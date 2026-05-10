@@ -49,9 +49,9 @@ function tile_closed_door()constructor{
 
 function tile_secret_door()constructor{
 	tile			= "closed door";
-	char			= "?";
-	fg				= c_lime;
-	bg				= c_green;
+	char			= "#";
+	fg				= c_ltgrey;
+	bg				= c_dkgrey;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;

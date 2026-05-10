@@ -26,6 +26,7 @@ function state_ready_for_inputs(){
 }
 
 function state_interaction(){
+	var player_moved = false;
 	
 	for (var key = 0; key < array_length(control_key); key ++){
 		if (keyboard_check_pressed(control_key[key])){
@@ -39,7 +40,7 @@ function state_interaction(){
 				if (other.game_grid[interact_x][interact_y].tile_script != noone){
 					other.game_grid[interact_x][interact_y].tile_script(interact_x, interact_y);
 					
-					set_player_los(other.game_grid, self);
+					player_moved = true;
 				}
 			}
 			
@@ -49,10 +50,13 @@ function state_interaction(){
 			}
 		}
 	}
+	if (player_moved){
+		set_player_los(other.game_grid, self);
+	}
 }
 
 function state_idle(){
-	
+	// Do nothing
 }
 
 

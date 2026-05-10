@@ -1,0 +1,553 @@
+
+
+// INITIALISE
+function initialise_game_grid(grid_width, grid_height){
+	
+	var grid = [];
+	
+	for (var x_pos = 0; x_pos < grid_width; x_pos ++){
+		for (var y_pos = 0; y_pos < grid_height; y_pos ++){
+			
+			// CREATE WALL TILE -------------------------------------------------------------------
+			grid[x_pos][y_pos] = new tile_wall();
+			grid[x_pos][y_pos].flag = -1;
+		}
+	}
+	return(grid);
+}
+
+// ROOMS
+function generate_rooms(grid, number_of_rooms, min_size, max_size){
+	
+	// Initialise variables
+	var room_count = number_of_rooms;
+	var room_list = [];
+	var time_out = 500;
+	
+	while(room_count > 0){
+		
+		// Sets room with and height
+		var width = irandom_range(min_size, max_size);
+		width = floor(width / 2) * 2 + 1;
+		
+		var height = irandom_range(min_size, max_size);
+		height = floor(height / 2) * 2 + 1;
+		
+		// Finds position for room on game_grid
+		var position_list = [];
+		
+		for (var x_pos = 2; x_pos < array_length(grid) - (2 + width); x_pos += 2){
+			for (var y_pos = 2; y_pos < array_length(grid[0]) - (2 + height); y_pos += 2){
+				
+				//Initialise variable
+				var can_place_room = true;
+				
+				// Check room width and height
+				for(var room_x = x_pos; room_x < x_pos + width; room_x ++){
+					for(var room_y = y_pos; room_y < y_pos + height; room_y ++){
+						if (grid[room_x][room_y].char == "."){
+							can_place_room = false;
+						}
+					}
+				}
+				if (can_place_room == true){
+					// Push onto position array
+					array_push(position_list, [x_pos, y_pos]);
+				}
+			}
+		}
+		// Choose random room from list
+		var len = array_length(position_list);
+		if (len > 0){
+			var choice = irandom(len - 1);
+			
+			// Get position of random room
+			var xx = position_list[choice][0];
+			var yy = position_list[choice][1];
+			
+			// Width and height already stored
+			for (x_pos = xx; x_pos < xx + width; x_pos ++){
+				for (y_pos = yy; y_pos < yy + height; y_pos ++){
+					
+					// CREATE ROOM TILE -----------------------------------------------------------
+					grid[x_pos][y_pos] = new tile_room();
+				}
+			}
+			array_push(room_list, [xx, yy, width, height]);
+			
+			room_count --;
+		}
+		// Or decrement time-out and try again
+		else{
+			time_out --;
+			if (time_out <= 0){
+				room_count = 0;
+			}
+		}
+	}
+	return(room_list);
+}
+
+// HALLWAYS
+function generate_hallways(grid, hall_max_length){
+	
+	var can_place = true;
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	while (can_place == true){
+		
+		// Find starting points
+		var position_list = [];
+		
+		for (var x_pos = 2; x_pos < width - 2; x_pos += 2){
+			for (var y_pos = 2; y_pos < height - 2; y_pos += 2){
+				if (grid[x_pos][y_pos].tile == "wall"){
+					array_push(position_list, [x_pos, y_pos]);
+				}
+			}
+		}
+		
+		var len = array_length(position_list);
+		if (len > 0){
+			
+			// Set hallway starting point
+			var choice = irandom(array_length(position_list) - 1);
+			x_pos = position_list[choice][0];
+			y_pos = position_list[choice][1];
+			
+			// CREATE HALLWAY TILE ----------------------------------------------------------------
+			grid[x_pos][y_pos] = new tile_hall();
+			
+			// Dig hallway
+			var hall_length = 0;
+			while(hall_length < hall_max_length){
+				
+				// Find clear direction
+				var dir = find_direction_target(grid, x_pos, y_pos, "wall", 2);
+				
+				// Dig hallway
+				if (dir != noone){
+					var hall_repeats = floor(hall_max_length / 2);
+					var target_x, target_y, tile_in_bounds;
+					
+					repeat(hall_repeats){
+				
+						// Increment Hall
+						repeat(2){
+							x_pos += lengthdir_x(1, dir);
+							y_pos += lengthdir_y(1, dir);
+							
+							// CREATE HALLWAY TILE ------------------------------------------------
+							grid[x_pos][y_pos] = new tile_hall();
+						}
+				
+						// Check Twistyness
+						if (irandom(100) < 50){
+							dir += choose(90, -90);
+						}
+				
+						// Check Direction for Rooms or Halls
+						target_x = x_pos + lengthdir_x(2, dir);
+						target_y = y_pos + lengthdir_y(2, dir);
+				
+						tile_in_bounds = grid_check_position_in_bounds(grid, target_x, target_y, 2);
+				
+						if (!tile_in_bounds or grid[target_x][target_y].tile != "wall"){
+							dir = find_direction_target(grid, x_pos, y_pos, "wall", 2);
+							if (dir == noone) break;
+						}
+					}
+				}
+				
+				hall_length += 2;
+			}
+		}
+		else{
+			// Stop placing hallways
+			can_place = false;
+		}
+	}
+}
+
+function find_direction_target(grid, x_pos, y_pos, target_type, step_size){
+	
+	// Get grid dimentions
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	var candidate_list = [];
+	
+	// Check Surrounding Tiles
+	var dir, target_x, target_y,
+	
+	for (var d = 0; d < 4; d ++){
+		dir = d * 90;
+		target_x = x_pos + lengthdir_x(step_size, dir);
+		target_y = y_pos + lengthdir_y(step_size, dir);
+		
+		// Check target tile is in bounds and is required string
+		if (target_x > 1 and target_x < width - 2) and (target_y > 1 and target_y < height - 2){
+			if (grid[target_x][target_y].tile == target_type){
+				array_push(candidate_list, dir);
+			}
+		}
+	}
+	var len, choice;
+	len = array_length(candidate_list);
+	if (len > 0){
+		choice = irandom(len - 1);
+		return(candidate_list[choice]);
+	}
+	else return(noone);
+}
+
+// CONNECTIONS
+function connect_areas(grid){
+	var i, j, current_flag;
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	// Add Viable Cells
+	for (i = 0; i < width; i ++){
+		for (j = 0; j < height; j ++){
+			if (grid[i][j].tile != "wall"){
+				grid[i][j].flag = 0;
+			}
+		}
+	}
+	
+	// Grow Flags
+	current_flag = 1;
+	for (i = 0; i < width; i ++){
+		for (j = 0; j < height; j ++){
+			if (grid[i][j].flag == 0){
+				grow_flags(grid, i, j, current_flag);
+				current_flag ++;
+			}
+		}
+	}
+	
+	// Connect Flagged Areas with Different Values
+	var connect_cell = find_connection(grid);
+	if (connect_cell != noone)
+	{
+		// CREATE HALL TILE -----------------------------------------------------------------------
+		grid[connect_cell[0]][connect_cell[1]] = new tile_hall();
+	
+		grow_flags(grid, connect_cell[0], connect_cell[1], connect_cell[2]);
+		return(true);
+	}
+	else return(false);
+	
+}
+
+function grow_flags(grid, xpos, ypos, flag){
+	var candidate_list, new_list;
+	
+	candidate_list[0] = [xpos, ypos];
+	
+	while (array_length(candidate_list) > 0){
+		new_list = [];
+		
+		for (var i = 0; i < array_length(candidate_list); i ++){
+			var cell_x = candidate_list[i][0];
+			var cell_y = candidate_list[i][1];
+			
+			grid[cell_x][cell_y].flag = flag;
+		
+			for (var j = 0; j < 4; j ++){
+				var dir = j*90;
+				var xx = cell_x + lengthdir_x(1, dir);
+				var yy = cell_y + lengthdir_y(1, dir);
+				
+				var in_bounds = grid_check_position_in_bounds(grid, xx, yy, 1);
+				
+				if (in_bounds){
+					if (grid[xx][yy].flag != flag) and (grid[xx][yy].flag != -1){
+						grid[xx][yy].flag = flag;
+						grid[xx][yy].bg = c_black;
+						array_push(new_list, [xx, yy]);
+					}
+				}
+			}
+		}
+		candidate_list = new_list;
+	}
+}
+
+function find_connection(grid){
+	var i, j, candidate_list, flag_r, flag_u, flag_l, flag_d;
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	candidate_list = [];
+	for (i = 1; i < width - 1; i += 1){
+		for (j = 1; j < height - 1; j += 1){
+			if (j mod 2 == 1 and i mod 2 == 1) continue;
+			
+			// Get surrounding flags
+			flag_r = grid[i+1][j].flag;
+			flag_u = grid[i][j-1].flag;
+			flag_l = grid[i-1][j].flag;
+			flag_d = grid[i][j+1].flag;
+			
+			// Push valid candidates to list
+			if (flag_r == -1 and flag_l == -1) and (flag_d != -1 and flag_u != -1) and (flag_u != flag_d){
+				array_push(candidate_list, [i, j, flag_u]);
+			}
+			if (flag_u == -1 and flag_d == -1) and (flag_r != -1 and flag_l != -1) and (flag_r != flag_l){
+				array_push(candidate_list, [i, j, flag_l]);
+			}
+		}
+	}
+	
+	// Choose random candidate from list
+	var len = array_length(candidate_list);
+	if (len > 0)
+	{
+		var c = irandom(len - 1);
+		return(candidate_list[c]);
+	}
+	else return(noone);
+}
+
+// SHORTCUTS
+function create_shortcuts(grid, shortcut_length, secret_door_chance){
+	
+	var shortcut_list, xx, yy, distance_map;
+	
+	// Find Potential Shortcuts
+	shortcut_list = find_shortcut_candidates(grid, shortcut_length);
+	
+	while (array_length(shortcut_list) > 0){
+		
+		// Pick random shortcut
+		var len, choice;
+		len = array_length(shortcut_list);
+		choice = irandom(len-1);
+		
+		xx = shortcut_list[choice][0];
+		yy = shortcut_list[choice][1];
+		
+		// Check if it is viable
+		var grid_r = grid[xx + 1][yy].tile;
+		var grid_u = grid[xx][yy + 1].tile;
+		var grid_l = grid[xx - 1][yy].tile;
+		var grid_d = grid[xx][yy - 1].tile;
+
+		// Create shortcut if viable
+		var shortcut_is_viable = false;
+		
+		// Vertical shortcuts
+		if (grid_r == "wall" and grid_l == "wall"){
+			distance_map = set_dijkstra_map(grid, xx, yy - 1, 0);
+					
+			if (distance_map[xx][yy = 1] >= shortcut_length){
+				shortcut_is_viable = true;
+			}
+			
+		}
+		// Horizontal shortcuts
+		else if (grid_u = "wall" and grid_d = "wall"){
+			distance_map = set_dijkstra_map(grid, xx - 1, yy, 0);
+					
+			if (distance_map[xx + 1][yy] >= shortcut_length){
+				shortcut_is_viable = true;
+			}
+		}
+		// delete from list if not viable
+		else {
+			shortcut_is_viable = false;
+		}
+		
+		if (shortcut_is_viable){
+			
+			// CREATE SECRET DOOR -----------------------------------------------------------------
+			if (irandom(100) < secret_door_chance){
+				grid[xx][yy] = new tile_secret_door();
+				
+			}
+			// CREATE OPEN CONNECTION -------------------------------------------------------------
+			else{
+		        grid[xx][yy] = new tile_hall();
+		    }
+		}
+		array_delete(shortcut_list, choice, 1);
+	}
+}
+
+function find_shortcut_candidates(grid, shortcut_length){
+	var i, j, candidate_list, distance_map;
+	candidate_list = [];
+    var width  = array_length(grid);
+    var height = array_length(grid[0]);
+	
+	for (i = 1; i < width-1; i ++){
+		for (j = 1; j < height-1; j ++){
+			if (i mod 2 == 1 and j mod 2 == 1) continue;
+			
+			if (grid[i][j].char == "#"){
+			
+				var grid_r = grid[i+1][j].char;
+				var grid_u = grid[i][j+1].char;
+				var grid_l = grid[i-1][j].char;
+				var grid_d = grid[i][j-1].char;
+				
+				// Vertical shortcuts
+				if (grid_r == "#" and grid_l == "#"){
+					if (grid_d != "#" and grid_u != "#"){
+						distance_map = set_dijkstra_map(grid, i, j-1, 0);
+					
+						if (abs(distance_map[i][j-1] - distance_map[i][j+1]) >= shortcut_length){
+							array_push(candidate_list, [i, j]);
+						}
+					}
+				}
+				// Horizontal shortcuts
+				if (grid_r != "#" and grid_l != "#"){
+					if (grid_d == "#" and grid_u == "#"){
+						distance_map = set_dijkstra_map(grid, i-1, j, 0);
+					
+						if (abs(distance_map[i-1][j] - distance_map[i+1][j]) >= shortcut_length){
+							array_push(candidate_list, [i, j]);
+						}
+					}
+				}
+			}
+		}
+	}
+	return(candidate_list);
+}
+
+// END CULLING
+function cull_dead_ends(grid){
+	var i, j, count;
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	for (i = 1; i < width-1; i ++){
+		for (j = 0; j < height-1; j ++){
+			
+			var xx = i;
+			var yy = j;
+			
+			if (grid[xx][yy].tile != "wall"){
+				
+				// Repeat loop
+				var can_cull_tile = true;
+				
+				while (can_cull_tile){
+					count = grid_check_neighbour_count(grid, i, j, "wall", NEIGHBOUR_CHECK.ORTH);
+					if (count == 3){
+					
+						// CREATE WALL TILE -----------------------------------------------------------
+						grid[xx][yy] = new tile_wall();
+					
+						// Move to next tile
+						for (var d = 0; d < 4; d ++){
+							var target_x = xx + lengthdir_x(1, d * 90);
+							var target_y = yy + lengthdir_y(1, d * 90);
+						
+							if (grid[target_x][target_y].tile != "wall"){
+								xx = target_x;
+								yy = target_y;
+								break;
+							}
+						}
+						return(true);
+					}
+					else can_cull_tile = false;
+				}
+			}
+		}
+	}
+	return(false);
+}
+
+// DOORS
+function add_doors(grid){
+	var can_place = true;
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	while (can_place){
+		
+		for (var x_pos = 1; x_pos < width - 1; x_pos ++){
+			for (var y_pos = 1; y_pos < height - 1; y_pos ++){
+				if (grid[x_pos][y_pos].tile == "hall"){
+					var room_cell_count = grid_check_neighbour_count(grid, x_pos, y_pos, "room", NEIGHBOUR_CHECK.ORTH)
+					if (room_cell_count > 0){
+						grid[x_pos][y_pos] = new tile_closed_door();
+					}
+				}
+			}
+		}
+		
+		can_place = false;
+	}
+}
+
+// ENTRY AND EXIT
+function add_entry(grid){
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	var candidate_list = [];
+	
+	for (var x_pos = 1; x_pos < width - 1; x_pos ++){
+		for (var y_pos = 1; y_pos < height - 1; y_pos ++){
+			if (grid[x_pos][y_pos].tile == "room"){
+				var count = grid_check_neighbour_count(grid, x_pos, y_pos, "room")
+				if (count > 4){
+					array_push(candidate_list, [x_pos, y_pos]);
+				}
+			}
+		}
+	}
+	
+	var len = array_length(candidate_list);
+	if (len > 0){
+		var choice = irandom(len - 1);
+		
+		x_pos = candidate_list[choice][0];
+		y_pos = candidate_list[choice][1];
+		
+		grid[x_pos][y_pos] = new tile_entry();
+		
+		return([x_pos, y_pos]);
+	}
+}
+
+function add_exit(grid, entry_x, entry_y){
+	var width  = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	var candidate_list = [];
+	
+	for (var x_pos = 1; x_pos < width - 1; x_pos ++){
+		for (var y_pos = 1; y_pos < height - 1; y_pos ++){
+			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > 25){
+				var count = grid_check_neighbour_count(grid, x_pos, y_pos, "room")
+				if (count > 4){
+					array_push(candidate_list, [x_pos, y_pos]);
+				}
+			}
+		}
+	}
+	
+	var len = array_length(candidate_list);
+	if (len > 0){
+		var choice = irandom(len - 1);
+		
+		x_pos = candidate_list[choice][0];
+		y_pos = candidate_list[choice][1];
+		
+		grid[x_pos][y_pos] = new tile_exit();
+		
+		return([x_pos, y_pos]);
+	}
+}
+
+
+
+

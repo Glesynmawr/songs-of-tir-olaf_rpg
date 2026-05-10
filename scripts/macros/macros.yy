@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"macros",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"macros",
+  "parent":{
+    "name":"roguelike_rpg",
+    "path":"roguelike_rpg.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

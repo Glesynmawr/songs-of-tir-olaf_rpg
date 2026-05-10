@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"grid_checks",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"grid_checks",
+  "parent":{
+    "name":"roguelike_rpg",
+    "path":"roguelike_rpg.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

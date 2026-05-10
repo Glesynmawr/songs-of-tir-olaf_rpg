@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"items",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"items",
+  "parent":{
+    "name":"roguelike_rpg",
+    "path":"roguelike_rpg.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,10 @@
+
+enum NEIGHBOUR_CHECK{
+	ORTH,
+	DIAG,
+	ALL
+}
+
+
+
+

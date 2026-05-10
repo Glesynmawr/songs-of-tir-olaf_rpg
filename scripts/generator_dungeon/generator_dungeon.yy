@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"generator_dungeon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"generator_dungeon",
+  "parent":{
+    "name":"roguelike_rpg",
+    "path":"roguelike_rpg.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

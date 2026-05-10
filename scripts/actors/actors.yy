@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"actors",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"actors",
+  "parent":{
+    "name":"roguelike_rpg",
+    "path":"roguelike_rpg.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

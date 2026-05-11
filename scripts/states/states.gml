@@ -38,7 +38,7 @@ function state_interaction(){
 				var interact_y = y_pos + other.cell_y_neighbours[key];
 				
 				if (other.game_grid[interact_x][interact_y].tile_script != noone){
-					other.game_grid[interact_x][interact_y].tile_script(interact_x, interact_y);
+					other.game_grid[interact_x][interact_y].tile_script(self, interact_x, interact_y);
 					
 					player_moved = true;
 				}

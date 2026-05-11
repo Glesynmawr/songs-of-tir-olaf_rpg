@@ -22,20 +22,24 @@ control_key[8] = vk_numpad5;
 draw_set_font(mono_fnt);
 cell_width  = string_width("M");
 cell_height = string_height("M");
-	
+
+// Initialise game log
+initialise_log();
+
 // Level generation
 generate_dungeon();
-
 
 // Spawn Player
 actor_registry = {
 	actor_list:	[],
 	player:		noone
 }
-
-
 spawn_actor(actor_player, entry_pos[0],   entry_pos[1]);
-spawn_actor(actor_goblin, entry_pos[0]-2,   entry_pos[1]-2);
+
+// Spawn mobs
+spawn_actor(actor_goblin,	entry_pos[0]-2,   entry_pos[1]-2);
+spawn_actor(actor_orc,		entry_pos[0],     entry_pos[1]-2);
+spawn_actor(actor_assassin, entry_pos[0]-2,   entry_pos[1]);
 
 set_player_los(game_grid, actor_registry.player);
 

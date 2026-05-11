@@ -13,5 +13,6 @@
     {"name":"management","order":2,"path":"scripts/management/management.yy",},
     {"name":"states","order":11,"path":"scripts/states/states.yy",},
     {"name":"tiles","order":9,"path":"scripts/tiles/tiles.yy",},
+    {"name":"ui_border_spr","order":13,"path":"sprites/ui_border_spr/ui_border_spr.yy",},
   ],
 }

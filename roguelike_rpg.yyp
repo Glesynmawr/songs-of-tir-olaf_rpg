@@ -34,6 +34,7 @@
     {"id":{"name":"management","path":"scripts/management/management.yy",},},
     {"id":{"name":"states","path":"scripts/states/states.yy",},},
     {"id":{"name":"tiles","path":"scripts/tiles/tiles.yy",},},
+    {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

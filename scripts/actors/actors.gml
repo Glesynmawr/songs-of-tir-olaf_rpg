@@ -22,6 +22,11 @@ function actor_player()constructor{
 	is_visible  = true;
 	range		= 8;
 	state		= state_ready_for_inputs;
+	strength	= 4;
+	agility		= 4;
+	defence		= 2;
+	hit_points	= 12;
+	
 }
 
 function actor_goblin()constructor{
@@ -34,6 +39,44 @@ function actor_goblin()constructor{
 	is_visible  = false;
 	range		= 6;
 	state		= state_idle;
+	strength	= 2;
+	agility		= 2;
+	defence		= 0;
+	hit_points	= 6;
 }
+
+function actor_orc()constructor{
+	name		= "Orc";
+	char		= "O";
+	fg			= c_teal;
+	bg			= c_black;
+	x_pos		= 0;
+	y_pos		= 0;
+	is_visible  = false;
+	range		= 8;
+	state		= state_idle;
+	strength	= 4;
+	agility		= 1;
+	defence		= 2;
+	hit_points	= 12;
+}
+
+function actor_assassin()constructor{
+	name		= "Assassin";
+	char		= "A";
+	fg			= c_red;
+	bg			= c_black;
+	x_pos		= 0;
+	y_pos		= 0;
+	is_visible  = false;
+	range		= 6;
+	state		= state_idle;
+	strength	= 6;
+	agility		= 3;
+	defence		= 0;
+	hit_points	= 8;
+}
+
+
 
 

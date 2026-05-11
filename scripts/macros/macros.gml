@@ -5,6 +5,6 @@ enum NEIGHBOUR_CHECK{
 	ALL
 }
 
-
+#macro ENERGY_PER_TURN 100
 
 

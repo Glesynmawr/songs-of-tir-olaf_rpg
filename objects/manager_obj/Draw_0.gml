@@ -30,6 +30,9 @@ for (var x_pos = 0; x_pos < grid_width; x_pos ++){
 			draw_text_colour(x_pos * cell_width, y_pos * cell_height, char, fg, fg, fg, fg, 1);
 		
 		}
+		//if (array_length(distance_map_player) > 0){
+		//	draw_text_transformed(x_pos * cell_width, y_pos * cell_height, string(distance_map_player[x_pos, y_pos]), 0.5, 0.5, 1);
+		//}
 	}
 }
 

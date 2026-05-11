@@ -4,8 +4,9 @@ var target_y = floor((actor_registry.player.y_pos * cell_height) - (room_height 
 
 move_camera(target_x, target_y, 0.1);
 
-with (actor_registry.player){
-	state();
+
+if (!game_pause){
+	turn_order_update();
 }
 
 

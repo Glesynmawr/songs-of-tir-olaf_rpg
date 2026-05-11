@@ -23,7 +23,7 @@ function action_move(grid, move_x, move_y){
 			// Bump target actor
 			action_attack_melee(self, other_actor);
 			
-			return(false);
+			return(true);
 		}
 	}
 	
@@ -79,9 +79,7 @@ function action_attack_melee(attacker, defender){
 		if (defender.hit_points <= 0){
 			
 			second_log = $"{defender.name} was killed!";
-			
-			var actor_index = array_get_index(other.actor_registry.actor_list, defender);
-			array_delete(other.actor_registry.actor_list, actor_index, 1);
+			action_remove_actor(defender);
 		}
 	}
 			
@@ -96,6 +94,21 @@ function action_attack_melee(attacker, defender){
 		// Death log entry
 		log_add_entry(second_log, c_ltgrey);
 	}
+}
+
+function action_remove_actor(actor){
+	
+	if (actor == manager_obj.actor_registry.player){
+		manager_obj.game_pause = true;
+	}
+	
+	// Remove from action list
+	var index = array_get_index(manager_obj.action_list, actor);
+	array_delete(manager_obj.action_list, index, 1);
+	
+	// Remove from actor list
+	index = array_get_index(manager_obj.actor_registry.actor_list, actor);
+	array_delete(manager_obj.actor_registry.actor_list, index, 1);
 }
 
 

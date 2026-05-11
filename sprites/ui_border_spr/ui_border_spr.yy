@@ -25,15 +25,15 @@
   "name":"ui_border_spr",
   "nineSlice":{
     "$GMNineSliceData":"",
-    "bottom":7,
+    "bottom":5,
     "enabled":true,
     "guideColour":[4294902015,4294902015,4294902015,4294902015,],
     "highlightColour":1728023040,
     "highlightStyle":0,
-    "left":7,
+    "left":6,
     "resourceType":"GMNineSliceData",
     "resourceVersion":"2.0",
-    "right":7,
+    "right":5,
     "tileMode":[
       1,
       1,
@@ -41,7 +41,7 @@
       1,
       0,
     ],
-    "top":7,
+    "top":5,
   },
   "origin":0,
   "parent":{

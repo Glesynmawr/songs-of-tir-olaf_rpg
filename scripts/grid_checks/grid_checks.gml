@@ -1,4 +1,5 @@
 
+// MAP CHECK FUNCTIONS
 function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
 	var x_min, x_max, y_min, y_max, in_bounds;
 	
@@ -112,6 +113,7 @@ function grid_check_neighbour_count(grid, x_pos, y_pos, tile_type, directions = 
 	// All check
 	else return(orth_check + diag_check);
 }
+
 
 // LOS FUNCTIONS
 function set_player_los(grid, actor){

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"management",
+  "%Name":"utilities",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"management",
+  "name":"utilities",
   "parent":{
     "name":"roguelike_rpg",
     "path":"roguelike_rpg.yyp",

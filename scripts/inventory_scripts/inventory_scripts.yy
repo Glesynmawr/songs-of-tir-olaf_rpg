@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"items",
+  "%Name":"inventory_scripts",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"items",
+  "name":"inventory_scripts",
   "parent":{
     "name":"roguelike_rpg",
     "path":"roguelike_rpg.yyp",

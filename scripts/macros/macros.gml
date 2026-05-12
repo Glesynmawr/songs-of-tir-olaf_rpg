@@ -5,6 +5,12 @@ enum NEIGHBOUR_CHECK{
 	ALL
 }
 
+enum SPAWN_LOC{
+	FLOOR,
+	INVENTORY,
+	EQUIPPED
+}
+
 #macro ENERGY_PER_TURN 100
 
 

@@ -9,15 +9,18 @@ cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
 
 // Define controls
 globalvar control_key;
-control_key[0] = vk_numpad6;
-control_key[1] = vk_numpad9;
-control_key[2] = vk_numpad8;
-control_key[3] = vk_numpad7;
-control_key[4] = vk_numpad4;
-control_key[5] = vk_numpad1;
-control_key[6] = vk_numpad2;
-control_key[7] = vk_numpad3;
-control_key[8] = vk_numpad5;
+control_key[0]  = vk_numpad6;
+control_key[1]  = vk_numpad9;
+control_key[2]  = vk_numpad8;
+control_key[3]  = vk_numpad7;
+control_key[4]  = vk_numpad4;
+control_key[5]  = vk_numpad1;
+control_key[6]  = vk_numpad2;
+control_key[7]  = vk_numpad3;
+control_key[8]  = vk_numpad5;
+control_key[9]  = ord("I");
+control_key[10] = ord("D");
+control_key[11] = ord("E");
 
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
@@ -55,6 +58,13 @@ initialise_camera(actor_registry.player);
 
 action_list = [];
 turn_order_initialise();
+
+spawn_item(item_sword,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+spawn_item(item_shield, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+spawn_item(item_armour, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+spawn_item(item_helmet, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+spawn_item(item_bow,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+spawn_item(item_arrow,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 
 
 

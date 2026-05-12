@@ -12,11 +12,18 @@ function state_ready_for_inputs(){
 		
 				if (action_move(other.game_grid,  move_x,  move_y)){
 					player_moved = true;
+					break;
 				}
 			}
 			// Enter INTERACTION state
-			if (key == 8){
+			else if (key == 8){
 				state = state_interaction;
+				break;
+			}
+			// Enter INVENTORY state
+			else if (key == 9){
+				state = state_inventory;
+				break;
 			}
 		}
 	}
@@ -54,8 +61,8 @@ function state_interaction(){
 				}
 			}
 			
-			// Exit INTERACTION state
-			if (key == 8){
+			// Exit READY FOR INPUTS state
+			else if (key == 8){
 				state = state_ready_for_inputs;
 			}
 		}
@@ -66,6 +73,48 @@ function state_interaction(){
 		
 		// Update player LOS
 		set_player_los(other.game_grid, self);
+	}
+}
+
+function state_inventory(){
+	var player_moved = false;
+	var len = array_length(inventory.items);
+	
+	for (var key = 0; key < array_length(control_key); key ++){
+		if (keyboard_check_pressed(control_key[key])){
+			
+			if (key == 2){
+				// Move up inventory
+				inventory.hover --;
+				if (inventory.hover < 0){
+					inventory.hover += len;
+				}
+			}
+			else if (key == 6){
+				// Move down inventory
+				inventory.hover ++;
+				if (inventory.hover >= len){
+					inventory.hover -= len;
+				}
+			}
+			else if (key == 9){
+				// Exit READY FOR INPUTS state
+				state = state_ready_for_inputs;
+			}
+			else if (key == 10){
+				// DROP item
+				inventory_drop_slot(self, inventory.hover);
+			}
+			else if (key == 11){
+				// EQUIP item
+				
+			}
+		}
+	}
+	
+	if (player_moved){
+		// Set has-acted flag
+		has_acted = true;
 	}
 }
 

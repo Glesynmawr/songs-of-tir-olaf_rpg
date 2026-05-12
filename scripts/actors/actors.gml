@@ -3,12 +3,18 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	
 	var new_actor = new actor_type();
 	
+	// Inventory
+	new_actor.inventory = inventory_initialise();
+	
+	// Replacement variables
 	new_actor.x_pos		= cell_x;
 	new_actor.y_pos		= cell_y;
+	
+	// Turn structure variables
 	new_actor.energy	= 0;
 	new_actor.has_acted = false;
 	
-	
+	// Push to actor registry
 	array_push(actor_registry.actor_list, new_actor);
 	if (actor_type == actor_player){
 		actor_registry.player = new_actor;

@@ -33,6 +33,9 @@ function generate_dungeon(){
 	
 	// Add exit
 	add_exit(game_grid, entry_pos[0], entry_pos[1]);
+	
+	// Initialise item grid
+	initialise_item_grid(game_grid, grid_width, grid_height);
 }
 
 // INITIALISE
@@ -583,6 +586,12 @@ function add_exit(grid, entry_x, entry_y){
 	}
 }
 
-
-
+// ITEM CREATION
+function initialise_item_grid(grid, width, height){
+	for (var i = 0; i < width; i ++){
+		for (var j = 0; j < height; j ++){
+			grid[i][j].items = [];
+		}
+	}
+}
 

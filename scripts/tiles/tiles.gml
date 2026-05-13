@@ -1,4 +1,16 @@
 
+function cell_replace_tile(x_pos, y_pos, new_tile){
+	var vis   = other.game_grid[x_pos][y_pos].is_visible;
+	var ex    = other.game_grid[x_pos][y_pos].explored;
+	var items = other.game_grid[x_pos][y_pos].items;
+	
+	other.game_grid[x_pos][y_pos] = new new_tile();
+	
+	other.game_grid[x_pos][y_pos].is_visible = vis;
+	other.game_grid[x_pos][y_pos].explored   = ex;
+	other.game_grid[x_pos][y_pos].items		 = items;
+}
+
 function tile_wall()constructor{
 	tile			= "wall";
 	char			= "#";
@@ -56,7 +68,7 @@ function tile_secret_door()constructor{
 	transparent		= false;
 	is_visible		= false;
 	explored		= false;
-	tile_script		= noone;
+	tile_script		= door_set_open;
 }
 
 function tile_open_door()constructor{

@@ -1,9 +1,9 @@
 /// @desc
 
-var txt1 = $"Player has acted = {actor_registry.player.has_acted}";
+var txt1 = $"Cell width = {cell_width}";
 draw_text(10, cell_height * 3, txt1);
 
-var txt2 = $"Action list length = {array_length(action_list)}";
+var txt2 = $"Cell height = {cell_height}";
 draw_text(10, cell_height * 4, txt2);
 
 var txt2 = $"Player inventory = {actor_registry.player.inventory.items}";

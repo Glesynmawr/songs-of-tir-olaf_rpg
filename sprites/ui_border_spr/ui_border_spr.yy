@@ -45,8 +45,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"roguelike_rpg",
-    "path":"roguelike_rpg.yyp",
+    "name":"Sprites",
+    "path":"folders/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

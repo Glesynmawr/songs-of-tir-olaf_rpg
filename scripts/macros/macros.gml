@@ -12,5 +12,8 @@ enum SPAWN_LOC{
 }
 
 #macro ENERGY_PER_TURN 100
+#macro LOG_MAX_ENTRIES 6
+
+
 
 

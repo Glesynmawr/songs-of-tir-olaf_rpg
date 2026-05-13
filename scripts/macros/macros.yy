@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"macros",
   "parent":{
-    "name":"roguelike_rpg",
-    "path":"roguelike_rpg.yyp",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

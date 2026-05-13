@@ -1,30 +1,38 @@
 
 function state_ready_for_inputs(){
 	var player_moved = false;
-
-	for (var key = 0; key < array_length(control_key); key ++){
-		if (keyboard_check_pressed(control_key[key])){
-			
-			// Enter MOVEMENT state
-			if (key < 8){
-				var move_x = other.cell_x_neighbours[key];
-				var move_y = other.cell_y_neighbours[key];
+	
+	if (keyboard_check_pressed(controls.key_inv)){
+		state = state_inventory;
+		exit;
+	}
+	
+	// Direction inputs
+	var x_move = keyboard_check(controls.key_r) - keyboard_check(controls.key_l)
+	var y_move = keyboard_check(controls.key_d) - keyboard_check(controls.key_u)
+	
+	var move_dir = input_direction(x_move, y_move);
+	if (move_dir != noone){
 		
-				if (action_move(other.game_grid,  move_x,  move_y)){
-					player_moved = true;
-					break;
-				}
-			}
-			// Enter INTERACTION state
-			else if (key == 8){
-				state = state_interaction;
-				break;
-			}
-			// Enter INVENTORY state
-			else if (key == 9){
-				state = state_inventory;
-				break;
-			}
+		// Set manager direction indicator
+		with (manager_obj) direction_indicator = move_dir;
+		
+		// Movement
+		if (keyboard_check_pressed(controls.key_confirm)){
+			var xx = manager_obj.cell_x_neighbours[move_dir];
+			var yy = manager_obj.cell_y_neighbours[move_dir];
+			action_move(manager_obj.game_grid, xx, yy);
+			player_moved = true;
+		}
+		
+		// Interaction
+		else if (keyboard_check_pressed(controls.key_interact)){
+			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+		}
+	}
+	else{
+		if (manager_obj.direction_indicator != noone){
+			manager_obj.direction_indicator = noone;
 		}
 	}
 
@@ -37,84 +45,33 @@ function state_ready_for_inputs(){
 		
 		// Update player distance map
 		distance_map_player = create_distance_map(x_pos, y_pos);
-		
-		
-	}
-}
-
-function state_interaction(){
-	var player_moved = false;
-	
-	for (var key = 0; key < array_length(control_key); key ++){
-		if (keyboard_check_pressed(control_key[key])){
-			
-			// Interact with neighbour tiles
-			if (key < 8){
-				
-				var interact_x = x_pos + other.cell_x_neighbours[key];
-				var interact_y = y_pos + other.cell_y_neighbours[key];
-				
-				if (other.game_grid[interact_x][interact_y].tile_script != noone){
-					other.game_grid[interact_x][interact_y].tile_script(self, interact_x, interact_y);
-					
-					player_moved = true;
-				}
-			}
-			
-			// Exit READY FOR INPUTS state
-			else if (key == 8){
-				state = state_ready_for_inputs;
-			}
-		}
-	}
-	if (player_moved){
-		// Set has-acted flag
-		has_acted = true;
-		
-		// Update player LOS
-		set_player_los(other.game_grid, self);
 	}
 }
 
 function state_inventory(){
-	var player_moved = false;
 	var len = array_length(inventory.items);
 	
-	for (var key = 0; key < array_length(control_key); key ++){
-		if (keyboard_check_pressed(control_key[key])){
-			
-			if (key == 2){
-				// Move up inventory
-				inventory.hover --;
-				if (inventory.hover < 0){
-					inventory.hover += len;
-				}
-			}
-			else if (key == 6){
-				// Move down inventory
-				inventory.hover ++;
-				if (inventory.hover >= len){
-					inventory.hover -= len;
-				}
-			}
-			else if (key == 9){
-				// Exit READY FOR INPUTS state
-				state = state_ready_for_inputs;
-			}
-			else if (key == 10){
-				// DROP item
-				inventory_drop_slot(self, inventory.hover);
-			}
-			else if (key == 11){
-				// EQUIP item
-				
-			}
+	if (keyboard_check_pressed(controls.key_inv)){
+		// Exit INVENTORY state
+		state = state_ready_for_inputs;
+	}
+	else if (keyboard_check_pressed(controls.key_u)){
+		// Move up inventory
+		inventory.hover --;
+		if (inventory.hover < 0){
+			inventory.hover += len;
 		}
 	}
-	
-	if (player_moved){
-		// Set has-acted flag
-		has_acted = true;
+	else if (keyboard_check_pressed(controls.key_d)){
+		// Move up inventory
+		inventory.hover ++;
+		if (inventory.hover >= len){
+			inventory.hover -= len;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_drop)){
+		// DROP item
+		inventory_drop_slot(self, inventory.hover);
 	}
 }
 

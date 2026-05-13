@@ -6,6 +6,7 @@ game_pause		= false;
 // Cell positioning data
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
+direction_indicator = noone;
 
 // Define controls
 globalvar control_key;
@@ -22,10 +23,25 @@ control_key[9]  = ord("I");
 control_key[10] = ord("D");
 control_key[11] = ord("E");
 
+globalvar controls;
+controls = {
+	key_r:			vk_right,
+	key_u:			vk_up,
+	key_l:			vk_left,
+	key_d:			vk_down,
+	key_confirm:	vk_space,
+	key_interact:	vk_enter,
+	key_inv:		ord("I"),
+	key_drop:		ord("D")
+}
+
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
-cell_width  = string_width("M");
-cell_height = string_height("M");
+cell_width  = 24;
+cell_height = 32;
+
+text_height = string_height("M");
+text_width  = string_width("M");
 
 // Set distance maps
 globalvar distance_map_player;

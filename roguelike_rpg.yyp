@@ -9,7 +9,10 @@
     "name":"Default",
   },
   "defaultScriptType":1,
-  "Folders":[],
+  "Folders":[
+    {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
+  ],
   "ForcedPrefabProjectReferences":[
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
@@ -35,6 +38,8 @@
     {"id":{"name":"states","path":"scripts/states/states.yy",},},
     {"id":{"name":"tiles","path":"scripts/tiles/tiles.yy",},},
     {"id":{"name":"utilities","path":"scripts/utilities/utilities.yy",},},
+    {"id":{"name":"direction_arrow_spr","path":"sprites/direction_arrow_spr/direction_arrow_spr.yy",},},
+    {"id":{"name":"Sprite2","path":"sprites/Sprite2/Sprite2.yy",},},
     {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
   ],
   "resourceType":"GMProject",

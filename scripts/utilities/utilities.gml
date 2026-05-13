@@ -27,23 +27,20 @@ function log_add_entry(text, colour){
 }
 
 function draw_game_log(x_pos, y_pos, width, height){
-	var xx = x_pos  * cell_width;
-	var yy = y_pos  * cell_height;
-	var ww = width  * cell_width;
-	var hh = height * cell_height;
+
+	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, c_black,  1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_ltgrey, 1);
 	
-	draw_sprite_stretched_ext(ui_border_spr, 1, xx, yy, ww, hh, c_black,  1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, xx, yy, ww, hh, c_ltgrey, 1);
+	var xx = x_pos + text_width;
+	var yy = y_pos + (text_height / 2);
 	
-	xx += 5;
-	yy += 5;
-	var draw_to = min(5, array_length(game_log));
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
 	for (var line = 0; line < draw_to; line ++){
 		
 		var text =		game_log[line][0];
 		var colour =	game_log[line][1];
 		
-		draw_text_colour(xx, yy + (line * cell_height), text, colour, colour, colour, colour, 1);
+		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
 	}
 }
 
@@ -181,6 +178,25 @@ function turn_order_update(){
 }
 
 
+// CONTROLS
+function input_direction(x_move, y_move){
+
+	if (x_move == -1){
+		if (y_move == -1) return(3);
+		if (y_move == 0)  return(4);
+		if (y_move == 1)  return(5);
+	}
+	else if (x_move == 0){
+		if (y_move == -1) return(2);
+		if (y_move == 0)  return(noone);
+		if (y_move == 1)  return(6);
+	}
+	else if (x_move == 1){
+		if (y_move == -1) return(1);
+		if (y_move == 0)  return(0);
+		if (y_move == 1)  return(7);
+	}
+}
 
 
 

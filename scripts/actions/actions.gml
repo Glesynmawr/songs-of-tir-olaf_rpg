@@ -32,7 +32,7 @@ function action_move(grid, move_x, move_y){
 	y_pos += move_y;
 	
 	if (grid[x_pos][y_pos].tile == "closed door"){
-		grid[x_pos][y_pos] = new tile_open_door();
+		cell_replace_tile(x_pos, y_pos, tile_open_door);
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";

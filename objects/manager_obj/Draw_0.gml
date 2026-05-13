@@ -47,7 +47,6 @@ if (len > 0){
 			if (self.is_visible or debugging_mode){
 				x_pos	= self.x_pos * other.cell_width;
 				y_pos	= self.y_pos * other.cell_height;
-				char	= self.char;
 				fg		= self.fg;
 				bg		= self.bg;
 		
@@ -61,8 +60,14 @@ if (len > 0){
 					false
 				)
 		
-				// Draw actor character
-				draw_text_colour(x_pos, y_pos, char, fg, fg, fg, fg, 1)
+				// Draw actor sprite
+				draw_sprite_ext(sprite[0], sprite[1], x_pos, y_pos, 1, 1, 0, fg, 1);
+				
+				if (self == other.actor_registry.player){
+					if (other.direction_indicator != noone){
+						draw_sprite(direction_arrow_spr, other.direction_indicator, x_pos, y_pos);
+					}
+				}
 			}
 		}
 	}

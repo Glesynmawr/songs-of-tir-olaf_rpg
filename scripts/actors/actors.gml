@@ -23,7 +23,7 @@ function spawn_actor(actor_type, cell_x, cell_y){
 
 function actor_player()constructor{
 	name			= "Player";
-	char			= "@";
+	sprite			= [Sprite2, 0];
 	fg				= c_yellow;
 	bg				= c_black;
 	x_pos			= 0;
@@ -41,7 +41,7 @@ function actor_player()constructor{
 
 function actor_goblin()constructor{
 	name			= "Goblin";
-	char			= "g";
+	sprite			= [Sprite2, 0];
 	fg				= c_lime;
 	bg				= c_black;
 	x_pos			= 0;
@@ -58,7 +58,7 @@ function actor_goblin()constructor{
 
 function actor_orc()constructor{
 	name			= "Orc";
-	char			= "O";
+	sprite			= [Sprite2, 0];
 	fg				= c_teal;
 	bg				= c_black;
 	x_pos			= 0;
@@ -75,7 +75,7 @@ function actor_orc()constructor{
 
 function actor_assassin()constructor{
 	name			= "Assassin";
-	char			= "A";
+	sprite			= [Sprite2, 0];
 	fg				= c_red;
 	bg				= c_black;
 	x_pos			= 0;

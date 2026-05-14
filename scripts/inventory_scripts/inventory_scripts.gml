@@ -1,38 +1,4 @@
 
-function inventory_draw(actor, x_pos, y_pos, width, height){
-	
-	// Get inventory array
-	var inv = actor.inventory.items;
-	
-	// Background
-	var bg_col = c_black;
-	draw_rectangle_colour(x_pos, y_pos, x_pos + width, y_pos + height, bg_col, bg_col, bg_col, bg_col, false);
-	
-	// Title
-	draw_text(x_pos + 10, y_pos + 10, "Inventory");
-	
-	// Items
-	var len = array_length(inv);
-	if (len > 0){
-		for(var i = 0; i < len; i ++){
-			
-			// Position
-			var xx = x_pos + 20;
-			var yy = y_pos + 40 + (30 * i);
-			
-			// Text
-			var text = "";
-			if (actor.inventory.hover == i){
-				text += "> ";
-			}
-			
-			text += inv[i].name;
-			
-			draw_text(xx, yy, text);
-		}
-	}
-}
-
 function inventory_initialise(){
 	var inv;
 	
@@ -44,6 +10,23 @@ function inventory_initialise(){
 	return(inv);
 }
 
+function pickup_menu_initialise(actor){
+	var items = manager_obj.game_grid[actor.x_pos][actor.y_pos].items;
+	if (array_length(items) <= 0){
+		return(false);
+	}
+	else{
+		pickup_menu		= [];
+		pickup_hover	= 0;
+		
+		for (var i = 0; i < array_length(items); i ++){
+			array_push(pickup_menu, items[i]);
+		}
+		
+		state = state_pickup;
+	}
+}
+
 function inventory_add_item(actor, item){
 	with (actor){
 		array_push(inventory.items, item);
@@ -51,9 +34,14 @@ function inventory_add_item(actor, item){
 	}
 }
 
-function inventory_drop_slot(actor, slot){
+function inventory_drop_slot(actor, slot, stack){
 	with (actor){
-		array_delete(inventory.items, slot, 1);
+		inventory.items[slot].stack -= stack;
+		if (inventory.items[slot].stack <= 0){
+			array_delete(inventory.items, slot, 1);
+		}
+		if (inventory.hover >= array_length(inventory.items)) inventory.hover = array_length(inventory.items) - 1;
+		
 		return(true);
 	}
 }

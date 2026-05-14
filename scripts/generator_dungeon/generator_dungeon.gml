@@ -550,7 +550,7 @@ function add_entry(grid){
 		x_pos = candidate_list[choice][0];
 		y_pos = candidate_list[choice][1];
 		
-		grid[x_pos][y_pos] = new tile_entry();
+		grid[x_pos][y_pos] = new tile_stairs_up();
 		
 		return([x_pos, y_pos]);
 	}
@@ -580,7 +580,7 @@ function add_exit(grid, entry_x, entry_y){
 		x_pos = candidate_list[choice][0];
 		y_pos = candidate_list[choice][1];
 		
-		grid[x_pos][y_pos] = new tile_exit();
+		grid[x_pos][y_pos] = new tile_stairs_down();
 		
 		return([x_pos, y_pos]);
 	}

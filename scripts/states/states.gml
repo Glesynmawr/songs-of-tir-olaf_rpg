@@ -2,14 +2,14 @@
 function state_ready_for_inputs(){
 	var player_moved = false;
 	
-	if (keyboard_check_pressed(controls.key_inv)){
+	if (keyboard_check_pressed(controls.key_inventory)){
 		state = state_inventory;
 		exit;
 	}
 	
 	// Direction inputs
-	var x_move = keyboard_check(controls.key_r) - keyboard_check(controls.key_l)
-	var y_move = keyboard_check(controls.key_d) - keyboard_check(controls.key_u)
+	var x_move = keyboard_check(controls.key_right) - keyboard_check(controls.key_left)
+	var y_move = keyboard_check(controls.key_down) - keyboard_check(controls.key_up)
 	
 	var move_dir = input_direction(x_move, y_move);
 	if (move_dir != noone){
@@ -18,7 +18,7 @@ function state_ready_for_inputs(){
 		with (manager_obj) direction_indicator = move_dir;
 		
 		// Movement
-		if (keyboard_check_pressed(controls.key_confirm)){
+		if (keyboard_check_pressed(controls.key_move_confirm)){
 			var xx = manager_obj.cell_x_neighbours[move_dir];
 			var yy = manager_obj.cell_y_neighbours[move_dir];
 			action_move(manager_obj.game_grid, xx, yy);
@@ -26,13 +26,23 @@ function state_ready_for_inputs(){
 		}
 		
 		// Interaction
-		else if (keyboard_check_pressed(controls.key_interact)){
-			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+		if (keyboard_check_pressed(controls.key_interact_confirm)){
+			{
+				player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+			}
 		}
 	}
 	else{
 		if (manager_obj.direction_indicator != noone){
 			manager_obj.direction_indicator = noone;
+		}
+		if (keyboard_check_pressed(controls.key_interact_confirm)){
+			if (array_length(manager_obj.game_grid[x_pos][y_pos].items) > 0){
+				pickup_menu_initialise(self);
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_move_confirm)){
+			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
 		}
 	}
 
@@ -51,18 +61,18 @@ function state_ready_for_inputs(){
 function state_inventory(){
 	var len = array_length(inventory.items);
 	
-	if (keyboard_check_pressed(controls.key_inv)){
+	if (keyboard_check_pressed(controls.key_inventory)){
 		// Exit INVENTORY state
 		state = state_ready_for_inputs;
 	}
-	else if (keyboard_check_pressed(controls.key_u)){
+	else if (keyboard_check_pressed(controls.key_up)){
 		// Move up inventory
 		inventory.hover --;
 		if (inventory.hover < 0){
 			inventory.hover += len;
 		}
 	}
-	else if (keyboard_check_pressed(controls.key_d)){
+	else if (keyboard_check_pressed(controls.key_down)){
 		// Move up inventory
 		inventory.hover ++;
 		if (inventory.hover >= len){
@@ -70,8 +80,38 @@ function state_inventory(){
 		}
 	}
 	else if (keyboard_check_pressed(controls.key_drop)){
+		// Spawn item on ground
+		spawn_existing_item(inventory.items[inventory.hover], 1, x_pos, y_pos);
+		
 		// DROP item
-		inventory_drop_slot(self, inventory.hover);
+		inventory_drop_slot(self, inventory.hover, 1);
+	}
+}
+
+function state_pickup(){
+	var len = array_length(pickup_menu);
+	if (keyboard_check_pressed(controls.key_cancel)){
+		state = state_ready_for_inputs;
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
+		pickup_hover --;
+		if (pickup_hover < 0) pickup_hover += len;
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		pickup_hover ++;
+		if (pickup_hover >= len) pickup_hover -= len;
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		// Add item to inventory and remove from menu
+		inventory_add_item(self, pickup_menu[pickup_hover]);
+		array_delete(pickup_menu, pickup_hover, 1);
+		
+		// Reset menu length
+		len = array_length(pickup_menu);
+		if (len <= 0){
+			state = state_ready_for_inputs;
+		}
+		if (pickup_hover >= len) pickup_hover --;
 	}
 }
 

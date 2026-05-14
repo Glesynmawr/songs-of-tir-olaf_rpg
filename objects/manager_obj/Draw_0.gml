@@ -30,13 +30,28 @@ for (var x_pos = 0; x_pos < grid_width; x_pos ++){
 			draw_text_colour(x_pos * cell_width, y_pos * cell_height, char, fg, fg, fg, fg, 1);
 		
 		}
-		//if (array_length(distance_map_player) > 0){
-		//	draw_text_transformed(x_pos * cell_width, y_pos * cell_height, string(distance_map_player[x_pos, y_pos]), 0.5, 0.5, 1);
-		//}
+		// Draw items
+		var len = array_length(game_grid[x_pos][y_pos].items);
+		if (len > 0){
+			bg = c_black;
+			fg = c_grey;
+			char = "t";
+			
+			// Draw character background
+			draw_rectangle_colour(
+				x_pos * cell_width,
+				y_pos * cell_height,
+				x_pos * cell_width + cell_width,
+				y_pos * cell_height + cell_height,
+				bg, bg, bg, bg,
+				false
+			)
+		
+			// draw tile character
+			draw_text_colour(x_pos * cell_width, y_pos * cell_height, char, fg, fg, fg, fg, 1);
+		}
 	}
 }
-
-// Draw items
 
 // Draw actors
 var len = array_length(actor_registry.actor_list);

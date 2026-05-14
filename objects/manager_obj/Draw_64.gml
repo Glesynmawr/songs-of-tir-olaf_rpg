@@ -2,7 +2,9 @@
 
 var ww = camera_get_view_width(view_camera[0]);
 var hh = camera_get_view_height(view_camera[0]);
-
+var xx = 0;
+var yy = 0;
+	
 draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
 
 var txt1 = $"Direction = {direction_indicator}";
@@ -17,11 +19,12 @@ draw_text(10, text_height * 4, txt2);
 var log_height = (LOG_MAX_ENTRIES + 1) * text_height
 draw_game_log(0, hh - log_height, ww, log_height);
 
+
 if (actor_registry.player.state == state_inventory){
-	var xx = 0;
-	var yy = 0;
-	
-	inventory_draw(actor_registry.player, xx, yy, ww, hh);
+	draw_inventory(actor_registry.player, xx, yy, ww, hh);
+}
+if (actor_registry.player.state == state_pickup){
+	draw_pickup(actor_registry.player, xx, yy, ww, hh);
 }
 
 draw_set_halign(fa_right);

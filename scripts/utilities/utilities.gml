@@ -27,9 +27,8 @@ function log_add_entry(text, colour){
 }
 
 function draw_game_log(x_pos, y_pos, width, height){
-
-	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, c_black,  1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_ltgrey, 1);
+	
+	ui_draw_box(x_pos, y_pos, width, height);
 	
 	var xx = x_pos + text_width;
 	var yy = y_pos + (text_height / 2);
@@ -197,6 +196,65 @@ function input_direction(x_move, y_move){
 		if (y_move == 1)  return(7);
 	}
 }
+
+
+// UI DRAWING
+function ui_draw_box(x_pos, y_pos, width, height){
+	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, global_bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, global_fg, 1);
+}
+
+function draw_inventory(actor, x_pos, y_pos, width, height){
+	// Background
+	ui_draw_box(x_pos, y_pos, width, height);
+	
+	// Title
+	draw_text(x_pos + text_width, y_pos + (text_height / 2), "Inventory");
+	
+	// Items
+	var len = array_length(actor.inventory.items);
+	if (len > 0){
+		for(var i = 0; i < len; i ++){
+			
+			// Position
+			var xx = x_pos + 20;
+			var yy = y_pos + 40 + (text_height * i);
+			
+			// Text
+			var text = "";
+			if (actor.inventory.hover == i){
+				text += "> ";
+			}
+			text += actor.inventory.items[i].name;
+			
+			draw_text(xx, yy, text);
+		}
+	}
+}
+
+function draw_pickup(actor, x_pos, y_pos, width, height){
+	// Background
+	ui_draw_box(x_pos, y_pos, width, height);
+	
+	// Title
+	draw_text(x_pos + text_width, y_pos + (text_height / 2), "Pick up");
+	
+	// Draw menu options
+	for (var i = 0; i < array_length(actor.pickup_menu); i ++){
+		var xx = x_pos + text_width;
+		var yy = y_pos + 40 + (i * text_height);
+		
+		// Text
+		var text = "";
+		if (actor.pickup_hover == i){
+			text += "> ";
+		}
+		text += actor.pickup_menu[i].name;
+		
+		draw_text(xx, yy, text);
+	}
+}
+
 
 
 

@@ -83,7 +83,7 @@ function tile_open_door()constructor{
 	tile_script		= door_set_close;
 }
 
-function tile_entry()constructor{
+function tile_stairs_up()constructor{
 	tile			= "entry";
 	char			= "<";
 	fg				= c_orange;
@@ -92,10 +92,10 @@ function tile_entry()constructor{
 	transparent		= true;
 	is_visible		= false;
 	explored		= false;
-	tile_script		= noone;
+	tile_script		= level_ascend;
 }
 
-function tile_exit()constructor{
+function tile_stairs_down()constructor{
 	tile			= "exit";
 	char			= ">";
 	fg				= c_white;
@@ -104,7 +104,7 @@ function tile_exit()constructor{
 	transparent		= true;
 	is_visible		= false;
 	explored		= false;
-	tile_script		= noone;
+	tile_script		= level_descend;
 }
 
 

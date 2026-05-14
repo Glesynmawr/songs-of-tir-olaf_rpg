@@ -18,5 +18,6 @@
     {"name":"utilities","order":10,"path":"scripts/utilities/utilities.yy",},
     {"name":"Sprite2","order":1,"path":"sprites/Sprite2/Sprite2.yy",},
     {"name":"ui_border_spr","order":2,"path":"sprites/ui_border_spr/ui_border_spr.yy",},
+    {"name":"wall_00_spr","order":3,"path":"sprites/wall_00_spr/wall_00_spr.yy",},
   ],
 }

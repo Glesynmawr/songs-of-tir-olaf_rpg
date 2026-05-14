@@ -29,7 +29,7 @@ controls = {
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
 cell_width  = 24;
-cell_height = 32;
+cell_height = 36;
 
 text_height = string_height("M");
 text_width  = string_width("M");

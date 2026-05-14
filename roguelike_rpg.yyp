@@ -41,6 +41,7 @@
     {"id":{"name":"direction_arrow_spr","path":"sprites/direction_arrow_spr/direction_arrow_spr.yy",},},
     {"id":{"name":"Sprite2","path":"sprites/Sprite2/Sprite2.yy",},},
     {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
+    {"id":{"name":"wall_00_spr","path":"sprites/wall_00_spr/wall_00_spr.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

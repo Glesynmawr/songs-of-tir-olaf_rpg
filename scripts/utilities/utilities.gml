@@ -198,6 +198,34 @@ function input_direction(x_move, y_move){
 }
 
 
+// MAP DRAWING
+function draw_game_grid(grid){
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	for (var i = 0; i < ww; i ++){
+		for (var j = 0; j < hh; j ++){
+			var spr = grid[i][j].sprite;
+			var ind = grid[i][j].index;
+			var fg   = c_white;
+			
+			var x_pos = i * cell_width;
+			var y_pos = j * cell_height;
+			
+			if (!grid[i][j].is_visible and !debugging_mode){
+				fg   = c_dkgrey;
+			}
+			
+			var tile_x = ind % 8;
+			var tile_y = ind div 8;
+			
+			draw_sprite_part(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos);
+			//draw_text(x_pos, y_pos, string(grid[i][j].index));
+		}
+	}
+}
+
+
 // UI DRAWING
 function ui_draw_box(x_pos, y_pos, width, height){
 	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, global_bg, 1);

@@ -13,7 +13,8 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 
 function tile_wall()constructor{
 	tile			= "wall";
-	char			= "#";
+	sprite			= wall_00_spr;
+	index			= 1;
 	fg				= c_ltgrey;
 	bg				= c_dkgrey;
 	walkable		= false;
@@ -25,7 +26,8 @@ function tile_wall()constructor{
 
 function tile_room()constructor{
 	tile			= "room";
-	char			= ".";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_grey;
 	bg				= c_black;
 	walkable		= true;
@@ -37,7 +39,8 @@ function tile_room()constructor{
 
 function tile_hall()constructor{
 	tile			= "hall";
-	char			= ".";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_grey;
 	bg				= c_black;
 	walkable		= true;
@@ -49,7 +52,8 @@ function tile_hall()constructor{
 
 function tile_closed_door()constructor{
 	tile			= "closed door";
-	char			= "+";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_aqua;
 	bg				= c_navy;
 	walkable		= true;
@@ -61,7 +65,8 @@ function tile_closed_door()constructor{
 
 function tile_secret_door()constructor{
 	tile			= "closed door";
-	char			= "#";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_ltgrey;
 	bg				= c_dkgrey;
 	walkable		= true;
@@ -73,7 +78,8 @@ function tile_secret_door()constructor{
 
 function tile_open_door()constructor{
 	tile			= "open door";
-	char			= "/";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_aqua;
 	bg				= c_navy;
 	walkable		= true;
@@ -85,7 +91,8 @@ function tile_open_door()constructor{
 
 function tile_stairs_up()constructor{
 	tile			= "entry";
-	char			= "<";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_orange;
 	bg				= c_red;
 	walkable		= true;
@@ -97,7 +104,8 @@ function tile_stairs_up()constructor{
 
 function tile_stairs_down()constructor{
 	tile			= "exit";
-	char			= ">";
+	sprite			= wall_00_spr;
+	index			= 0;
 	fg				= c_white;
 	bg				= c_aqua;
 	walkable		= true;

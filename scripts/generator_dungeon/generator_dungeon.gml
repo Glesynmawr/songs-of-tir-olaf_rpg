@@ -34,6 +34,9 @@ function generate_dungeon(){
 	// Add exit
 	add_exit(game_grid, entry_pos[0], entry_pos[1]);
 	
+	// Generate tilemap
+	generate_map(game_grid);
+	
 	// Initialise item grid
 	initialise_item_grid(game_grid, grid_width, grid_height);
 }
@@ -83,7 +86,7 @@ function generate_rooms(grid, number_of_rooms, min_size, max_size){
 				// Check room width and height
 				for(var room_x = x_pos; room_x < x_pos + width; room_x ++){
 					for(var room_y = y_pos; room_y < y_pos + height; room_y ++){
-						if (grid[room_x][room_y].char == "."){
+						if (grid[room_x][room_y].tile == "room"){
 							can_place_room = false;
 						}
 					}
@@ -425,16 +428,16 @@ function find_shortcut_candidates(grid, shortcut_length){
 		for (j = 1; j < height-1; j ++){
 			if (i mod 2 == 1 and j mod 2 == 1) continue;
 			
-			if (grid[i][j].char == "#"){
+			if (grid[i][j].tile == "wall"){
 			
-				var grid_r = grid[i+1][j].char;
-				var grid_u = grid[i][j+1].char;
-				var grid_l = grid[i-1][j].char;
-				var grid_d = grid[i][j-1].char;
+				var grid_r = grid[i+1][j].tile;
+				var grid_u = grid[i][j+1].tile;
+				var grid_l = grid[i-1][j].tile;
+				var grid_d = grid[i][j-1].tile;
 				
 				// Vertical shortcuts
-				if (grid_r == "#" and grid_l == "#"){
-					if (grid_d != "#" and grid_u != "#"){
+				if (grid_r == "wall" and grid_l == "wall"){
+					if (grid_d != "wall" and grid_u != "wall"){
 						distance_map = set_dijkstra_map(grid, i, j-1, 0);
 					
 						if (abs(distance_map[i][j-1] - distance_map[i][j+1]) >= shortcut_length){
@@ -443,8 +446,8 @@ function find_shortcut_candidates(grid, shortcut_length){
 					}
 				}
 				// Horizontal shortcuts
-				if (grid_r != "#" and grid_l != "#"){
-					if (grid_d == "#" and grid_u == "#"){
+				if (grid_r != "wall" and grid_l != "wall"){
+					if (grid_d == "wall" and grid_u == "wall"){
 						distance_map = set_dijkstra_map(grid, i-1, j, 0);
 					
 						if (abs(distance_map[i-1][j] - distance_map[i+1][j]) >= shortcut_length){
@@ -583,6 +586,121 @@ function add_exit(grid, entry_x, entry_y){
 		grid[x_pos][y_pos] = new tile_stairs_down();
 		
 		return([x_pos, y_pos]);
+	}
+}
+
+// AUTOTILING
+function autotile_16(grid, type, xpos, ypos){
+	
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	var count = 0;
+	
+	if (xpos + 1 >= ww)	or (grid[xpos+1][ypos].tile == type) count += 1;
+	if (ypos - 1 < 0)	or (grid[xpos][ypos-1].tile == type) count += 2;
+	if (xpos - 1 < 0)	or (grid[xpos-1][ypos].tile == type) count += 4;
+	if (ypos + 1 >= hh)	or (grid[xpos][ypos+1].tile == type) count += 8;
+	
+	return(count);
+}
+
+function autotile_47(grid, type, xpos, ypos){
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	var index = 0;
+	var orthcount = autotile_16(grid, type, xpos, ypos);
+	
+	var ur = false;
+	var ul = false;
+	var dl = false;
+	var dr = false;
+	
+	if (xpos + 1 >= ww) or (ypos - 1 < 0)	or (grid[xpos+1][ypos-1].tile == type) ur = true;
+	if (xpos - 1 < 0) or (ypos  - 1 < 0)	or (grid[xpos-1][ypos-1].tile == type) ul = true;
+	if (xpos - 1 < 0) or (ypos + 1 >= hh)	or (grid[xpos-1][ypos+1].tile == type) dl = true;
+	if (xpos + 1 >= ww) or (ypos + 1 >= hh)	or (grid[xpos+1][ypos+1].tile == type) dr = true;
+	
+	switch(orthcount){
+		case(3):
+			if (ur) index = 16 else index = orthcount;
+			break;
+	
+		case(6):
+			if (ul) index = 17 else index = orthcount;
+			break;
+			
+		case(7):
+			if (ur and ul) index = 20;
+			else if (ur) index = 18;
+			else if (ul) index = 19;
+			else index = orthcount;
+			break;
+		
+		case(9):
+			if (dr) index = 21 else index = orthcount;
+			break;
+			
+		case(11):
+			if (ur and dr) index = 24;
+			else if (ur) index = 22;
+			else if (dr) index = 23;
+			else index = orthcount;
+			break;
+			
+		case(12):
+			if (dl) index = 25 else index = orthcount;
+			break;
+			
+		case(13):
+			if (dl and dr) index = 28;
+			else if (dl) index = 26;
+			else if (dr) index = 27;
+			else index = orthcount;
+			break;
+			
+		case(14):
+			if (ul and dl) index = 31;
+			else if (ul) index = 29;
+			else if (dl) index = 30;
+			else index = orthcount;
+			break;
+			
+		case(15):
+			if (ur and ul and dl and dr) index = 46;
+			else if (ur and ul and dl) index = 45;
+			else if (ur and ul and dr) index = 44;
+			else if (ur and dl and dr) index = 43;
+			else if (ul and dl and dr) index = 42;
+			else if (ur and ul) index = 41;
+			else if (ul and dl) index = 40;
+			else if (dl and dr) index = 39;
+			else if (ur and dr) index = 38;
+			else if (ur and dl) index = 37;
+			else if (ul and dr) index = 36;
+			else if (ur) index = 32;
+			else if (ul) index = 33; 
+			else if (dl) index = 34;
+			else if (dr) index = 35;
+			else index = orthcount;
+			break;
+			
+		default: index = orthcount;
+	}
+	
+	return(index+1);
+}
+
+function generate_map(grid){
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	for (var i = 0; i < ww; i ++){
+		for (var j = 0; j < hh; j ++){
+			if (grid[i][j].tile == "wall"){
+				grid[i][j].index = autotile_47(grid, "wall", i, j);
+			}
+		}
 	}
 }
 

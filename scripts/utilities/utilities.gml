@@ -198,29 +198,58 @@ function input_direction(x_move, y_move){
 }
 
 
-// MAP DRAWING
+// GAME DRAWING
 function draw_game_grid(grid){
 	var ww = array_length(grid);
 	var hh = array_length(grid[0]);
 	
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
-			var spr = grid[i][j].sprite;
-			var ind = grid[i][j].index;
-			var fg   = c_white;
+			if (grid[i][j].explored){
+				var spr = grid[i][j].sprite;
+				var ind = grid[i][j].index;
+				var fg   = c_white;
 			
-			var x_pos = i * cell_width;
-			var y_pos = j * cell_height;
+				var x_pos = i * cell_width;
+				var y_pos = j * cell_height;
 			
-			if (!grid[i][j].is_visible and !debugging_mode){
-				fg   = c_dkgrey;
+				if (!grid[i][j].is_visible and !debugging_mode){
+					fg   = c_dkgrey;
+				}
+			
+				var tile_x = ind % 8;
+				var tile_y = ind div 8;
+			
+				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, fg, 1);
 			}
-			
-			var tile_x = ind % 8;
-			var tile_y = ind div 8;
-			
-			draw_sprite_part(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos);
-			//draw_text(x_pos, y_pos, string(grid[i][j].index));
+		}
+	}
+}
+
+function draw_actors(list){
+	var len = array_length(list);
+	if (len > 0){
+		for (var actor = 0; actor < len; actor ++){
+		
+			with (list[actor]){
+				if (self.is_visible or debugging_mode){
+				
+					// Position and colour
+					var x_pos	= self.x_pos * other.cell_width;
+					var y_pos	= self.y_pos * other.cell_height;
+					var fg		= self.fg;
+		
+					// Draw actor sprite
+					draw_sprite_ext(sprite[0], sprite[1], x_pos, y_pos, 1, 1, 0, fg, 1);
+				
+					// Direction indicator
+					if (self == other.actor_registry.player){
+						if (other.direction_indicator != noone){
+							draw_sprite(direction_arrow_spr, other.direction_indicator, x_pos, y_pos);
+						}
+					}
+				}
+			}
 		}
 	}
 }

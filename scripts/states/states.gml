@@ -104,6 +104,12 @@ function state_pickup(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		// Add item to inventory and remove from menu
 		inventory_add_item(self, pickup_menu[pickup_hover]);
+		
+		// Find item in ground and delete it
+		var ind = array_get_index(manager_obj.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
+		array_delete(manager_obj.game_grid[x_pos][y_pos].items, ind, 1);
+		
+		// Delete item from pickup menu
 		array_delete(pickup_menu, pickup_hover, 1);
 		
 		// Reset menu length

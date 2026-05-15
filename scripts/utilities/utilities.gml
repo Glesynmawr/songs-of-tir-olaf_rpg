@@ -197,8 +197,121 @@ function input_direction(x_move, y_move){
 	}
 }
 
+function keybinding_get_text(key_char){
+	switch(key_char){
+		
+		case vk_tab:		 return("[tab]"); break;
+		case vk_control:	 return("[ctrl]"); break;
+		case vk_printscreen: return("[PtSc]"); break;
+		case vk_pause:		 return("[pau]"); break;
+		case vk_insert:		 return("[ins]"); break;
+		case vk_shift:		 return("[shift]"); break;
+		case vk_alt:		 return("[alt]"); break;
+		case vk_home:		 return("[home]"); break;
+		case vk_end:		 return("[end]"); break;
+		case vk_pageup:		 return("[PgUp]"); break;
+		case vk_pagedown:	 return("[PgDn]"); break;
+		case vk_escape:		 return("[esc]"); break;
+		case vk_enter:		 return("[ent]"); break;
+		case vk_backspace:	 return("[BkSp]"); break;
+		case vk_up:			 return("[up]"); break;
+		case vk_down:		 return("[down]"); break;
+		case vk_left:		 return("[left]"); break;
+		case vk_right:		 return("[right]"); break;
+		case vk_space:		 return("[space]"); break;
+		case vk_delete:		 return("[del]"); break;
+		
+		case vk_numpad0:	return("[num0]"); break;
+		case vk_numpad1:	return("[num1]"); break;
+		case vk_numpad2:	return("[num2]"); break;
+		case vk_numpad3:	return("[num3]"); break;
+		case vk_numpad4:	return("[num4]"); break;
+		case vk_numpad5:	return("[num5]"); break;
+		case vk_numpad6:	return("[num6]"); break;
+		case vk_numpad7:	return("[num7]"); break;
+		case vk_numpad8:	return("[num8]"); break;
+		case vk_numpad9:	return("[num9]"); break;
+		
+		case ord("1"):		return("[1]"); break;
+		case ord("2"):		return("[2]"); break;
+		case ord("3"):		return("[3]"); break;
+		case ord("4"):		return("[4]"); break;
+		case ord("5"):		return("[5]"); break;
+		case ord("6"):		return("[6]"); break;
+		case ord("7"):		return("[7]"); break;
+		case ord("8"):		return("[8]"); break;
+		case ord("9"):		return("[9]"); break;
+		case ord("0"):		return("[0]"); break;
+		
+		case vk_f1:			return("[f1]"); break;
+		case vk_f2:			return("[f2]"); break;
+		case vk_f3:			return("[f3]"); break;
+		case vk_f4:			return("[f4]"); break;
+		case vk_f5:			return("[f5]"); break;
+		case vk_f6:			return("[f6]"); break;
+		case vk_f7:			return("[f7]"); break;
+		case vk_f8:			return("[f8]"); break;
+		case vk_f9:			return("[f9]"); break;
+		case vk_f10:		return("[f10]"); break;
+		case vk_f11:		return("[f11]"); break;
+		case vk_f12:		return("[f12]"); break;
+		
+		case vk_multiply:	return("[num*]"); break;
+		case vk_divide:		return("[num/]"); break;
+		case vk_add:		return("[num+]"); break;
+		case vk_subtract:	return("[num-]"); break;
+		case vk_decimal:	return("[num.]"); break;
+		
+		case 188:			return("[,]"); break;
+		case 190:			return("[.]"); break;
+		case 191:			return("[/]"); break;
+								  
+		case 186:			return("[;]"); break;
+		case 192:			return("[']"); break;
+		case 222:			return("[#]"); break;
+								  
+		case 219:			return("[[]"); break;
+		case 221:			return("[]]"); break;
+								
+		case 189:			return("[-]"); break;
+		case 187:			return("[=]"); break;
+								
+		case 223:			return("[`]"); break;
+		case 220:			return("[\]"); break;
+		
+		case ord("A"):		return("[a]"); break;
+		case ord("B"):		return("[b]"); break;
+		case ord("C"):		return("[c]"); break;
+		case ord("D"):		return("[d]"); break;
+		case ord("E"):		return("[e]"); break;
+		case ord("F"):		return("[f]"); break;
+		case ord("G"):		return("[g]"); break;
+		case ord("H"):		return("[h]"); break;
+		case ord("I"):		return("[i]"); break;
+		case ord("J"):		return("[j]"); break;
+		case ord("K"):		return("[k]"); break;
+		case ord("L"):		return("[l]"); break;
+		case ord("M"):		return("[m]"); break;
+		case ord("N"):		return("[n]"); break;
+		case ord("O"):		return("[o]"); break;
+		case ord("P"):		return("[p]"); break;
+		case ord("Q"):		return("[q]"); break;
+		case ord("R"):		return("[r]"); break;
+		case ord("S"):		return("[s]"); break;
+		case ord("T"):		return("[t]"); break;
+		case ord("U"):		return("[u]"); break;
+		case ord("V"):		return("[v]"); break;
+		case ord("W"):		return("[w]"); break;
+		case ord("X"):		return("[x]"); break;
+		case ord("Y"):		return("[y]"); break;
+		case ord("Z"):		return("[z]"); break;
+		
+		default:			return("[undefined]");
+	}
+}
 
-// GAME DRAWING
+
+// GAME DRAWING -----------------------------------------------------------------------------------
 function draw_game_grid(grid){
 	var ww = array_length(grid);
 	var hh = array_length(grid[0]);
@@ -255,18 +368,61 @@ function draw_actors(list){
 }
 
 
-// UI DRAWING
+// UI DRAWING -------------------------------------------------------------------------------------
+
+// Generic UI elements ------------------------------------------------------------------
 function ui_draw_box(x_pos, y_pos, width, height){
-	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, global_bg, 1);
+	draw_rectangle_colour(x_pos, y_pos, x_pos + width, y_pos + height, c_black, c_black, c_black, c_black, false);
 	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, global_fg, 1);
 }
+	
+function ui_draw_box_title(x_pos, y_pos, text){
+	
+	var xx = x_pos + text_width; 
+	var yy = y_pos;
+	var text_w = string_width(text) + (text_width * 2);
+	
+	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, c_black, c_black, c_black, c_black, false);
+	draw_text(xx + text_width, yy, text);
+}
 
+function ui_draw_box_controls(x_pos, y_pos, control_array){
+	
+	var xx = x_pos + text_width; 
+	var yy = y_pos;
+	
+	var text = "Press ";
+	for (var i = 0; i < array_length(control_array); i ++){
+		for (var j = 0; j < array_length(control_array[i][0]); j ++){
+			var key = keybinding_get_text(control_array[i][0][j])
+			
+			text += key;
+			if (j < array_length(control_array[i][0]) - 1){
+				text += " or "
+			}
+			else {
+				text += " to " + control_array[i][1];
+			}
+		}
+		if (i < array_length(control_array) - 1){
+			text += " / ";
+		}
+	}
+	
+	var text_w = string_width(text) + (text_width * 2);
+	
+	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, c_black, c_black, c_black, c_black, false);
+	draw_text(xx + text_width, yy, text);
+}
+
+// Specific UI elements -----------------------------------------------------------------
 function draw_inventory(actor, x_pos, y_pos, width, height){
+
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height);
 	
 	// Title
-	draw_text(x_pos + text_width, y_pos + (text_height / 2), "Inventory");
+	ui_draw_box_title(x_pos + text_width, y_pos, "Inventory");
 	
 	// Items
 	var len = array_length(actor.inventory.items);
@@ -274,8 +430,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		for(var i = 0; i < len; i ++){
 			
 			// Position
-			var xx = x_pos + 20;
-			var yy = y_pos + 40 + (text_height * i);
+			var xx = x_pos + (text_width * 2);
+			var yy = y_pos + (text_height * 2) + (text_height * i);
 			
 			// Text
 			var text = "";
@@ -287,6 +443,19 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			draw_text(xx, yy, text);
 		}
 	}
+	
+	// Draw box controls
+	if (show_controls){
+		
+		ui_draw_box_controls(
+			x_pos + text_width, 
+			y_pos + height - text_height,
+			[
+				[[controls.key_cancel, controls.key_inventory], "exit"],
+				[[controls.key_drop], "drop item"]
+			]
+		);
+	}
 }
 
 function draw_pickup(actor, x_pos, y_pos, width, height){
@@ -294,12 +463,12 @@ function draw_pickup(actor, x_pos, y_pos, width, height){
 	ui_draw_box(x_pos, y_pos, width, height);
 	
 	// Title
-	draw_text(x_pos + text_width, y_pos + (text_height / 2), "Pick up");
+	ui_draw_box_title(x_pos + text_width, y_pos, "Pick up");
 	
 	// Draw menu options
 	for (var i = 0; i < array_length(actor.pickup_menu); i ++){
-		var xx = x_pos + text_width;
-		var yy = y_pos + 40 + (i * text_height);
+		var xx = x_pos + (text_width * 2);
+		var yy = y_pos + (text_height * 2) + (i * text_height);
 		
 		// Text
 		var text = "";
@@ -309,6 +478,19 @@ function draw_pickup(actor, x_pos, y_pos, width, height){
 		text += actor.pickup_menu[i].name;
 		
 		draw_text(xx, yy, text);
+	}
+	
+	// Draw box controls
+	if (show_controls){
+		
+		ui_draw_box_controls(
+			x_pos + text_width, 
+			y_pos + height - text_height,
+			[
+				[[controls.key_cancel], "exit"],
+				[[controls.key_interact_confirm], "pick up item"]
+			]
+		);
 	}
 }
 

@@ -13,7 +13,8 @@ global_bg = c_black;
 global_fg = c_grey;
 
 // Define controls
-globalvar controls;
+globalvar controls, show_controls;
+show_controls = true;
 controls = {
 	key_right:				vk_right,
 	key_up:					vk_up,

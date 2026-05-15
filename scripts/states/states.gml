@@ -61,7 +61,7 @@ function state_ready_for_inputs(){
 function state_inventory(){
 	var len = array_length(inventory.items);
 	
-	if (keyboard_check_pressed(controls.key_inventory)){
+	if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
 		// Exit INVENTORY state
 		state = state_ready_for_inputs;
 	}

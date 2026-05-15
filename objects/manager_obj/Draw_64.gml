@@ -10,7 +10,7 @@ draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
 var txt1 = $"Direction = {direction_indicator}";
 draw_text(text_width, text_height * 2, txt1);
 
-var txt2 = $"Cell height = {cell_height}";
+var txt2 = $"Text size = x:{text_width} - y:{text_height}";
 draw_text(text_width, text_height * 3, txt2);
 
 var txt2 = $"Player inventory = {actor_registry.player.inventory.items}";

@@ -30,8 +30,8 @@ function draw_game_log(x_pos, y_pos, width, height){
 	
 	ui_draw_box(x_pos, y_pos, width, height);
 	
-	var xx = x_pos + text_width;
-	var yy = y_pos + (text_height / 2);
+	var xx = x_pos + (text_width * 2);
+	var yy = y_pos + text_height;
 	
 	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
 	for (var line = 0; line < draw_to; line ++){
@@ -52,8 +52,8 @@ function create_distance_map(target_x, target_y){
 	flag = 0;
 	
 	// Initialise Grid
-	for (i = 0; i < manager_obj.grid_width; i ++){
-		for (j = 0; j < manager_obj.grid_height; j ++){
+	for (i = 0; i < manager.grid_width; i ++){
+		for (j = 0; j < manager.grid_height; j ++){
 			dijkstra_map[i][j] = 1000000;
 		}
 	}
@@ -76,11 +76,11 @@ function create_distance_map(target_x, target_y){
 			for (j = 0; j < 8; j ++){
 				
 				// Get all 8 cell neighbour positions
-				xx = cell_x + manager_obj.cell_x_neighbours[j];
-				yy = cell_y + manager_obj.cell_y_neighbours[j];
+				xx = cell_x + manager.cell_x_neighbours[j];
+				yy = cell_y + manager.cell_y_neighbours[j];
 				
 				// If cell is walkable
-				if (manager_obj.game_grid[xx][yy].walkable){
+				if (manager.game_grid[xx][yy].walkable){
 					if (dijkstra_map[xx][yy] == 1000000){
 						dijkstra_map[xx][yy] = flag;
 						array_push(new_list, [xx, yy]);
@@ -116,7 +116,7 @@ function turn_order_initialise(){
 		
 				// GET ACTOR DISTANCE FROM PLAYER
 				dist = 0;
-				if (self != manager_obj.actor_registry.player){
+				if (self != manager.actor_registry.player){
 					var dist = distance_map_player[x_pos][y_pos];
 				}
 		
@@ -200,26 +200,26 @@ function input_direction(x_move, y_move){
 function keybinding_get_text(key_char){
 	switch(key_char){
 		
-		case vk_tab:		 return("[tab]"); break;
-		case vk_control:	 return("[ctrl]"); break;
-		case vk_printscreen: return("[PtSc]"); break;
-		case vk_pause:		 return("[pau]"); break;
-		case vk_insert:		 return("[ins]"); break;
+		case vk_tab:		 return("[tab]");	break;
+		case vk_control:	 return("[ctrl]");	break;
+		case vk_printscreen: return("[PtSc]");	break;
+		case vk_pause:		 return("[pau]");	break;
+		case vk_insert:		 return("[ins]");	break;
 		case vk_shift:		 return("[shift]"); break;
-		case vk_alt:		 return("[alt]"); break;
-		case vk_home:		 return("[home]"); break;
-		case vk_end:		 return("[end]"); break;
-		case vk_pageup:		 return("[PgUp]"); break;
-		case vk_pagedown:	 return("[PgDn]"); break;
-		case vk_escape:		 return("[esc]"); break;
-		case vk_enter:		 return("[ent]"); break;
-		case vk_backspace:	 return("[BkSp]"); break;
-		case vk_up:			 return("[up]"); break;
-		case vk_down:		 return("[down]"); break;
-		case vk_left:		 return("[left]"); break;
+		case vk_alt:		 return("[alt]");	break;
+		case vk_home:		 return("[home]");	break;
+		case vk_end:		 return("[end]");	break;
+		case vk_pageup:		 return("[PgUp]");	break;
+		case vk_pagedown:	 return("[PgDn]");	break;
+		case vk_escape:		 return("[esc]");	break;
+		case vk_enter:		 return("[enter]"); break;
+		case vk_backspace:	 return("[BkSp]");	break;
+		case vk_up:			 return("[up]");	break;
+		case vk_down:		 return("[down]");	break;
+		case vk_left:		 return("[left]");	break;
 		case vk_right:		 return("[right]"); break;
 		case vk_space:		 return("[space]"); break;
-		case vk_delete:		 return("[del]"); break;
+		case vk_delete:		 return("[del]");	break;
 		
 		case vk_numpad0:	return("[num0]"); break;
 		case vk_numpad1:	return("[num1]"); break;
@@ -243,15 +243,15 @@ function keybinding_get_text(key_char){
 		case ord("9"):		return("[9]"); break;
 		case ord("0"):		return("[0]"); break;
 		
-		case vk_f1:			return("[f1]"); break;
-		case vk_f2:			return("[f2]"); break;
-		case vk_f3:			return("[f3]"); break;
-		case vk_f4:			return("[f4]"); break;
-		case vk_f5:			return("[f5]"); break;
-		case vk_f6:			return("[f6]"); break;
-		case vk_f7:			return("[f7]"); break;
-		case vk_f8:			return("[f8]"); break;
-		case vk_f9:			return("[f9]"); break;
+		case vk_f1:			return("[f1]");  break;
+		case vk_f2:			return("[f2]");  break;
+		case vk_f3:			return("[f3]");  break;
+		case vk_f4:			return("[f4]");  break;
+		case vk_f5:			return("[f5]");  break;
+		case vk_f6:			return("[f6]");  break;
+		case vk_f7:			return("[f7]");  break;
+		case vk_f8:			return("[f8]");  break;
+		case vk_f9:			return("[f9]");	 break;
 		case vk_f10:		return("[f10]"); break;
 		case vk_f11:		return("[f11]"); break;
 		case vk_f12:		return("[f12]"); break;
@@ -354,15 +354,21 @@ function draw_actors(list){
 		
 					// Draw actor sprite
 					draw_sprite_ext(sprite[0], sprite[1], x_pos, y_pos, 1, 1, 0, fg, 1);
-				
-					// Direction indicator
-					if (self == other.actor_registry.player){
-						if (other.direction_indicator != noone){
-							draw_sprite(direction_arrow_spr, other.direction_indicator, x_pos, y_pos);
-						}
-					}
 				}
 			}
+		}
+	}
+}
+	
+function draw_direction_indicator(){
+	if (direction_indicator != noone){
+		var dir = direction_indicator * 45;
+	
+		with (actor_registry.player){
+			var xx = (x_pos * other.cell_width) + (other.cell_width / 2);
+			var yy = (y_pos * other.cell_height) + (other.cell_height / 2);
+		
+			draw_sprite_ext(direction_arrow_spr, 0, xx, yy, 1, 1, dir, c_white, 1);
 		}
 	}
 }
@@ -372,8 +378,8 @@ function draw_actors(list){
 
 // Generic UI elements ------------------------------------------------------------------
 function ui_draw_box(x_pos, y_pos, width, height){
-	draw_rectangle_colour(x_pos, y_pos, x_pos + width, y_pos + height, c_black, c_black, c_black, c_black, false);
-	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, global_fg, 1);
+	draw_rectangle_colour(x_pos, y_pos, x_pos + width, y_pos + height, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_white, 1);
 }
 	
 function ui_draw_box_title(x_pos, y_pos, text){
@@ -382,42 +388,30 @@ function ui_draw_box_title(x_pos, y_pos, text){
 	var yy = y_pos;
 	var text_w = string_width(text) + (text_width * 2);
 	
-	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, c_black, c_black, c_black, c_black, false);
-	draw_text(xx + text_width, yy, text);
+	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 }
 
-function ui_draw_box_controls(x_pos, y_pos, control_array){
+function ui_draw_box_controls(x_pos, y_pos, text){
 	
-	var xx = x_pos + text_width; 
-	var yy = y_pos;
+	var ww = string_width(text) + (text_width * 2);
+	var hh = text_height;
 	
-	var text = "Press ";
-	for (var i = 0; i < array_length(control_array); i ++){
-		for (var j = 0; j < array_length(control_array[i][0]); j ++){
-			var key = keybinding_get_text(control_array[i][0][j])
-			
-			text += key;
-			if (j < array_length(control_array[i][0]) - 1){
-				text += " or "
-			}
-			else {
-				text += " to " + control_array[i][1];
-			}
-		}
-		if (i < array_length(control_array) - 1){
-			text += " / ";
-		}
-	}
-	
-	var text_w = string_width(text) + (text_width * 2);
-	
-	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, c_black, c_black, c_black, c_black, false);
-	draw_text(xx + text_width, yy, text);
+	draw_rectangle_colour(x_pos, y_pos, x_pos + ww, y_pos + hh, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_text_colour(x_pos + text_width, y_pos, text, text_colour, text_colour, text_colour, text_colour, 1);
 }
 
 // Specific UI elements -----------------------------------------------------------------
 function draw_inventory(actor, x_pos, y_pos, width, height){
-
+	
+	var xx, yy;
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_inventory);
+	var key_3 = keybinding_get_text(controls.key_drop);
+	var control_list = $"{key_1} or {key_2} to exit / {key_3} to drop item";
+	
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height);
 	
@@ -430,8 +424,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		for(var i = 0; i < len; i ++){
 			
 			// Position
-			var xx = x_pos + (text_width * 2);
-			var yy = y_pos + (text_height * 2) + (text_height * i);
+			xx = x_pos + (text_width * 2);
+			yy = y_pos + (text_height * 2) + (text_height * i);
 			
 			// Text
 			var text = "";
@@ -440,35 +434,55 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			}
 			text += actor.inventory.items[i].name;
 			
-			draw_text(xx, yy, text);
+			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 		}
 	}
 	
 	// Draw box controls
 	if (show_controls){
-		
-		ui_draw_box_controls(
-			x_pos + text_width, 
-			y_pos + height - text_height,
-			[
-				[[controls.key_cancel, controls.key_inventory], "exit"],
-				[[controls.key_drop], "drop item"]
-			]
-		);
+		xx = x_pos + text_width;
+		yy = y_pos + height - text_height;
+		ui_draw_box_controls(xx, yy, control_list);
 	}
 }
 
-function draw_pickup(actor, x_pos, y_pos, width, height){
-	// Background
+function draw_pickup(actor){
+	var xx, yy, ww;
+	
+	// Get array length
+	var len = array_length(actor.pickup_menu);
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} to exit / {key_2} to pick up item";
+	
+	// Get menu width
+	var width = 0;
+	for (var i = 0; i < len; i ++){
+		ww = string_width(actor.pickup_menu[i].name);
+		if (ww > width){
+			width = ww;
+		}
+	}
+	width = max(string_width(control_list), width);
+	width += (text_width * 4);
+	var x_pos = round(camera_get_view_width(view_camera[0]) / 2) - round(width / 2);
+	
+	// Get menu height
+	var height = (len * text_height) + (text_height * 4);
+	var y_pos = round(camera_get_view_height(view_camera[0]) / 2) - round(height / 2);
+	
+	// Draw box and background
 	ui_draw_box(x_pos, y_pos, width, height);
 	
 	// Title
 	ui_draw_box_title(x_pos + text_width, y_pos, "Pick up");
 	
 	// Draw menu options
-	for (var i = 0; i < array_length(actor.pickup_menu); i ++){
-		var xx = x_pos + (text_width * 2);
-		var yy = y_pos + (text_height * 2) + (i * text_height);
+	for (var i = 0; i < len; i ++){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + (text_height * 2) + (i * text_height);
 		
 		// Text
 		var text = "";
@@ -477,20 +491,14 @@ function draw_pickup(actor, x_pos, y_pos, width, height){
 		}
 		text += actor.pickup_menu[i].name;
 		
-		draw_text(xx, yy, text);
+		draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 	}
 	
 	// Draw box controls
 	if (show_controls){
-		
-		ui_draw_box_controls(
-			x_pos + text_width, 
-			y_pos + height - text_height,
-			[
-				[[controls.key_cancel], "exit"],
-				[[controls.key_interact_confirm], "pick up item"]
-			]
-		);
+		xx = x_pos + text_width;
+		yy = y_pos + height - text_height;
+		ui_draw_box_controls(xx, yy, control_list);
 	}
 }
 

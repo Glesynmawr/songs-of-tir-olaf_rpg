@@ -15,13 +15,13 @@ function state_ready_for_inputs(){
 	if (move_dir != noone){
 		
 		// Set manager direction indicator
-		with (manager_obj) direction_indicator = move_dir;
+		with (manager) direction_indicator = move_dir;
 		
 		// Movement
 		if (keyboard_check_pressed(controls.key_move_confirm)){
-			var xx = manager_obj.cell_x_neighbours[move_dir];
-			var yy = manager_obj.cell_y_neighbours[move_dir];
-			action_move(manager_obj.game_grid, xx, yy);
+			var xx = manager.cell_x_neighbours[move_dir];
+			var yy = manager.cell_y_neighbours[move_dir];
+			action_move(manager.game_grid, xx, yy);
 			player_moved = true;
 		}
 		
@@ -33,11 +33,11 @@ function state_ready_for_inputs(){
 		}
 	}
 	else{
-		if (manager_obj.direction_indicator != noone){
-			manager_obj.direction_indicator = noone;
+		if (manager.direction_indicator != noone){
+			manager.direction_indicator = noone;
 		}
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (array_length(manager_obj.game_grid[x_pos][y_pos].items) > 0){
+			if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
 				pickup_menu_initialise(self);
 			}
 		}
@@ -106,8 +106,8 @@ function state_pickup(){
 		inventory_add_item(self, pickup_menu[pickup_hover]);
 		
 		// Find item in ground and delete it
-		var ind = array_get_index(manager_obj.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
-		array_delete(manager_obj.game_grid[x_pos][y_pos].items, ind, 1);
+		var ind = array_get_index(manager.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
+		array_delete(manager.game_grid[x_pos][y_pos].items, ind, 1);
 		
 		// Delete item from pickup menu
 		array_delete(pickup_menu, pickup_hover, 1);
@@ -123,8 +123,8 @@ function state_pickup(){
 
 function state_idle(){
 	// Check if player is in range and visible
-	if (distance_map_player[x_pos][y_pos] <= range) and (manager_obj.game_grid[x_pos][y_pos].is_visible == true){
-		log_add_entry($"{name} has spotted {manager_obj.actor_registry.player.name}!", c_ltgrey);
+	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_grid[x_pos][y_pos].is_visible == true){
+		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", c_ltgrey);
 		state = state_chase;
 	}
 	
@@ -136,8 +136,8 @@ function state_chase(){
 	// Find lowest distance value of neighbours
 	var lowest_dist = 10000;
 	for (var i = 0; i < 8; i ++){
-		var target_x = x_pos + manager_obj.cell_x_neighbours[i];
-		var target_y = y_pos + manager_obj.cell_y_neighbours[i];
+		var target_x = x_pos + manager.cell_x_neighbours[i];
+		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
 		if (distance_map_player[target_x][target_y] < lowest_dist){
 			lowest_dist = distance_map_player[target_x][target_y];
@@ -147,11 +147,11 @@ function state_chase(){
 	// Make list of unoccupied neighbours with lowest value
 	var candidate_list = [];
 	for (i = 0; i < 8; i ++){
-		var target_x = x_pos + manager_obj.cell_x_neighbours[i];
-		var target_y = y_pos + manager_obj.cell_y_neighbours[i];
+		var target_x = x_pos + manager.cell_x_neighbours[i];
+		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
 		if (distance_map_player[target_x][target_y] <= lowest_dist){
-			array_push(candidate_list, [manager_obj.cell_x_neighbours[i], manager_obj.cell_y_neighbours[i]]);
+			array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
 		}
 	}
 	
@@ -161,7 +161,7 @@ function state_chase(){
 		var choice = irandom(len - 1);
 		
 		// execute move
-		action_move(manager_obj.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
+		action_move(manager.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
 	}
 	
 	has_acted = true;

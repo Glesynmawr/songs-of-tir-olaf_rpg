@@ -11,7 +11,7 @@ function inventory_initialise(){
 }
 
 function pickup_menu_initialise(actor){
-	var items = manager_obj.game_grid[actor.x_pos][actor.y_pos].items;
+	var items = manager.game_grid[actor.x_pos][actor.y_pos].items;
 	if (array_length(items) <= 0){
 		return(false);
 	}

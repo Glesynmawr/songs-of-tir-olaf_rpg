@@ -98,17 +98,20 @@ function action_attack_melee(attacker, defender){
 
 function action_remove_actor(actor){
 	
-	if (actor == manager_obj.actor_registry.player){
-		manager_obj.game_pause = true;
+	if (actor == manager.actor_registry.player){
+		with (manager){
+			direction_indicator = noone;
+			game_pause = true;
+		}
 	}
 	
 	// Remove from action list
-	var index = array_get_index(manager_obj.action_list, actor);
-	array_delete(manager_obj.action_list, index, 1);
+	var index = array_get_index(manager.action_list, actor);
+	array_delete(manager.action_list, index, 1);
 	
 	// Remove from actor list
-	index = array_get_index(manager_obj.actor_registry.actor_list, actor);
-	array_delete(manager_obj.actor_registry.actor_list, index, 1);
+	index = array_get_index(manager.actor_registry.actor_list, actor);
+	array_delete(manager.actor_registry.actor_list, index, 1);
 }
 
 

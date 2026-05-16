@@ -18,11 +18,23 @@ function state_ready_for_inputs(){
 		with (manager) direction_indicator = move_dir;
 		
 		// Movement
-		if (keyboard_check_pressed(controls.key_move_confirm)){
-			var xx = manager.cell_x_neighbours[move_dir];
-			var yy = manager.cell_y_neighbours[move_dir];
-			action_move(manager.game_grid, xx, yy);
-			player_moved = true;
+		if (keyboard_check(controls.key_move_confirm)){
+				if (manager.move_timer <= 0){
+				var xx = manager.cell_x_neighbours[move_dir];
+				var yy = manager.cell_y_neighbours[move_dir];
+				player_moved = action_move(manager.game_grid, xx, yy);
+				manager.move_timer = manager.move_timer_max;
+			}
+			else {
+				manager.move_timer --;
+			}
+		}
+		else{
+			with (manager){
+				if (move_timer != 0){
+					move_timer = 0;
+				}
+			}
 		}
 		
 		// Interaction

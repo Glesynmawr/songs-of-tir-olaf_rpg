@@ -27,6 +27,9 @@ controls = {
 	key_cancel:				vk_escape
 }
 
+move_timer_max = 10;
+move_timer = 0;
+
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
 cell_width  = 24;

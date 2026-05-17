@@ -3,6 +3,8 @@ globalvar debugging_mode;
 debugging_mode  = false;
 game_pause		= false;
 
+resolution_scale();
+
 // Cell positioning data
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
@@ -32,10 +34,10 @@ move_timer = 0;
 
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
-cell_width  = 24;
-cell_height = 36;
+cell_width  = 16;
+cell_height = 16;
 
-text_height = string_height("M");
+text_height = string_height("M") + 2;
 text_width  = string_width("M");
 
 // Set distance maps

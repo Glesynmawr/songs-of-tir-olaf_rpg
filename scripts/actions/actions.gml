@@ -52,7 +52,7 @@ function action_attack_melee(attacker, defender){
 	
 	// COMBAT CALCULATION -------------------------------------------------------------------------
 	
-	first_log = $"{att_name} attacks {def_name} ";
+	first_log = $"{att_name} attacks {def_name}";
 	
 	// 1) Initialise combat variables
 	var base_hit_chance = 0.8;									// 80% base to-hit chance
@@ -62,7 +62,7 @@ function action_attack_melee(attacker, defender){
 	
 	// 2) Determine if attack hits
 	if (random(1) > hit_chance){
-		first_log += "and misses!";
+		first_log += " and misses!";
 	}
 	else{
 		

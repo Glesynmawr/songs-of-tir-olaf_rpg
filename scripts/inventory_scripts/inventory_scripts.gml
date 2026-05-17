@@ -36,6 +36,7 @@ function inventory_add_item(actor, item){
 
 function inventory_drop_slot(actor, slot, stack){
 	with (actor){
+		
 		inventory.items[slot].stack -= stack;
 		if (inventory.items[slot].stack <= 0){
 			array_delete(inventory.items, slot, 1);

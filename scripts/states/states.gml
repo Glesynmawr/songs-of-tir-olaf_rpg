@@ -117,7 +117,7 @@ function state_pickup(){
 		// Add item to inventory and remove from menu
 		inventory_add_item(self, pickup_menu[pickup_hover]);
 		
-		// Find item in ground and delete it
+		// Find item on ground and delete it
 		var ind = array_get_index(manager.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
 		array_delete(manager.game_grid[x_pos][y_pos].items, ind, 1);
 		

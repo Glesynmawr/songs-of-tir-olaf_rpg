@@ -1,8 +1,43 @@
 
 // CAMERA
+function resolution_scale(){
+	
+	// INITIALISE VARIABLES
+	var width, height, scale_x, scale_y, scale;
+	
+	// GET WINDOW SIZE
+	width = window_get_width();
+	height = window_get_height();
+	
+	// SET SCALE FACTOR
+	scale_x = max(1, floor(width / SCREEN_WIDTH));
+	scale_y = max(1, floor(height / SCREEN_HEIGHT));
+	scale = min(scale_x, scale_y);
+	scale = floor(scale);
+	
+	// GET MAIN VIEW CAMERA
+	var cam = view_get_camera(0);
+	
+	
+	// SET VIEWPORT SIZE
+	view_set_wport(0, width);
+	view_set_hport(0, height);
+
+
+	// SET CAMERA AND APPLICATION SURFACE SIZE
+	camera_set_view_size(cam, view_wport[0]/scale, view_hport[0]/scale);
+	surface_resize(application_surface, width, height);
+	display_set_gui_size(width / scale, height / scale)
+	
+	
+	// SET SCREEN SIZE VARIABLES
+	screen_width  = width  / scale;
+	screen_height = height / scale;
+}
+
 function initialise_camera(following){
-	camera_pos[0] = floor((following.x_pos * cell_width)  - (room_width  / 2) - (cell_width  / 2));
-	camera_pos[1] = floor((following.y_pos * cell_height) - (room_height / 2) - (cell_height / 2));
+	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) - (cell_width  / 2));
+	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
 }
 
 function move_camera(target_x, target_y, camera_spd){
@@ -334,6 +369,11 @@ function draw_game_grid(grid){
 				var tile_y = ind div 8;
 			
 				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, fg, 1);
+				
+				if (array_length(grid[i][j].items) > 0){
+					draw_sprite(item_spr, 0, x_pos, y_pos);
+					draw_text(x_pos - 64, y_pos - 15, string(grid[i][j].items));
+				}
 			}
 		}
 	}
@@ -362,13 +402,12 @@ function draw_actors(list){
 	
 function draw_direction_indicator(){
 	if (direction_indicator != noone){
-		var dir = direction_indicator * 45;
-	
+		
 		with (actor_registry.player){
 			var xx = (x_pos * other.cell_width) + (other.cell_width / 2);
 			var yy = (y_pos * other.cell_height) + (other.cell_height / 2);
 		
-			draw_sprite_ext(direction_arrow_spr, 0, xx, yy, 1, 1, dir, c_white, 1);
+			draw_sprite_ext(direction_arrow_spr, manager.direction_indicator, xx, yy, 1, 1, 0, c_white, 1);
 		}
 	}
 }
@@ -378,7 +417,7 @@ function draw_direction_indicator(){
 
 // Generic UI elements ------------------------------------------------------------------
 function ui_draw_box(x_pos, y_pos, width, height){
-	draw_rectangle_colour(x_pos, y_pos, x_pos + width, y_pos + height, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_rectangle_colour(x_pos - 2, y_pos - 2, x_pos + width + 4, y_pos + height + 4, bg_colour, bg_colour, bg_colour, bg_colour, false);
 	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_white, 1);
 }
 	
@@ -440,7 +479,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	// Draw box controls
 	if (show_controls){
-		xx = x_pos + text_width;
+		xx = x_pos + (text_width * 2);
 		yy = y_pos + height - text_height;
 		ui_draw_box_controls(xx, yy, control_list);
 	}
@@ -466,7 +505,7 @@ function draw_pickup(actor){
 		}
 	}
 	width = max(string_width(control_list), width);
-	width += (text_width * 4);
+	width += (text_width * 6);
 	var x_pos = round(camera_get_view_width(view_camera[0]) / 2) - round(width / 2);
 	
 	// Get menu height
@@ -496,7 +535,7 @@ function draw_pickup(actor){
 	
 	// Draw box controls
 	if (show_controls){
-		xx = x_pos + text_width;
+		xx = x_pos + (text_width * 2);
 		yy = y_pos + height - text_height;
 		ui_draw_box_controls(xx, yy, control_list);
 	}

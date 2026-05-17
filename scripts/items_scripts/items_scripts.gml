@@ -12,10 +12,12 @@ function spawn_new_item(item, stack, location, x_pos = 0, y_pos = 0, actor = noo
 }
 
 function spawn_existing_item(item, stack, x_pos, y_pos){
+	
+	var new_item = variable_clone(item);
+	new_item.stack = stack;
+	
 	with (manager.game_grid[x_pos][y_pos]){
-		var len = array_length(manager.game_grid[x_pos][y_pos].items);
-		array_push(items, item);
-		items[len].stack = stack;
+		array_push(items, new_item);
 	}
 }
 

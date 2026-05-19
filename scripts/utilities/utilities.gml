@@ -502,10 +502,10 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			if (type == i and slot == j and actor.inventory.selected == 0){
 				text += "> ";
 			}
-			if (actor.inventory.equipment[type][slot] == noone){
+			if (actor.inventory.equipment[i][j] == noone){
 				text += $" - No {equip_data[i][1]} equipped - "
 			}
-			else text += string(actor.inventory.equipment[i][j]);
+			else text += actor.inventory.equipment[i][j].name;
 		
 			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 			
@@ -513,6 +513,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		}
 		yy += text_height;
 	}
+	
+	// Interaction context menu
 	var menu = actor.inventory.context_menu;
 	if (menu != noone){
 		draw_context_menu(actor, menu[1], menu[2], menu[3], menu[4]);

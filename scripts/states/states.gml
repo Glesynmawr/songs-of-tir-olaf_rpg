@@ -99,7 +99,7 @@ function state_inventory(){
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (inventory.context_menu == noone){
+			if (len > 0 and inventory.context_menu == noone){
 				context_menu_initialise();
 			}
 		}
@@ -139,7 +139,7 @@ function state_inventory(){
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (is_array(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]])){
+			if (inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]] != noone){
 				if (inventory.context_menu == noone){
 					context_menu_initialise();
 				}
@@ -173,25 +173,45 @@ function state_context_menu(){
 		// Inventory or equipment
 		
 		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
-			// Spawn item on ground
-			spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
+			if (inventory.selected == 0){
+				var type = inventory.equ_hover[0];
+				var slot = inventory.equ_hover[1];
+				spawn_existing_item(inventory.equipment[type][slot], 1, x_pos, y_pos);
+				
+				equipment_drop_slot(self, type, slot);
+			}
+			else if (inventory.selected == 1){
+				// Spawn item on ground
+				spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
 		
-			// DROP item
-			inventory_drop_slot(self, inventory.inv_hover, 1);
-		
+				// DROP item
+				inventory_drop_slot(self, inventory.inv_hover, 1);
+			}
 			// Exit context menu
 			inventory.context_menu = noone;
 			state = state_inventory;
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
 			// Inventory only
+			var item_to_equip = variable_clone(inventory.items[inventory.inv_hover]);
+			inventory_drop_slot(self, inventory.inv_hover, 1);
+			equipment_add_item(self, item_to_equip, 0, 0);
 			
-			
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
 			// Equipment only
+			var item_to_remove = variable_clone(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]]);
+			equipment_drop_slot(self, inventory.equ_hover[0], inventory.equ_hover[1]);
+			if (item_to_remove != noone){
+				inventory_add_item(self, item_to_remove);
+			}
 			
-			
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
 		}
 	}
 }

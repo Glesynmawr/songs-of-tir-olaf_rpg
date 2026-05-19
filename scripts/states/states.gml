@@ -71,32 +71,128 @@ function state_ready_for_inputs(){
 }
 
 function state_inventory(){
-	var len = array_length(inventory.items);
+	var len, slots;
 	
-	if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
-		// Exit INVENTORY state
-		state = state_ready_for_inputs;
+	if (keyboard_check_pressed(controls.key_right)) inventory.selected ++;
+	if (keyboard_check_pressed(controls.key_left))  inventory.selected --;
+	inventory.selected = clamp(inventory.selected, 0, 1);
+	
+	if (inventory.selected == 1){
+		len = array_length(inventory.items);
+		
+		if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
+			// Exit INVENTORY state
+			state = state_ready_for_inputs;
+		}
+		else if (keyboard_check_pressed(controls.key_up)){
+			// Move up inventory
+			inventory.inv_hover --;
+			if (inventory.inv_hover < 0){
+				inventory.inv_hover += len;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_down)){
+			// Move down inventory
+			inventory.inv_hover ++;
+			if (inventory.inv_hover >= len){
+				inventory.inv_hover -= len;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			if (inventory.context_menu == noone){
+				context_menu_initialise();
+			}
+		}
+	}
+	else {
+		len = array_length(inventory.equipment);
+		
+		if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
+			// Exit INVENTORY state
+			state = state_ready_for_inputs;
+		}
+		else if (keyboard_check_pressed(controls.key_up)){
+			// Move up equipment
+			
+			inventory.equ_hover[1] --;
+			if (inventory.equ_hover[1] < 0){
+				inventory.equ_hover[0] --;
+				if (inventory.equ_hover[0] < 0){
+					inventory.equ_hover[0] += len;
+				}
+				slots = array_length(inventory.equipment[inventory.equ_hover[0]]);
+				inventory.equ_hover[1] += slots;
+			}
+			
+		}
+		else if (keyboard_check_pressed(controls.key_down)){
+			slots = array_length(inventory.equipment[inventory.equ_hover[0]]);
+			
+			// Move down equipment
+			inventory.equ_hover[1] ++;
+			if (inventory.equ_hover[1] >= slots){
+				inventory.equ_hover[0] ++;
+				if (inventory.equ_hover[0] >= len){
+					inventory.equ_hover[0] -= len;
+				}
+				inventory.equ_hover[1] = 0;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			if (is_array(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]])){
+				if (inventory.context_menu == noone){
+					context_menu_initialise();
+				}
+			}
+		}
+	}
+}
+
+function state_context_menu(){
+	var len = array_length(inventory.context_menu[0]);
+	
+	if (keyboard_check_pressed(controls.key_cancel)){
+		
+		// Exit context menu
+		inventory.context_menu = noone;
+		state = state_inventory;
 	}
 	else if (keyboard_check_pressed(controls.key_up)){
-		// Move up inventory
-		inventory.hover --;
-		if (inventory.hover < 0){
-			inventory.hover += len;
+		inventory.context_menu[5] --;
+		if (inventory.context_menu[5] < 0){
+			inventory.context_menu[5] += len;
 		}
 	}
 	else if (keyboard_check_pressed(controls.key_down)){
-		// Move up inventory
-		inventory.hover ++;
-		if (inventory.hover >= len){
-			inventory.hover -= len;
+		inventory.context_menu[5] ++;
+		if (inventory.context_menu[5] >= len){
+			inventory.context_menu[5] -= len;
 		}
 	}
-	else if (keyboard_check_pressed(controls.key_drop)){
-		// Spawn item on ground
-		spawn_existing_item(inventory.items[inventory.hover], 1, x_pos, y_pos);
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		// Inventory or equipment
 		
-		// DROP item
-		inventory_drop_slot(self, inventory.hover, 1);
+		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
+			// Spawn item on ground
+			spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
+		
+			// DROP item
+			inventory_drop_slot(self, inventory.inv_hover, 1);
+		
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
+			// Inventory only
+			
+			
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
+			// Equipment only
+			
+			
+		}
 	}
 }
 

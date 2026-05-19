@@ -20,7 +20,7 @@ var log_height = (LOG_MAX_ENTRIES + 2) * text_height
 draw_game_log(0, hh - log_height, ww, log_height);
 
 
-if (actor_registry.player.state == state_inventory){
+if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu){
 	draw_inventory(actor_registry.player, xx, yy, ww, hh);
 }
 if (actor_registry.player.state == state_pickup){

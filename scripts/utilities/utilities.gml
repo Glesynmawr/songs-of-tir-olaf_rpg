@@ -353,7 +353,7 @@ function draw_game_grid(grid){
 	
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
-			if (grid[i][j].explored){
+			if (grid[i][j].explored or debugging_mode){
 				var spr = grid[i][j].sprite;
 				var ind = grid[i][j].index;
 				var fg   = c_white;
@@ -388,12 +388,12 @@ function draw_actors(list){
 				if (self.is_visible or debugging_mode){
 				
 					// Position and colour
-					var x_pos	= self.x_pos * other.cell_width;
-					var y_pos	= self.y_pos * other.cell_height;
-					var fg		= self.fg;
+					var xx	= self.x_pos * other.cell_width;
+					var yy	= self.y_pos * other.cell_height;
+					var col	= self.fg;
 		
 					// Draw actor sprite
-					draw_sprite_ext(sprite[0], sprite[1], x_pos, y_pos, 1, 1, 0, fg, 1);
+					draw_sprite_ext(sprite[0], sprite[1], xx, yy, 1, 1, 0, col, 1);
 				}
 			}
 		}
@@ -443,6 +443,8 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 // Specific UI elements -----------------------------------------------------------------
 function draw_inventory(actor, x_pos, y_pos, width, height){
 	
+	var inv_x = x_pos + floor(width / 2);
+	var equ_x = x_pos + floor(width / 4);
 	var xx, yy;
 	
 	// Create controls string
@@ -454,8 +456,9 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height);
 	
+	// INVENTORY ----------------------------------------------------------------------------------
 	// Title
-	ui_draw_box_title(x_pos + text_width, y_pos, "Inventory");
+	ui_draw_box_title(inv_x + text_width, y_pos, "Inventory");
 	
 	// Items
 	var len = array_length(actor.inventory.items);
@@ -463,12 +466,12 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		for(var i = 0; i < len; i ++){
 			
 			// Position
-			xx = x_pos + (text_width * 2);
+			xx = inv_x + (text_width * 2);
 			yy = y_pos + (text_height * 2) + (text_height * i);
 			
 			// Text
 			var text = "";
-			if (actor.inventory.hover == i){
+			if (actor.inventory.inv_hover == i and actor.inventory.selected == 1){
 				text += "> ";
 			}
 			text += actor.inventory.items[i].name;
@@ -476,6 +479,45 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 		}
 	}
+	
+	// EQUIPMENT ----------------------------------------------------------------------------------
+	// Title
+	ui_draw_box_title(equ_x + text_width, y_pos, "Equipment");
+	var j;
+	
+	var type = actor.inventory.equ_hover[0];
+	var slot = actor.inventory.equ_hover[1];
+	yy = y_pos + (text_height * 2);
+	xx = equ_x + (text_width * 2);
+	
+	// Equipment slots
+	for (i = 0; i < array_length(actor.inventory.equipment); i ++){
+		draw_text_colour(xx, yy, equip_data[i][0], text_colour, text_colour, text_colour, text_colour, 1);
+		yy += text_height;
+		
+		for (j = 0; j < array_length(actor.inventory.equipment[i]); j ++){
+			
+			// Text
+			var text = "";
+			if (type == i and slot == j and actor.inventory.selected == 0){
+				text += "> ";
+			}
+			if (actor.inventory.equipment[type][slot] == noone){
+				text += $" - No {equip_data[i][1]} equipped - "
+			}
+			else text += string(actor.inventory.equipment[i][j]);
+		
+			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+			
+			yy += text_height;
+		}
+		yy += text_height;
+	}
+	var menu = actor.inventory.context_menu;
+	if (menu != noone){
+		draw_context_menu(actor, menu[1], menu[2], menu[3], menu[4]);
+	}
+	
 	
 	// Draw box controls
 	if (show_controls){
@@ -529,6 +571,45 @@ function draw_pickup(actor){
 			text += "> ";
 		}
 		text += actor.pickup_menu[i].name;
+		
+		draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+	}
+	
+	// Draw box controls
+	if (show_controls){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + height - text_height;
+		ui_draw_box_controls(xx, yy, control_list);
+	}
+}
+
+function draw_context_menu(actor, x_pos, y_pos, width, height){
+	
+	var xx, yy;
+	var choices = actor.inventory.context_menu;
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_3 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} to exit / {key_3} to select item";
+	
+	var box_width = max(width, string_width(control_list));
+	box_width += (text_width * 6);
+	// Draw box border
+	ui_draw_box(x_pos, y_pos, box_width, height);
+	
+	// Draw box title 
+	ui_draw_box_title(x_pos + text_width, y_pos, "Interact");
+	
+	// Draw context menu choices
+	for (var i = 0; i < array_length(choices[0]); i ++){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + (text_height * 2) + (text_height * i);
+		var text = "";
+		if (choices[5] == i){
+			text += "> ";
+		}
+		text += choices[0][i];
 		
 		draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 	}

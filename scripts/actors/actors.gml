@@ -3,12 +3,10 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	
 	var new_actor = new actor_type();
 	
-	// Inventory
-	new_actor.inventory = inventory_initialise();
-	
 	// Replacement variables
-	new_actor.x_pos		= cell_x;
-	new_actor.y_pos		= cell_y;
+	new_actor.is_visible	= false;
+	new_actor.x_pos			= cell_x;
+	new_actor.y_pos			= cell_y;
 	
 	// Turn structure variables
 	new_actor.energy	= 0;
@@ -17,19 +15,21 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	// Push to actor registry
 	array_push(actor_registry.actor_list, new_actor);
 	if (actor_type == actor_player){
-		actor_registry.player = new_actor;
+		actor_registry.player	= new_actor;
+		new_actor.is_visible	= false;
 	}
+	
+	// Inventory
+	new_actor.inventory = inventory_initialise();
+	new_actor.inventory.equipment = equipment_initialise(new_actor.body_plan);
 }
 
 function actor_player()constructor{
 	name			= "Player";
 	sprite			= [actor_spr, 0];
 	fg				= c_yellow;
-	bg				= c_black;
-	x_pos			= 0;
-	y_pos			= 0;
-	is_visible		= true;
 	range			= 8;
+	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;
 	strength		= 4;
 	agility			= 4;
@@ -43,11 +43,8 @@ function actor_goblin()constructor{
 	name			= "Goblin";
 	sprite			= [actor_spr, 0];
 	fg				= c_lime;
-	bg				= c_black;
-	x_pos			= 0;
-	y_pos			= 0;
-	is_visible		= false;
 	range			= 6;
+	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
 	strength		= 2;
 	agility			= 2;
@@ -60,11 +57,8 @@ function actor_orc()constructor{
 	name			= "Orc";
 	sprite			= [actor_spr, 0];
 	fg				= c_teal;
-	bg				= c_black;
-	x_pos			= 0;
-	y_pos			= 0;
-	is_visible		= false;
 	range			= 8;
+	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
 	strength		= 4;
 	agility			= 1;
@@ -77,11 +71,8 @@ function actor_assassin()constructor{
 	name			= "Assassin";
 	sprite			= [actor_spr, 0];
 	fg				= c_red;
-	bg				= c_black;
-	x_pos			= 0;
-	y_pos			= 0;
-	is_visible		= false;
 	range			= 6;
+	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
 	strength		= 6;
 	agility			= 3;

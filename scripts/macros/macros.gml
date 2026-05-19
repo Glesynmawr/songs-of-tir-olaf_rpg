@@ -1,4 +1,23 @@
 
+enum BODY_PART{
+	HEAD,
+	BODY,
+	ARMS,
+	LEGS
+}
+
+enum EQUIP{
+	HEAD,
+	NECK,
+	BODY,
+	BACK,
+	ARMS,
+	HAND,
+	MITT,
+	GUNS,
+	FEET
+}
+
 enum NEIGHBOUR_CHECK{
 	ORTH,
 	DIAG,

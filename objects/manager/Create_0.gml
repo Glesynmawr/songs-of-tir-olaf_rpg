@@ -32,6 +32,18 @@ controls = {
 move_timer_max = 10;
 move_timer = 0;
 
+// Actor equipment
+equip_data[EQUIP.HEAD] = ["head", "headwear",			3];
+equip_data[EQUIP.NECK] = ["neck", "necklace",			3];
+equip_data[EQUIP.BODY] = ["body", "armour",				1];
+equip_data[EQUIP.BACK] = ["back", "cloak",				1];
+equip_data[EQUIP.ARMS] = ["arm", "Vambrace",			6];
+equip_data[EQUIP.HAND] = ["hand", "Item",				6];
+equip_data[EQUIP.MITT] = ["gloves", "Gloves",		 	3];
+equip_data[EQUIP.GUNS] = ["ranged item", "Ranged item",	2];
+equip_data[EQUIP.FEET] = ["feet", "Footwear",	 		3];
+
+
 // Sets cell size using monospaced font
 draw_set_font(mono_fnt);
 cell_width  = 16;

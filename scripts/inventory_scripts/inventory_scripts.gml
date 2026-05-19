@@ -139,7 +139,7 @@ function equipment_add_item(actor, item, type, slot){
 		var existing_item = variable_clone(inventory.equipment[type][slot]);
 	
 		// Move inventory item to equipment
-		inventory.equipment[0][0] = variable_clone(item);
+		inventory.equipment[type][slot] = variable_clone(item);
 	
 		if (existing_item != noone){
 			

@@ -18,6 +18,11 @@ enum EQUIP{
 	FEET
 }
 
+enum TAG{
+	STACKABLE,
+	TWO_SLOTS
+}
+
 enum NEIGHBOUR_CHECK{
 	ORTH,
 	DIAG,

@@ -23,44 +23,44 @@ function spawn_existing_item(item, stack, x_pos, y_pos){
 
 function item_sword()constructor{
 	name		= "Sword";
-	slots		= [];
+	slot		= [EQUIP.HAND];
 	tags		= [];
 	interact	= ["Equip", "Drop"];
 }
 
 function item_shield()constructor{
 	name		= "Shield";
-	slots		= [];
+	slot		= [EQUIP.HAND];
 	tags		= [];
 	interact	= ["Equip", "Drop"];
 }
 
 function item_helmet()constructor{
 	name		= "Helmet";
-	slots		= [];
+	slot		= [EQUIP.HEAD];
 	tags		= [];
 	interact	= ["Equip", "Drop"];
 }
 
 function item_armour()constructor{
 	name		= "Armour";
-	slots		= [];
+	slot		= [EQUIP.BODY];
 	tags		= [];
 	interact	= ["Equip", "Drop"];
 }
 
 function item_bow()constructor{
 	name		= "Bow";
-	slots		= [];
+	slot		= [EQUIP.GUNS];
 	tags		= [];
 	interact	= ["Equip", "Drop"];
 }
 
 function item_arrow()constructor{
 	name		= "Arrow";
-	slots		= [];
+	slot		= [];
 	tags		= [];
-	interact	= ["Equip", "Drop"];
+	interact	= ["Drop"];
 }
 
 

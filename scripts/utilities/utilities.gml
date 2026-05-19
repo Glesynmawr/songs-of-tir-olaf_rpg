@@ -476,7 +476,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			}
 			text += actor.inventory.items[i].name;
 			
-			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+			draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 		}
 	}
 	
@@ -502,12 +502,17 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			if (type == i and slot == j and actor.inventory.selected == 0){
 				text += "> ";
 			}
+			if (actor.inventory.slot_selection != noone){
+				if (actor.inventory.slot_selection[0] == i and actor.inventory.slot_selection[1] == j){
+					text += "> ";
+				}
+			}
 			if (actor.inventory.equipment[i][j] == noone){
 				text += $" - No {equip_data[i][1]} equipped - "
 			}
 			else text += actor.inventory.equipment[i][j].name;
 		
-			draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+			draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 			
 			yy += text_height;
 		}

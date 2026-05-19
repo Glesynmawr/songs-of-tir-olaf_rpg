@@ -192,14 +192,24 @@ function state_context_menu(){
 			state = state_inventory;
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
-			// Inventory only
-			var item_to_equip = variable_clone(inventory.items[inventory.inv_hover]);
-			inventory_drop_slot(self, inventory.inv_hover, 1);
-			equipment_add_item(self, item_to_equip, 0, 0);
 			
-			// Exit context menu
-			inventory.context_menu = noone;
-			state = state_inventory;
+			var item_to_equip = variable_clone(inventory.items[inventory.inv_hover]);
+			var target_type = item_to_equip.slot[0];
+			if (array_length(inventory.equipment[target_type]) > 1){
+				// Enter slot selection state
+				inventory.context_menu = noone;
+				inventory.slot_selection = [target_type, 0];	
+				state = state_slot_selection;
+			}
+			else{
+				// Equip item
+				inventory_drop_slot(self, inventory.inv_hover, 1);
+				equipment_add_item(self, item_to_equip, target_type, 0);
+			
+				// Exit context menu
+				inventory.context_menu = noone;
+				state = state_inventory;
+			}
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
 			// Equipment only
@@ -213,6 +223,39 @@ function state_context_menu(){
 			inventory.context_menu = noone;
 			state = state_inventory;
 		}
+	}
+}
+
+function state_slot_selection(){
+	var len = array_length(inventory.equipment[inventory.slot_selection[0]]);
+	if (keyboard_check_pressed(controls.key_cancel)){
+		
+		// Exit slot select state
+		inventory.slot_selection = noone;
+		state = state_inventory;
+	}
+	if (keyboard_check_pressed(controls.key_up)){
+		inventory.slot_selection[1] --;
+		if (inventory.slot_selection[1] < 0){
+			inventory.slot_selection[1] += len;
+		}
+	}
+	if (keyboard_check_pressed(controls.key_down)){
+		inventory.slot_selection[1] ++;
+		if (inventory.slot_selection[1] >= len){
+			inventory.slot_selection[1] -= len;
+		}
+	}
+	if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var type = inventory.slot_selection[0];
+		var slot = inventory.slot_selection[1];
+		var item_to_copy = variable_clone(inventory.items[inventory.inv_hover]);
+		equipment_add_item(self, item_to_copy, type, slot);
+		inventory_drop_slot(self, inventory.inv_hover, 1);
+		
+		// Exit slot select state
+		inventory.slot_selection = noone;
+		state = state_inventory;
 	}
 }
 
@@ -294,3 +337,7 @@ function state_chase(){
 	
 	has_acted = true;
 }
+
+
+
+

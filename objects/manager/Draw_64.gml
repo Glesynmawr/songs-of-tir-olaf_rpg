@@ -7,8 +7,7 @@ var yy = 0;
 	
 draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
 
-var txt1 = $"Direction = {direction_indicator}";
-draw_text(text_width, text_height * 2, txt1);
+
 
 var txt2 = $"Text size = x:{text_width} - y:{text_height}";
 draw_text(text_width, text_height * 3, txt2);
@@ -20,18 +19,17 @@ var log_height = (LOG_MAX_ENTRIES + 2) * text_height
 draw_game_log(0, hh - log_height, ww, log_height);
 
 
-if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu){
+if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
 	draw_inventory(actor_registry.player, xx, yy, ww, hh);
 }
 if (actor_registry.player.state == state_pickup){
 	draw_pickup(actor_registry.player);
 }
 
-draw_set_halign(fa_right);
-for (var i = 0; i < array_length(action_list); i ++){
-	draw_text(room_width, text_height * i, string(action_list[i].name) + ":" + string(action_list[i].state));
-}
-draw_set_halign(fa_left);
+var txt1 = $"Slot selection = {actor_registry.player.inventory.slot_selection}";
+draw_text(text_width, text_height * 2, txt1);
+
+
 
 
 

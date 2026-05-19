@@ -22,6 +22,7 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	// Inventory
 	new_actor.inventory = inventory_initialise();
 	new_actor.inventory.equipment = equipment_initialise(new_actor.body_plan);
+	new_actor.inventory.slot_selection = noone;
 }
 
 function actor_player()constructor{

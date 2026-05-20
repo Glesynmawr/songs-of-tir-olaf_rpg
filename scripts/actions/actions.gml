@@ -31,12 +31,12 @@ function action_move(grid, move_x, move_y){
 	x_pos += move_x;
 	y_pos += move_y;
 	
-	if (grid[x_pos][y_pos].tile == "closed door"){
+	if (grid[x_pos][y_pos].tile == "closed door") or (grid[x_pos][y_pos].tile == "secret door"){
 		cell_replace_tile(x_pos, y_pos, tile_open_door);
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";
-		log_add_entry(text, c_ltgrey);
+		log_add_entry(text, manager.text_colour);
 	}
 	return(true);
 }
@@ -87,12 +87,12 @@ function action_attack_melee(attacker, defender){
 	if (first_log != ""){
 		
 		// Damage log entry
-		log_add_entry(first_log, c_ltgrey);
+		log_add_entry(first_log, manager.text_colour);
 	}
 	if (second_log != ""){
 		
 		// Death log entry
-		log_add_entry(second_log, c_ltgrey);
+		log_add_entry(second_log, manager.text_colour);
 	}
 }
 

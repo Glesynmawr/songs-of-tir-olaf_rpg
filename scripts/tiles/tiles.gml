@@ -64,7 +64,7 @@ function tile_closed_door()constructor{
 }
 
 function tile_secret_door()constructor{
-	tile			= "closed door";
+	tile			= "secret door";
 	sprite			= wall_00_spr;
 	index			= 0;
 	fg				= c_ltgrey;

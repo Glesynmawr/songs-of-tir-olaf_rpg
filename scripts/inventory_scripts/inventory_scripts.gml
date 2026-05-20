@@ -15,6 +15,12 @@ function context_menu_initialise(){
 		}
 	}
 	else if (inventory.selected == 0){
+		
+		var type = inventory.equ_hover[0];
+		var slot = inventory.equ_hover[1];
+		
+		if (!is_struct(inventory.equipment[type][slot])) return(false);
+		
 		var h1 = inventory.equ_hover[0];
 		var h2 = inventory.equ_hover[1];
 		var type_y = h1 * (manager.text_height * 2);
@@ -106,7 +112,8 @@ function pickup_menu_initialise(actor){
 // Inventory interaction
 function inventory_add_item(actor, item){
 	with (actor){
-		array_push(inventory.items, item);
+		var new_item = variable_clone(item);
+		array_push(inventory.items, new_item);
 		return(true);
 	}
 }
@@ -133,25 +140,75 @@ function inventory_drop_slot(actor, slot, stack){
 // Equipment interaction
 function equipment_add_item(actor, item, type, slot){
 	
-	with (actor){
+	var new_item = variable_clone(item);
+	var empty_prev_slot = false;
+	var empty_next_slot = false;
+	
+	// CHECK ITEM TWO HANDED ----------------------------------------------------------------------
+	// Get Item Two Handed Status
+	if (array_contains(new_item.tags, TAG.TWO_SLOTS)){
+		empty_next_slot = true;
+	}
+	
+	// Check Previous Slot
+	if (actor.inventory.equipment[type][slot] == -3){
+		empty_prev_slot = true;
+	}
+	
+	if (empty_prev_slot == true){
 		
-		// Copy existing item to temporary variable
-		var existing_item = variable_clone(inventory.equipment[type][slot]);
-	
-		// Move inventory item to equipment
-		inventory.equipment[type][slot] = variable_clone(item);
-	
-		if (existing_item != noone){
-			
-			// Add temporary item to inventory
-			inventory_add_item(self, existing_item);
+		var prev_slot = slot - 1;
+		if (prev_slot < 0) prev_slot = array_length(actor.inventory.equipment[type]) - 1;
+		
+		if (is_struct(actor.inventory.equipment[type][prev_slot])){
+			inventory_add_item(actor, actor.inventory.equipment[type][prev_slot]);
+			actor.inventory.equipment[type][prev_slot] = noone;
 		}
+		else if (actor.inventory.equipment[type][prev_slot] == -3){
+			actor.inventory.equipment[type][prev_slot] = noone;
+		}
+	}
+	
+	var next_slot = slot + 1;
+	if (next_slot >= array_length(actor.inventory.equipment[type])) next_slot = 0;
+		
+	if (empty_next_slot == true){
+		
+		if (is_struct(actor.inventory.equipment[type][next_slot])){
+			inventory_add_item(actor, actor.inventory.equipment[type][next_slot]);
+			actor.inventory.equipment[type][next_slot] = noone;
+		}
+		else if (actor.inventory.equipment[type][next_slot] == -3){
+			actor.inventory.equipment[type][next_slot] = noone;
+		}
+	}
+	else{
+		
+		if (actor.inventory.equipment[type][next_slot] == -3){
+			actor.inventory.equipment[type][next_slot] = noone;
+		}
+	}
+	
+	// SET EQUIPMENT ITEM AND REMOVE EXISTING ITEM ------------------------------------------------
+	if (is_struct(actor.inventory.equipment[type][slot])){
+		inventory_add_item(actor, actor.inventory.equipment[type][slot]);
+	}
+	actor.inventory.equipment[type][slot] = noone;
+	actor.inventory.equipment[type][slot] = new_item;
+	if (empty_next_slot){
+		actor.inventory.equipment[type][next_slot] = -3;
 	}
 }
 
 function equipment_drop_slot(actor, type, slot){
 	// Reset equipment slot to noone
 	actor.inventory.equipment[type][slot] = noone;
+	
+	var next_slot = slot + 1;
+	if (next_slot >= array_length(actor.inventory.equipment[type])) next_slot = 0;
+	if (actor.inventory.equipment[type][next_slot] == -3){
+		actor.inventory.equipment[type][next_slot] = noone;
+	}
 }
 
 

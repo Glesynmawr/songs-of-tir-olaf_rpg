@@ -24,7 +24,7 @@ function spawn_existing_item(item, stack, x_pos, y_pos){
 function item_sword()constructor{
 	name		= "Sword";
 	slot		= [EQUIP.HAND];
-	tags		= [];
+	tags		= [TAG.TWO_SLOTS];
 	interact	= ["Equip", "Drop"];
 }
 
@@ -52,7 +52,7 @@ function item_armour()constructor{
 function item_bow()constructor{
 	name		= "Bow";
 	slot		= [EQUIP.GUNS];
-	tags		= [];
+	tags		= [TAG.TWO_SLOTS];
 	interact	= ["Equip", "Drop"];
 }
 

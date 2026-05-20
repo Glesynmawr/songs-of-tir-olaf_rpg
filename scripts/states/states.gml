@@ -139,7 +139,7 @@ function state_inventory(){
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]] != noone){
+			if (is_struct(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]])){
 				if (inventory.context_menu == noone){
 					context_menu_initialise();
 				}
@@ -215,7 +215,7 @@ function state_context_menu(){
 			// Equipment only
 			var item_to_remove = variable_clone(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]]);
 			equipment_drop_slot(self, inventory.equ_hover[0], inventory.equ_hover[1]);
-			if (item_to_remove != noone){
+			if (is_struct(item_to_remove)){
 				inventory_add_item(self, item_to_remove);
 			}
 			
@@ -295,7 +295,7 @@ function state_pickup(){
 function state_idle(){
 	// Check if player is in range and visible
 	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_grid[x_pos][y_pos].is_visible == true){
-		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", c_ltgrey);
+		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.text_colour);
 		state = state_chase;
 	}
 	

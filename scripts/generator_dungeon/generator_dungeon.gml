@@ -596,10 +596,10 @@ function autotile_16(grid, type, xpos, ypos){
 	var hh = array_length(grid[0]);
 	var count = 0;
 	
-	if (xpos + 1 >= ww)	or (grid[xpos+1][ypos].tile == type) count += 1;
-	if (ypos - 1 < 0)	or (grid[xpos][ypos-1].tile == type) count += 2;
-	if (xpos - 1 < 0)	or (grid[xpos-1][ypos].tile == type) count += 4;
-	if (ypos + 1 >= hh)	or (grid[xpos][ypos+1].tile == type) count += 8;
+	if (xpos + 1 >= ww)	or (grid[xpos+1][ypos].tile == type) or (grid[xpos+1][ypos].tile == "secret door") count += 1;
+	if (ypos - 1 < 0)	or (grid[xpos][ypos-1].tile == type) or (grid[xpos][ypos-1].tile == "secret door") count += 2;
+	if (xpos - 1 < 0)	or (grid[xpos-1][ypos].tile == type) or (grid[xpos-1][ypos].tile == "secret door") count += 4;
+	if (ypos + 1 >= hh)	or (grid[xpos][ypos+1].tile == type) or (grid[xpos][ypos+1].tile == "secret door") count += 8;
 	
 	return(count);
 }
@@ -616,10 +616,10 @@ function autotile_47(grid, type, xpos, ypos){
 	var dl = false;
 	var dr = false;
 	
-	if (xpos + 1 >= ww) or (ypos - 1 < 0)	or (grid[xpos+1][ypos-1].tile == type) ur = true;
-	if (xpos - 1 < 0) or (ypos  - 1 < 0)	or (grid[xpos-1][ypos-1].tile == type) ul = true;
-	if (xpos - 1 < 0) or (ypos + 1 >= hh)	or (grid[xpos-1][ypos+1].tile == type) dl = true;
-	if (xpos + 1 >= ww) or (ypos + 1 >= hh)	or (grid[xpos+1][ypos+1].tile == type) dr = true;
+	if (xpos + 1 >= ww) or (ypos - 1 < 0)	or (grid[xpos+1][ypos-1].tile == type) or (grid[xpos+1][ypos-1].tile == "secret door") ur = true;
+	if (xpos - 1 < 0) or (ypos  - 1 < 0)	or (grid[xpos-1][ypos-1].tile == type) or (grid[xpos-1][ypos-1].tile == "secret door") ul = true;
+	if (xpos - 1 < 0) or (ypos + 1 >= hh)	or (grid[xpos-1][ypos+1].tile == type) or (grid[xpos-1][ypos+1].tile == "secret door") dl = true;
+	if (xpos + 1 >= ww) or (ypos + 1 >= hh)	or (grid[xpos+1][ypos+1].tile == type) or (grid[xpos+1][ypos+1].tile == "secret door") dr = true;
 	
 	switch(orthcount){
 		case(3):
@@ -697,7 +697,7 @@ function generate_map(grid){
 	
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
-			if (grid[i][j].tile == "wall"){
+			if (grid[i][j].tile == "wall" or grid[i][j].tile == "secret door"){
 				grid[i][j].index = autotile_47(grid, "wall", i, j);
 			}
 		}

@@ -32,7 +32,7 @@ function door_set_close(actor, x_pos, y_pos){
 function found_a_secret(actor){
 	if (actor == manager.actor_registry.player){
 		var text = $"{actor.name} found a secret!";
-		log_add_entry("These are the stairs up.", manager.text_colour);
+		log_add_entry(text, c_aqua);
 	}
 }
 

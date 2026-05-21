@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"grid_checks",
+  "%Name":"inventory_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"grid_checks",
+  "name":"inventory_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

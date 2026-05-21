@@ -39,9 +39,10 @@ function state_ready_for_inputs(){
 		
 		// Interaction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			{
-				player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+			if (manager.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
+				found_a_secret(self);
 			}
+			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
 		}
 	}
 	else{
@@ -170,8 +171,8 @@ function state_context_menu(){
 		}
 	}
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		// Inventory or equipment
 		
+		// Inventory or equipment
 		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
 			if (inventory.selected == 0){
 				var type = inventory.equ_hover[0];
@@ -181,6 +182,7 @@ function state_context_menu(){
 				equipment_drop_slot(self, type, slot);
 			}
 			else if (inventory.selected == 1){
+				
 				// Spawn item on ground
 				spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
 		

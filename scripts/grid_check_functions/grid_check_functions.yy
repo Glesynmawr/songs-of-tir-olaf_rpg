@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"interactions",
+  "%Name":"grid_check_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"interactions",
+  "name":"grid_check_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

@@ -32,9 +32,9 @@ function actor_player()constructor{
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;
-	strength		= 4;
-	agility			= 4;
-	defence			= 2;
+	strength		= 50;
+	agility			= 50;
+	armour			= 1;
 	hit_points		= 12;
 	action_speed	= 100;
 	
@@ -47,9 +47,9 @@ function actor_goblin()constructor{
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
-	strength		= 2;
-	agility			= 2;
-	defence			= 0;
+	strength		= 20;
+	agility			= 20;
+	armour			= 0;
 	hit_points		= 6;
 	action_speed	= 100;
 }
@@ -61,9 +61,9 @@ function actor_orc()constructor{
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
-	strength		= 4;
-	agility			= 1;
-	defence			= 2;
+	strength		= 50;
+	agility			= 20;
+	armour			= 1;
 	hit_points		= 12;
 	action_speed	= 50;
 }
@@ -75,9 +75,9 @@ function actor_assassin()constructor{
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
-	strength		= 6;
-	agility			= 3;
-	defence			= 0;
+	strength		= 20;
+	agility			= 50;
+	armour			= 0;
 	hit_points		= 8;
 	action_speed	= 150;
 }

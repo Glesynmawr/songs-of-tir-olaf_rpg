@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"inventory_scripts",
+  "%Name":"dungeon_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"inventory_scripts",
+  "name":"dungeon_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

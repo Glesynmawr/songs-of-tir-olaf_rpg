@@ -39,7 +39,7 @@ enum SPAWN_LOC{
 #macro SCREEN_HEIGHT 360
 
 #macro ENERGY_PER_TURN 100
-#macro LOG_MAX_ENTRIES 6
+#macro LOG_MAX_ENTRIES 9
 
 
 

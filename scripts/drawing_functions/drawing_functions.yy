@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"items_scripts",
+  "%Name":"drawing_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"items_scripts",
+  "name":"drawing_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

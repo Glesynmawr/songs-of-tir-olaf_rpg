@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"utilities",
+  "%Name":"tile_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"utilities",
+  "name":"tile_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

@@ -26,6 +26,9 @@ if (actor_registry.player.state == state_pickup){
 	draw_pickup(actor_registry.player);
 }
 
+draw_minimap();
+
+
 var txt1 = $"Slot selection = {actor_registry.player.inventory.slot_selection}";
 draw_text(text_width, text_height * 2, txt1);
 

@@ -52,6 +52,14 @@ cell_height = 16;
 text_height = string_height("M") + 2;
 text_width  = string_width("M");
 
+// Minimap
+minimap_scale	= 2;
+minimap_surface = noone;
+minimap_width	= 96;
+minimap_height	= 96;
+minimap_x		= screen_width - minimap_width;
+minimap_y		= 0;
+
 // Set distance maps
 globalvar distance_map_player;
 distance_map_player = [];

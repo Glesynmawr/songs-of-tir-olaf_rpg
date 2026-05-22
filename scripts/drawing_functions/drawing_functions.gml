@@ -288,6 +288,59 @@ function draw_context_menu(actor, x_pos, y_pos, width, height){
 	}
 }
 
+function draw_minimap(){
+	var px, py, mx, my, s, col;
+	
+	s = minimap_scale;
+	if (!surface_exists(minimap_surface)){
+		minimap_surface = surface_create(minimap_width, minimap_height);
+	}
+	
+	surface_set_target(minimap_surface);
+	draw_clear(bg_colour);
+	
+	// Mini Map Background
+	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, minimap_width, minimap_height, bg_colour, 1);
+
+	px = actor_registry.player.x_pos;
+	py = actor_registry.player.y_pos;
+	
+	for (var i = 0; i < grid_width; i ++){
+		for (var j = 0; j < grid_height; j ++){
+				
+			col = bg_colour;
+			mx  = (i * s) - (px * s) + (minimap_width / 2);
+			my  = (j * s) - (py * s) + (minimap_height / 2);
+				
+			if(game_grid[i][j].is_visible){
+				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
+					col = c_grey;
+				}
+			}
+			else if (game_grid[i][j].explored){
+				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
+					col = c_dkgrey;
+				}
+			}
+				
+			if (col != bg_colour){
+				draw_sprite_ext(pixel_spr, 0, mx, my, s, s, 0, col, 1);
+			}
+		}
+	}
+		
+	// Draw Player Position
+	draw_sprite_ext(pixel_spr, 0, minimap_width / 2, minimap_height / 2, s, s, 0, c_white, 1);
+	
+	surface_reset_target();
+		
+	draw_surface(minimap_surface, minimap_x, minimap_y);
+		
+	// Draw Map Border
+	draw_sprite_stretched(ui_border_spr, 0, minimap_x, minimap_y, minimap_width, minimap_height);
+	
+}
+
 
 
 

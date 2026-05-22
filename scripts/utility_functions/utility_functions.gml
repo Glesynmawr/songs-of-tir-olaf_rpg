@@ -31,8 +31,9 @@ function resolution_scale(){
 	
 	
 	// SET SCREEN SIZE VARIABLES
-	screen_width  = width  / scale;
-	screen_height = height / scale;
+	screen_width	= width  / scale;
+	screen_height	= height / scale;
+	game_scale		= scale;
 }
 
 function initialise_camera(following){

@@ -42,6 +42,7 @@
     {"id":{"name":"actor_spr","path":"sprites/actor_spr/actor_spr.yy",},},
     {"id":{"name":"direction_arrow_spr","path":"sprites/direction_arrow_spr/direction_arrow_spr.yy",},},
     {"id":{"name":"item_spr","path":"sprites/item_spr/item_spr.yy",},},
+    {"id":{"name":"pixel_spr","path":"sprites/pixel_spr/pixel_spr.yy",},},
     {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
     {"id":{"name":"wall_00_spr","path":"sprites/wall_00_spr/wall_00_spr.yy",},},
   ],

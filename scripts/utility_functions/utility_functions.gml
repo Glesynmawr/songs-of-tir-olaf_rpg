@@ -33,12 +33,11 @@ function resolution_scale(){
 	// SET SCREEN SIZE VARIABLES
 	screen_width	= width  / scale;
 	screen_height	= height / scale;
-	game_scale		= scale;
 }
 
 function initialise_camera(following){
-	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) - (cell_width  / 2));
-	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2)) + floor(log_height / 2);
 }
 
 function move_camera(target_x, target_y, camera_spd){
@@ -48,7 +47,11 @@ function move_camera(target_x, target_y, camera_spd){
 	if (camera_pos[1] != target_y){
 		camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
 	}
-	camera_set_view_pos(view_camera[0], round(camera_pos[0]), round(camera_pos[1]));
+	
+	if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
+	if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
+	
+	camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
 }
 
 

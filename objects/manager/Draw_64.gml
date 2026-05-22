@@ -15,7 +15,6 @@ draw_text(text_width, text_height * 3, txt2);
 var txt2 = $"Player inventory = {actor_registry.player.inventory.items}";
 draw_text(10, text_height * 4, txt2);
 
-var log_height = (LOG_MAX_ENTRIES + 2) * text_height
 draw_game_log(0, hh - log_height, ww, log_height);
 
 

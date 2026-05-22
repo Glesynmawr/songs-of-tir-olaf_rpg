@@ -52,7 +52,7 @@ function tile_hall()constructor{
 
 function tile_closed_door()constructor{
 	tile			= "closed door";
-	sprite			= wall_00_spr;
+	sprite			= door_closed_spr;
 	index			= 0;
 	fg				= c_aqua;
 	bg				= c_navy;
@@ -78,7 +78,7 @@ function tile_secret_door()constructor{
 
 function tile_open_door()constructor{
 	tile			= "open door";
-	sprite			= wall_00_spr;
+	sprite			= door_open_spr;
 	index			= 0;
 	fg				= c_aqua;
 	bg				= c_navy;

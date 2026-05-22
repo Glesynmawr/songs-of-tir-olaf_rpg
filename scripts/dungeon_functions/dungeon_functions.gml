@@ -520,6 +520,7 @@ function add_doors(grid){
 					var room_cell_count = grid_check_neighbour_count(grid, x_pos, y_pos, "room", NEIGHBOUR_CHECK.ORTH)
 					if (room_cell_count > 0){
 						grid[x_pos][y_pos] = new tile_closed_door();
+						grid[x_pos][y_pos].index = door_index;
 					}
 				}
 			}
@@ -697,8 +698,15 @@ function generate_map(grid){
 	
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
-			if (grid[i][j].tile == "wall" or grid[i][j].tile == "secret door"){
+			
+			var tile = grid[i][j].tile;
+			
+			if (tile == "wall" or tile == "secret door"){
 				grid[i][j].index = autotile_47(grid, "wall", i, j);
+			}
+			else if (tile == "room" or tile == "hall"){
+				grid[i][j].index = irandom(3);
+				grid[i][j].sprite = floor_sprite;
 			}
 		}
 	}

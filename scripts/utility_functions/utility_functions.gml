@@ -83,6 +83,98 @@ function draw_game_log(x_pos, y_pos, width, height){
 }
 
 
+// GAME_STATE
+function init_control_menu(){
+	control_array = [];
+}
+
+function init_main(){
+	resolution_scale();
+	game_state = game_state_main_menu;
+	main_menu_hover = 0;
+	
+	
+}
+
+function game_state_control_menu(){
+	if (keyboard_check_pressed(controls.key_cancel)){
+		// Exit control menu
+	}
+	control_menu_hover = 0;
+}
+
+function game_state_main_menu(){
+	if (keyboard_check_pressed(controls.key_up)){
+		main_menu_hover --;
+		if (main_menu_hover < 0){
+			main_menu_hover += array_length(main_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		main_menu_hover ++;
+		if (main_menu_hover >= array_length(main_menu)){
+			main_menu_hover -= array_length(main_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var txt = main_menu[main_menu_hover];
+		if (txt == "New game"){
+			game_state = game_state_dungeon;
+		}
+		else if (txt == "Load game"){
+			
+		}
+		else if (txt == "Controls"){
+			
+		}
+		else if (txt == "Settings"){
+			
+		}
+		else if (txt == "Quit to desktop"){
+			game_end();
+		}
+	}
+}
+
+function game_state_dungeon(){
+	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+
+	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+
+
+	if (!game_paused){
+		turn_order_update();
+	}
+}
+
+
+// LOADING AND SAVING
+function controls_read_settings(){
+	
+	var struct_json = json_stringify(controls_default);
+
+	var file = file_text_open_read("player_settings_controls");
+	if (file != -1){
+		struct_json = file_text_read_string(file);
+	}
+	
+	var loaded = json_parse(struct_json);
+	controls = variable_clone(loaded);
+}
+
+function controls_save_settings(){
+	
+	var struct_json = json_stringify(controls);
+	
+	var file = file_text_open_write("player_settings_controls");
+	file_text_write_string(file, struct_json);
+	file_text_close(file);
+	
+	show_message(struct_json);
+}
+
+
 // DISTANCE MAPPING
 function create_distance_map(target_x, target_y){
 	var i, j, xx, yy, cell_x, cell_y, candidate_list, dijkstra_map, new_list, flag;

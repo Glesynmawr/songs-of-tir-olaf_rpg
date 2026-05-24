@@ -3,7 +3,7 @@
   "%Name":"actor_spr",
   "bboxMode":0,
   "bbox_bottom":15,
-  "bbox_left":1,
+  "bbox_left":2,
   "bbox_right":14,
   "bbox_top":0,
   "collisionKind":1,

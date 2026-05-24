@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"ui_border_spr",
   "bboxMode":0,
-  "bbox_bottom":20,
+  "bbox_bottom":18,
   "bbox_left":0,
   "bbox_right":14,
   "bbox_top":0,

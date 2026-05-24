@@ -118,7 +118,7 @@ function action_remove_actor(actor){
 	if (actor == manager.actor_registry.player){
 		with (manager){
 			direction_indicator = noone;
-			game_pause = true;
+			game_paused = true;
 		}
 	}
 	

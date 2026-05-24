@@ -46,6 +46,8 @@
     {"id":{"name":"floor_00_spr","path":"sprites/floor_00_spr/floor_00_spr.yy",},},
     {"id":{"name":"item_spr","path":"sprites/item_spr/item_spr.yy",},},
     {"id":{"name":"pixel_spr","path":"sprites/pixel_spr/pixel_spr.yy",},},
+    {"id":{"name":"title_background_spr","path":"sprites/title_background_spr/title_background_spr.yy",},},
+    {"id":{"name":"title_spr","path":"sprites/title_spr/title_spr.yy",},},
     {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
     {"id":{"name":"wall_00_spr","path":"sprites/wall_00_spr/wall_00_spr.yy",},},
   ],

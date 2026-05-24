@@ -1,36 +1,54 @@
 /// @desc Initialise 
-globalvar debugging_mode;
-debugging_mode  = false;
-game_pause		= false;
 
-resolution_scale();
+debugging_mode  = false;
+game_paused		= false;
+
+// Colours
+
+text_colour = c_white;
+bg_colour   = c_black;
+
+// Menus
+main_menu[0] = "New game";
+main_menu[1] = "Load game";
+main_menu[2] = "Controls";
+main_menu[3] = "Settings";
+main_menu[4] = "Quit to desktop";
+
+
+#region// SET CONTRLS
+globalvar controls;
+show_controls = true;
+
+controls_default = {
+	key_right: vk_right,
+	key_up: vk_up,
+	key_left: vk_left,
+	key_down: vk_down,
+	key_move_confirm: vk_space,
+	key_interact_confirm: vk_enter,
+	key_inventory: ord("I"),
+	key_drop: ord("D"),
+	key_cancel: vk_escape
+}
+
+controls_read_settings();
+
+move_timer_max = 10;
+move_timer = 0;
+
+#endregion
+
+init_main();
 
 // Cell positioning data
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
 direction_indicator = noone;
 
-// Drawing colours
-text_colour = c_white;
-bg_colour   = c_black;
 
-// Define controls
-globalvar controls, show_controls;
-show_controls = true;
-controls = {
-	key_right:				vk_right,
-	key_up:					vk_up,
-	key_left:				vk_left,
-	key_down:				vk_down,
-	key_move_confirm:		vk_space,
-	key_interact_confirm:	vk_enter,
-	key_inventory:			ord("I"),
-	key_drop:				ord("D"),
-	key_cancel:				vk_escape
-}
 
-move_timer_max = 10;
-move_timer = 0;
+
 
 // Actor equipment
 equip_data[EQUIP.HEAD] = ["head", "headwear",			3];

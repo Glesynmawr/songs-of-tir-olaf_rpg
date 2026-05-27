@@ -1,2 +1,3 @@
 /// @desc EXIT GAME
-game_end();
+transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+

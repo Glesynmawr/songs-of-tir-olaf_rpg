@@ -1,7 +1,11 @@
 /// @desc Main loop
 
-game_state();
+if (game_state != noone){
+	game_state();
+}
 
-
+if (transition != noone){
+	transition_update();
+}
 
 

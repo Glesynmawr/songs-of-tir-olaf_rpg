@@ -1,22 +1,38 @@
 /// @desc Initialise 
 
-debugging_mode  = false;
-game_paused		= false;
+debugging_mode		= false;
+game_paused			= false;
 
 // Colours
+text_colour = C_PEACH;
+bg_colour   = C_BLACK;
 
-text_colour = c_white;
-bg_colour   = c_black;
+// STATE TRANSITION
+transition = noone;
 
-// Menus
+#region// MENUS -----------------------------------------------------------------------------------
+control_menu[0] = "Rebind keys";
+control_menu[1] = "Set default keys";
+control_menu[2] = "Save and exit";
+
+game_over_menu[0] = "Try again";
+game_over_menu[1] = "Quit to title";
+game_over_menu[2] = "Quit to desktop";
+
 main_menu[0] = "New game";
 main_menu[1] = "Load game";
 main_menu[2] = "Controls";
 main_menu[3] = "Settings";
 main_menu[4] = "Quit to desktop";
 
+pause_menu[0] = "Continue";
+pause_menu[1] = "Save and quit";
+pause_menu[2] = "Quit without saving";
+pause_menu[3] = "Quit to desktop";
 
-#region// SET CONTRLS
+#endregion
+
+#region// SET CONTRLS------------------------------------------------------------------------------
 globalvar controls;
 show_controls = true;
 

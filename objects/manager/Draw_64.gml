@@ -6,7 +6,10 @@ switch(game_state){
 	case game_state_main_menu:		draw_main_menu();		break;
 }
 
+if (transition != noone){
+	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
+}
 
-
-
+draw_text(10, 10, $"Game state: {game_state}");
+draw_text(10, 17, $"Game state previous: {game_state_previous}");
 

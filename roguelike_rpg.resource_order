@@ -25,6 +25,7 @@
     {"name":"pixel_spr","order":5,"path":"sprites/pixel_spr/pixel_spr.yy",},
     {"name":"title_background_spr","order":10,"path":"sprites/title_background_spr/title_background_spr.yy",},
     {"name":"title_spr","order":9,"path":"sprites/title_spr/title_spr.yy",},
+    {"name":"transition_spr","order":11,"path":"sprites/transition_spr/transition_spr.yy",},
     {"name":"ui_border_spr","order":2,"path":"sprites/ui_border_spr/ui_border_spr.yy",},
     {"name":"wall_00_spr","order":3,"path":"sprites/wall_00_spr/wall_00_spr.yy",},
   ],

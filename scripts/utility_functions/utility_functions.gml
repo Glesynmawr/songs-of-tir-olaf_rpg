@@ -85,22 +85,61 @@ function draw_game_log(x_pos, y_pos, width, height){
 
 // GAME_STATE
 function init_control_menu(){
-	control_array = [];
+	is_rebinding_keys = false;
+	game_state = game_state_control_menu;
 }
 
 function init_main(){
 	resolution_scale();
-	game_state = game_state_main_menu;
+	
+	game_state			= noone;
+	game_state_previous = noone;
+	
+	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 	main_menu_hover = 0;
-	
-	
 }
 
 function game_state_control_menu(){
 	if (keyboard_check_pressed(controls.key_cancel)){
-		// Exit control menu
+		transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
 	}
-	control_menu_hover = 0;
+	else if (keyboard_check_pressed(controls.key_up)){
+		control_menu_hover --;
+		if (control_menu_hover < 0){
+			control_menu_hover += array_length(control_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		control_menu_hover ++;
+		if (control_menu_hover >= array_length(control_menu)){
+			control_menu_hover -= array_length(control_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var txt = control_menu[control_menu_hover];
+		if (txt == "Rebind keys"){
+			is_rebinding_keys = true;
+		}
+		else if (txt == "Set default keys"){
+			controls = variable_clone(controls_default);
+		}
+		else if (txt == "Save and exit"){
+			controls_save_settings();
+			transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
+		}
+	}
+}
+
+function game_state_dungeon(){
+	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+
+	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+
+
+	if (!game_paused){
+		turn_order_update();
+	}
 }
 
 function game_state_main_menu(){
@@ -119,13 +158,14 @@ function game_state_main_menu(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var txt = main_menu[main_menu_hover];
 		if (txt == "New game"){
-			game_state = game_state_dungeon;
+			transition_set(TRANSITION.GAME_NEW, bg_colour);
 		}
 		else if (txt == "Load game"){
 			
 		}
 		else if (txt == "Controls"){
-			
+			game_state_previous = game_state;
+			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
 		}
 		else if (txt == "Settings"){
 			
@@ -136,15 +176,33 @@ function game_state_main_menu(){
 	}
 }
 
-function game_state_dungeon(){
-	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
 
-	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+// GAME STATE TRANSITIONS
+function transition_set(transition_type, transition_colour){
+	transition = {
+		anim_speed:	0.5,
+		index:		0,
+		colour:		transition_colour,
+		type:		transition_type
+	}
+}
 
-
-	if (!game_paused){
-		turn_order_update();
+function transition_update(){
+	transition.index += transition.anim_speed;
+	if (transition.index >= sprite_get_number(transition_spr) - 1){
+		transition.anim_speed *= -1;
+		
+		switch(transition.type){
+			
+			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
+			case TRANSITION.CONTROL_EXIT:	game_state = game_state_previous;	break;
+			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
+			case TRANSITION.GAME_NEW:		game_state = game_state_dungeon;	break;
+			case TRANSITION.GAME_QUIT:		game_end();							break;
+		}
+	}
+	else if (transition.index <= 0){
+		transition			= noone;
 	}
 }
 

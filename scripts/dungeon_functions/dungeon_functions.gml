@@ -406,7 +406,7 @@ function create_shortcuts(grid, shortcut_length, secret_door_chance){
 			
 			// CREATE SECRET DOOR -----------------------------------------------------------------
 			if (irandom(100) < secret_door_chance){
-				grid[xx][yy] = new tile_secret_door();
+				grid[xx][yy] = new tile_door_secret();
 				
 			}
 			// CREATE OPEN CONNECTION -------------------------------------------------------------
@@ -519,7 +519,7 @@ function add_doors(grid){
 				if (grid[x_pos][y_pos].tile == "hall"){
 					var room_cell_count = grid_check_neighbour_count(grid, x_pos, y_pos, "room", NEIGHBOUR_CHECK.ORTH)
 					if (room_cell_count > 0){
-						grid[x_pos][y_pos] = new tile_closed_door();
+						grid[x_pos][y_pos] = new tile_door_closed();
 						grid[x_pos][y_pos].index = door_index;
 					}
 				}

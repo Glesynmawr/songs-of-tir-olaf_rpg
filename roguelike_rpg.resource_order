@@ -17,6 +17,7 @@
     {"name":"state_functions","order":8,"path":"scripts/state_functions/state_functions.yy",},
     {"name":"tile_functions","order":9,"path":"scripts/tile_functions/tile_functions.yy",},
     {"name":"utility_functions","order":10,"path":"scripts/utility_functions/utility_functions.yy",},
+    {"name":"world_functions","order":12,"path":"scripts/world_functions/world_functions.yy",},
     {"name":"actor_spr","order":1,"path":"sprites/actor_spr/actor_spr.yy",},
     {"name":"door_closed_spr","order":6,"path":"sprites/door_closed_spr/door_closed_spr.yy",},
     {"name":"door_open_spr","order":7,"path":"sprites/door_open_spr/door_open_spr.yy",},
@@ -28,5 +29,6 @@
     {"name":"transition_spr","order":11,"path":"sprites/transition_spr/transition_spr.yy",},
     {"name":"ui_border_spr","order":2,"path":"sprites/ui_border_spr/ui_border_spr.yy",},
     {"name":"wall_00_spr","order":3,"path":"sprites/wall_00_spr/wall_00_spr.yy",},
+    {"name":"world_tiles_spr","order":12,"path":"sprites/world_tiles_spr/world_tiles_spr.yy",},
   ],
 }

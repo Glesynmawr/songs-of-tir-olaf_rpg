@@ -1,0 +1,2 @@
+/// @desc
+world_generate();

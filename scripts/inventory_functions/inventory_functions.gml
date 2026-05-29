@@ -1,4 +1,5 @@
 
+// INVENTORY INITIALISATION
 function context_menu_initialise(){
 	
 	var content, xx, yy, ww, hh, i;
@@ -44,21 +45,6 @@ function context_menu_initialise(){
 	state = state_context_menu;
 }
 
-function inventory_initialise(){
-	var inv;
-	
-	inv = {
-		items:			[],
-		equipment:		[],
-		selected:		1,
-		inv_hover:		0,
-		equ_hover:		[0, 0],
-		context_menu:	noone
-	}
-	
-	return(inv);
-}
-
 function equipment_initialise(body_layout){
 	var equipment = [];
 
@@ -92,6 +78,21 @@ function equipment_initialise(body_layout){
 	return(equipment);
 }
 
+function inventory_initialise(){
+	var inv;
+	
+	inv = {
+		items:			[],
+		equipment:		[],
+		selected:		1,
+		inv_hover:		0,
+		equ_hover:		[0, 0],
+		context_menu:	noone
+	}
+	
+	return(inv);
+}
+
 function pickup_menu_initialise(actor){
 	var items = manager.game_grid[actor.x_pos][actor.y_pos].items;
 	if (array_length(items) <= 0){
@@ -109,7 +110,8 @@ function pickup_menu_initialise(actor){
 	}
 }
 
-// Inventory interaction
+
+// INVENTORY INTERACTION
 function inventory_add_item(actor, item){
 	with (actor){
 		var new_item = variable_clone(item);
@@ -137,7 +139,8 @@ function inventory_drop_slot(actor, slot, stack){
 	}
 }
 
-// Equipment interaction
+
+// EQUIPMENT INTERACTION
 function equipment_add_item(actor, item, type, slot){
 	
 	var new_item = variable_clone(item);

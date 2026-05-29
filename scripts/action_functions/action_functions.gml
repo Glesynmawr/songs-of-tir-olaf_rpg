@@ -40,7 +40,7 @@ function action_move(grid, move_x, move_y){
 			}
 		}
 			
-		cell_replace_tile(x_pos, y_pos, tile_open_door);
+		cell_replace_tile(x_pos, y_pos, tile_door_open);
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";
@@ -175,5 +175,7 @@ function combat_get_melee_damage_modifier(attacker, defender){
 	
 	return(damage_modifier);
 }
+
+
 
 

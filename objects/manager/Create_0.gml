@@ -108,6 +108,9 @@ distance_map_player = [];
 // Initialise game log
 initialise_log();
 
+// World generation
+world_generate();
+
 // Level generation
 generate_dungeon();
 

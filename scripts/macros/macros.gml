@@ -48,14 +48,19 @@ enum TRANSITION{
 	CONTROL_EXIT,
 	GAME_BOOT,
 	GAME_NEW,
-	GAME_QUIT
+	GAME_QUIT,
+	GAME_WORLD
 }
+
 
 #macro SCREEN_WIDTH  640
 #macro SCREEN_HEIGHT 360
 
 #macro ENERGY_PER_TURN 100
 #macro LOG_MAX_ENTRIES 9
+
+#macro WORLD_WIDTH	40
+#macro WORLD_HEIGHT	22
 
 #macro C_BLACK	make_colour_rgb(0,   0,   0)
 #macro C_NAVY	make_colour_rgb(29,  43,  83)

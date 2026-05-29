@@ -106,6 +106,27 @@ function draw_game_ui(){
 
 }
 
+function draw_world_grid(grid){
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	var i, j;
+	for (i = 0; i < ww; i ++){
+		for (j = 0; j < hh; j ++){
+			
+			var xx = i * cell_width;
+			var yy = j * cell_height;
+			var ind = grid[i][j].index;
+			var spr = grid[i][j].sprite;
+			
+			var tile_x = ind % 8;
+			var tile_y = ind div 8;
+			
+			draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, xx, yy, 1, 1, c_white, 1);
+		}
+	}
+}
+
 
 // UI DRAWING -------------------------------------------------------------------------------------
 function draw_control_menu(){

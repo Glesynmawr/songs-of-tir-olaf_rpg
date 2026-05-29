@@ -1,5 +1,24 @@
 
 // CAMERA
+function initialise_camera(following){
+	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2)) + floor(log_height / 2);
+}
+
+function move_camera(target_x, target_y, camera_spd){
+	if (camera_pos[0] != target_x){
+		camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
+	}
+	if (camera_pos[1] != target_y){
+		camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
+	}
+	
+	if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
+	if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
+	
+	camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
+}
+
 function resolution_scale(){
 	
 	// INITIALISE VARIABLES
@@ -33,336 +52,6 @@ function resolution_scale(){
 	// SET SCREEN SIZE VARIABLES
 	screen_width	= width  / scale;
 	screen_height	= height / scale;
-}
-
-function initialise_camera(following){
-	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2)) + floor(log_height / 2);
-}
-
-function move_camera(target_x, target_y, camera_spd){
-	if (camera_pos[0] != target_x){
-		camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
-	}
-	if (camera_pos[1] != target_y){
-		camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
-	}
-	
-	if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
-	if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
-	
-	camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
-}
-
-
-// GAME LOG	
-function initialise_log(){
-	globalvar game_log;
-	game_log = [];
-}
-
-function log_add_entry(text, colour){
-	array_insert(game_log, 0, [text, colour]);
-}
-
-function draw_game_log(x_pos, y_pos, width, height){
-	
-	ui_draw_box(x_pos, y_pos, width, height);
-	
-	var xx = x_pos + (text_width * 2);
-	var yy = y_pos + text_height;
-	
-	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
-	for (var line = 0; line < draw_to; line ++){
-		
-		var text =		game_log[line][0];
-		var colour =	game_log[line][1];
-		
-		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
-	}
-}
-
-
-// GAME_STATE
-function init_control_menu(){
-	is_rebinding_keys = false;
-	game_state = game_state_control_menu;
-}
-
-function init_main(){
-	resolution_scale();
-	
-	game_state			= noone;
-	game_state_previous = noone;
-	
-	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
-	main_menu_hover = 0;
-}
-
-function game_state_control_menu(){
-	if (keyboard_check_pressed(controls.key_cancel)){
-		transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		control_menu_hover --;
-		if (control_menu_hover < 0){
-			control_menu_hover += array_length(control_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		control_menu_hover ++;
-		if (control_menu_hover >= array_length(control_menu)){
-			control_menu_hover -= array_length(control_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = control_menu[control_menu_hover];
-		if (txt == "Rebind keys"){
-			is_rebinding_keys = true;
-		}
-		else if (txt == "Set default keys"){
-			controls = variable_clone(controls_default);
-		}
-		else if (txt == "Save and exit"){
-			controls_save_settings();
-			transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
-		}
-	}
-}
-
-function game_state_dungeon(){
-	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
-
-	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
-
-
-	if (!game_paused){
-		turn_order_update();
-	}
-}
-
-function game_state_main_menu(){
-	if (keyboard_check_pressed(controls.key_up)){
-		main_menu_hover --;
-		if (main_menu_hover < 0){
-			main_menu_hover += array_length(main_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		main_menu_hover ++;
-		if (main_menu_hover >= array_length(main_menu)){
-			main_menu_hover -= array_length(main_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = main_menu[main_menu_hover];
-		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_NEW, bg_colour);
-		}
-		else if (txt == "Load game"){
-			
-		}
-		else if (txt == "Controls"){
-			game_state_previous = game_state;
-			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
-		}
-		else if (txt == "Settings"){
-			
-		}
-		else if (txt == "Quit to desktop"){
-			game_end();
-		}
-	}
-}
-
-
-// GAME STATE TRANSITIONS
-function transition_set(transition_type, transition_colour){
-	transition = {
-		anim_speed:	0.5,
-		index:		0,
-		colour:		transition_colour,
-		type:		transition_type
-	}
-}
-
-function transition_update(){
-	transition.index += transition.anim_speed;
-	if (transition.index >= sprite_get_number(transition_spr) - 1){
-		transition.anim_speed *= -1;
-		
-		switch(transition.type){
-			
-			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
-			case TRANSITION.CONTROL_EXIT:	game_state = game_state_previous;	break;
-			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
-			case TRANSITION.GAME_NEW:		game_state = game_state_dungeon;	break;
-			case TRANSITION.GAME_QUIT:		game_end();							break;
-		}
-	}
-	else if (transition.index <= 0){
-		transition			= noone;
-	}
-}
-
-
-// LOADING AND SAVING
-function controls_read_settings(){
-	
-	var struct_json = json_stringify(controls_default);
-
-	var file = file_text_open_read("player_settings_controls");
-	if (file != -1){
-		struct_json = file_text_read_string(file);
-	}
-	
-	var loaded = json_parse(struct_json);
-	controls = variable_clone(loaded);
-}
-
-function controls_save_settings(){
-	
-	var struct_json = json_stringify(controls);
-	
-	var file = file_text_open_write("player_settings_controls");
-	file_text_write_string(file, struct_json);
-	file_text_close(file);
-	
-	show_message(struct_json);
-}
-
-
-// DISTANCE MAPPING
-function create_distance_map(target_x, target_y){
-	var i, j, xx, yy, cell_x, cell_y, candidate_list, dijkstra_map, new_list, flag;
-	
-	candidate_list[0] = [target_x, target_y];
-	flag = 0;
-	
-	// Initialise Grid
-	for (i = 0; i < manager.grid_width; i ++){
-		for (j = 0; j < manager.grid_height; j ++){
-			dijkstra_map[i][j] = 1000000;
-		}
-	}
-
-	// Populate grid
-	while (array_length(candidate_list) > 0){
-		
-		// New cell list
-		new_list = [];
-		
-		// Loop through current cell list
-		for (i = 0; i < array_length(candidate_list); i ++){
-			cell_x = candidate_list[i][0];
-			cell_y = candidate_list[i][1];
-			
-			// Set the cell flag
-			dijkstra_map[cell_x][cell_y] = flag;
-			
-			// Loop through cell neighbours
-			for (j = 0; j < 8; j ++){
-				
-				// Get all 8 cell neighbour positions
-				xx = cell_x + manager.cell_x_neighbours[j];
-				yy = cell_y + manager.cell_y_neighbours[j];
-				
-				// If cell is walkable
-				if (manager.game_grid[xx][yy].walkable){
-					if (dijkstra_map[xx][yy] == 1000000){
-						dijkstra_map[xx][yy] = flag;
-						array_push(new_list, [xx, yy]);
-					}
-				}
-			}
-		}
-		
-		candidate_list = new_list;
-		flag ++;
-	}
-	return(dijkstra_map);
-}
-
-
-// TURN STRUCTURE
-function turn_order_initialise(){
-	action_list = [];
-	action_index = 0;
-	
-	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-		
-		with (actor_registry.actor_list[i]){
-	
-			// CHECK ACTOR ENERGY
-			if (energy > 0){
-		
-				// GET ACTION ENERGY COST
-				var action_cost = 100;
-				if (action_speed > 0){
-					action_cost = 10000 / action_speed;
-				}
-		
-				// GET ACTOR DISTANCE FROM PLAYER
-				dist = 0;
-				if (self != manager.actor_registry.player){
-					var dist = distance_map_player[x_pos][y_pos];
-				}
-		
-				// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
-				energy -= action_cost;
-				array_push(other.action_list, [self, dist]);
-			}
-		}
-	}
-	// IF ACTION LIST LENGTH IS GREATER THAN ZERO
-	var len = array_length(action_list);
-	if (len > 0){
-	
-		// SORT ACTION LIST BY ASCENDING DISTANCE TO PLAYER
-		array_sort(action_list, function(elm1, elm2){
-			return(elm1[1] - elm2[1])
-		});
-	
-		// CONVERT ARRAY TO 1D
-		for (i = 0; i < len; i ++){
-			action_list[i] = action_list[i][0];
-		}
-	}
-	else {
-		if (array_length(actor_registry.actor_list) > 0){
-			
-			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-				actor_registry.actor_list[i].energy += ENERGY_PER_TURN;
-			}
-			actor_registry.player.has_acted = false;
-			turn_order_initialise();
-		}
-	}
-}
-
-function turn_order_update(){
-	var len = array_length(action_list);
-
-	if (action_index < len){
-	
-			with (action_list[action_index]){
-				state();
-				if (has_acted){
-					other.action_index ++;
-				}
-			}
-		
-		if (action_index >= array_length(action_list)){
-						
-			// Create New Action List
-			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-				actor_registry.actor_list[i].has_acted = false;
-			}
-			turn_order_initialise();
-			
-		}
-	}
 }
 
 
@@ -496,6 +185,324 @@ function keybinding_get_text(key_char){
 		case ord("Z"):		return("[z]"); break;
 		
 		default:			return("[undefined]");
+	}
+}
+
+
+// DISTANCE MAPPING
+function create_distance_map(target_x, target_y){
+	var i, j, xx, yy, cell_x, cell_y, candidate_list, dijkstra_map, new_list, flag;
+	
+	candidate_list[0] = [target_x, target_y];
+	flag = 0;
+	
+	// Initialise Grid
+	for (i = 0; i < manager.grid_width; i ++){
+		for (j = 0; j < manager.grid_height; j ++){
+			dijkstra_map[i][j] = 1000000;
+		}
+	}
+
+	// Populate grid
+	while (array_length(candidate_list) > 0){
+		
+		// New cell list
+		new_list = [];
+		
+		// Loop through current cell list
+		for (i = 0; i < array_length(candidate_list); i ++){
+			cell_x = candidate_list[i][0];
+			cell_y = candidate_list[i][1];
+			
+			// Set the cell flag
+			dijkstra_map[cell_x][cell_y] = flag;
+			
+			// Loop through cell neighbours
+			for (j = 0; j < 8; j ++){
+				
+				// Get all 8 cell neighbour positions
+				xx = cell_x + manager.cell_x_neighbours[j];
+				yy = cell_y + manager.cell_y_neighbours[j];
+				
+				// If cell is walkable
+				if (manager.game_grid[xx][yy].walkable){
+					if (dijkstra_map[xx][yy] == 1000000){
+						dijkstra_map[xx][yy] = flag;
+						array_push(new_list, [xx, yy]);
+					}
+				}
+			}
+		}
+		
+		candidate_list = new_list;
+		flag ++;
+	}
+	return(dijkstra_map);
+}
+
+
+// GAME LOG	
+function draw_game_log(x_pos, y_pos, width, height){
+	
+	ui_draw_box(x_pos, y_pos, width, height);
+	
+	var xx = x_pos + (text_width * 2);
+	var yy = y_pos + text_height;
+	
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
+	for (var line = 0; line < draw_to; line ++){
+		
+		var text =		game_log[line][0];
+		var colour =	game_log[line][1];
+		
+		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
+	}
+}
+
+function initialise_log(){
+	globalvar game_log;
+	game_log = [];
+}
+
+function log_add_entry(text, colour){
+	array_insert(game_log, 0, [text, colour]);
+}
+
+
+// GAME_STATE
+function init_control_menu(){
+	is_rebinding_keys = false;
+	game_state = game_state_control_menu;
+}
+
+function init_main(){
+	resolution_scale();
+	
+	game_state			= noone;
+	game_state_previous = noone;
+	
+	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
+	main_menu_hover = 0;
+}
+
+function game_state_control_menu(){
+	if (keyboard_check_pressed(controls.key_cancel)){
+		transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
+		control_menu_hover --;
+		if (control_menu_hover < 0){
+			control_menu_hover += array_length(control_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		control_menu_hover ++;
+		if (control_menu_hover >= array_length(control_menu)){
+			control_menu_hover -= array_length(control_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var txt = control_menu[control_menu_hover];
+		if (txt == "Rebind keys"){
+			is_rebinding_keys = true;
+		}
+		else if (txt == "Set default keys"){
+			controls = variable_clone(controls_default);
+		}
+		else if (txt == "Save and exit"){
+			controls_save_settings();
+			transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
+		}
+	}
+}
+
+function game_state_dungeon(){
+	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+
+	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+
+
+	if (!game_paused){
+		turn_order_update();
+	}
+}
+
+function game_state_main_menu(){
+	if (keyboard_check_pressed(controls.key_up)){
+		main_menu_hover --;
+		if (main_menu_hover < 0){
+			main_menu_hover += array_length(main_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		main_menu_hover ++;
+		if (main_menu_hover >= array_length(main_menu)){
+			main_menu_hover -= array_length(main_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var txt = main_menu[main_menu_hover];
+		if (txt == "New game"){
+			transition_set(TRANSITION.GAME_WORLD, bg_colour);
+		}
+		else if (txt == "Load game"){
+			
+		}
+		else if (txt == "Controls"){
+			game_state_previous = game_state;
+			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
+		}
+		else if (txt == "Settings"){
+			
+		}
+		else if (txt == "Quit to desktop"){
+			transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+		}
+	}
+}
+
+function game_state_world(){
+	
+}
+
+
+// GAME STATE TRANSITIONS
+function transition_set(transition_type, transition_colour){
+	transition = {
+		anim_speed:	0.5,
+		index:		0,
+		colour:		transition_colour,
+		type:		transition_type
+	}
+}
+
+function transition_update(){
+	transition.index += transition.anim_speed;
+	if (transition.index >= sprite_get_number(transition_spr) - 1){
+		transition.anim_speed *= -1;
+		
+		switch(transition.type){
+			
+			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
+			case TRANSITION.CONTROL_EXIT:	game_state = game_state_previous;	break;
+			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
+			case TRANSITION.GAME_NEW:		game_state = game_state_dungeon;	break;
+			case TRANSITION.GAME_QUIT:		game_end();							break;
+			case TRANSITION.GAME_WORLD:		game_state = game_state_world;		break;
+			
+			default: show_message("Transition type not set!");					break;
+		}
+	}
+	else if (transition.index <= 0){
+		transition			= noone;
+	}
+}
+
+
+// LOADING AND SAVING
+function controls_read_settings(){
+	
+	var struct_json = json_stringify(controls_default);
+
+	var file = file_text_open_read("player_settings_controls");
+	if (file != -1){
+		struct_json = file_text_read_string(file);
+	}
+	
+	var loaded = json_parse(struct_json);
+	controls = variable_clone(loaded);
+}
+
+function controls_save_settings(){
+	
+	var struct_json = json_stringify(controls);
+	
+	var file = file_text_open_write("player_settings_controls");
+	file_text_write_string(file, struct_json);
+	file_text_close(file);
+	
+	show_message(struct_json);
+}
+
+
+// TURN STRUCTURE
+function turn_order_initialise(){
+	action_list = [];
+	action_index = 0;
+	
+	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+		
+		with (actor_registry.actor_list[i]){
+	
+			// CHECK ACTOR ENERGY
+			if (energy > 0){
+		
+				// GET ACTION ENERGY COST
+				var action_cost = 100;
+				if (action_speed > 0){
+					action_cost = 10000 / action_speed;
+				}
+		
+				// GET ACTOR DISTANCE FROM PLAYER
+				dist = 0;
+				if (self != manager.actor_registry.player){
+					var dist = distance_map_player[x_pos][y_pos];
+				}
+		
+				// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
+				energy -= action_cost;
+				array_push(other.action_list, [self, dist]);
+			}
+		}
+	}
+	// IF ACTION LIST LENGTH IS GREATER THAN ZERO
+	var len = array_length(action_list);
+	if (len > 0){
+	
+		// SORT ACTION LIST BY ASCENDING DISTANCE TO PLAYER
+		array_sort(action_list, function(elm1, elm2){
+			return(elm1[1] - elm2[1])
+		});
+	
+		// CONVERT ARRAY TO 1D
+		for (i = 0; i < len; i ++){
+			action_list[i] = action_list[i][0];
+		}
+	}
+	else {
+		if (array_length(actor_registry.actor_list) > 0){
+			
+			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+				actor_registry.actor_list[i].energy += ENERGY_PER_TURN;
+			}
+			actor_registry.player.has_acted = false;
+			turn_order_initialise();
+		}
+	}
+}
+
+function turn_order_update(){
+	var len = array_length(action_list);
+
+	if (action_index < len){
+	
+			with (action_list[action_index]){
+				state();
+				if (has_acted){
+					other.action_index ++;
+				}
+			}
+		
+		if (action_index >= array_length(action_list)){
+						
+			// Create New Action List
+			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+				actor_registry.actor_list[i].has_acted = false;
+			}
+			turn_order_initialise();
+			
+		}
 	}
 }
 

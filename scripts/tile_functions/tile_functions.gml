@@ -79,7 +79,7 @@ function tile_room()constructor{
 
 function tile_stairs_up()constructor{
 	tile			= "entry";
-	sprite			= wall_00_spr;
+	sprite			= stairs_00_spr;
 	index			= 0;
 	fg				= c_orange;
 	bg				= c_red;
@@ -92,8 +92,8 @@ function tile_stairs_up()constructor{
 
 function tile_stairs_down()constructor{
 	tile			= "exit";
-	sprite			= wall_00_spr;
-	index			= 0;
+	sprite			= stairs_00_spr;
+	index			= 1;
 	fg				= c_white;
 	bg				= c_aqua;
 	walkable		= true;

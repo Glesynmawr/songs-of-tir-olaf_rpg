@@ -156,6 +156,42 @@ function game_state_main_menu(){
 	}
 }
 
+function game_state_pause_menu(){
+	if (keyboard_check_pressed(controls.key_up)){
+		pause_menu_hover --;
+		if (pause_menu_hover < 0){
+			pause_menu_hover += array_length(pause_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		pause_menu_hover ++;
+		if (pause_menu_hover >= array_length(pause_menu)){
+			pause_menu_hover -= array_length(pause_menu);
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var txt = pause_menu[pause_menu_hover];
+		if (txt == "Continue"){
+			game_state = game_state_previous;
+		}
+		else if (txt == "Controls"){
+			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
+		}
+		else if (txt == "Settings"){
+			
+		}
+		else if (txt == "Save and quit"){
+			
+		}
+		else if (txt == "Quit without saving"){
+			transition_set(TRANSITION.GAME_BOOT, bg_colour);
+		}
+		else if (txt == "Quit to desktop"){
+			transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+		}
+	}
+}
+
 function game_state_world(){
 	
 }

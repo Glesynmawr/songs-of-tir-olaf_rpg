@@ -71,7 +71,6 @@ function draw_game_grid(grid){
 				
 				if (array_length(grid[i][j].items) > 0){
 					draw_sprite(item_spr, 0, x_pos, y_pos);
-					draw_text(x_pos - 64, y_pos - 15, string(grid[i][j].items));
 				}
 			}
 		}
@@ -86,12 +85,6 @@ function draw_game_ui(){
 	
 	draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
 
-	var txt2 = $"Text size = x:{text_width} - y:{text_height}";
-	draw_text(text_width, text_height * 3, txt2);
-
-	var txt2 = $"Player inventory = {actor_registry.player.inventory.items}";
-	draw_text(10, text_height * 4, txt2);
-
 	draw_game_log(0, hh - log_height, ww, log_height);
 
 
@@ -103,7 +96,6 @@ function draw_game_ui(){
 	}
 
 	draw_minimap();
-
 }
 
 function draw_world_grid(grid){
@@ -145,29 +137,22 @@ function draw_control_menu(){
 	control_text[5] = "Select/Interact";
 	control_text[6] = "Inventory";
 	
-	var xx = floor(screen_width / 2);
-	var y1 = floor(screen_height / 2);
+	var box_height		= text_height * (array_length(control_menu) + array_length(control_text) + 6);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
 	
-	// Draw title and background
-	draw_sprite(title_background_spr, 0, xx, y1);
+	// Draw background
+	draw_sprite(title_background_spr, 0, box_center_x, box_center_y);
 	
-	var title			= "Controls";
-	var up				= keybinding_get_text(new_controls[0]);
-	var down			= keybinding_get_text(new_controls[1]);
-	var choice			= keybinding_get_text(new_controls[5]);
-	var control_keys	= $"{up} or {down} to move cursor - {choice} to select";
+	// UI border
+	var box_left_x = box_center_x - floor(box_width * 0.5);
+	var box_top_y  = box_center_y - floor(box_height * 0.5);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Controls", control_string);
 	
-	var control_height = text_height * (array_length(new_controls) + array_length(control_menu) + 6);
-	var control_width = text_width * 60;
-	
-	var box_x = floor(screen_width / 2) - (control_width / 2);
-	var box_y = floor(screen_height / 2) - (control_height / 2);
-	ui_draw_box(box_x, box_y, control_width, control_height)
-	ui_draw_box_title(box_x + (text_width * 2), box_y, title);
-	ui_draw_box_controls(box_x + (text_width * 2), box_y + control_height - text_height, control_keys);
-	
-	var binding_y = box_y + (text_height * 2);
-	var menu_y    = box_y + (text_height * 11);
+	var binding_y = box_top_y + (text_height * 2);
+	var menu_y    = box_top_y + (text_height * 11);
 	
 	// Draw keybindings
 	for (var i = 0; i < array_length(new_controls); i ++){
@@ -175,11 +160,9 @@ function draw_control_menu(){
 		var control_y = binding_y + (i * text_height);
 		
 		// Key use text
-		var control_x = box_x + (control_width / 2) - text_width;
-		draw_text_outlined(control_text[i], control_x, control_y, text_colour, fa_right);
+		draw_text_outlined(control_text[i], box_center_x - text_width, control_y, text_colour, fa_right);
 		
 		// Keybinding
-		control_x += text_width * 2;
 		var control_key = "";
 		if (!is_rebinding_keys){
 			control_key += keybinding_get_text(new_controls[i]);
@@ -192,7 +175,7 @@ function draw_control_menu(){
 				control_key += keybinding_get_text(new_controls[i]);
 			}
 		}
-		draw_text_outlined(control_key, control_x, control_y, text_colour, fa_left);
+		draw_text_outlined(control_key, box_center_x + text_width, control_y, text_colour, fa_left);
 	}
 	
 	// Draw menu
@@ -203,25 +186,33 @@ function draw_control_menu(){
 			txt += "> ";
 		}
 		txt += control_menu[i];
-		draw_text_outlined(txt, xx, yy, text_colour, fa_center);
+		draw_text_outlined(txt, box_center_x, yy, text_colour, fa_center);
 	}
 }
 
 function draw_main_menu(){
-	var xx = floor(screen_width / 2);
-	var y1 = floor(screen_height / 3);
-	var y2 = floor(screen_height / 2);
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(main_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.66);
+	var title_y			= floor(screen_height * 0.5);
 	
 	// Background
-	draw_sprite(title_background_spr, 0, xx, y2);
-	// UI border
-	ui_draw_box(xx - 48, y2 - text_height, 96, (array_length(main_menu) + 2) * text_height)
+	draw_sprite(title_background_spr, 0, box_center_x, title_y);
+	
 	// Title
-	draw_sprite(title_spr, 0, xx, y1);
+	draw_sprite(title_spr, 0, box_center_x, floor(screen_height * 0.33));
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width / 2);
+	var box_top_y  = box_center_y - floor(box_height / 2);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height, , control_string);
 	
 	// Draw menu
 	for (var i = 0; i < array_length(main_menu); i ++){
-		var yy = y2 + (i * text_height);
+		var yy = box_top_y + ((i + 2) * text_height);
 		var txt = "";
 		if (main_menu_hover == i){
 			txt += "> ";
@@ -232,8 +223,31 @@ function draw_main_menu(){
 }
 
 function draw_pause_menu(){
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(pause_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
 	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width * 0.5);
+	var box_top_y  = box_center_y - floor(box_height * 0.5);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Options", control_string);
+	
+	
+	// Draw menu
+	for (var i = 0; i < array_length(pause_menu); i ++){
+		var yy = box_top_y + ((i + 2) * text_height);
+		var txt = "";
+		if (pause_menu_hover == i){
+			txt += "> ";
+		}
+		txt += pause_menu[i];
+		draw_text_outlined(txt, xx, yy, text_colour, fa_center);
+	}
 }
+
 
 // Generic UI elements ------------------------------------------------------------------
 function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
@@ -254,20 +268,25 @@ function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
 	draw_set_halign(fa_left);
 }
 
-function ui_draw_box(x_pos, y_pos, width, height){
+function ui_draw_box(x_pos, y_pos, width, height, title = "", control_keys = ""){
 	draw_sprite_stretched_ext(ui_border_spr, 2, x_pos, y_pos, width, height, bg_colour, 1);
 	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, bg_colour, 1);
 	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_white, 1);
+	
+	if (title != ""){
+		ui_draw_box_title(x_pos + (text_width * 2), y_pos, title);
+	}
+	if (control_keys != ""){
+		ui_draw_box_controls(x_pos + (text_width * 2), y_pos + height - text_height, control_keys);
+	}
 }
 	
 function ui_draw_box_title(x_pos, y_pos, text){
 	
-	var xx = x_pos + text_width; 
-	var yy = y_pos;
 	var ww = string_width(text) + (text_width * 2);
 	
-	draw_rectangle_colour(xx, yy - 1, xx + ww, yy + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
-	draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_text_colour(x_pos + text_width, y_pos, text, text_colour, text_colour, text_colour, text_colour, 1);
 }
 
 function ui_draw_box_controls(x_pos, y_pos, text){

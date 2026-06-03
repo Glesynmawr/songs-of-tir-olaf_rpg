@@ -2,6 +2,15 @@
 function state_ready_for_inputs(){
 	var player_moved = false;
 	
+	if (keyboard_check_pressed(controls.key_cancel)){
+		with (manager){
+			pause_menu_hover = 0;
+			game_state_previous = game_state;
+			game_state = game_state_pause_menu;
+			exit;
+		}
+	}
+	
 	if (keyboard_check_pressed(controls.key_inventory)){
 		state = state_inventory;
 		exit;

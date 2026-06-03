@@ -30,9 +30,11 @@ main_menu[4] = "Quit to desktop";
 
 pause_menu_hover = 0;
 pause_menu[0] = "Continue";
-pause_menu[1] = "Save and quit";
-pause_menu[2] = "Quit without saving";
-pause_menu[3] = "Quit to desktop";
+pause_menu[1] = "Controls";
+pause_menu[2] = "Settings";
+pause_menu[3] = "Save and quit";
+pause_menu[4] = "Quit without saving";
+pause_menu[5] = "Quit to desktop";
 
 #endregion
 

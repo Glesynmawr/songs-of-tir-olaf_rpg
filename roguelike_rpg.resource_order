@@ -1,5 +1,6 @@
 {
   "FolderOrderSettings":[
+    {"name":"Sounds","order":19,"path":"folders/Sounds.yy",},
     {"name":"Scripts","order":17,"path":"folders/Scripts.yy",},
     {"name":"Sprites","order":18,"path":"folders/Sprites.yy",},
   ],
@@ -26,6 +27,7 @@
     {"name":"floor_00_spr","order":8,"path":"sprites/floor_00_spr/floor_00_spr.yy",},
     {"name":"item_spr","order":4,"path":"sprites/item_spr/item_spr.yy",},
     {"name":"pixel_spr","order":5,"path":"sprites/pixel_spr/pixel_spr.yy",},
+    {"name":"stairs_00_spr","order":15,"path":"sprites/stairs_00_spr/stairs_00_spr.yy",},
     {"name":"title_background_spr","order":10,"path":"sprites/title_background_spr/title_background_spr.yy",},
     {"name":"title_spr","order":9,"path":"sprites/title_spr/title_spr.yy",},
     {"name":"transition_spr","order":11,"path":"sprites/transition_spr/transition_spr.yy",},

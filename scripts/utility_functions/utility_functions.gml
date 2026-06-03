@@ -188,6 +188,17 @@ function keybinding_get_text(key_char){
 	}
 }
 
+function ui_menu_control_string(){
+	
+	var key_up		= keybinding_get_text(controls.key_up);
+	var key_down	= keybinding_get_text(controls.key_down);
+	var key_select	= keybinding_get_text(controls.key_interact_confirm);
+	
+	var control_text = $"{key_up} or {key_down} to move cursor - {key_select} to select";
+	
+	return(control_text);
+}
+
 
 // DISTANCE MAPPING
 function create_distance_map(target_x, target_y){
@@ -287,9 +298,11 @@ function transition_update(){
 		switch(transition.type){
 			
 			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
-			case TRANSITION.CONTROL_EXIT:	game_state = game_state_previous;	break;
+			case TRANSITION.CONTROL_EXIT:	
+				game_state = game_state_previous;	
+				if (game_state == game_state_dungeon) game_state = game_state_pause_menu; break;
 			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
-			case TRANSITION.GAME_DUNGEON:		game_state = game_state_dungeon;	break;
+			case TRANSITION.GAME_DUNGEON:	game_state = game_state_dungeon;	break;
 			case TRANSITION.GAME_QUIT:		game_end();							break;
 			case TRANSITION.GAME_WORLD:		game_state = game_state_world;		break;
 			

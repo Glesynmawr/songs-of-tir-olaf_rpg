@@ -6,7 +6,7 @@ function draw_actors(list){
 		for (var actor = 0; actor < len; actor ++){
 		
 			with (list[actor]){
-				if (self.is_visible or debugging_mode){
+				if (self.is_visible or manager.debugging_mode){
 				
 					// Position and colour
 					var xx	= self.x_pos * other.cell_width;
@@ -123,6 +123,11 @@ function draw_world_grid(grid){
 			var tile_y = ind div 8;
 			
 			draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, xx, yy, 1, 1, c_white, 1);
+			
+			if (actor_registry.player.world_x == i and actor_registry.player.world_y == j){
+				draw_rectangle_colour(xx, yy, xx + cell_width, yy + cell_height, bg_colour, bg_colour, bg_colour, bg_colour, false);
+				draw_sprite_ext(actor_spr, 0, xx, yy, 1, 1, 0, c_yellow, 1);
+			}
 		}
 	}
 }
@@ -130,15 +135,76 @@ function draw_world_grid(grid){
 
 // UI DRAWING -------------------------------------------------------------------------------------
 function draw_control_menu(){
+	
+	var control_text;
+	control_text[0] = "Up";
+	control_text[1] = "Down";
+	control_text[2] = "Left";
+	control_text[3] = "Right";
+	control_text[4] = "Move";
+	control_text[5] = "Select/Interact";
+	control_text[6] = "Inventory";
+	
 	var xx = floor(screen_width / 2);
-	var y1 = floor(screen_height / 3);
-	var y2 = floor(screen_height / 2);
+	var y1 = floor(screen_height / 2);
 	
 	// Draw title and background
-	draw_sprite(title_background_spr, 0, xx, y2);
-	draw_text_outlined("Controls", xx, y1, text_colour, fa_center);
+	draw_sprite(title_background_spr, 0, xx, y1);
+	
+	var title			= "Controls";
+	var up				= keybinding_get_text(new_controls[0]);
+	var down			= keybinding_get_text(new_controls[1]);
+	var choice			= keybinding_get_text(new_controls[5]);
+	var control_keys	= $"{up} or {down} to move cursor - {choice} to select";
+	
+	var control_height = text_height * (array_length(new_controls) + array_length(control_menu) + 6);
+	var control_width = text_width * 60;
+	
+	var box_x = floor(screen_width / 2) - (control_width / 2);
+	var box_y = floor(screen_height / 2) - (control_height / 2);
+	ui_draw_box(box_x, box_y, control_width, control_height)
+	ui_draw_box_title(box_x + (text_width * 2), box_y, title);
+	ui_draw_box_controls(box_x + (text_width * 2), box_y + control_height - text_height, control_keys);
+	
+	var binding_y = box_y + (text_height * 2);
+	var menu_y    = box_y + (text_height * 11);
+	
+	// Draw keybindings
+	for (var i = 0; i < array_length(new_controls); i ++){
+		
+		var control_y = binding_y + (i * text_height);
+		
+		// Key use text
+		var control_x = box_x + (control_width / 2) - text_width;
+		draw_text_outlined(control_text[i], control_x, control_y, text_colour, fa_right);
+		
+		// Keybinding
+		control_x += text_width * 2;
+		var control_key = "";
+		if (!is_rebinding_keys){
+			control_key += keybinding_get_text(new_controls[i]);
+		}
+		else{
+			if (current_key_rebind == i){
+				control_key += "<";
+			}
+			if (new_controls[i] != noone){
+				control_key += keybinding_get_text(new_controls[i]);
+			}
+		}
+		draw_text_outlined(control_key, control_x, control_y, text_colour, fa_left);
+	}
 	
 	// Draw menu
+	for (i = 0; i < array_length(control_menu); i ++){
+		var yy = menu_y + (i * text_height);
+		var txt = "";
+		if (control_menu_hover == i){
+			txt += "> ";
+		}
+		txt += control_menu[i];
+		draw_text_outlined(txt, xx, yy, text_colour, fa_center);
+	}
 }
 
 function draw_main_menu(){
@@ -198,20 +264,20 @@ function ui_draw_box_title(x_pos, y_pos, text){
 	
 	var xx = x_pos + text_width; 
 	var yy = y_pos;
-	var text_w = string_width(text) + (text_width * 2);
+	var ww = string_width(text) + (text_width * 2);
 	
-	draw_rectangle_colour(xx, yy, xx + text_w, yy + text_height, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_rectangle_colour(xx, yy - 1, xx + ww, yy + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
 	draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
 }
 
 function ui_draw_box_controls(x_pos, y_pos, text){
 	
 	var ww = string_width(text) + (text_width * 2);
-	var hh = text_height;
 	
-	draw_rectangle_colour(x_pos, y_pos, x_pos + ww, y_pos + hh, bg_colour, bg_colour, bg_colour, bg_colour, false);
+	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
 	draw_text_colour(x_pos + text_width, y_pos, text, text_colour, text_colour, text_colour, text_colour, 1);
 }
+
 
 // Specific UI elements -----------------------------------------------------------------
 function draw_context_menu(actor, x_pos, y_pos, width, height){
@@ -262,8 +328,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
 	var key_2 = keybinding_get_text(controls.key_inventory);
-	var key_3 = keybinding_get_text(controls.key_drop);
-	var control_list = $"{key_1} or {key_2} to exit / {key_3} to drop item";
+	var key_3 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} or {key_2} to exit / {key_3} to select";
 	
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height);

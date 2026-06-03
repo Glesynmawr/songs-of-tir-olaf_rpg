@@ -11,20 +11,24 @@ bg_colour   = C_BLACK;
 transition = noone;
 
 #region// MENUS -----------------------------------------------------------------------------------
+control_menu_hover = 0;
 control_menu[0] = "Rebind keys";
 control_menu[1] = "Set default keys";
 control_menu[2] = "Save and exit";
 
+game_over_menu_hover = 0;
 game_over_menu[0] = "Try again";
 game_over_menu[1] = "Quit to title";
 game_over_menu[2] = "Quit to desktop";
 
+main_menu_hover = 0;
 main_menu[0] = "New game";
 main_menu[1] = "Load game";
 main_menu[2] = "Controls";
 main_menu[3] = "Settings";
 main_menu[4] = "Quit to desktop";
 
+pause_menu_hover = 0;
 pause_menu[0] = "Continue";
 pause_menu[1] = "Save and quit";
 pause_menu[2] = "Quit without saving";
@@ -44,7 +48,6 @@ controls_default = {
 	key_move_confirm: vk_space,
 	key_interact_confirm: vk_enter,
 	key_inventory: ord("I"),
-	key_drop: ord("D"),
 	key_cancel: vk_escape
 }
 
@@ -124,9 +127,9 @@ distance_map_player = create_distance_map(entry_pos[0],   entry_pos[1]);
 
 
 // Spawn mobs
-spawn_actor(actor_goblin,	entry_pos[0]-3,   entry_pos[1]-2);
-spawn_actor(actor_orc,		entry_pos[0],     entry_pos[1]-2);
-spawn_actor(actor_assassin, entry_pos[0]-4,   entry_pos[1]-5);
+//spawn_actor(actor_goblin,	entry_pos[0]-3,   entry_pos[1]-2);
+//spawn_actor(actor_orc,		entry_pos[0],     entry_pos[1]-2);
+//spawn_actor(actor_assassin, entry_pos[0]-4,   entry_pos[1]-5);
 
 
 set_player_los(game_grid, actor_registry.player);

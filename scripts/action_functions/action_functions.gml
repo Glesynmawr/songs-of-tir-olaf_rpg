@@ -131,6 +131,7 @@ function action_remove_actor(actor){
 	array_delete(manager.actor_registry.actor_list, index, 1);
 }
 
+
 // COMBAT ACTIONS ---------------------------------------------------------------------------------
 function combat_get_hit(attacker, defender){
 	// 80% base to-hit chance

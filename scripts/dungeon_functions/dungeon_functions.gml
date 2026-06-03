@@ -689,7 +689,7 @@ function autotile_47(grid, type, xpos, ypos){
 		default: index = orthcount;
 	}
 	
-	return(index+1);
+	return(index);
 }
 
 function generate_map(grid){

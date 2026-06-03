@@ -1,13 +1,15 @@
 
 function world_generate(){
 	
+	tiles_per_biome = 8;
+	
 	// Biome counts
 	biome[0] = 50;	// Mountains
-	biome[1] = 100;	// Hills
-	biome[2] = 120;	// Deep forest
-	biome[3] = 140;	// Light forest
-	biome[4] = 100;	// Grassland
-	biome[5] = 90;	// Mangroves
+	biome[1] = 70;	// Hills
+	biome[2] = 90;	// Canyon
+	biome[3] = 180;	// Salt plains
+	biome[4] = 100;	// Scrubland
+	biome[5] = 120;	// Mangroves
 	biome[6] = 50;	// Marsh
 	biome[7] = 80;	// Water
 	biome[8] = 50;	// Marsh
@@ -15,9 +17,9 @@ function world_generate(){
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
-	tile[2] = tile_world_deep_forest;
-	tile[3] = tile_world_light_forest;
-	tile[4] = tile_world_grass;
+	tile[2] = tile_world_canyon;
+	tile[3] = tile_world_salt_plain;
+	tile[4] = tile_world_scrubland;
 	tile[5] = tile_world_mangrove;
 	tile[6] = tile_world_marsh;
 	tile[7] = tile_world_water;
@@ -32,6 +34,12 @@ function world_generate(){
 	
 	// Add biomes
 	world_grid = biomes_add(world_grid);
+	
+	// Smoothing passes
+	world_grid = map_smoothing(world_grid);
+	
+	// Autotile river and canyon
+	autotile_world(world_grid);
 }
 
 function world_grid_initialise(width, height){
@@ -193,6 +201,7 @@ function biomes_add(grid){
 				var cell_y = highest_cell[1];
 			
 				grid[cell_x][cell_y] = new tile[current_biome]();
+				grid[cell_x][cell_y].index += irandom(tiles_per_biome - 1);
 			}
 		}
 		current_biome ++;
@@ -202,12 +211,93 @@ function biomes_add(grid){
 	for (i = 0; i < width; i ++){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
-				grid[i][j] = new tile_world_grass();
+				grid[i][j] = new tile_world_scrubland();
+				grid[i][j].index += irandom(tiles_per_biome - 1);
 			}
 		}
 	}
 	
 	return(grid);
+}
+
+function map_smoothing(grid){
+	var width = array_length(grid);
+	var height = array_length(grid[0]);
+	
+	// Smoothing passes
+	for (var i = 0; i < width-1; i ++){
+		for (var j = 0; j < height-1; j ++){
+			var t1 = grid[i][j].tile;
+			var t2 = grid[i+1][j].tile;
+			var t3 = grid[i][j+1].tile;
+			var t4 = grid[i+1][j+1].tile;
+			
+			if (t1 == "water" and t4 == "water"){
+				if (t2 != "water" and t3 != "water"){
+					grid[i+1][j] = new tile_world_water();
+				}
+			}
+			else if (t2 == "water" and t3 == "water"){
+				if (t1 != "water" and t4 != "water"){
+					grid[i][j] = new tile_world_water();
+				}
+			}
+			else if (t1 == "canyon" and t4 == "canyon"){
+				if (t2 != "canyon" and t3 != "canyon"){
+					grid[i+1][j] = new tile_world_canyon();
+				}
+			}
+			else if (t2 == "canyon" and t3 == "canyon"){
+				if (t1 != "canyon" and t4 != "canyon"){
+					grid[i][j] = new tile_world_canyon();
+				}
+			}
+		}
+	}
+	
+	// Remove isolated tiles
+	for (i = 0; i < width; i ++){
+		for (j = 0; j < height; j ++){
+			
+			var tile = [];
+			
+			tile[0] = grid[i][j].tile;
+			if (i + 1 < width)	tile[1]	= grid[i+1][j].tile else tile[1] = noone;
+			if (j - 1 >- 0)		tile[2]	= grid[i][j-1].tile else tile[2] = noone;
+			if (i - 1 >- 0)		tile[3]	= grid[i-1][j].tile else tile[3] = noone;
+			if (j + 1 < height)	tile[4]	= grid[i][j+1].tile else tile[4] = noone;
+			
+			if (tile[0] != tile[1] and tile[0] != tile[2] and tile[0] != tile[3] and tile[0] != tile[4]){
+				
+				if (tile[3] == noone) grid[i][j] = variable_clone(grid[i+1][j]) else grid[i][j] = variable_clone(grid[i-1][j]);
+			}
+		}	
+	}
+	return(grid);
+}
+
+function autotile_world(grid){
+	for (var i = 0; i < WORLD_WIDTH; i ++){
+		for (var j = 0; j < WORLD_HEIGHT; j ++){
+			
+			if (grid[i][j].tile == "water"){
+				grid[i][j].sprite = water_00_spr;
+				grid[i][j].index = autotile_47(grid, "water", i, j);
+				if (grid[i][j].index == 46){
+					grid[i][j].sprite = world_tiles_spr;
+					grid[i][j].index = 56 + irandom(tiles_per_biome - 1);
+				}
+			}
+			else if (grid[i][j].tile == "canyon"){
+				grid[i][j].sprite = canyon_00_spr;
+				grid[i][j].index = autotile_47(grid, "canyon", i, j);
+				if (grid[i][j].index == 46){
+					grid[i][j].sprite = world_tiles_spr;
+					grid[i][j].index = 16 + irandom(tiles_per_biome - 1);
+				}
+			}
+		}
+	}
 }
 
 

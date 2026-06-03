@@ -130,20 +130,20 @@ function tile_world_hill()constructor{
 	index	= 8;
 }
 
-function tile_world_deep_forest()constructor{
-	tile	= "deep forest";
+function tile_world_canyon()constructor{
+	tile	= "canyon";
 	sprite	= world_tiles_spr;
 	index	= 16;
 }
 
-function tile_world_light_forest()constructor{
-	tile	= "light forest";
+function tile_world_salt_plain()constructor{
+	tile	= "salt plain";
 	sprite	= world_tiles_spr;
 	index	= 24;
 }
 
-function tile_world_grass()constructor{
-	tile	= "grass";
+function tile_world_scrubland()constructor{
+	tile	= "scrubland";
 	sprite	= world_tiles_spr;
 	index	= 32;
 }

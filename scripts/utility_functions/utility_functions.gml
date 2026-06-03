@@ -269,104 +269,6 @@ function log_add_entry(text, colour){
 }
 
 
-// GAME_STATE
-function init_control_menu(){
-	is_rebinding_keys = false;
-	game_state = game_state_control_menu;
-}
-
-function init_main(){
-	resolution_scale();
-	
-	game_state			= noone;
-	game_state_previous = noone;
-	
-	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
-	main_menu_hover = 0;
-}
-
-function game_state_control_menu(){
-	if (keyboard_check_pressed(controls.key_cancel)){
-		transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		control_menu_hover --;
-		if (control_menu_hover < 0){
-			control_menu_hover += array_length(control_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		control_menu_hover ++;
-		if (control_menu_hover >= array_length(control_menu)){
-			control_menu_hover -= array_length(control_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = control_menu[control_menu_hover];
-		if (txt == "Rebind keys"){
-			is_rebinding_keys = true;
-		}
-		else if (txt == "Set default keys"){
-			controls = variable_clone(controls_default);
-		}
-		else if (txt == "Save and exit"){
-			controls_save_settings();
-			transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
-		}
-	}
-}
-
-function game_state_dungeon(){
-	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
-
-	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
-
-
-	if (!game_paused){
-		turn_order_update();
-	}
-}
-
-function game_state_main_menu(){
-	if (keyboard_check_pressed(controls.key_up)){
-		main_menu_hover --;
-		if (main_menu_hover < 0){
-			main_menu_hover += array_length(main_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		main_menu_hover ++;
-		if (main_menu_hover >= array_length(main_menu)){
-			main_menu_hover -= array_length(main_menu);
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = main_menu[main_menu_hover];
-		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_WORLD, bg_colour);
-		}
-		else if (txt == "Load game"){
-			
-		}
-		else if (txt == "Controls"){
-			game_state_previous = game_state;
-			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
-		}
-		else if (txt == "Settings"){
-			
-		}
-		else if (txt == "Quit to desktop"){
-			transition_set(TRANSITION.GAME_QUIT, C_BLACK);
-		}
-	}
-}
-
-function game_state_world(){
-	
-}
-
-
 // GAME STATE TRANSITIONS
 function transition_set(transition_type, transition_colour){
 	transition = {
@@ -387,7 +289,7 @@ function transition_update(){
 			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
 			case TRANSITION.CONTROL_EXIT:	game_state = game_state_previous;	break;
 			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
-			case TRANSITION.GAME_NEW:		game_state = game_state_dungeon;	break;
+			case TRANSITION.GAME_DUNGEON:		game_state = game_state_dungeon;	break;
 			case TRANSITION.GAME_QUIT:		game_end();							break;
 			case TRANSITION.GAME_WORLD:		game_state = game_state_world;		break;
 			
@@ -421,8 +323,6 @@ function controls_save_settings(){
 	var file = file_text_open_write("player_settings_controls");
 	file_text_write_string(file, struct_json);
 	file_text_close(file);
-	
-	show_message(struct_json);
 }
 
 

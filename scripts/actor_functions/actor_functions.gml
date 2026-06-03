@@ -37,6 +37,8 @@ function actor_player()constructor{
 	armour			= 1;
 	hit_points		= 12;
 	action_speed	= 100;
+	world_x			= 0;
+	world_y			= 0;
 	
 }
 

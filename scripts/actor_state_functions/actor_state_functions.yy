@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"state_functions",
+  "%Name":"actor_state_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"state_functions",
+  "name":"actor_state_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

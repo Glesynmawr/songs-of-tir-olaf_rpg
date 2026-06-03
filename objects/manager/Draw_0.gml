@@ -1,4 +1,4 @@
-/// @desc Draw game
+/// @desc Game elements
 
 if (game_state == game_state_dungeon){
 	draw_dungeon();

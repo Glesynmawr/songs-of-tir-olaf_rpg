@@ -1,11 +1,12 @@
 {
   "FolderOrderSettings":[
-    {"name":"Sounds","order":19,"path":"folders/Sounds.yy",},
+    {"name":"Effects and Shaders","order":20,"path":"folders/Effects and Shaders.yy",},
     {"name":"Scripts","order":17,"path":"folders/Scripts.yy",},
-    {"name":"Sprites","order":18,"path":"folders/Sprites.yy",},
+    {"name":"Sounds","order":19,"path":"folders/Sounds.yy",},
+    {"name":"Sprites and Fonts","order":18,"path":"folders/Sprites and Fonts.yy",},
   ],
   "ResourceOrderSettings":[
-    {"name":"mono_fnt","order":1,"path":"fonts/mono_fnt/mono_fnt.yy",},
+    {"name":"mono_fnt","order":16,"path":"fonts/mono_fnt/mono_fnt.yy",},
     {"name":"manager","order":4,"path":"objects/manager/manager.yy",},
     {"name":"actor_functions","order":1,"path":"scripts/actor_functions/actor_functions.yy",},
     {"name":"actor_state_functions","order":8,"path":"scripts/actor_state_functions/actor_state_functions.yy",},
@@ -26,6 +27,7 @@
     {"name":"door_open_spr","order":7,"path":"sprites/door_open_spr/door_open_spr.yy",},
     {"name":"floor_00_spr","order":8,"path":"sprites/floor_00_spr/floor_00_spr.yy",},
     {"name":"item_spr","order":4,"path":"sprites/item_spr/item_spr.yy",},
+    {"name":"palette_spr","order":17,"path":"sprites/palette_spr/palette_spr.yy",},
     {"name":"pixel_spr","order":5,"path":"sprites/pixel_spr/pixel_spr.yy",},
     {"name":"stairs_00_spr","order":15,"path":"sprites/stairs_00_spr/stairs_00_spr.yy",},
     {"name":"title_background_spr","order":10,"path":"sprites/title_background_spr/title_background_spr.yy",},

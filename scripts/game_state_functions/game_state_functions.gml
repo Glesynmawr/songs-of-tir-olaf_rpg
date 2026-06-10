@@ -15,6 +15,10 @@ function init_control_menu(){
 	game_state = game_state_control_menu;
 }
 
+function init_dungeon(){
+	dungeon_grid = dungeon_generate();
+}
+
 function init_main(){
 	resolution_scale();
 	
@@ -23,6 +27,14 @@ function init_main(){
 	
 	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 	main_menu_hover = 0;
+}
+	
+function init_world(){
+	world_grid = world_generate();
+}
+
+function game_state_character_select(){
+	
 }
 
 function game_state_control_menu(){
@@ -116,8 +128,7 @@ function game_state_dungeon(){
 
 	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
 
-
-	if (!game_paused){
+	if (!game_paused and transition == noone){
 		turn_order_update();
 	}
 }

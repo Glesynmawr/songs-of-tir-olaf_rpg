@@ -1,7 +1,7 @@
 
 // MAP CHECK FUNCTIONS
 function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
-	var x_min, x_max, y_min, y_max, in_bounds;
+	var x_min, x_max, y_min, y_max;
 	
     var width  = array_length(grid);
     var height = array_length(grid[0]);
@@ -12,11 +12,9 @@ function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
 	y_max = height - border;
 	
 	if (x_pos > x_min and x_pos < x_max) and (y_pos > y_min and y_pos < y_max){
-		in_bounds = true;
+		return(true)
 	}
-	else in_bounds = false;
-	
-	return(in_bounds);
+	return(false);
 }
 
 function initialise_distance_grid(grid_width, grid_height, initial_value){

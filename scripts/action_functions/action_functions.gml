@@ -7,6 +7,9 @@ function action_move(grid, move_x, move_y){
 	x_move = x_pos + move_x;
 	y_move = y_pos + move_y;
 	
+	// Check target in bounds
+	if (!grid_check_position_in_bounds(grid, x_move, y_move)) return(false);
+	
 	// Check game_grid for collision
 	if (!grid[x_move][y_move].walkable) return(false);
 	
@@ -35,7 +38,7 @@ function action_move(grid, move_x, move_y){
 	if (grid[x_pos][y_pos].tile == "closed door") or (grid[x_pos][y_pos].tile == "secret door"){
 		
 		if (self == manager.actor_registry.player){
-			if (manager.game_grid[x_pos][y_pos].tile == "secret door"){
+			if (grid[x_pos][y_pos].tile == "secret door"){
 				found_a_secret(self);
 			}
 		}

@@ -76,7 +76,7 @@ function state_ready_for_inputs(){
 		set_player_los(other.game_grid, self);
 		
 		// Update player distance map
-		distance_map_player = create_distance_map(x_pos, y_pos);
+		distance_map_player = create_distance_map(manager.game_grid, x_pos, y_pos);
 	}
 }
 

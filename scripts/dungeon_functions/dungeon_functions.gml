@@ -1,44 +1,59 @@
 
-function generate_dungeon(){
+function dungeon_generate(){
+	
+	dungeon_grid = [];
 	
 	// Sets level overall size
-	grid_width = 79;
+	grid_width = 29;
 	grid_height = 29;
 	
 	// Initialise grids
-	game_grid = initialise_game_grid(grid_width, grid_height);
-	generate_rooms(game_grid, 9, 5, 9);
-	generate_hallways(game_grid, 25);
+	dungeon_grid = initialise_game_grid(grid_width, grid_height);
+	generate_rooms(dungeon_grid, 9, 3, 5);
+	generate_hallways(dungeon_grid, 25);
     
     // Initial connections
     var areas_connected = true;
     while(areas_connected){
-        areas_connected = connect_areas(game_grid);
+        areas_connected = connect_areas(dungeon_grid);
     }
     
     // Shortcuts
-    create_shortcuts(game_grid, 25, 25);
+    create_shortcuts(dungeon_grid, 25, 25);
 	
 	// Dead end culling
 	var dead_ends_culled = true;
 	while(dead_ends_culled){
-		dead_ends_culled = cull_dead_ends(game_grid);
+		dead_ends_culled = cull_dead_ends(dungeon_grid);
 	}
 	
 	// Doors
-	add_doors(game_grid);
+	add_doors(dungeon_grid);
 	
 	// Add entry
-	entry_pos = add_entry(game_grid);
+	entry_pos = add_entry(dungeon_grid);
 	
 	// Add exit
-	add_exit(game_grid, entry_pos[0], entry_pos[1]);
+	add_exit(dungeon_grid, entry_pos[0], entry_pos[1]);
 	
 	// Generate tilemap
-	generate_map(game_grid);
+	generate_map(dungeon_grid);
 	
 	// Initialise item grid
-	initialise_item_grid(game_grid, grid_width, grid_height);
+	initialise_item_grid(dungeon_grid, grid_width, grid_height);
+	
+	// Set player start position
+	for (var xx = 0; xx < grid_width; xx ++){
+		for (var yy = 0; yy < grid_height; yy ++){
+			if (dungeon_grid[xx][yy].tile == "entry"){
+				player_start_x = xx;
+				player_start_y = yy;
+				break;
+			}
+		}
+	}
+	
+	return(dungeon_grid);
 }
 
 // INITIALISE
@@ -561,14 +576,14 @@ function add_entry(grid){
 }
 
 function add_exit(grid, entry_x, entry_y){
-	var width  = array_length(grid);
-	var height = array_length(grid[0]);
+	var grid_w = array_length(grid);
+	var grid_h = array_length(grid[0]);
 	
 	var candidate_list = [];
 	
-	for (var x_pos = 1; x_pos < width - 1; x_pos ++){
-		for (var y_pos = 1; y_pos < height - 1; y_pos ++){
-			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > 25){
+	for (var x_pos = 1; x_pos < grid_w - 1; x_pos ++){
+		for (var y_pos = 1; y_pos < grid_h - 1; y_pos ++){
+			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > grid_width / 2){
 				var count = grid_check_neighbour_count(grid, x_pos, y_pos, "room")
 				if (count > 4){
 					array_push(candidate_list, [x_pos, y_pos]);

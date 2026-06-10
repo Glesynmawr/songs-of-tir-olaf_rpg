@@ -1,27 +1,59 @@
 
 // GAME DRAWING -----------------------------------------------------------------------------------
-function draw_actors(list){
-	var len = array_length(list);
-	if (len > 0){
-		for (var actor = 0; actor < len; actor ++){
-		
-			with (list[actor]){
-				if (self.is_visible or manager.debugging_mode){
+function game_draw_character_select(){
+	
+}
+
+function game_draw_grid(){
+	var ww = array_length(game_grid);
+	var hh = array_length(game_grid[0]);
+	
+	for (var xx = 0; xx < ww; xx ++){
+		for (var yy = 0; yy < hh; yy ++){
+			if (game_grid[xx][yy].explored or debugging_mode){
+				var spr = game_grid[xx][yy].sprite;
+				var ind = game_grid[xx][yy].index;
+			
+				var x_pos = xx * cell_width;
+				var y_pos = yy * cell_height;
+			
+				if (!game_grid[xx][yy].is_visible and !debugging_mode){
+					shader_set(fog_shd);
+				}
+			
+				var tile_x = ind % 8;
+				var tile_y = ind div 8;
+			
+				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, c_white, 1);
 				
-					// Position and colour
-					var xx	= self.x_pos * other.cell_width;
-					var yy	= self.y_pos * other.cell_height;
-					var col	= self.fg;
-		
-					// Draw actor sprite
-					draw_sprite_ext(sprite[0], sprite[1], xx, yy, 1, 1, 0, col, 1);
+				if (struct_exists(game_grid[xx][yy], "items")){
+					if (array_length(game_grid[xx][yy].items) > 0){
+						draw_sprite(item_spr, 0, x_pos, y_pos);
+					}
+				}
+				
+				shader_reset();
+				
+				for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+					
+					var actor_x = actor_registry.actor_list[i].x_pos;
+					var actor_y = actor_registry.actor_list[i].y_pos;
+					
+					if (actor_x == xx and actor_y == yy){
+						if (actor_registry.actor_list[i].is_visible){
+							// Draw actor sprite
+							var spr = actor_registry.actor_list[i].sprite[0];
+							var ind = actor_registry.actor_list[i].sprite[1];
+							draw_sprite(spr, ind, actor_x * manager.cell_width, actor_y * manager.cell_height)
+						}
+					}
 				}
 			}
 		}
 	}
 }
-	
-function draw_direction_indicator(){
+
+function game_draw_direction_indicator(){
 	if (direction_indicator != noone){
 		
 		with (actor_registry.player){
@@ -31,71 +63,6 @@ function draw_direction_indicator(){
 			draw_sprite_ext(direction_arrow_spr, manager.direction_indicator, xx, yy, 1, 1, 0, c_white, 1);
 		}
 	}
-}
-
-function draw_dungeon(){
-	// Game layers
-	draw_game_grid(game_grid);
-	draw_actors(actor_registry.actor_list);
-	
-	if (game_paused){
-		draw_pause_menu();
-	}
-	else{
-		draw_direction_indicator();
-	}
-}
-	
-function draw_game_grid(grid){
-	var ww = array_length(grid);
-	var hh = array_length(grid[0]);
-	
-	for (var i = 0; i < ww; i ++){
-		for (var j = 0; j < hh; j ++){
-			if (grid[i][j].explored or debugging_mode){
-				var spr = grid[i][j].sprite;
-				var ind = grid[i][j].index;
-				var fg   = c_white;
-			
-				var x_pos = i * cell_width;
-				var y_pos = j * cell_height;
-			
-				if (!grid[i][j].is_visible and !debugging_mode){
-					fg   = c_dkgrey;
-				}
-			
-				var tile_x = ind % 8;
-				var tile_y = ind div 8;
-			
-				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, fg, 1);
-				
-				if (array_length(grid[i][j].items) > 0){
-					draw_sprite(item_spr, 0, x_pos, y_pos);
-				}
-			}
-		}
-	}
-}
-
-function draw_game_ui(){
-	var ww = camera_get_view_width(view_camera[0]);
-	var hh = camera_get_view_height(view_camera[0]);
-	var xx = 0;
-	var yy = 0;
-	
-	draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
-
-	draw_game_log(0, hh - log_height, ww, log_height);
-
-
-	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
-		draw_inventory(actor_registry.player, xx, yy, ww, hh);
-	}
-	if (actor_registry.player.state == state_pickup){
-		draw_pickup(actor_registry.player);
-	}
-
-	draw_minimap();
 }
 
 function draw_world_grid(grid){
@@ -126,6 +93,27 @@ function draw_world_grid(grid){
 
 
 // UI DRAWING -------------------------------------------------------------------------------------
+function draw_game_ui(){
+	var ww = camera_get_view_width(view_camera[0]);
+	var hh = camera_get_view_height(view_camera[0]);
+	var xx = 0;
+	var yy = 0;
+	
+	draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
+
+	draw_game_log(0, hh - log_height, ww, log_height);
+
+
+	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
+		draw_inventory(actor_registry.player, xx, yy, ww, hh);
+	}
+	if (actor_registry.player.state == state_pickup){
+		draw_pickup(actor_registry.player);
+	}
+
+	draw_minimap();
+}
+
 function draw_control_menu(){
 	
 	var control_text;

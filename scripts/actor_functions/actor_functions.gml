@@ -18,6 +18,10 @@ function spawn_actor(actor_type, cell_x, cell_y){
 		actor_registry.player	= new_actor;
 		new_actor.is_visible	= false;
 	}
+	else{
+		new_actor.world_x = noone;
+		new_actor.world_y = noone;
+	}
 	
 	// Inventory
 	new_actor.inventory = inventory_initialise();

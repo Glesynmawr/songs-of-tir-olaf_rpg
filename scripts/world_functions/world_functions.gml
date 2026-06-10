@@ -40,6 +40,17 @@ function world_generate(){
 	
 	// Autotile river and canyon
 	autotile_world(world_grid);
+	
+	// Set player start position
+	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
+		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
+			if (world_grid[xx][yy].tile == "marsh"){
+				player_start_x = xx;
+				player_start_y = yy;
+				break;
+			}
+		}
+	}
 }
 
 function world_grid_initialise(width, height){

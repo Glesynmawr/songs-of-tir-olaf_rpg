@@ -114,26 +114,21 @@ distance_map_player = [];
 initialise_log();
 
 // World generation
-world_generate();
+world_grid = world_generate();
 
 // Level generation
-generate_dungeon();
+dungeon_grid = dungeon_generate();
+game_grid = dungeon_grid;
 
-// Spawn Player
+// Initialise actor lists
 actor_registry = {
 	actor_list:	[],
 	player:		noone
 }
+
+// Initialise player
 spawn_actor(actor_player, entry_pos[0],   entry_pos[1]);
-distance_map_player = create_distance_map(entry_pos[0],   entry_pos[1]);
-
-
-// Spawn mobs
-//spawn_actor(actor_goblin,	entry_pos[0]-3,   entry_pos[1]-2);
-//spawn_actor(actor_orc,		entry_pos[0],     entry_pos[1]-2);
-//spawn_actor(actor_assassin, entry_pos[0]-4,   entry_pos[1]-5);
-
-
+distance_map_player = create_distance_map(game_grid, entry_pos[0],   entry_pos[1]);
 set_player_los(game_grid, actor_registry.player);
 initialise_camera(actor_registry.player);
 
@@ -141,12 +136,7 @@ initialise_camera(actor_registry.player);
 action_list = [];
 turn_order_initialise();
 
-spawn_new_item(item_sword,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-spawn_new_item(item_shield, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-spawn_new_item(item_armour, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-spawn_new_item(item_helmet, 1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-spawn_new_item(item_bow,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-spawn_new_item(item_arrow,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+
 
 
 

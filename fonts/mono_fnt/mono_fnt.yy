@@ -146,8 +146,8 @@
   "maintainGms1Font":false,
   "name":"mono_fnt",
   "parent":{
-    "name":"roguelike_rpg",
-    "path":"roguelike_rpg.yyp",
+    "name":"Sprites and Fonts",
+    "path":"folders/Sprites and Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

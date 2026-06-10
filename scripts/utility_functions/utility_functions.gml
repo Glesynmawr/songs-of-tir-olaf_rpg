@@ -201,15 +201,18 @@ function ui_menu_control_string(){
 
 
 // DISTANCE MAPPING
-function create_distance_map(target_x, target_y){
+function create_distance_map(grid, target_x, target_y){
 	var i, j, xx, yy, cell_x, cell_y, candidate_list, dijkstra_map, new_list, flag;
+	
+	var grid_w = array_length(grid);
+	var grid_h = array_length(grid[0]);
 	
 	candidate_list[0] = [target_x, target_y];
 	flag = 0;
 	
 	// Initialise Grid
-	for (i = 0; i < manager.grid_width; i ++){
-		for (j = 0; j < manager.grid_height; j ++){
+	for (i = 0; i < grid_w; i ++){
+		for (j = 0; j < grid_h; j ++){
 			dijkstra_map[i][j] = 1000000;
 		}
 	}
@@ -235,11 +238,15 @@ function create_distance_map(target_x, target_y){
 				xx = cell_x + manager.cell_x_neighbours[j];
 				yy = cell_y + manager.cell_y_neighbours[j];
 				
-				// If cell is walkable
-				if (manager.game_grid[xx][yy].walkable){
-					if (dijkstra_map[xx][yy] == 1000000){
-						dijkstra_map[xx][yy] = flag;
-						array_push(new_list, [xx, yy]);
+				// Check cell is in bounds
+				if (grid_check_position_in_bounds(grid, xx, yy)){
+				
+					// If cell is walkable
+					if (grid[xx][yy].walkable){
+						if (dijkstra_map[xx][yy] == 1000000){
+							dijkstra_map[xx][yy] = flag;
+							array_push(new_list, [xx, yy]);
+						}
 					}
 				}
 			}

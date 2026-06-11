@@ -2,13 +2,16 @@
 // ACTOR ACTIONS ----------------------------------------------------------------------------------
 function action_move(grid, move_x, move_y){
 	
+	var grid_w = array_length(grid);
+	var grid_h = array_length(grid[0]);
+	
 	// Get target position
 	var x_move, y_move;
 	x_move = x_pos + move_x;
 	y_move = y_pos + move_y;
 	
 	// Check target in bounds
-	if (!grid_check_position_in_bounds(grid, x_move, y_move)) return(false);
+	if (x_move < 0 or x_move >= grid_w or y_move < 0 or y_move >= grid_h) return(false);
 	
 	// Check game_grid for collision
 	if (!grid[x_move][y_move].walkable) return(false);

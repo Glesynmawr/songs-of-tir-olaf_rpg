@@ -51,6 +51,8 @@ function world_generate(){
 			}
 		}
 	}
+	
+	return(world_grid);
 }
 
 function world_grid_initialise(width, height){

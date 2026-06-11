@@ -16,7 +16,7 @@ function init_control_menu(){
 }
 
 function init_dungeon(){
-	dungeon_grid = dungeon_generate();
+	dungeon_map = dungeon_generate();
 }
 
 function init_main(){
@@ -30,7 +30,7 @@ function init_main(){
 }
 	
 function init_world(){
-	world_grid = world_generate();
+	world_map = world_generate();
 }
 
 function game_state_character_select(){
@@ -149,7 +149,7 @@ function game_state_main_menu(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var txt = main_menu[main_menu_hover];
 		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_DUNGEON, bg_colour);
+			transition_set(TRANSITION.GAME_WORLD, bg_colour);
 		}
 		else if (txt == "Load game"){
 			
@@ -204,7 +204,9 @@ function game_state_pause_menu(){
 }
 
 function game_state_world(){
-	
+	if (!game_paused and transition == noone){
+		turn_order_update();
+	}
 }
 
 

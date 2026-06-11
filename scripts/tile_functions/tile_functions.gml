@@ -119,51 +119,93 @@ function tile_wall()constructor{
 
 // WORLD TILES
 function tile_world_mountain()constructor{
-	tile	= "mountain";
-	sprite	= world_tiles_spr;
-	index	= 0;
+	tile			= "mountain";
+	sprite			= world_tiles_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_hill()constructor{
-	tile	= "hill";
-	sprite	= world_tiles_spr;
-	index	= 8;
+	tile			= "hill";
+	sprite			= world_tiles_spr;
+	index			= 8;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_canyon()constructor{
-	tile	= "canyon";
-	sprite	= world_tiles_spr;
-	index	= 16;
+	tile			= "canyon";
+	sprite			= world_tiles_spr;
+	index			= 16;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_salt_plain()constructor{
-	tile	= "salt plain";
-	sprite	= world_tiles_spr;
-	index	= 24;
+	tile			= "salt plain";
+	sprite			= world_tiles_spr;
+	index			= 24;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_scrubland()constructor{
-	tile	= "scrubland";
-	sprite	= world_tiles_spr;
-	index	= 32;
+	tile			= "scrubland";
+	sprite			= world_tiles_spr;
+	index			= 32;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_mangrove()constructor{
-	tile	= "mangrove";
-	sprite	= world_tiles_spr;
-	index	= 40;
+	tile			= "mangrove";
+	sprite			= world_tiles_spr;
+	index			= 40;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_marsh()constructor{
-	tile	= "marsh";
-	sprite	= world_tiles_spr;
-	index	= 48;
+	tile			= "marsh";
+	sprite			= world_tiles_spr;
+	index			= 48;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 function tile_world_water()constructor{
-	tile	= "water";
-	sprite	= world_tiles_spr;
-	index	= 56;
+	tile			= "water";
+	sprite			= world_tiles_spr;
+	index			= 56;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
+
+
 
 

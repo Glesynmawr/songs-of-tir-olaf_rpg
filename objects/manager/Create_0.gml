@@ -113,12 +113,14 @@ distance_map_player = [];
 // Initialise game log
 initialise_log();
 
+entry_pos = [0, 0];
+
 // World generation
-world_grid = world_generate();
+init_world();
 
 // Level generation
-dungeon_grid = dungeon_generate();
-game_grid = dungeon_grid;
+//dungeon_map = dungeon_generate();
+game_grid = world_map;
 
 // Initialise actor lists
 actor_registry = {
@@ -127,8 +129,9 @@ actor_registry = {
 }
 
 // Initialise player
+
 spawn_actor(actor_player, entry_pos[0],   entry_pos[1]);
-distance_map_player = create_distance_map(game_grid, entry_pos[0],   entry_pos[1]);
+//distance_map_player = create_distance_map(game_grid, entry_pos[0],   entry_pos[1]);
 set_player_los(game_grid, actor_registry.player);
 initialise_camera(actor_registry.player);
 

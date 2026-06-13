@@ -2,6 +2,7 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
+	zone_size		= 10;
 	
 	// Biome counts
 	biome[0] = 50;	// Mountains
@@ -9,22 +10,22 @@ function world_generate(){
 	biome[2] = 90;	// Canyon
 	biome[3] = 180;	// Salt plains
 	biome[4] = 100;	// Scrubland
-	biome[5] = 120;	// Mangroves
-	biome[6] = 50;	// Marsh
+	biome[5] = 120;	// Marsh
+	biome[6] = 50;	// Mangrove
 	biome[7] = 80;	// Water
-	biome[8] = 50;	// Marsh
-	biome[9] = 60;	// Mangroves
+	biome[8] = 50;	// Mangrove
+	biome[9] = 60;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
 	tile[2] = tile_world_canyon;
 	tile[3] = tile_world_salt_plain;
 	tile[4] = tile_world_scrubland;
-	tile[5] = tile_world_mangrove;
-	tile[6] = tile_world_marsh;
+	tile[5] = tile_world_marsh;
+	tile[6] = tile_world_mangrove;
 	tile[7] = tile_world_water;
-	tile[8] = tile_world_marsh;
-	tile[9] = tile_world_mangrove;
+	tile[8] = tile_world_mangrove;
+	tile[9] = tile_world_marsh;
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
@@ -41,9 +42,17 @@ function world_generate(){
 	// Autotile river and canyon
 	autotile_world(world_grid);
 	
-	// Set player start position
+	// Generate zone maps
+	zone_map = [];
 	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
 		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
+			zone_map[xx][yy] = zone_map_generate(world_grid, xx, yy);
+		}
+	}
+	
+	// Set player start position
+	for (xx = 0; xx < WORLD_WIDTH; xx ++){
+		for (yy = 0; yy < WORLD_HEIGHT; yy ++){
 			if (world_grid[xx][yy].tile == "marsh"){
 				player_start_x = xx;
 				player_start_y = yy;
@@ -311,6 +320,37 @@ function autotile_world(grid){
 			}
 		}
 	}
+}
+
+function zone_map_generate(grid, cell_x, cell_y){
+	var tile = grid[cell_x][cell_y].tile;
+	
+	if (tile == "mountain"){
+		
+	}
+	else if (tile == "hill"){
+		
+	}
+	else if (tile == "canyon"){
+		
+	}
+	else if (tile == "salt plain"){
+		
+	}
+	else if (tile == "scrubland"){
+		
+	}
+	else if (tile == "mangrove"){
+		
+	}
+	else if (tile == "marsh"){
+		
+	}
+	else if (tile == "water"){
+		
+	}
+	
+	return(false);
 }
 
 

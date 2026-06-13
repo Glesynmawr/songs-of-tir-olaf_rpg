@@ -32,7 +32,6 @@ function spawn_actor(actor_type, cell_x, cell_y){
 function actor_player()constructor{
 	name			= "Player";
 	sprite			= [actor_spr, 0];
-	fg				= c_yellow;
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;
@@ -49,7 +48,6 @@ function actor_player()constructor{
 function actor_goblin()constructor{
 	name			= "Goblin";
 	sprite			= [actor_spr, 0];
-	fg				= c_lime;
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
@@ -63,7 +61,6 @@ function actor_goblin()constructor{
 function actor_orc()constructor{
 	name			= "Orc";
 	sprite			= [actor_spr, 0];
-	fg				= c_teal;
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
@@ -77,7 +74,6 @@ function actor_orc()constructor{
 function actor_assassin()constructor{
 	name			= "Assassin";
 	sprite			= [actor_spr, 0];
-	fg				= c_red;
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;

@@ -21,6 +21,7 @@
     {"name":"tile_functions","order":9,"path":"scripts/tile_functions/tile_functions.yy",},
     {"name":"utility_functions","order":10,"path":"scripts/utility_functions/utility_functions.yy",},
     {"name":"world_functions","order":12,"path":"scripts/world_functions/world_functions.yy",},
+    {"name":"zone_generators","order":14,"path":"scripts/zone_generators/zone_generators.yy",},
     {"name":"actor_spr","order":1,"path":"sprites/actor_spr/actor_spr.yy",},
     {"name":"canyon_00_spr","order":14,"path":"sprites/canyon_00_spr/canyon_00_spr.yy",},
     {"name":"door_closed_spr","order":6,"path":"sprites/door_closed_spr/door_closed_spr.yy",},

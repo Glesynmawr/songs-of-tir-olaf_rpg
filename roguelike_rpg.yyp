@@ -43,6 +43,7 @@
     {"id":{"name":"tile_functions","path":"scripts/tile_functions/tile_functions.yy",},},
     {"id":{"name":"utility_functions","path":"scripts/utility_functions/utility_functions.yy",},},
     {"id":{"name":"world_functions","path":"scripts/world_functions/world_functions.yy",},},
+    {"id":{"name":"zone_generators","path":"scripts/zone_generators/zone_generators.yy",},},
     {"id":{"name":"fog_shd","path":"shaders/fog_shd/fog_shd.yy",},},
     {"id":{"name":"actor_spr","path":"sprites/actor_spr/actor_spr.yy",},},
     {"id":{"name":"canyon_00_spr","path":"sprites/canyon_00_spr/canyon_00_spr.yy",},},

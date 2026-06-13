@@ -321,6 +321,14 @@ function transition_update(){
 	}
 }
 
+function transition_zoom_in(){
+	
+}
+
+function transition_zoom_out(){
+	
+}
+
 
 // LOADING AND SAVING
 function controls_read_settings(){

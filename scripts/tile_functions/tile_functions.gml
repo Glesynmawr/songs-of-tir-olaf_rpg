@@ -1,5 +1,5 @@
 
-// LEVEL TILES
+// TILE SWAPPING
 function cell_replace_tile(x_pos, y_pos, new_tile){
 	var vis   = other.game_grid[x_pos][y_pos].is_visible;
 	var ex    = other.game_grid[x_pos][y_pos].explored;
@@ -12,12 +12,12 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	other.game_grid[x_pos][y_pos].items		 = items;
 }
 
+
+// DUNGEON TILES
 function tile_door_closed()constructor{
 	tile			= "closed door";
 	sprite			= door_closed_spr;
 	index			= 0;
-	fg				= c_aqua;
-	bg				= c_navy;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -29,8 +29,6 @@ function tile_door_open()constructor{
 	tile			= "open door";
 	sprite			= door_open_spr;
 	index			= 0;
-	fg				= c_aqua;
-	bg				= c_navy;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -42,8 +40,6 @@ function tile_door_secret()constructor{
 	tile			= "secret door";
 	sprite			= wall_00_spr;
 	index			= 0;
-	fg				= c_ltgrey;
-	bg				= c_dkgrey;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -55,8 +51,6 @@ function tile_hall()constructor{
 	tile			= "hall";
 	sprite			= wall_00_spr;
 	index			= 0;
-	fg				= c_grey;
-	bg				= c_black;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -68,8 +62,6 @@ function tile_room()constructor{
 	tile			= "room";
 	sprite			= wall_00_spr;
 	index			= 0;
-	fg				= c_grey;
-	bg				= c_black;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -81,8 +73,6 @@ function tile_stairs_up()constructor{
 	tile			= "entry";
 	sprite			= stairs_00_spr;
 	index			= 0;
-	fg				= c_orange;
-	bg				= c_red;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -94,8 +84,6 @@ function tile_stairs_down()constructor{
 	tile			= "exit";
 	sprite			= stairs_00_spr;
 	index			= 1;
-	fg				= c_white;
-	bg				= c_aqua;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -107,8 +95,6 @@ function tile_wall()constructor{
 	tile			= "wall";
 	sprite			= wall_00_spr;
 	index			= 1;
-	fg				= c_ltgrey;
-	bg				= c_dkgrey;
 	walkable		= false;
 	transparent		= false;
 	is_visible		= false;
@@ -199,6 +185,30 @@ function tile_world_water()constructor{
 	tile			= "water";
 	sprite			= world_tiles_spr;
 	index			= 56;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+
+// ZONE TILES
+function tile_zone_wall()constructor{
+	tile			= "wall";
+	sprite			= wall_00_spr;
+	index			= 1;
+	walkable		= false;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_grass()constructor{
+	tile			= "grass";
+	sprite			= wall_00_spr;
+	index			= 1;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;

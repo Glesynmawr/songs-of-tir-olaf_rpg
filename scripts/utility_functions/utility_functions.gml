@@ -16,6 +16,9 @@ function move_camera(target_x, target_y, camera_spd){
 	if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
 	if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
 	
+	camera_pos[0] = clamp(camera_pos[0], camera_min_x, camera_max_x);
+	camera_pos[1] = clamp(camera_pos[1], camera_min_y, camera_max_y);
+	
 	camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
 }
 
@@ -309,9 +312,10 @@ function transition_update(){
 				game_state = game_state_previous;	
 				if (game_state == game_state_dungeon) game_state = game_state_pause_menu; break;
 			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
-			case TRANSITION.GAME_DUNGEON:	game_state = game_state_dungeon;	break;
+			case TRANSITION.GAME_DUNGEON:	init_dungeon();						break;
 			case TRANSITION.GAME_QUIT:		game_end();							break;
-			case TRANSITION.GAME_WORLD:		game_state = game_state_world;		break;
+			case TRANSITION.GAME_WORLD:		goto_world();						break;
+			case TRANSITION.GAME_ZONE:	goto_zone(actor_registry.player.world_x, actor_registry.player.world_y); break;
 			
 			default: show_message("Transition type not set!");					break;
 		}

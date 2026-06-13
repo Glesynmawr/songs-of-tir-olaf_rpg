@@ -11,7 +11,7 @@ function state_ready_for_inputs(){
 		}
 	}
 	
-	if (keyboard_check_pressed(controls.key_inventory)){
+	if (keyboard_check_pressed(controls.key_inventory) and game_state != game_state_world){
 		state = state_inventory;
 		exit;
 	}
@@ -55,22 +55,44 @@ function state_ready_for_inputs(){
 		}
 	}
 	else{
-		if (manager.direction_indicator != noone){
-			manager.direction_indicator = noone;
+		
+		// Reset direction indicator
+		with (manager){
+			if (direction_indicator != noone) direction_indicator = noone;
 		}
+		
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
-				pickup_menu_initialise(self);
+			
+			if (struct_exists(manager.game_grid[x_pos][y_pos], "items")){
+				if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
+					pickup_menu_initialise(self);
+				}
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_move_confirm)){
-			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+			if (manager.game_grid == manager.world_map){
+				with(manager){
+					transition_set(TRANSITION.GAME_ZONE, bg_colour);
+				}
+			}
+			else if (manager.game_grid == manager.zone_map[world_x][world_y]){
+				with(manager){
+					transition_set(TRANSITION.GAME_WORLD, bg_colour);
+				}
+			}
+			else player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
 		}
 	}
 
 	if (player_moved){
 		// Set has-acted flag
 		has_acted = true;
+		
+		// Update world position
+		if (manager.game_grid == manager.world_map){
+			world_x = x_pos;
+			world_y = y_pos;
+		}
 		
 		// Update player LOS
 		set_player_los(other.game_grid, self);

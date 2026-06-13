@@ -322,7 +322,6 @@ function grow_flags(grid, xpos, ypos, flag){
 				if (in_bounds){
 					if (grid[xx][yy].flag != flag) and (grid[xx][yy].flag != -1){
 						grid[xx][yy].flag = flag;
-						grid[xx][yy].bg = c_black;
 						array_push(new_list, [xx, yy]);
 					}
 				}

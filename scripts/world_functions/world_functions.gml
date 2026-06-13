@@ -2,7 +2,7 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
-	zone_size		= 10;
+	zone_size		= 21;
 	
 	// Biome counts
 	biome[0] = 50;	// Mountains
@@ -47,6 +47,7 @@ function world_generate(){
 	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
 		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
 			zone_map[xx][yy] = zone_map_generate(world_grid, xx, yy);
+			//initialise_item_grid(zone_map[xx][yy], zone_size, zone_size);
 		}
 	}
 	
@@ -324,30 +325,31 @@ function autotile_world(grid){
 
 function zone_map_generate(grid, cell_x, cell_y){
 	var tile = grid[cell_x][cell_y].tile;
+	var index = grid[cell_x][cell_y].index;
 	
 	if (tile == "mountain"){
-		
+		return(zone_mountain());
 	}
 	else if (tile == "hill"){
-		
+		return(zone_hill());
 	}
 	else if (tile == "canyon"){
-		
+		return(zone_canyon(index));
 	}
 	else if (tile == "salt plain"){
-		
+		return(zone_salt_plain());
 	}
 	else if (tile == "scrubland"){
-		
+		return(zone_scrubland());
 	}
 	else if (tile == "mangrove"){
-		
+		return(zone_mangrove());
 	}
 	else if (tile == "marsh"){
-		
+		return(zone_marsh());
 	}
 	else if (tile == "water"){
-		
+		return(zone_water(index));
 	}
 	
 	return(false);

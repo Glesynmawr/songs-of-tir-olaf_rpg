@@ -429,6 +429,9 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 function draw_minimap(){
 	var px, py, mx, my, s, col;
 	
+	var grid_w = array_length(game_grid);
+	var grid_h = array_length(game_grid[0]);
+	
 	s = minimap_scale;
 	if (!surface_exists(minimap_surface)){
 		minimap_surface = surface_create(minimap_width, minimap_height);
@@ -443,8 +446,8 @@ function draw_minimap(){
 	px = actor_registry.player.x_pos;
 	py = actor_registry.player.y_pos;
 	
-	for (var i = 0; i < grid_width; i ++){
-		for (var j = 0; j < grid_height; j ++){
+	for (var i = 0; i < grid_w; i ++){
+		for (var j = 0; j < grid_h; j ++){
 				
 			col = bg_colour;
 			mx  = (i * s) - (px * s) + (minimap_width / 2);

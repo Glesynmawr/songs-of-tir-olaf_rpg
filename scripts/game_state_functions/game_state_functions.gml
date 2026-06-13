@@ -1,5 +1,5 @@
 
-// GAME_STATE
+// INIT STATE FUNCTIONS
 function init_control_menu(){
 	is_rebinding_keys	= false;
 	current_key_rebind	= 0;
@@ -17,22 +17,35 @@ function init_control_menu(){
 
 function init_dungeon(){
 	dungeon_map = dungeon_generate();
+	game_grid = dungeon_map;
+	
+	camera_min_x = -(array_length(game_grid) * cell_width);
+	camera_max_x = array_length(game_grid) * cell_width;
+	camera_min_y = -(array_length(game_grid[0]) * cell_height);
+	camera_max_y = array_length(game_grid[0]) * cell_height;
+
 }
 
 function init_main(){
 	resolution_scale();
 	
+	camera_min_x = 0;
+	camera_max_x = 0;
+	camera_min_y = 0;
+	camera_max_y = 0;
+	
 	game_state			= noone;
 	game_state_previous = noone;
 	
 	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
-	main_menu_hover = 0;
 }
 	
 function init_world(){
 	world_map = world_generate();
 }
 
+
+// GAME STATE FUNCTIONS
 function game_state_character_select(){
 	
 }
@@ -204,9 +217,74 @@ function game_state_pause_menu(){
 }
 
 function game_state_world(){
+	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+
+	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+	
 	if (!game_paused and transition == noone){
 		turn_order_update();
 	}
+}
+
+
+// LOCATION GOTO FUNCTIONS
+function goto_dungeon(dungeon_id, level){
+	
+	// Set game grid
+	
+	// Set player position
+	
+	// Set camera bounds
+	
+	// Set game state
+	
+	// Update player LOS
+	set_player_los(game_grid, actor_registry.player);
+}
+
+function goto_world(){
+	
+	// Set game grid
+	game_grid = world_map;
+	
+	// Set player position
+	actor_registry.player.x_pos = actor_registry.player.world_x;
+	actor_registry.player.y_pos = actor_registry.player.world_y;
+	
+	// Set camera bounds
+	camera_min_x = 0;
+	camera_max_x = 0;
+	camera_min_y = 0;
+	camera_max_y = 0;
+	
+	// Set game state
+	game_state = game_state_world;
+	
+	// Update player LOS
+	set_player_los(game_grid, actor_registry.player);
+}
+
+function goto_zone(world_x, world_y){
+	
+	// Set game grid
+	game_grid = zone_map[world_x][world_y];
+	
+	// Set player position
+	actor_registry.player.x_pos = floor(array_length(game_grid)    * 0.5);
+	actor_registry.player.y_pos = floor(array_length(game_grid[0]) * 0.5);
+	
+	// Set camera bounds
+	camera_min_x = 0;
+	camera_max_x = max((array_length(game_grid)    * cell_width  - screen_width),  0);
+	camera_min_y = 0;
+	camera_max_y = max((array_length(game_grid[0]) * cell_height - screen_height), 0);
+	
+	// Set game state
+	game_state = game_state_dungeon;
+	
+	// Update player LOS
+	set_player_los(game_grid, actor_registry.player);
 }
 
 

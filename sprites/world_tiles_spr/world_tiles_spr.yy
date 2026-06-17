@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"469b9f2b-7abf-473c-b383-9193050f47ae","name":"469b9f2b-7abf-473c-b383-9193050f47ae","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"3c76466a-423b-4bab-a844-744171882fb1","name":"3c76466a-423b-4bab-a844-744171882fb1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":128,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"1c31ab3f-c789-43b6-8053-4704e232c00c","blendMode":0,"displayName":"default","isLocked":false,"name":"1c31ab3f-c789-43b6-8053-4704e232c00c","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"ea733d5d-e1bf-4dd0-82a1-99e64c1bb7e8","blendMode":0,"displayName":"default","isLocked":false,"name":"ea733d5d-e1bf-4dd0-82a1-99e64c1bb7e8","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tiles_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"World tiles",
+    "path":"folders/Sprites and Fonts/World tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"469b9f2b-7abf-473c-b383-9193050f47ae","path":"sprites/world_tiles_spr/world_tiles_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"a72510b7-8b3e-409b-9881-60c517fe407a","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3c76466a-423b-4bab-a844-744171882fb1","path":"sprites/world_tiles_spr/world_tiles_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"c5716e9a-01c9-46b3-a5e9-960daee5e63d","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

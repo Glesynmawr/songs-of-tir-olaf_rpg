@@ -1,4 +1,15 @@
 
+enum BIOME{
+	MOUNTAIN,
+	HILL,
+	CANYON,
+	DESERT,
+	SCRUB,
+	MARSH,
+	FOREST,
+	WATER
+}
+
 enum BODY_PART{
 	HEAD,
 	BODY,
@@ -16,6 +27,12 @@ enum EQUIP{
 	MITT,
 	GUNS,
 	FEET
+}
+
+enum MAP_MODE{
+	DUNGEON,
+	WORLD,
+	ZONE
 }
 
 enum MENU{

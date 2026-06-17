@@ -36,6 +36,7 @@ function init_main(){
 	
 	game_state			= noone;
 	game_state_previous = noone;
+	map_mode			= noone;
 	
 	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 }
@@ -233,6 +234,8 @@ function goto_dungeon(dungeon_id, level){
 	
 	// Set game grid
 	
+	map_mode  = MAP_MODE.DUNGEON;
+	
 	// Set player position
 	
 	// Set camera bounds
@@ -247,6 +250,7 @@ function goto_world(){
 	
 	// Set game grid
 	game_grid = world_map;
+	map_mode  = MAP_MODE.WORLD;
 	
 	// Set player position
 	actor_registry.player.x_pos = actor_registry.player.world_x;
@@ -269,6 +273,7 @@ function goto_zone(world_x, world_y){
 	
 	// Set game grid
 	game_grid = zone_map[world_x][world_y];
+	map_mode  = MAP_MODE.ZONE;
 	
 	// Set player position
 	actor_registry.player.x_pos = floor(array_length(game_grid)    * 0.5);

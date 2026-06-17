@@ -65,32 +65,6 @@ function game_draw_direction_indicator(){
 	}
 }
 
-function draw_world_grid(grid){
-	var ww = array_length(grid);
-	var hh = array_length(grid[0]);
-	
-	var i, j;
-	for (i = 0; i < ww; i ++){
-		for (j = 0; j < hh; j ++){
-			
-			var xx = i * cell_width;
-			var yy = j * cell_height;
-			var ind = grid[i][j].index;
-			var spr = grid[i][j].sprite;
-			
-			var tile_x = ind % 8;
-			var tile_y = ind div 8;
-			
-			draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, xx, yy, 1, 1, c_white, 1);
-			
-			if (actor_registry.player.world_x == i and actor_registry.player.world_y == j){
-				draw_rectangle_colour(xx, yy, xx + cell_width, yy + cell_height, bg_colour, bg_colour, bg_colour, bg_colour, false);
-				draw_sprite_ext(actor_spr, 0, xx, yy, 1, 1, 0, c_yellow, 1);
-			}
-		}
-	}
-}
-
 
 // UI DRAWING -------------------------------------------------------------------------------------
 function draw_game_ui(){
@@ -190,7 +164,19 @@ function draw_main_menu(){
 	draw_sprite(title_background_spr, 0, box_center_x, title_y);
 	
 	// Title
-	draw_sprite(title_spr, 0, box_center_x, floor(screen_height * 0.33));
+	title_y = floor(screen_height / 3);
+	draw_sprite(title_spr, 0, box_center_x, title_y);
+	
+	particle_create_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y, 1)
+	particle_create_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y, 1)
+	
+	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
+	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
+	
+	part_system_drawit(particle_system);
+	
+	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) - 120, title_y);
+	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) + 120, title_y);
 	
 	// UI border
 	var box_left_x = box_center_x - floor(box_width / 2);

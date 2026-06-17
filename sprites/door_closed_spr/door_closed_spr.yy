@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"Dungeon tiles",
+    "path":"folders/Sprites and Fonts/Dungeon tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

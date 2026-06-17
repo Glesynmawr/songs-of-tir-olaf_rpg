@@ -2,7 +2,8 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
-	zone_size		= 21;
+	zone_size		= 17;
+	zone_third		= floor(zone_size / 3);
 	
 	// Biome counts
 	biome[0] = 50;	// Mountains
@@ -10,11 +11,11 @@ function world_generate(){
 	biome[2] = 90;	// Canyon
 	biome[3] = 180;	// Salt plains
 	biome[4] = 100;	// Scrubland
-	biome[5] = 120;	// Marsh
-	biome[6] = 50;	// Mangrove
+	biome[5] = 70;	// Marsh
+	biome[6] = 120;	// Mangrove
 	biome[7] = 80;	// Water
-	biome[8] = 50;	// Mangrove
-	biome[9] = 60;	// Marsh
+	biome[8] = 60;	// Mangrove
+	biome[9] = 50;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
@@ -26,6 +27,15 @@ function world_generate(){
 	tile[7] = tile_world_water;
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
+	
+	terrain_lookup[BIOME.MOUNTAIN] = [tile_zone_rocks, noone];
+	terrain_lookup[BIOME.HILL] = 0;
+	terrain_lookup[BIOME.CANYON] = 0;
+	terrain_lookup[BIOME.DESERT] = 0;
+	terrain_lookup[BIOME.SCRUB] = 0;
+	terrain_lookup[BIOME.MARSH] = 0;
+	terrain_lookup[BIOME.FOREST] = 0;
+	terrain_lookup[BIOME.WATER] = 0;
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
@@ -40,14 +50,14 @@ function world_generate(){
 	world_grid = map_smoothing(world_grid);
 	
 	// Autotile river and canyon
-	autotile_world(world_grid);
+	world_grid = autotile_map(world_grid);
 	
 	// Generate zone maps
 	zone_map = [];
 	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
 		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
 			zone_map[xx][yy] = zone_map_generate(world_grid, xx, yy);
-			//initialise_item_grid(zone_map[xx][yy], zone_size, zone_size);
+			initialise_item_grid(zone_map[xx][yy], zone_size, zone_size);
 		}
 	}
 	
@@ -299,9 +309,12 @@ function map_smoothing(grid){
 	return(grid);
 }
 
-function autotile_world(grid){
-	for (var i = 0; i < WORLD_WIDTH; i ++){
-		for (var j = 0; j < WORLD_HEIGHT; j ++){
+function autotile_map(grid){
+	var grid_w = array_length(grid);
+	var grid_h = array_length(grid[0]);
+	
+	for (var i = 0; i < grid_w; i ++){
+		for (var j = 0; j < grid_h; j ++){
 			
 			if (grid[i][j].tile == "water"){
 				grid[i][j].sprite = water_00_spr;
@@ -321,6 +334,7 @@ function autotile_world(grid){
 			}
 		}
 	}
+	return(grid);
 }
 
 function zone_map_generate(grid, cell_x, cell_y){

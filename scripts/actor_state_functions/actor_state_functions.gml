@@ -11,7 +11,7 @@ function state_ready_for_inputs(){
 		}
 	}
 	
-	if (keyboard_check_pressed(controls.key_inventory) and game_state != game_state_world){
+	if (keyboard_check_pressed(controls.key_inventory) and manager.game_state != game_state_world){
 		state = state_inventory;
 		exit;
 	}
@@ -89,9 +89,45 @@ function state_ready_for_inputs(){
 		has_acted = true;
 		
 		// Update world position
-		if (manager.game_grid == manager.world_map){
+		if (manager.map_mode == MAP_MODE.WORLD){
 			world_x = x_pos;
 			world_y = y_pos;
+		}
+		
+		// Check for map edge in zone mode
+		if (manager.map_mode ==	MAP_MODE.ZONE){
+			if (x_pos == 0){
+				if (world_x > 0){
+					
+					x_pos = manager.zone_size - 2;
+					world_x --;
+					manager.game_grid = manager.zone_map[world_x][world_y];
+				}
+			}
+			else if (x_pos == manager.zone_size - 1){
+				if (world_x < array_length(manager.world_map) - 1){
+					
+					x_pos = 1;
+					world_x ++;
+					manager.game_grid = manager.zone_map[world_x][world_y];
+				}
+			}
+			if (y_pos == 0){
+				if (world_y > 0){
+					
+					y_pos = manager.zone_size - 2;
+					world_y --;
+					manager.game_grid = manager.zone_map[world_x][world_y];
+				}
+			}
+			else if (y_pos == manager.zone_size - 1){
+				if (world_y < array_length(manager.world_map) - 1){
+					
+					y_pos = 1;
+					world_y ++;
+					manager.game_grid = manager.zone_map[world_x][world_y];
+				}
+			}
 		}
 		
 		// Update player LOS

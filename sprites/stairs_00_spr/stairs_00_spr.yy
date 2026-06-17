@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"stairs_00_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":15,
   "bbox_left":1,
   "bbox_right":31,
   "bbox_top":1,
@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"3e84c10a-b3ab-4146-8da1-4c70bcd16bdc","name":"3e84c10a-b3ab-4146-8da1-4c70bcd16bdc","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"6d1208fc-f8e0-444c-a87c-c3e60bd0061b","name":"6d1208fc-f8e0-444c-a87c-c3e60bd0061b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"1106bd9d-26e6-4f96-b5ea-cb315777369c","blendMode":0,"displayName":"default","isLocked":false,"name":"1106bd9d-26e6-4f96-b5ea-cb315777369c","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"2a0a7a45-531e-463d-a0c6-f5ffdc6b7f25","blendMode":0,"displayName":"default","isLocked":false,"name":"2a0a7a45-531e-463d-a0c6-f5ffdc6b7f25","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"stairs_00_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"Dungeon tiles",
+    "path":"folders/Sprites and Fonts/Dungeon tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3e84c10a-b3ab-4146-8da1-4c70bcd16bdc","path":"sprites/stairs_00_spr/stairs_00_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"b9dba974-9638-4f77-9ca0-3ebb33e0a233","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6d1208fc-f8e0-444c-a87c-c3e60bd0061b","path":"sprites/stairs_00_spr/stairs_00_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"8187932a-9519-48f3-abbd-9ef266c52ad1","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

@@ -32,8 +32,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"UI sprites",
+    "path":"folders/Sprites and Fonts/UI sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

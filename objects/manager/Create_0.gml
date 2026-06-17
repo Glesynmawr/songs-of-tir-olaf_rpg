@@ -61,6 +61,7 @@ move_timer = 0;
 #endregion
 
 init_main();
+init_particle_system();
 
 // Cell positioning data
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];

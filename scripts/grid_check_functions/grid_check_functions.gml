@@ -169,8 +169,8 @@ function draw_los_line(grid, x_from, y_from, x_to, y_to){
 			cell_x += increment;
 			var interpolation = abs(cell_x - x_from) / len_x;
 			var cell_y = round(lerp(y_from, y_to, interpolation));
-
-			if (cell_x != x_from or cell_y != y_from){
+			
+			if (cell_x != x_from or cell_y != y_from) and (cell_x != x_to or cell_y != y_to){
 				if (grid[cell_x][cell_y].transparent == false){
 					return(false);
 				}
@@ -188,7 +188,7 @@ function draw_los_line(grid, x_from, y_from, x_to, y_to){
 			var interpolation = abs(cell_y - y_from) / len_y;
 			var cell_x = round(lerp(x_from, x_to, interpolation));
 
-			if (cell_x != x_from or cell_y != y_from){
+			if (cell_x != x_from or cell_y != y_from) and (cell_x != x_to or cell_y != y_to){
 				if (grid[cell_x][cell_y].transparent == false){
 					return(false);
 				}

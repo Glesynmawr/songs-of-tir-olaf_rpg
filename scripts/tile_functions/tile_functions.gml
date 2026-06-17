@@ -164,7 +164,7 @@ function tile_world_mangrove()constructor{
 	sprite			= world_tiles_spr;
 	index			= 40;
 	walkable		= true;
-	transparent		= true;
+	transparent		= false;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;
@@ -194,21 +194,16 @@ function tile_world_water()constructor{
 
 
 // ZONE TILES
-function tile_zone_wall()constructor{
-	tile			= "wall";
-	sprite			= wall_00_spr;
-	index			= 1;
-	walkable		= false;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
+function generate_zone_tile(tile_type){
+	var new_tile = new tile_type();
+	new_tile.index += irandom(floor(sprite_get_width(new_tile.sprite) / cell_width) - 1);
+	return(new_tile);
 }
 
-function tile_zone_grass()constructor{
-	tile			= "grass";
-	sprite			= wall_00_spr;
-	index			= 1;
+function tile_zone_dirt()constructor{
+	tile			= "dirt";
+	sprite			= zone_tile_dirt_spr;
+	index			= 0;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -216,6 +211,59 @@ function tile_zone_grass()constructor{
 	tile_script		= noone;
 }
 
+function tile_zone_grass()constructor{
+	tile			= "grass";
+	sprite			= zone_tile_grass_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
 
+function tile_zone_rocks()constructor{
+	tile			= "rocks";
+	sprite			= zone_tile_rocks_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_salt()constructor{
+	tile			= "salt";
+	sprite			= zone_tile_salt_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_tree()constructor{
+	tile			= "tree";
+	sprite			= zone_tile_tree_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_water()constructor{
+	tile			= "water";
+	sprite			= zone_tile_water_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
 
 

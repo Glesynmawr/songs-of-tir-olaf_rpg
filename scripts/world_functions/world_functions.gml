@@ -28,14 +28,14 @@ function world_generate(){
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
 	
-	terrain_lookup[BIOME.MOUNTAIN] = [tile_zone_rocks, noone];
-	terrain_lookup[BIOME.HILL] = 0;
-	terrain_lookup[BIOME.CANYON] = 0;
-	terrain_lookup[BIOME.DESERT] = 0;
-	terrain_lookup[BIOME.SCRUB] = 0;
-	terrain_lookup[BIOME.MARSH] = 0;
-	terrain_lookup[BIOME.FOREST] = 0;
-	terrain_lookup[BIOME.WATER] = 0;
+	terrain_lookup[BIOME.MOUNTAIN]	= [tile_zone_rocks, noone];
+	terrain_lookup[BIOME.HILL]		= 0;
+	terrain_lookup[BIOME.CANYON]	= 0;
+	terrain_lookup[BIOME.DESERT]	= 0;
+	terrain_lookup[BIOME.SCRUB]		= 0;
+	terrain_lookup[BIOME.MARSH]		= [[tile_zone_tree, 5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
+	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_water, 60], [tile_zone_dirt, 100]];
+	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree, 2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
@@ -319,18 +319,10 @@ function autotile_map(grid){
 			if (grid[i][j].tile == "water"){
 				grid[i][j].sprite = water_00_spr;
 				grid[i][j].index = autotile_47(grid, "water", i, j);
-				if (grid[i][j].index == 46){
-					grid[i][j].sprite = world_tiles_spr;
-					grid[i][j].index = 56 + irandom(tiles_per_biome - 1);
-				}
 			}
 			else if (grid[i][j].tile == "canyon"){
 				grid[i][j].sprite = canyon_00_spr;
 				grid[i][j].index = autotile_47(grid, "canyon", i, j);
-				if (grid[i][j].index == 46){
-					grid[i][j].sprite = world_tiles_spr;
-					grid[i][j].index = 16 + irandom(tiles_per_biome - 1);
-				}
 			}
 		}
 	}

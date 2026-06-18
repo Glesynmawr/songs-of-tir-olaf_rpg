@@ -109,7 +109,7 @@ function tile_world_mountain()constructor{
 	sprite			= world_tiles_spr;
 	index			= 0;
 	walkable		= true;
-	transparent		= true;
+	transparent		= false;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;
@@ -222,12 +222,45 @@ function tile_zone_grass()constructor{
 	tile_script		= noone;
 }
 
+function tile_zone_lilypad()constructor{
+	tile			= "lilypad";
+	sprite			= zone_tile_lilypad_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_marsh()constructor{
+	tile			= "marsh";
+	sprite			= zone_tile_marsh_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_reeds()constructor{
+	tile			= "reeds";
+	sprite			= zone_tile_reeds_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
 function tile_zone_rocks()constructor{
 	tile			= "rocks";
 	sprite			= zone_tile_rocks_spr;
 	index			= 0;
 	walkable		= true;
-	transparent		= true;
+	transparent		= false;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;
@@ -249,7 +282,7 @@ function tile_zone_tree()constructor{
 	sprite			= zone_tile_tree_spr;
 	index			= 0;
 	walkable		= true;
-	transparent		= true;
+	transparent		= false;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;
@@ -265,5 +298,7 @@ function tile_zone_water()constructor{
 	explored		= false;
 	tile_script		= noone;
 }
+
+
 
 

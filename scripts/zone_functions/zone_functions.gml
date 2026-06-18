@@ -57,7 +57,8 @@ function zone_marsh(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = new tile_zone_grass();
+			var new_tile = tile_lookup(terrain_lookup[BIOME.MARSH]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
 	return(temp_list);
@@ -67,9 +68,12 @@ function zone_mangrove(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = generate_zone_tile(tile_zone_tree);
+			var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
+	temp_list = autotile_map(temp_list);
+	
 	return(temp_list);
 }
 
@@ -93,53 +97,53 @@ function zone_water(world_index){
 			
 	// Get tile image index for water bank position
 	switch(world_index){
-		case 0:  tile_fill[0] = true tile_fill[1] = true tile_fill[2] = true tile_fill[3] = true;	break;
-		case 1:  tile_fill[1] = true tile_fill[2] = true tile_fill[3] = true;						break;
-		case 2:  tile_fill[0] = true tile_fill[2] = true tile_fill[3] = true;						break;
-		case 3:  tile_fill[2] = true tile_fill[3] = true;											break;
-		case 4:  tile_fill[0] = true tile_fill[1] = true tile_fill[3] = true;						break;
-		case 5:  tile_fill[1] = true tile_fill[3] = true;											break;
-		case 6:  tile_fill[0] = true tile_fill[3] = true tile_fill[5] = true;						break;
-		case 7:  tile_fill[3] = true tile_fill[5] = true;											break;
-		case 8:  tile_fill[0] = true tile_fill[1] = true tile_fill[2] = true;						break;
-		case 9:  tile_fill[1] = true tile_fill[2] = true tile_fill[7] = true;						break;
-		case 10: tile_fill[0] = true tile_fill[2] = true;											break;
-		case 11: tile_fill[2] = true tile_fill[4] = true tile_fill[7] = true;						break;
-		case 12: tile_fill[0] = true tile_fill[1] = true tile_fill[6] = true;						break;
-		case 13: tile_fill[1] = true tile_fill[6] = true tile_fill[7] = true;						break;
-		case 14: tile_fill[0] = true tile_fill[5] = true tile_fill[6] = true;						break;
-		case 15: tile_fill[4] = true tile_fill[5] = true tile_fill[6] = true tile_fill[7] = true;	break;
-		case 16: tile_fill[2] = true tile_fill[3] = true;											break;
-		case 17: tile_fill[0] = true tile_fill[3] = true;											break;
-		case 18: tile_fill[3] = true tile_fill[5] = true;											break;
-		case 19: tile_fill[3] = true tile_fill[4] = true;											break;
-		case 20: tile_fill[3] = true;																break;
-		case 21: tile_fill[1] = true tile_fill[2] = true;											break;
-		case 22: tile_fill[2] = true tile_fill[7] = true;											break;
-		case 23: tile_fill[2] = true tile_fill[4] = true;											break;
-		case 24: tile_fill[2] = true;																break;
-		case 25: tile_fill[0] = true tile_fill[1] = true;											break;
-		case 26: tile_fill[1] = true tile_fill[7] = true;											break;
-		case 27: tile_fill[1] = true tile_fill[6] = true;											break;
-		case 28: tile_fill[1] = true;																break;
-		case 29: tile_fill[0] = true tile_fill[6] = true;											break;
-		case 30: tile_fill[0] = true tile_fill[5] = true;											break;
-		case 31: tile_fill[0] = true;																break;
-		case 32: tile_fill[5] = true tile_fill[6] = true tile_fill[7] = true;						break;
-		case 33: tile_fill[4] = true tile_fill[6] = true tile_fill[7] = true;						break;
-		case 34: tile_fill[4] = true tile_fill[5] = true tile_fill[7] = true;						break;
-		case 35: tile_fill[4] = true tile_fill[5] = true tile_fill[6] = true;						break;
-		case 36: tile_fill[4] = true tile_fill[6] = true;											break;
-		case 37: tile_fill[5] = true tile_fill[7] = true;											break;
-		case 38: tile_fill[5] = true tile_fill[6] = true;											break;
-		case 39: tile_fill[4] = true tile_fill[5] = true;											break;
-		case 40: tile_fill[4] = true tile_fill[7] = true;											break;
-		case 41: tile_fill[6] = true tile_fill[7] = true;											break;
-		case 42: tile_fill[4] = true;																break;
-		case 43: tile_fill[5] = true;																break;
-		case 44: tile_fill[6] = true;																break;
-		case 45: tile_fill[7] = true;																break;
-		case 46: ;																					break;
+		case 0:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[3] = true;	break;
+		case 1:  tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[3] = true;							break;
+		case 2:  tile_fill[0] = true	 tile_fill[2] = true	 tile_fill[3] = true;							break;
+		case 3:  tile_fill[2] = true	 tile_fill[3] = true;													break;
+		case 4:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[3] = true;							break;
+		case 5:  tile_fill[1] = true	 tile_fill[3] = true;													break;
+		case 6:  tile_fill[0] = true	 tile_fill[3] = true	 tile_fill[5] = true;							break;
+		case 7:  tile_fill[3] = true	 tile_fill[5] = true;													break;
+		case 8:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[2] = true;							break;
+		case 9:  tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[7] = true;							break;
+		case 10: tile_fill[0] = true	 tile_fill[2] = true;													break;
+		case 11: tile_fill[2] = true	 tile_fill[4] = true	 tile_fill[7] = true;							break;
+		case 12: tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[6] = true;							break;
+		case 13: tile_fill[1] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
+		case 14: tile_fill[0] = true	 tile_fill[5] = true	 tile_fill[6] = true;							break;
+		case 15: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[6] = true	 tile_fill[7] = true;	break;
+		case 16: tile_fill[2] = true	 tile_fill[3] = true;													break;
+		case 17: tile_fill[0] = true	 tile_fill[3] = true;													break;
+		case 18: tile_fill[3] = true	 tile_fill[5] = true;													break;
+		case 19: tile_fill[3] = true	 tile_fill[4] = true;													break;
+		case 20: tile_fill[3] = true;																			break;
+		case 21: tile_fill[1] = true	 tile_fill[2] = true;													break;
+		case 22: tile_fill[2] = true	 tile_fill[7] = true;													break;
+		case 23: tile_fill[2] = true	 tile_fill[4] = true;													break;
+		case 24: tile_fill[2] = true;																			break;
+		case 25: tile_fill[0] = true	 tile_fill[1] = true;													break;
+		case 26: tile_fill[1] = true	 tile_fill[7] = true;													break;
+		case 27: tile_fill[1] = true	 tile_fill[6] = true;													break;
+		case 28: tile_fill[1] = true;																			break;
+		case 29: tile_fill[0] = true	 tile_fill[6] = true;													break;
+		case 30: tile_fill[0] = true	 tile_fill[5] = true;													break;
+		case 31: tile_fill[0] = true;																			break;
+		case 32: tile_fill[5] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
+		case 33: tile_fill[4] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
+		case 34: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[7] = true;							break;
+		case 35: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[6] = true;							break;
+		case 36: tile_fill[4] = true	 tile_fill[6] = true;													break;
+		case 37: tile_fill[5] = true	 tile_fill[7] = true;													break;
+		case 38: tile_fill[5] = true	 tile_fill[6] = true;													break;
+		case 39: tile_fill[4] = true	 tile_fill[5] = true;													break;
+		case 40: tile_fill[4] = true	 tile_fill[7] = true;													break;
+		case 41: tile_fill[6] = true	 tile_fill[7] = true;													break;
+		case 42: tile_fill[4] = true;																			break;
+		case 43: tile_fill[5] = true;																			break;
+		case 44: tile_fill[6] = true;																			break;
+		case 45: tile_fill[7] = true;																			break;
+		case 46: ;																								break;
 				
 	}
 	var x2, y2, dist, anchor_x, anchor_y, tile_chance;
@@ -153,7 +157,8 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -168,7 +173,8 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -183,7 +189,8 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -198,71 +205,32 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
 	}
 	
-	// Top right corner fill
-	if (tile_fill[4] == true){
-		anchor_x = zone_size - 1;
-		anchor_y = 0;
-		
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
-				dist = point_distance(x2, y2, anchor_x, anchor_y);
-				tile_chance = dist / zone_third;
-				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
-				}
+	// Corner fill
+	for (var i = 4; i < array_length(tile_fill); i ++){
+		if (tile_fill[i] == true){
+			
+			switch(i){
+				case 4: anchor_x = zone_size - 1 anchor_y = 0; break;
+				case 5: anchor_x = 0 anchor_y = 0; break;
+				case 6: anchor_x = 0 anchor_y = zone_size - 1; break;
+				case 7: anchor_x = zone_size - 1 anchor_y = zone_size - 1; break;
 			}
-		}
-	}
-	
-	// Top left corner fill
-	if (tile_fill[5] == true){
-		anchor_x = 0;
-		anchor_y = 0;
 		
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
-				dist = point_distance(x2, y2, anchor_x, anchor_y);
-				tile_chance = dist / zone_third;
-				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
-				}
-			}
-		}
-	}
-	
-	// bottom left corner fill
-	if (tile_fill[6] == true){
-		anchor_x = 0;
-		anchor_y = zone_size - 1;
-		
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
-				dist = point_distance(x2, y2, anchor_x, anchor_y);
-				tile_chance = dist / zone_third;
-				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
-				}
-			}
-		}
-	}
-	
-	// bottom right corner fill
-	if (tile_fill[7] == true){
-		anchor_x = zone_size - 1;
-		anchor_y = zone_size - 1;
-		
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
-				dist = point_distance(x2, y2, anchor_x, anchor_y);
-				tile_chance = dist / zone_third;
-				if (random(1) >= tile_chance){
-					temp_list[x2][y2] = generate_zone_tile(tile_zone_tree);
+			for (x2 = 0; x2 < zone_size; x2 ++){
+				for (y2 = 0; y2 < zone_size; y2 ++){
+					dist = point_distance(x2, y2, anchor_x, anchor_y);
+					tile_chance = dist / zone_third;
+					if (random(1) >= tile_chance){
+						var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+						temp_list[x2][y2] = generate_zone_tile(new_tile);
+					}
 				}
 			}
 		}
@@ -270,7 +238,27 @@ function zone_water(world_index){
 	
 	temp_list = autotile_map(temp_list);
 	
+	for (xx = 0; xx < zone_size; xx ++){
+		for (yy = 0; yy < zone_size; yy ++){
+			if (temp_list[xx][yy].index == 46){
+				var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);
+				temp_list[xx][yy] = generate_zone_tile(new_tile);
+			}
+		}
+	}
+	
 	return(temp_list);
+}
+
+function tile_lookup(list){
+	var len = array_length(list);
+	var roll = irandom(100);
+	for (var i = 0; i < len; i ++){
+		if (roll < list[i][1]){
+			return(list[i][0]);
+		}
+	}
+	return(list[len-1][0]);
 }
 
 

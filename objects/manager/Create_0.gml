@@ -98,9 +98,9 @@ log_height = (LOG_MAX_ENTRIES + 2) * text_height;
 // Minimap
 minimap_scale	= 2;
 minimap_surface = noone;
-minimap_width	= 96;
-minimap_height	= 96;
-minimap_x		= screen_width - minimap_width;
+ui_width	= 96;
+ui_height	= 96;
+minimap_x		= screen_width - ui_width;
 minimap_y		= 0;
 
 // Level Sprite Indices

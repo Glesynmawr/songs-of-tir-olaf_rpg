@@ -26,7 +26,7 @@
     {"name":"tile_functions","order":9,"path":"scripts/tile_functions/tile_functions.yy",},
     {"name":"utility_functions","order":10,"path":"scripts/utility_functions/utility_functions.yy",},
     {"name":"world_functions","order":12,"path":"scripts/world_functions/world_functions.yy",},
-    {"name":"zone_generators","order":14,"path":"scripts/zone_generators/zone_generators.yy",},
+    {"name":"zone_functions","order":14,"path":"scripts/zone_functions/zone_functions.yy",},
     {"name":"actor_spr","order":1,"path":"sprites/actor_spr/actor_spr.yy",},
     {"name":"direction_arrow_spr","order":3,"path":"sprites/direction_arrow_spr/direction_arrow_spr.yy",},
     {"name":"door_open_spr","order":1,"path":"sprites/door_open_spr/door_open_spr.yy",},

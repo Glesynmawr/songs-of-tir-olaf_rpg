@@ -2,7 +2,7 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
-	zone_size		= 17;
+	zone_size		= 36;
 	zone_third		= floor(zone_size / 3);
 	
 	// Biome counts

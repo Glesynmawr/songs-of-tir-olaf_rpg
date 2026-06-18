@@ -420,14 +420,14 @@ function draw_minimap(){
 	
 	s = minimap_scale;
 	if (!surface_exists(minimap_surface)){
-		minimap_surface = surface_create(minimap_width, minimap_height);
+		minimap_surface = surface_create(ui_width, ui_height);
 	}
 	
 	surface_set_target(minimap_surface);
 	draw_clear(bg_colour);
 	
 	// Mini Map Background
-	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, minimap_width, minimap_height, bg_colour, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, ui_width, ui_height, bg_colour, 1);
 
 	px = actor_registry.player.x_pos;
 	py = actor_registry.player.y_pos;
@@ -436,8 +436,8 @@ function draw_minimap(){
 		for (var j = 0; j < grid_h; j ++){
 				
 			col = bg_colour;
-			mx  = (i * s) - (px * s) + (minimap_width / 2);
-			my  = (j * s) - (py * s) + (minimap_height / 2);
+			mx  = (i * s) - (px * s) + (ui_width / 2);
+			my  = (j * s) - (py * s) + (ui_height / 2);
 				
 			if(game_grid[i][j].is_visible){
 				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
@@ -457,14 +457,14 @@ function draw_minimap(){
 	}
 		
 	// Draw Player Position
-	draw_sprite_ext(pixel_spr, 0, minimap_width / 2, minimap_height / 2, s, s, 0, c_white, 1);
+	draw_sprite_ext(pixel_spr, 0, ui_width / 2, ui_height / 2, s, s, 0, c_white, 1);
 	
 	surface_reset_target();
 		
 	draw_surface(minimap_surface, minimap_x, minimap_y);
 		
 	// Draw Map Border
-	draw_sprite_stretched(ui_border_spr, 0, minimap_x, minimap_y, minimap_width, minimap_height);
+	draw_sprite_stretched(ui_border_spr, 0, minimap_x, minimap_y, ui_width, ui_height);
 	
 }
 

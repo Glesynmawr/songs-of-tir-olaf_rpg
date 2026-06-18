@@ -200,6 +200,22 @@ function draw_los_line(grid, x_from, y_from, x_to, y_to){
 	return(true);
 }
 
+function grid_set_visible(grid, visibility){
+	for (var i = 0; i < array_length(grid); i ++){
+		for (var j = 0; j < array_length(grid[0]); j ++){
+			grid[i][j].is_visible = visibility;
+		}
+	}
+}
+
+function grid_set_explored(grid, is_explored){
+	for (var i = 0; i < array_length(grid); i ++){
+		for (var j = 0; j < array_length(grid[0]); j ++){
+			grid[i][j].explored = is_explored;
+		}
+	}
+}
+
 
 
 

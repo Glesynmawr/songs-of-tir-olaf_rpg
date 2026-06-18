@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"zone_generators",
+  "%Name":"zone_functions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"zone_generators",
+  "name":"zone_functions",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

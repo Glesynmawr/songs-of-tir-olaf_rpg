@@ -5,6 +5,15 @@ function initialise_camera(following){
 	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2)) + floor(log_height / 2);
 }
 
+function camera_set_position_to_player(){
+	with (manager){
+		var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+		var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+
+		move_camera(target_x, target_y + floor(log_height / 2), 1);
+	}
+}
+
 function move_camera(target_x, target_y, camera_spd){
 	if (camera_pos[0] != target_x){
 		camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;

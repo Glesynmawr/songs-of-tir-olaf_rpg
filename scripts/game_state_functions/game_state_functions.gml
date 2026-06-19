@@ -288,6 +288,8 @@ function goto_zone(world_x, world_y){
 	camera_min_y = 0;
 	camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
 	
+	camera_set_position_to_player();
+	
 	// Set game state
 	game_state = game_state_dungeon;
 	

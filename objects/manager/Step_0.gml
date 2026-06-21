@@ -8,6 +8,8 @@ if (transition != noone){
 	transition_update();
 }
 
+ui_anim_flip();
+
 
 
 

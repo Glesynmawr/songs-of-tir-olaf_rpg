@@ -144,11 +144,16 @@ function draw_control_menu(){
 	for (i = 0; i < array_length(control_menu); i ++){
 		var yy = menu_y + (i * text_height);
 		var txt = "";
+		var x_mod = 0;
 		if (control_menu_hover == i){
 			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
 		}
 		txt += control_menu[i];
-		draw_text_outlined(txt, box_center_x, yy, text_colour, fa_center);
+		draw_text_outlined(txt, box_center_x - x_mod, yy, text_colour, fa_center);
 	}
 }
 
@@ -188,11 +193,16 @@ function draw_main_menu(){
 	for (var i = 0; i < array_length(main_menu); i ++){
 		var yy = box_top_y + ((i + 2) * text_height);
 		var txt = "";
+		var x_mod = 0;
 		if (main_menu_hover == i){
 			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
 		}
 		txt += main_menu[i];
-		draw_text_outlined(txt, xx, yy, text_colour, fa_center);
+		draw_text_outlined(txt, xx - x_mod, yy, text_colour, fa_center);
 	}
 }
 
@@ -214,11 +224,16 @@ function draw_pause_menu(){
 	for (var i = 0; i < array_length(pause_menu); i ++){
 		var yy = box_top_y + ((i + 2) * text_height);
 		var txt = "";
+		var x_mod = 0;
 		if (pause_menu_hover == i){
 			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
 		}
 		txt += pause_menu[i];
-		draw_text_outlined(txt, xx, yy, text_colour, fa_center);
+		draw_text_outlined(txt, xx - x_mod, yy, text_colour, fa_center);
 	}
 }
 
@@ -273,6 +288,14 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 
 
 // Specific UI elements -----------------------------------------------------------------
+function ui_anim_flip(){
+	ui_flip_timer --;
+	if (ui_flip_timer <= 0){
+		ui_flip_timer = ui_flip_timer_max;
+		ui_flip = !ui_flip;
+	}
+}
+
 function draw_context_menu(actor, x_pos, y_pos, width, height){
 	
 	var xx, yy;

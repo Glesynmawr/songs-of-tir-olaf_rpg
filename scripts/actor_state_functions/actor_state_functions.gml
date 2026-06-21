@@ -124,7 +124,7 @@ function state_ready_for_inputs(){
 				}
 			}
 			else if (y_pos == manager.zone_size - 1){
-				if (world_y < array_length(manager.world_map) - 1){
+				if (world_y < array_length(manager.world_map[0]) - 1){
 					grid_set_visible(manager.game_grid, false)
 					y_pos = 1;
 					world_y ++;

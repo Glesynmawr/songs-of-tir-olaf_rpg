@@ -2,24 +2,24 @@
   "$GMSprite":"v2",
   "%Name":"zone_tile_rocks_spr",
   "bboxMode":0,
-  "bbox_bottom":12,
-  "bbox_left":3,
-  "bbox_right":11,
-  "bbox_top":4,
+  "bbox_bottom":14,
+  "bbox_left":1,
+  "bbox_right":126,
+  "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"5dde0494-b864-441e-9522-10d22c8f0658","name":"5dde0494-b864-441e-9522-10d22c8f0658","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"e42eee70-6107-4442-a40c-00b9a95979aa","name":"e42eee70-6107-4442-a40c-00b9a95979aa","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"721e5d78-fe05-4486-892b-a0b529084b6e","blendMode":0,"displayName":"default","isLocked":false,"name":"721e5d78-fe05-4486-892b-a0b529084b6e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"677bcff6-15c7-4e10-9dd1-19cdc7f45d2a","blendMode":0,"displayName":"default","isLocked":false,"name":"677bcff6-15c7-4e10-9dd1-19cdc7f45d2a","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"zone_tile_rocks_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5dde0494-b864-441e-9522-10d22c8f0658","path":"sprites/zone_tile_rocks_spr/zone_tile_rocks_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ae74b054-ee56-46d8-9673-d2939f917e3f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e42eee70-6107-4442-a40c-00b9a95979aa","path":"sprites/zone_tile_rocks_spr/zone_tile_rocks_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"62ba6c2c-ef0c-4ff6-a0e3-bde563855a3f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":16,
+  "width":128,
 }

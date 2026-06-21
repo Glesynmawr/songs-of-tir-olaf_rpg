@@ -13,7 +13,7 @@ if (transition != noone){
 
 //draw_text_outlined($"Game state: {game_state}", 10, 10, c_white, fa_left);
 //draw_text_outlined($"Prev state: {game_state_previous}", 10, 17, c_white, fa_left);
-
+//draw_text_outlined($"Cont state: {control_state_previous}", 10, 24, c_white, fa_left);
 
 
 

@@ -34,9 +34,14 @@ function init_main(){
 	camera_min_y = 0;
 	camera_max_y = 0;
 	
-	game_state			= noone;
-	game_state_previous = noone;
-	map_mode			= noone;
+	game_state				= noone;
+	game_state_previous		= noone;
+	control_state_previous	= noone;
+	map_mode				= noone;
+	
+	ui_flip				= true;
+	ui_flip_timer_max	= 30;
+	ui_flip_timer		= ui_flip_timer_max;
 	
 	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 }
@@ -182,7 +187,10 @@ function game_state_main_menu(){
 }
 
 function game_state_pause_menu(){
-	if (keyboard_check_pressed(controls.key_up)){
+	if (keyboard_check_pressed(controls.key_cancel)){
+		game_state = game_state_previous;
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
 		pause_menu_hover --;
 		if (pause_menu_hover < 0){
 			pause_menu_hover += array_length(pause_menu);

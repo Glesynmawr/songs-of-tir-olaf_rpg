@@ -2,24 +2,24 @@
   "$GMSprite":"v2",
   "%Name":"zone_tile_water_spr",
   "bboxMode":0,
-  "bbox_bottom":10,
-  "bbox_left":3,
-  "bbox_right":11,
-  "bbox_top":5,
+  "bbox_bottom":14,
+  "bbox_left":2,
+  "bbox_right":124,
+  "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"7d818ead-b641-434c-8d15-eaf84190fbf3","name":"7d818ead-b641-434c-8d15-eaf84190fbf3","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"936e5645-8a3b-46ae-b31b-c20185920f64","name":"936e5645-8a3b-46ae-b31b-c20185920f64","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"e169ec19-a2fb-41d0-9bda-4c15ffb81e06","blendMode":0,"displayName":"default","isLocked":false,"name":"e169ec19-a2fb-41d0-9bda-4c15ffb81e06","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"8ff2b0f1-7049-440c-a069-db566f2e0f2e","blendMode":0,"displayName":"default","isLocked":false,"name":"8ff2b0f1-7049-440c-a069-db566f2e0f2e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"zone_tile_water_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7d818ead-b641-434c-8d15-eaf84190fbf3","path":"sprites/zone_tile_water_spr/zone_tile_water_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"f923a64d-0a2f-496f-886b-f1736280dc83","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"936e5645-8a3b-46ae-b31b-c20185920f64","path":"sprites/zone_tile_water_spr/zone_tile_water_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"73afe45e-b4e5-4cb9-b08c-1727366f9ed5","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":16,
+  "width":128,
 }

@@ -28,14 +28,14 @@ function world_generate(){
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
 	
-	terrain_lookup[BIOME.MOUNTAIN]	= [tile_zone_rocks, noone];
-	terrain_lookup[BIOME.HILL]		= 0;
-	terrain_lookup[BIOME.CANYON]	= 0;
-	terrain_lookup[BIOME.DESERT]	= 0;
-	terrain_lookup[BIOME.SCRUB]		= 0;
-	terrain_lookup[BIOME.MARSH]		= [[tile_zone_tree, 5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
+	terrain_lookup[BIOME.MOUNTAIN]	= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.HILL]		= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.CANYON]	= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.DESERT]	= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
+	terrain_lookup[BIOME.SCRUB]		= [[tile_zone_tree,  5], [tile_zone_grass, 10], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.MARSH]		= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
 	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_water, 60], [tile_zone_dirt, 100]];
-	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree, 2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);

@@ -3,7 +3,8 @@ function zone_mountain(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = new tile_zone_rocks();
+			var new_tile = tile_lookup(terrain_lookup[BIOME.MOUNTAIN]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
 	return(temp_list);
@@ -13,7 +14,8 @@ function zone_hill(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = new tile_zone_grass();
+			var new_tile = tile_lookup(terrain_lookup[BIOME.HILL]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
 	return(temp_list);
@@ -37,7 +39,8 @@ function zone_salt_plain(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = new tile_zone_salt();
+			var new_tile = tile_lookup(terrain_lookup[BIOME.DESERT]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
 	return(temp_list);
@@ -47,7 +50,8 @@ function zone_scrubland(){
 	var temp_list = [];
 	for (var xx = 0; xx < zone_size; xx ++){
 		for (var yy = 0; yy < zone_size; yy ++){
-			temp_list[xx][yy] = new tile_zone_dirt();
+			var new_tile = tile_lookup(terrain_lookup[BIOME.SCRUB]);
+			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
 	return(temp_list);

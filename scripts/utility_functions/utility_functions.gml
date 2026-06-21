@@ -316,10 +316,11 @@ function transition_update(){
 		
 		switch(transition.type){
 			
-			case TRANSITION.CONTROL_MENU:	game_state = init_control_menu;		break;
+			case TRANSITION.CONTROL_MENU:	
+				control_state_previous = game_state;
+				game_state = init_control_menu;									break;
 			case TRANSITION.CONTROL_EXIT:	
-				game_state = game_state_previous;	
-				if (game_state == game_state_dungeon) game_state = game_state_pause_menu; break;
+				game_state = control_state_previous;							break;	
 			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
 			case TRANSITION.GAME_DUNGEON:	init_dungeon();						break;
 			case TRANSITION.GAME_QUIT:		game_end();							break;

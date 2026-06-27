@@ -21,14 +21,14 @@ function init_particle_system(){
 	part_type_speed(part_title_fire, 0.13, 0.4, 0, 0.15);
 }
 
-function particle_create_fire(particle, x_pos, y_pos, quantity){
+function particle_create_title_fire(particle, x_pos, y_pos, quantity){
 	repeat(quantity){
 		var xx = irandom_range(x_pos - 4, x_pos + 4);
 		part_particles_create(particle_system, xx, y_pos, particle, 1);
 	}
 }
 
-function create_particle(particle_type, grid_x, grid_y, number = 3, dist = 4){
+function particle_create_actor(particle_type, grid_x, grid_y, number = 3, dist = 4){
 	var i, xx, yy, angle, angle_start;
 	
 	angle = 360/number;

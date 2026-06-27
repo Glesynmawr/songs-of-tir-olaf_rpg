@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"Effect sprites",
+    "path":"folders/Sprites and Fonts/Effect sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

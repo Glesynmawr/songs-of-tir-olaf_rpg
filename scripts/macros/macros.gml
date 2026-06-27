@@ -75,10 +75,10 @@ enum TRANSITION{
 #macro SCREEN_HEIGHT 360
 
 #macro ENERGY_PER_TURN 100
-#macro LOG_MAX_ENTRIES 9
+#macro LOG_MAX_ENTRIES 10
 
-#macro WORLD_WIDTH	40
-#macro WORLD_HEIGHT	22
+#macro WORLD_WIDTH	28
+#macro WORLD_HEIGHT	17
 
 #macro C_BLACK	make_colour_rgb(0,   0,   0)
 #macro C_NAVY	make_colour_rgb(29,  43,  83)

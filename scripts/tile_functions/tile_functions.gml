@@ -18,6 +18,8 @@ function tile_door_closed()constructor{
 	tile			= "closed door";
 	sprite			= door_closed_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -29,6 +31,8 @@ function tile_door_open()constructor{
 	tile			= "open door";
 	sprite			= door_open_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -40,6 +44,8 @@ function tile_door_secret()constructor{
 	tile			= "secret door";
 	sprite			= wall_00_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -51,6 +57,8 @@ function tile_hall()constructor{
 	tile			= "hall";
 	sprite			= wall_00_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -62,6 +70,8 @@ function tile_room()constructor{
 	tile			= "room";
 	sprite			= wall_00_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -73,6 +83,8 @@ function tile_stairs_up()constructor{
 	tile			= "entry";
 	sprite			= stairs_00_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -84,6 +96,8 @@ function tile_stairs_down()constructor{
 	tile			= "exit";
 	sprite			= stairs_00_spr;
 	index			= 1;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -95,6 +109,8 @@ function tile_wall()constructor{
 	tile			= "wall";
 	sprite			= wall_00_spr;
 	index			= 1;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= false;
 	transparent		= false;
 	is_visible		= false;
@@ -108,6 +124,8 @@ function tile_world_mountain()constructor{
 	tile			= "mountain";
 	sprite			= world_tiles_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -119,6 +137,8 @@ function tile_world_hill()constructor{
 	tile			= "hill";
 	sprite			= world_tiles_spr;
 	index			= 8;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -130,6 +150,8 @@ function tile_world_canyon()constructor{
 	tile			= "canyon";
 	sprite			= world_tiles_spr;
 	index			= 16;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -141,6 +163,8 @@ function tile_world_salt_plain()constructor{
 	tile			= "salt plain";
 	sprite			= world_tiles_spr;
 	index			= 24;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -152,6 +176,8 @@ function tile_world_scrubland()constructor{
 	tile			= "scrubland";
 	sprite			= world_tiles_spr;
 	index			= 32;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -163,6 +189,8 @@ function tile_world_mangrove()constructor{
 	tile			= "mangrove";
 	sprite			= world_tiles_spr;
 	index			= 40;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -174,6 +202,8 @@ function tile_world_marsh()constructor{
 	tile			= "marsh";
 	sprite			= world_tiles_spr;
 	index			= 48;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -185,6 +215,8 @@ function tile_world_water()constructor{
 	tile			= "water";
 	sprite			= world_tiles_spr;
 	index			= 56;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -200,10 +232,25 @@ function generate_zone_tile(tile_type){
 	return(new_tile);
 }
 
+function tile_zone_bush()constructor{
+	tile			= "bush";
+	sprite			= zone_tile_bush_spr;
+	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
 function tile_zone_dirt()constructor{
 	tile			= "dirt";
 	sprite			= zone_tile_dirt_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -215,6 +262,8 @@ function tile_zone_grass()constructor{
 	tile			= "grass";
 	sprite			= zone_tile_grass_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -226,6 +275,8 @@ function tile_zone_lilypad()constructor{
 	tile			= "lilypad";
 	sprite			= zone_tile_lilypad_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -237,6 +288,8 @@ function tile_zone_marsh()constructor{
 	tile			= "marsh";
 	sprite			= zone_tile_marsh_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -248,6 +301,8 @@ function tile_zone_reeds()constructor{
 	tile			= "reeds";
 	sprite			= zone_tile_reeds_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -259,6 +314,8 @@ function tile_zone_rocks()constructor{
 	tile			= "rocks";
 	sprite			= zone_tile_rocks_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -270,6 +327,8 @@ function tile_zone_salt()constructor{
 	tile			= "salt";
 	sprite			= zone_tile_salt_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;
@@ -281,6 +340,8 @@ function tile_zone_tree()constructor{
 	tile			= "tree";
 	sprite			= zone_tile_tree_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
 	is_visible		= false;
@@ -292,6 +353,8 @@ function tile_zone_water()constructor{
 	tile			= "water";
 	sprite			= zone_tile_water_spr;
 	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
 	is_visible		= false;

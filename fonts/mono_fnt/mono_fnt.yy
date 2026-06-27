@@ -146,8 +146,8 @@
   "maintainGms1Font":false,
   "name":"mono_fnt",
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"Fonts",
+    "path":"folders/Sprites and Fonts/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

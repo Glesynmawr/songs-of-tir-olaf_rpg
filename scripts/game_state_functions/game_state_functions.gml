@@ -258,6 +258,8 @@ function goto_world(){
 	
 	// Set game grid
 	game_grid = world_map;
+	var grid_w = array_length(game_grid);
+	var grid_h = array_length(game_grid[0]);
 	map_mode  = MAP_MODE.WORLD;
 	
 	// Set player position
@@ -265,10 +267,10 @@ function goto_world(){
 	actor_registry.player.y_pos = actor_registry.player.world_y;
 	
 	// Set camera bounds
-	camera_min_x = 0;
-	camera_max_x = 0;
+	camera_min_x = -ui_width;
+	camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, -ui_width);
 	camera_min_y = 0;
-	camera_max_y = 0;
+	camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
 	
 	// Set game state
 	game_state = game_state_world;
@@ -283,7 +285,6 @@ function goto_zone(world_x, world_y){
 	game_grid = zone_map[world_x][world_y];
 	var grid_w = array_length(game_grid);
 	var grid_h = array_length(game_grid[0]);
-	
 	map_mode  = MAP_MODE.ZONE;
 	
 	// Set player position

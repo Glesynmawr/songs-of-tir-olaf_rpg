@@ -49,21 +49,19 @@ function resolution_scale(){
 	// GET MAIN VIEW CAMERA
 	var cam = view_get_camera(0);
 	
-	
 	// SET VIEWPORT SIZE
 	view_set_wport(0, width);
 	view_set_hport(0, height);
 
-
-	// SET CAMERA AND APPLICATION SURFACE SIZE
-	camera_set_view_size(cam, view_wport[0]/scale, view_hport[0]/scale);
+	// SET CAMERA AND SURFACE SIZES
+	camera_set_view_size(cam, width / scale, height / scale);
 	surface_resize(application_surface, width, height);
 	display_set_gui_size(width / scale, height / scale)
-	
 	
 	// SET SCREEN SIZE VARIABLES
 	screen_width	= width  / scale;
 	screen_height	= height / scale;
+	
 }
 
 

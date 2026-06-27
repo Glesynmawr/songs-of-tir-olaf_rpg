@@ -18,10 +18,11 @@ function game_draw_grid(){
 				var y_pos = yy * cell_height;
 			
 				if (!game_grid[xx][yy].is_visible and !debugging_mode){
-					shader_set(fog_shd);
+					shader_set(colour_overlay_shd);
+					shader_set_uniform_f_array(uni_colour, fog_colour);
 				}
 			
-				var tile_x = ind % 8;
+				var tile_x = ind mod 8;
 				var tile_y = ind div 8;
 			
 				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, c_white, 1);
@@ -55,12 +56,14 @@ function game_draw_grid(){
 
 function game_draw_direction_indicator(){
 	if (direction_indicator != noone){
-		
 		with (actor_registry.player){
-			var xx = (x_pos * other.cell_width) + (other.cell_width / 2);
-			var yy = (y_pos * other.cell_height) + (other.cell_height / 2);
+			var dir = manager.direction_indicator;
+			var ww  = manager.cell_width;
+			var hh  = manager.cell_height;
+			var xx  = floor((x_pos * ww) + (ww / 2) + lengthdir_x(ww / 2, dir * 45));
+			var yy  = floor((y_pos * hh) + (hh / 2) + lengthdir_y(hh / 2, dir * 45));
 		
-			draw_sprite_ext(direction_arrow_spr, manager.direction_indicator, xx, yy, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(direction_arrow_spr, dir, xx, yy, 1, 1, 0, c_white, 1);
 		}
 	}
 }
@@ -68,24 +71,28 @@ function game_draw_direction_indicator(){
 
 // UI DRAWING -------------------------------------------------------------------------------------
 function draw_game_ui(){
-	var ww = camera_get_view_width(view_camera[0]);
-	var hh = camera_get_view_height(view_camera[0]);
+	var ww = screen_width;
+	var hh = screen_height;
 	var xx = 0;
 	var yy = 0;
 	
+	// Player hit points
 	draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
-
+	
+	// Game log
 	draw_game_log(0, hh - log_height, ww, log_height);
 
-
+	// Inventory and pick-up menus
 	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
 		draw_inventory(actor_registry.player, xx, yy, ww, hh);
 	}
 	if (actor_registry.player.state == state_pickup){
 		draw_pickup(actor_registry.player);
 	}
-
+	
+	// Minimap
 	draw_minimap();
+	
 }
 
 function draw_control_menu(){
@@ -172,8 +179,8 @@ function draw_main_menu(){
 	title_y = floor(screen_height / 3);
 	draw_sprite(title_spr, 0, box_center_x, title_y);
 	
-	particle_create_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y, 1)
-	particle_create_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y, 1)
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y, 1)
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y, 1)
 	
 	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
 	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
@@ -443,7 +450,7 @@ function draw_minimap(){
 	
 	s = minimap_scale;
 	if (!surface_exists(minimap_surface)){
-		minimap_surface = surface_create(ui_width, ui_height);
+		minimap_surface = surface_create(minimap_width, minimap_height - 2);
 	}
 	
 	surface_set_target(minimap_surface);
@@ -487,6 +494,7 @@ function draw_minimap(){
 	draw_surface(minimap_surface, minimap_x, minimap_y);
 		
 	// Draw Map Border
+	draw_sprite_stretched_ext(ui_border_spr, 1, minimap_x, minimap_y, ui_width, ui_height, bg_colour, 1);
 	draw_sprite_stretched(ui_border_spr, 0, minimap_x, minimap_y, ui_width, ui_height);
 	
 }

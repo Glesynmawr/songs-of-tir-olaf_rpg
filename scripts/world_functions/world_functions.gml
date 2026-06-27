@@ -6,16 +6,16 @@ function world_generate(){
 	zone_third		= floor(zone_size / 3);
 	
 	// Biome counts
-	biome[0] = 50;	// Mountains
-	biome[1] = 70;	// Hills
-	biome[2] = 90;	// Canyon
-	biome[3] = 180;	// Salt plains
-	biome[4] = 100;	// Scrubland
-	biome[5] = 70;	// Marsh
-	biome[6] = 120;	// Mangrove
-	biome[7] = 80;	// Water
-	biome[8] = 60;	// Mangrove
-	biome[9] = 50;	// Marsh
+	biome[0] = 25;	// Mountains
+	biome[1] = 35;	// Hills
+	biome[2] = 55;	// Canyon
+	biome[3] = 100;	// Salt plains
+	biome[4] = 60;	// Scrubland
+	biome[5] = 40;	// Marsh
+	biome[6] = 60;	// Mangrove
+	biome[7] = 50;	// Water
+	biome[8] = 35;	// Mangrove
+	biome[9] = 30;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
@@ -32,9 +32,9 @@ function world_generate(){
 	terrain_lookup[BIOME.HILL]		= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.CANYON]	= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.DESERT]	= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
-	terrain_lookup[BIOME.SCRUB]		= [[tile_zone_tree,  5], [tile_zone_grass, 10], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.SCRUB]		= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.MARSH]		= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
-	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_water, 60], [tile_zone_dirt, 100]];
+	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
 	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
 	
 	// Initialise world grid
@@ -129,7 +129,7 @@ function noise_generate(grid){
 	
 	var temp_map = [];
 	var passes = 3;
-	var chunk_size = 12;
+	var chunk_size = 8;
 	var amplitude = 16;
 	
 	var i, j, p;
@@ -244,7 +244,7 @@ function biomes_add(grid){
 	for (i = 0; i < width; i ++){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
-				grid[i][j] = new tile_world_scrubland();
+				grid[i][j] = new tile_world_marsh();
 				grid[i][j].index += irandom(tiles_per_biome - 1);
 			}
 		}

@@ -6,6 +6,8 @@ game_paused			= false;
 // Colours
 text_colour = C_PEACH;
 bg_colour   = C_BLACK;
+fog_colour  = [0.07, 0.11, 0.21];
+uni_colour  = shader_get_uniform(colour_overlay_shd, "u_colour");
 
 // STATE TRANSITION
 transition = noone;
@@ -95,11 +97,14 @@ text_width  = string_width("M");
 // Game log
 log_height = (LOG_MAX_ENTRIES + 2) * text_height;
 
+ui_width	= 96;
+ui_height	= 96;
+
 // Minimap
 minimap_scale	= 2;
 minimap_surface = noone;
-ui_width	= 96;
-ui_height	= 96;
+minimap_width	= 96;
+minimap_height	= 96;
 minimap_x		= screen_width - ui_width;
 minimap_y		= 0;
 

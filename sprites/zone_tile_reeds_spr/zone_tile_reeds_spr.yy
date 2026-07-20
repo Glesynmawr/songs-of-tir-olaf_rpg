@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"zone_tile_reeds_spr",
   "bboxMode":0,
-  "bbox_bottom":15,
+  "bbox_bottom":14,
   "bbox_left":1,
   "bbox_right":126,
   "bbox_top":1,

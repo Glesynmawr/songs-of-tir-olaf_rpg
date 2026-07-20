@@ -32,6 +32,7 @@
     {"name":"door_open_spr","order":1,"path":"sprites/door_open_spr/door_open_spr.yy",},
     {"name":"fire_spr","order":3,"path":"sprites/fire_spr/fire_spr.yy",},
     {"name":"floor_00_spr","order":2,"path":"sprites/floor_00_spr/floor_00_spr.yy",},
+    {"name":"game_window_border_spr","order":7,"path":"sprites/game_window_border_spr/game_window_border_spr.yy",},
     {"name":"gamemaker_logo_small_spr","order":1,"path":"sprites/gamemaker_logo_small_spr/gamemaker_logo_small_spr.yy",},
     {"name":"glesynmawr_logo_small_spr","order":2,"path":"sprites/glesynmawr_logo_small_spr/glesynmawr_logo_small_spr.yy",},
     {"name":"item_spr","order":1,"path":"sprites/item_spr/item_spr.yy",},

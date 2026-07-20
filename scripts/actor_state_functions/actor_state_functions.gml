@@ -72,12 +72,12 @@ function state_ready_for_inputs(){
 		else if (keyboard_check_pressed(controls.key_move_confirm)){
 			if (manager.game_grid == manager.world_map){
 				with(manager){
-					transition_set(TRANSITION.GAME_ZONE, bg_colour);
+					transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
 				}
 			}
 			else if (manager.game_grid == manager.zone_map[world_x][world_y]){
 				with(manager){
-					transition_set(TRANSITION.GAME_WORLD, bg_colour);
+					transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
 				}
 			}
 			else player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
@@ -368,7 +368,7 @@ function state_pickup(){
 function state_idle(){
 	// Check if player is in range and visible
 	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_grid[x_pos][y_pos].is_visible == true){
-		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.text_colour);
+		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
 		state = state_chase;
 	}
 	

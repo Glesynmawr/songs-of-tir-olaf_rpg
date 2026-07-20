@@ -65,6 +65,9 @@ function zone_marsh(){
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
 	}
+	// Water Feature Placement
+	temp_list = water_tile_placement(temp_list);
+	
 	return(temp_list);
 }
 
@@ -77,6 +80,9 @@ function zone_mangrove(){
 		}
 	}
 	temp_list = autotile_map(temp_list);
+	
+	// Water Feature Placement
+	temp_list = water_tile_placement(temp_list);
 	
 	return(temp_list);
 }
@@ -242,27 +248,10 @@ function zone_water(world_index){
 	
 	temp_list = autotile_map(temp_list);
 	
-	for (xx = 0; xx < zone_size; xx ++){
-		for (yy = 0; yy < zone_size; yy ++){
-			if (temp_list[xx][yy].index == 46){
-				var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);
-				temp_list[xx][yy] = generate_zone_tile(new_tile);
-			}
-		}
-	}
+	// Water Feature Placement
+	temp_list = water_tile_placement(temp_list);
 	
 	return(temp_list);
-}
-
-function tile_lookup(list){
-	var len = array_length(list);
-	var roll = irandom(100);
-	for (var i = 0; i < len; i ++){
-		if (roll < list[i][1]){
-			return(list[i][0]);
-		}
-	}
-	return(list[len-1][0]);
 }
 
 

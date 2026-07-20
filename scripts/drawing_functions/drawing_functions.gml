@@ -8,33 +8,29 @@ function game_draw_grid(){
 	var ww = array_length(game_grid);
 	var hh = array_length(game_grid[0]);
 	
-	for (var xx = 0; xx < ww; xx ++){
-		for (var yy = 0; yy < hh; yy ++){
+	if (!surface_exists(gamemap_surface)){
+		gamemap_surface = surface_create(gamemap_width - cell_width, gamemap_height - cell_height);
+	}
+	
+	surface_set_target(gamemap_surface);
+	draw_clear(colour_bg_main);
+	
+	var player_x = actor_registry.player.x_pos;
+	var player_y = actor_registry.player.y_pos;
+	
+	var x_from = max(min(player_x - ceil(cells_draw_width  / 2), ww - (cells_draw_width)),  0);
+	var y_from = max(min(player_y - ceil(cells_draw_height / 2), hh - (cells_draw_height)), 0);
+	var x_to   = min(x_from + cells_draw_width,  ww)
+	var y_to   = min(y_from + cells_draw_height, hh);
+	
+	for (var xx = x_from; xx < x_to; xx ++){
+		for (var yy = y_from; yy < y_to; yy ++){
 			if (game_grid[xx][yy].explored or debugging_mode){
-				var spr = game_grid[xx][yy].sprite;
-				var ind = game_grid[xx][yy].index;
-			
-				var x_pos = xx * cell_width;
-				var y_pos = yy * cell_height;
-			
-				if (!game_grid[xx][yy].is_visible and !debugging_mode){
-					shader_set(colour_overlay_shd);
-					shader_set_uniform_f_array(uni_colour, fog_colour);
-				}
-			
-				var tile_x = ind mod 8;
-				var tile_y = ind div 8;
-			
-				draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, c_white, 1);
 				
-				if (struct_exists(game_grid[xx][yy], "items")){
-					if (array_length(game_grid[xx][yy].items) > 0){
-						draw_sprite(item_spr, 0, x_pos, y_pos);
-					}
-				}
+				var draw_actor = false;
+				var draw_item  = false;
 				
-				shader_reset();
-				
+				// Check for actor on tile
 				for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 					
 					var actor_x = actor_registry.actor_list[i].x_pos;
@@ -45,27 +41,74 @@ function game_draw_grid(){
 							// Draw actor sprite
 							var spr = actor_registry.actor_list[i].sprite[0];
 							var ind = actor_registry.actor_list[i].sprite[1];
-							draw_sprite(spr, ind, actor_x * manager.cell_width, actor_y * manager.cell_height)
+							draw_sprite(spr, ind, (actor_x - x_from) * manager.cell_width, (actor_y - y_from) * manager.cell_height)
+							
+							draw_actor = true;
+							
+							if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
+								var dir_ind_x = ((actor_x - x_from) * manager.cell_width)  + cell_width  / 2;
+								var dir_ind_y = ((actor_y - y_from) * manager.cell_height) + cell_height / 2;
+								
+								var arrow_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
+								var arrow_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
+								
+								draw_sprite_ext(direction_arrow_spr, direction_indicator, arrow_x, arrow_y, 1, 1, 0, c_white, 1);
+							}
+						}
+					}
+				}
+				
+				// Check for items on tile
+				if (!draw_actor){
+					
+				}
+				
+				// Draw tile
+				if (!draw_actor and !draw_item){
+					var spr = game_grid[xx][yy].sprite;
+					var ind = game_grid[xx][yy].index;
+				
+					var fg = game_grid[xx][yy].colour_fg;
+					var bg = game_grid[xx][yy].colour_bg;
+			
+					var x_pos = (xx - x_from) * cell_width;
+					var y_pos = (yy - y_from) * cell_height;
+			
+					if (!game_grid[xx][yy].is_visible and !debugging_mode){
+						fg = C_BLUE;
+					}
+					
+					// Set foreground draw colour
+					var draw_col_fg = c_white;
+					if (fg != noone) draw_col_fg = fg;
+					
+					// Draw background rectangle
+					if (bg != noone){
+						draw_rectangle_colour(x_pos, y_pos, x_pos + cell_width, y_pos + cell_height, bg, bg, bg, bg, false);
+					}
+					
+					// Get tile spritesheet position
+					var tile_x = ind mod 8;
+					var tile_y = ind div 8;
+			
+					draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, draw_col_fg, 1);
+				
+					if (struct_exists(game_grid[xx][yy], "items")){
+						if (array_length(game_grid[xx][yy].items) > 0){
+							draw_sprite(item_spr, 0, x_pos, y_pos);
 						}
 					}
 				}
 			}
 		}
 	}
-}
-
-function game_draw_direction_indicator(){
-	if (direction_indicator != noone){
-		with (actor_registry.player){
-			var dir = manager.direction_indicator;
-			var ww  = manager.cell_width;
-			var hh  = manager.cell_height;
-			var xx  = floor((x_pos * ww) + (ww / 2) + lengthdir_x(ww / 2, dir * 45));
-			var yy  = floor((y_pos * hh) + (hh / 2) + lengthdir_y(hh / 2, dir * 45));
-		
-			draw_sprite_ext(direction_arrow_spr, dir, xx, yy, 1, 1, 0, c_white, 1);
-		}
-	}
+	
+	surface_reset_target();
+	
+	draw_surface(gamemap_surface, ui_width + gamemap_x_buffer, gamemap_y_buffer);
+	
+	draw_sprite_stretched_ext(game_window_border_spr, 1, ui_width, 0, gamemap_width, gamemap_height, colour_bg_main, 1);
+	draw_sprite_stretched_ext(game_window_border_spr, 0, ui_width, 0, gamemap_width, gamemap_height, C_ORANGE,  1);
 }
 
 
@@ -129,7 +172,7 @@ function draw_control_menu(){
 		var control_y = binding_y + (i * text_height);
 		
 		// Key use text
-		draw_text_outlined(control_text[i], box_center_x - text_width, control_y, text_colour, fa_right);
+		draw_text_outlined(control_text[i], box_center_x - text_width, control_y, colour_text_main, fa_right);
 		
 		// Keybinding
 		var control_key = "";
@@ -144,7 +187,7 @@ function draw_control_menu(){
 				control_key += keybinding_get_text(new_controls[i]);
 			}
 		}
-		draw_text_outlined(control_key, box_center_x + text_width, control_y, text_colour, fa_left);
+		draw_text_outlined(control_key, box_center_x + text_width, control_y, colour_text_main, fa_left);
 	}
 	
 	// Draw menu
@@ -160,7 +203,7 @@ function draw_control_menu(){
 			}
 		}
 		txt += control_menu[i];
-		draw_text_outlined(txt, box_center_x - x_mod, yy, text_colour, fa_center);
+		draw_text_outlined(txt, box_center_x - x_mod, yy, colour_text_main, fa_center);
 	}
 }
 
@@ -209,7 +252,7 @@ function draw_main_menu(){
 			}
 		}
 		txt += main_menu[i];
-		draw_text_outlined(txt, xx - x_mod, yy, text_colour, fa_center);
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
 	}
 }
 
@@ -240,7 +283,7 @@ function draw_pause_menu(){
 			}
 		}
 		txt += pause_menu[i];
-		draw_text_outlined(txt, xx - x_mod, yy, text_colour, fa_center);
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
 	}
 }
 
@@ -248,26 +291,35 @@ function draw_pause_menu(){
 // Generic UI elements ------------------------------------------------------------------
 function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
 	
+	// Set colours
+	var bg = colour_bg_main;
+	var tc = text_col;
+	
 	// Set h align
 	draw_set_halign(h_align);
 	
 	// Outline
-	draw_text_colour(x_pos+1, y_pos, text, bg_colour, bg_colour, bg_colour, bg_colour, 1);
-	draw_text_colour(x_pos, y_pos-1, text, bg_colour, bg_colour, bg_colour, bg_colour, 1);
-	draw_text_colour(x_pos-1, y_pos, text, bg_colour, bg_colour, bg_colour, bg_colour, 1);
-	draw_text_colour(x_pos, y_pos+1, text, bg_colour, bg_colour, bg_colour, bg_colour, 1);
+	draw_text_colour(x_pos+1, y_pos, text, bg, bg, bg, bg, 1);
+	draw_text_colour(x_pos, y_pos-1, text, bg, bg, bg, bg, 1);
+	draw_text_colour(x_pos-1, y_pos, text, bg, bg, bg, bg, 1);
+	draw_text_colour(x_pos, y_pos+1, text, bg, bg, bg, bg, 1);
 	
 	// Fill text
-	draw_text_colour(x_pos, y_pos, text, text_col, text_col, text_col, text_col, 1);
+	draw_text_colour(x_pos, y_pos, text, tc, tc, tc, tc, 1);
 	
 	// Reset h align
 	draw_set_halign(fa_left);
 }
 
 function ui_draw_box(x_pos, y_pos, width, height, title = "", control_keys = ""){
-	draw_sprite_stretched_ext(ui_border_spr, 2, x_pos, y_pos, width, height, bg_colour, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, bg_colour, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, c_white, 1);
+	
+	// Set colours
+	var bg = colour_bg_main;
+	var uc = colour_ui_main;
+	
+	draw_sprite_stretched_ext(ui_border_spr, 2, x_pos, y_pos, width, height, bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, uc, 1);
 	
 	if (title != ""){
 		ui_draw_box_title(x_pos + (text_width * 2), y_pos, title);
@@ -281,16 +333,22 @@ function ui_draw_box_title(x_pos, y_pos, text){
 	
 	var ww = string_width(text) + (text_width * 2);
 	
-	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
-	draw_text_colour(x_pos + text_width, y_pos, text, text_colour, text_colour, text_colour, text_colour, 1);
+	var bg = colour_bg_main;
+	var fg = colour_text_main;
+	
+	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg, bg, bg, bg, false);
+	draw_text_colour(x_pos + text_width, y_pos, text, fg, fg, fg, fg, 1);
 }
 
 function ui_draw_box_controls(x_pos, y_pos, text){
 	
+	var bg = colour_bg_main;
+	var tc = colour_text_main;
+	
 	var ww = string_width(text) + (text_width * 2);
 	
-	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg_colour, bg_colour, bg_colour, bg_colour, false);
-	draw_text_colour(x_pos + text_width, y_pos, text, text_colour, text_colour, text_colour, text_colour, 1);
+	draw_rectangle_colour(x_pos, y_pos - 1, x_pos + ww, y_pos + text_height - 1, bg, bg, bg, bg, false);
+	draw_text_colour(x_pos + text_width, y_pos, text, tc, tc, tc, tc, 1);
 }
 
 
@@ -331,7 +389,7 @@ function draw_context_menu(actor, x_pos, y_pos, width, height){
 		}
 		text += choices[0][i];
 		
-		draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+		draw_text_colour(xx, yy, text, colour_text_main, colour_text_main, colour_text_main, colour_text_main, 1);
 	}
 	
 	// Draw box controls
@@ -342,7 +400,26 @@ function draw_context_menu(actor, x_pos, y_pos, width, height){
 	}
 }
 
+function draw_game_log(x_pos, y_pos, width, height){
+	
+	ui_draw_box(x_pos, y_pos, width, height);
+	
+	var xx = x_pos + (text_width * 2);
+	var yy = y_pos + text_height;
+	
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
+	for (var line = 0; line < draw_to; line ++){
+		
+		var text =		game_log[line][0];
+		var colour =	game_log[line][1];
+		
+		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
+	}
+}
+
 function draw_inventory(actor, x_pos, y_pos, width, height){
+	
+	var tc = colour_text_main;
 	
 	var inv_x = x_pos + floor(width / 2);
 	var equ_x = x_pos + floor(width / 4);
@@ -377,7 +454,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			}
 			text += actor.inventory.items[i].name;
 			
-			draw_text_colour(xx + text_width, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+			draw_text_colour(xx + text_width, yy, text, tc, tc, tc, tc, 1);
 		}
 	}
 	
@@ -393,11 +470,11 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	// Equipment slots
 	for (i = 0; i < array_length(actor.inventory.equipment); i ++){
-		draw_text_colour(xx, yy, equip_data[i][0], text_colour, text_colour, text_colour, text_colour, 1);
+		draw_text_colour(xx, yy, equip_data[i][0], tc, tc, tc, tc, 1);
 		yy += text_height;
 		
 		for (j = 0; j < array_length(actor.inventory.equipment[i]); j ++){
-			var col = text_colour;
+			var col = tc;
 			
 			// Text
 			var text = "";
@@ -445,6 +522,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 function draw_minimap(){
 	var px, py, mx, my, s, col;
 	
+	var bg = colour_bg_main;
+	
 	var grid_w = array_length(game_grid);
 	var grid_h = array_length(game_grid[0]);
 	
@@ -454,10 +533,10 @@ function draw_minimap(){
 	}
 	
 	surface_set_target(minimap_surface);
-	draw_clear(bg_colour);
+	draw_clear(bg);
 	
 	// Mini Map Background
-	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, ui_width, ui_height, bg_colour, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, minimap_width, minimap_height, bg, 1);
 
 	px = actor_registry.player.x_pos;
 	py = actor_registry.player.y_pos;
@@ -465,9 +544,9 @@ function draw_minimap(){
 	for (var i = 0; i < grid_w; i ++){
 		for (var j = 0; j < grid_h; j ++){
 				
-			col = bg_colour;
-			mx  = (i * s) - (px * s) + (ui_width / 2);
-			my  = (j * s) - (py * s) + (ui_height / 2);
+			col = colour_bg_main;
+			mx  = (i * s) - (px * s) + (minimap_width  / 2);
+			my  = (j * s) - (py * s) + (minimap_height / 2);
 				
 			if(game_grid[i][j].is_visible){
 				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
@@ -480,27 +559,29 @@ function draw_minimap(){
 				}
 			}
 				
-			if (col != bg_colour){
+			if (col != bg){
 				draw_sprite_ext(pixel_spr, 0, mx, my, s, s, 0, col, 1);
 			}
 		}
 	}
 		
 	// Draw Player Position
-	draw_sprite_ext(pixel_spr, 0, ui_width / 2, ui_height / 2, s, s, 0, c_white, 1);
+	draw_sprite_ext(pixel_spr, 0, minimap_width / 2, minimap_height / 2, s, s, 0, c_white, 1);
 	
 	surface_reset_target();
 		
 	draw_surface(minimap_surface, minimap_x, minimap_y);
 		
 	// Draw Map Border
-	draw_sprite_stretched_ext(ui_border_spr, 1, minimap_x, minimap_y, ui_width, ui_height, bg_colour, 1);
-	draw_sprite_stretched(ui_border_spr, 0, minimap_x, minimap_y, ui_width, ui_height);
+	draw_sprite_stretched_ext(ui_border_spr, 1, minimap_x, minimap_y, minimap_width, minimap_height, bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, minimap_x, minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
 	
 }
 
 function draw_pickup(actor){
 	var xx, yy, ww;
+	
+	var tc = colour_text_main;
 	
 	// Get array length
 	var len = array_length(actor.pickup_menu);
@@ -544,7 +625,7 @@ function draw_pickup(actor){
 		}
 		text += actor.pickup_menu[i].name;
 		
-		draw_text_colour(xx, yy, text, text_colour, text_colour, text_colour, text_colour, 1);
+		draw_text_colour(xx, yy, text, tc, tc, tc, tc, 1);
 	}
 	
 	// Draw box controls

@@ -4,10 +4,9 @@ debugging_mode		= false;
 game_paused			= false;
 
 // Colours
-text_colour = C_PEACH;
-bg_colour   = C_BLACK;
-fog_colour  = [0.07, 0.11, 0.21];
-uni_colour  = shader_get_uniform(colour_overlay_shd, "u_colour");
+colour_text_main	= C_LTGREY;
+colour_bg_main		= C_BLACK;
+colour_ui_main		= C_ORANGE;
 
 // STATE TRANSITION
 transition = noone;
@@ -75,15 +74,15 @@ direction_indicator = noone;
 
 
 // Actor equipment
-equip_data[EQUIP.HEAD] = ["head", "headwear",			3];
-equip_data[EQUIP.NECK] = ["neck", "necklace",			3];
-equip_data[EQUIP.BODY] = ["body", "armour",				1];
-equip_data[EQUIP.BACK] = ["back", "cloak",				1];
-equip_data[EQUIP.ARMS] = ["arm", "Vambrace",			6];
-equip_data[EQUIP.HAND] = ["hand", "Item",				6];
-equip_data[EQUIP.MITT] = ["gloves", "Gloves",		 	3];
-equip_data[EQUIP.GUNS] = ["ranged item", "Ranged item",	2];
-equip_data[EQUIP.FEET] = ["feet", "Footwear",	 		3];
+equip_data[EQUIP.HEAD] = ["head",			"headwear",			3];
+equip_data[EQUIP.NECK] = ["neck",			"necklace",			3];
+equip_data[EQUIP.BODY] = ["body",			"armour",			1];
+equip_data[EQUIP.BACK] = ["back",			"cloak",			1];
+equip_data[EQUIP.ARMS] = ["arm",			"Vambrace",			6];
+equip_data[EQUIP.HAND] = ["hand",			"Item",				6];
+equip_data[EQUIP.MITT] = ["gloves",			"Gloves",		 	3];
+equip_data[EQUIP.GUNS] = ["ranged item",	"Ranged item",		2];
+equip_data[EQUIP.FEET] = ["feet",			"Footwear",	 		3];
 
 
 // Sets cell size using monospaced font
@@ -91,6 +90,8 @@ draw_set_font(mono_fnt);
 cell_width  = 16;
 cell_height = 16;
 
+
+#region// UI
 text_height = string_height("M") + 2;
 text_width  = string_width("M");
 
@@ -98,15 +99,29 @@ text_width  = string_width("M");
 log_height = (LOG_MAX_ENTRIES + 2) * text_height;
 
 ui_width	= 96;
-ui_height	= 96;
 
 // Minimap
 minimap_scale	= 2;
 minimap_surface = noone;
-minimap_width	= 96;
-minimap_height	= 96;
+minimap_width	= ui_width;
+minimap_height	= ui_width + 2;
 minimap_x		= screen_width - ui_width;
 minimap_y		= 0;
+
+// Map drawing
+gamemap_surface		= noone;
+gamemap_width		= screen_width - (2 * ui_width);
+gamemap_height		= screen_height - log_height;
+cells_draw_width	= floor(gamemap_width  / cell_width) - 1;
+cells_draw_height	= floor(gamemap_height / cell_width) - 1;
+
+var gamemap_width_actual  = cells_draw_width  * cell_width;
+var gamemap_height_actual = cells_draw_height * cell_height;
+
+gamemap_x_buffer = (gamemap_width  - gamemap_width_actual)  / 2;
+gamemap_y_buffer = (gamemap_height - gamemap_height_actual) / 2;
+
+#endregion
 
 // Level Sprite Indices
 door_index = 0;

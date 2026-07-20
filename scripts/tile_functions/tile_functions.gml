@@ -12,6 +12,41 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	other.game_grid[x_pos][y_pos].items		 = items;
 }
 
+function tile_lookup(list){
+	var len = array_length(list);
+	var roll = irandom(100);
+	for (var i = 0; i < len; i ++){
+		if (roll < list[i][1]){
+			return(list[i][0]);
+		}
+	}
+	return(list[len-1][0]);
+}
+	
+function generate_zone_tile(tile_type){
+	var new_tile = new tile_type();
+	new_tile.index += irandom(floor(sprite_get_width(new_tile.sprite) / cell_width) - 1);
+	return(new_tile);
+}
+
+function water_tile_placement(map){
+	var xx, yy;
+	for (xx = 0; xx < zone_size; xx ++){
+		for (yy = 0; yy < zone_size; yy ++){
+			if (map[xx][yy].tile == "water"){
+				if (map[xx][yy].index >= 46){
+					var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);
+					map[xx][yy] = generate_zone_tile(new_tile);
+				}
+				else{
+					map[xx][yy].colour_fg = C_BROWN;
+				}
+			}
+		}
+	}
+	return(map);
+}
+
 
 // DUNGEON TILES
 function tile_door_closed()constructor{
@@ -124,7 +159,7 @@ function tile_world_mountain()constructor{
 	tile			= "mountain";
 	sprite			= world_tiles_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_WHITE;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -137,7 +172,7 @@ function tile_world_hill()constructor{
 	tile			= "hill";
 	sprite			= world_tiles_spr;
 	index			= 8;
-	colour_fg		= noone;
+	colour_fg		= C_DKGREY;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -150,7 +185,7 @@ function tile_world_canyon()constructor{
 	tile			= "canyon";
 	sprite			= world_tiles_spr;
 	index			= 16;
-	colour_fg		= noone;
+	colour_fg		= C_RED;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -163,7 +198,7 @@ function tile_world_salt_plain()constructor{
 	tile			= "salt plain";
 	sprite			= world_tiles_spr;
 	index			= 24;
-	colour_fg		= noone;
+	colour_fg		= C_MIDGREY;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -176,7 +211,7 @@ function tile_world_scrubland()constructor{
 	tile			= "scrubland";
 	sprite			= world_tiles_spr;
 	index			= 32;
-	colour_fg		= noone;
+	colour_fg		= C_BROWN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -189,7 +224,7 @@ function tile_world_mangrove()constructor{
 	tile			= "mangrove";
 	sprite			= world_tiles_spr;
 	index			= 40;
-	colour_fg		= noone;
+	colour_fg		= C_LIME;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -202,7 +237,7 @@ function tile_world_marsh()constructor{
 	tile			= "marsh";
 	sprite			= world_tiles_spr;
 	index			= 48;
-	colour_fg		= noone;
+	colour_fg		= C_GREEN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -215,7 +250,7 @@ function tile_world_water()constructor{
 	tile			= "water";
 	sprite			= world_tiles_spr;
 	index			= 56;
-	colour_fg		= noone;
+	colour_fg		= C_LTBLUE;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -226,17 +261,11 @@ function tile_world_water()constructor{
 
 
 // ZONE TILES
-function generate_zone_tile(tile_type){
-	var new_tile = new tile_type();
-	new_tile.index += irandom(floor(sprite_get_width(new_tile.sprite) / cell_width) - 1);
-	return(new_tile);
-}
-
 function tile_zone_bush()constructor{
 	tile			= "bush";
 	sprite			= zone_tile_bush_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_PINK;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -249,7 +278,7 @@ function tile_zone_dirt()constructor{
 	tile			= "dirt";
 	sprite			= zone_tile_dirt_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_BROWN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -262,7 +291,7 @@ function tile_zone_grass()constructor{
 	tile			= "grass";
 	sprite			= zone_tile_grass_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_GREEN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -275,7 +304,7 @@ function tile_zone_lilypad()constructor{
 	tile			= "lilypad";
 	sprite			= zone_tile_lilypad_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_GREEN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -288,7 +317,7 @@ function tile_zone_marsh()constructor{
 	tile			= "marsh";
 	sprite			= zone_tile_marsh_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_LTBLUE;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -301,7 +330,7 @@ function tile_zone_reeds()constructor{
 	tile			= "reeds";
 	sprite			= zone_tile_reeds_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_GREEN;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -314,7 +343,7 @@ function tile_zone_rocks()constructor{
 	tile			= "rocks";
 	sprite			= zone_tile_rocks_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_MIDGREY;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -327,7 +356,7 @@ function tile_zone_salt()constructor{
 	tile			= "salt";
 	sprite			= zone_tile_salt_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_PURPLE;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -340,7 +369,7 @@ function tile_zone_tree()constructor{
 	tile			= "tree";
 	sprite			= zone_tile_tree_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_LIME;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -353,7 +382,7 @@ function tile_zone_water()constructor{
 	tile			= "water";
 	sprite			= zone_tile_water_spr;
 	index			= 0;
-	colour_fg		= noone;
+	colour_fg		= C_LTBLUE;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;

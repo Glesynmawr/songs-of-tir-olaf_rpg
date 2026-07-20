@@ -59,7 +59,7 @@ function game_state_character_select(){
 function game_state_control_menu(){
 	if (!is_rebinding_keys){
 		if (keyboard_check_pressed(controls.key_cancel)){
-			transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
+			transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 		}
 		else if (keyboard_check_pressed(controls.key_up)){
 			control_menu_hover --;
@@ -94,7 +94,7 @@ function game_state_control_menu(){
 			}
 			else if (txt == "Save and exit"){
 				controls_save_settings();
-				transition_set(TRANSITION.CONTROL_EXIT, bg_colour);
+				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ function game_state_dungeon(){
 	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
 	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
 
-	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
+	move_camera(target_x, target_y + (cell_height) + floor(log_height / 2), 0.1);
 
 	if (!game_paused and transition == noone){
 		turn_order_update();
@@ -168,14 +168,14 @@ function game_state_main_menu(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var txt = main_menu[main_menu_hover];
 		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_WORLD, bg_colour);
+			transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
 		}
 		else if (txt == "Load game"){
 			
 		}
 		else if (txt == "Controls"){
 			game_state_previous = game_state;
-			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
+			transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
 		}
 		else if (txt == "Settings"){
 			
@@ -208,7 +208,7 @@ function game_state_pause_menu(){
 			game_state = game_state_previous;
 		}
 		else if (txt == "Controls"){
-			transition_set(TRANSITION.CONTROL_MENU, bg_colour);
+			transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
 		}
 		else if (txt == "Settings"){
 			
@@ -217,7 +217,7 @@ function game_state_pause_menu(){
 			
 		}
 		else if (txt == "Quit without saving"){
-			transition_set(TRANSITION.GAME_BOOT, bg_colour);
+			transition_set(TRANSITION.GAME_BOOT, colour_bg_main);
 		}
 		else if (txt == "Quit to desktop"){
 			transition_set(TRANSITION.GAME_QUIT, C_BLACK);

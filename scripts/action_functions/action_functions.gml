@@ -50,7 +50,7 @@ function action_move(grid, move_x, move_y){
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";
-		log_add_entry(text, manager.text_colour);
+		log_add_entry(text, manager.colour_text_main);
 	}
 	return(true);
 }
@@ -115,7 +115,7 @@ function action_attack_melee(attacker, defender){
 	if (second_log != ""){
 		
 		// Death log entry
-		log_add_entry(second_log, manager.text_colour);
+		log_add_entry(second_log, manager.colour_text_main);
 	}
 }
 

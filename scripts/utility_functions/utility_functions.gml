@@ -1,34 +1,34 @@
 
 // CAMERA
 function initialise_camera(following){
-	camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2)) + floor(log_height / 2);
+	//camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	//camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) + (cell_height / 2)) + floor(log_height / 2);
 }
 
 function camera_set_position_to_player(){
-	with (manager){
-		var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-		var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
+	//with (manager){
+	//	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
+	//	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) + (cell_height / 2));
 
-		move_camera(target_x, target_y + floor(log_height / 2), 1);
-	}
+	//	move_camera(target_x, target_y + floor(log_height / 2), 1);
+	//}
 }
 
 function move_camera(target_x, target_y, camera_spd){
-	if (camera_pos[0] != target_x){
-		camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
-	}
-	if (camera_pos[1] != target_y){
-		camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
-	}
+	//if (camera_pos[0] != target_x){
+	//	camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
+	//}
+	//if (camera_pos[1] != target_y){
+	//	camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
+	//}
 	
-	if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
-	if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
+	//if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
+	//if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
 	
-	camera_pos[0] = clamp(camera_pos[0], camera_min_x, camera_max_x);
-	camera_pos[1] = clamp(camera_pos[1], camera_min_y, camera_max_y);
+	//camera_pos[0] = clamp(camera_pos[0], camera_min_x, camera_max_x);
+	//camera_pos[1] = clamp(camera_pos[1], camera_min_y, camera_max_y);
 	
-	camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
+	//camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
 }
 
 function resolution_scale(){
@@ -270,23 +270,6 @@ function create_distance_map(grid, target_x, target_y){
 
 
 // GAME LOG	
-function draw_game_log(x_pos, y_pos, width, height){
-	
-	ui_draw_box(x_pos, y_pos, width, height);
-	
-	var xx = x_pos + (text_width * 2);
-	var yy = y_pos + text_height;
-	
-	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
-	for (var line = 0; line < draw_to; line ++){
-		
-		var text =		game_log[line][0];
-		var colour =	game_log[line][1];
-		
-		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
-	}
-}
-
 function initialise_log(){
 	globalvar game_log;
 	game_log = [];

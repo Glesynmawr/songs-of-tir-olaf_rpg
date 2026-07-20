@@ -2,7 +2,7 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
-	zone_size		= 36;
+	zone_size		= ZONE_SIZE;
 	zone_third		= floor(zone_size / 3);
 	
 	// Biome counts
@@ -319,6 +319,9 @@ function autotile_map(grid){
 			if (grid[i][j].tile == "water"){
 				grid[i][j].sprite = water_00_spr;
 				grid[i][j].index = autotile_47(grid, "water", i, j);
+				if (grid[i][j].index < 46){
+					grid[i][j].colour_fg = C_BROWN;
+				}
 			}
 			else if (grid[i][j].tile == "canyon"){
 				grid[i][j].sprite = canyon_00_spr;

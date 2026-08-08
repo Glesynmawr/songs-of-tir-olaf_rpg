@@ -12,8 +12,7 @@ if (transition != noone){
 	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
 }
 
-draw_text_outlined($"Game width: {gamemap_width}", 10, 10, c_white, fa_left);
-draw_text_outlined($"Game height: {gamemap_height}", 10, 20, c_white, fa_left);
-
+draw_text(10, 10, "Draw W: " + string(cells_draw_width));
+draw_text(10, 20, "Draw H: " + string(cells_draw_height));
 
 

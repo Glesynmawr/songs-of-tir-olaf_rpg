@@ -37,6 +37,15 @@ function world_generate(){
 	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
 	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
 	
+	mob_lookup[BIOME.MOUNTAIN]	= noone;
+	mob_lookup[BIOME.HILL]		= noone;
+	mob_lookup[BIOME.CANYON]	= noone;
+	mob_lookup[BIOME.DESERT]	= noone;
+	mob_lookup[BIOME.SCRUB]		= noone;
+	mob_lookup[BIOME.MARSH]		= noone;
+	mob_lookup[BIOME.FOREST]	= noone;
+	mob_lookup[BIOME.WATER]		= [5, [actor_goblin, 5]];
+	
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
 	
@@ -53,10 +62,13 @@ function world_generate(){
 	world_grid = autotile_map(world_grid);
 	
 	// Generate zone maps
-	zone_map = [];
+	zone_map  = [];
+	zone_mobs = [];
 	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
 		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
-			zone_map[xx][yy] = zone_map_generate(world_grid, xx, yy);
+			var new_zone = zone_map_generate(world_grid, xx, yy);
+			zone_map[xx][yy]  = new_zone[0];
+			zone_mobs[xx][yy] = new_zone[1];
 			initialise_item_grid(zone_map[xx][yy], zone_size, zone_size);
 		}
 	}
@@ -337,28 +349,83 @@ function zone_map_generate(grid, cell_x, cell_y){
 	var index = grid[cell_x][cell_y].index;
 	
 	if (tile == "mountain"){
-		return(zone_mountain());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.MOUNTAIN];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_mountain(), mobs]);
 	}
 	else if (tile == "hill"){
-		return(zone_hill());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.HILL];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_hill(), mobs]);
 	}
 	else if (tile == "canyon"){
-		return(zone_canyon(index));
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.CANYON];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		if (array_length(mobs) <= 0) mobs = noone;
+		return([zone_canyon(index), mobs]);
 	}
 	else if (tile == "salt plain"){
-		return(zone_salt_plain());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.DESERT];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_salt_plain(), mobs]);
 	}
 	else if (tile == "scrubland"){
-		return(zone_scrubland());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.SCRUB];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_scrubland(), mobs]);
 	}
 	else if (tile == "mangrove"){
-		return(zone_mangrove());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.FOREST];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_mangrove(), mobs]);
 	}
 	else if (tile == "marsh"){
-		return(zone_marsh());
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.MARSH];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		else mobs = noone;
+		return([zone_marsh(), mobs]);
 	}
 	else if (tile == "water"){
-		return(zone_water(index));
+		var mobs = noone;
+		var mob_list = mob_lookup[BIOME.WATER];
+		if (mob_list != noone){
+			mobs = [];
+			
+		}
+		return([zone_water(index), mob_list]);
 	}
 	
 	return(false);

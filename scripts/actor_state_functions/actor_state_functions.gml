@@ -100,8 +100,8 @@ function state_ready_for_inputs(){
 				if (world_x > 0){
 					grid_set_visible(manager.game_grid, false)
 					x_pos = manager.zone_size - 2;
+					player_set_sprite_pos(self);
 					world_x --;
-					camera_set_position_to_player();
 					manager.game_grid = manager.zone_map[world_x][world_y];
 				}
 			}
@@ -109,8 +109,8 @@ function state_ready_for_inputs(){
 				if (world_x < array_length(manager.world_map) - 1){
 					grid_set_visible(manager.game_grid, false)
 					x_pos = 1;
+					player_set_sprite_pos(self);
 					world_x ++;
-					camera_set_position_to_player();
 					manager.game_grid = manager.zone_map[world_x][world_y];
 				}
 			}
@@ -118,8 +118,8 @@ function state_ready_for_inputs(){
 				if (world_y > 0){
 					grid_set_visible(manager.game_grid, false)
 					y_pos = manager.zone_size - 2;
+					player_set_sprite_pos(self);
 					world_y --;
-					camera_set_position_to_player();
 					manager.game_grid = manager.zone_map[world_x][world_y];
 				}
 			}
@@ -127,8 +127,8 @@ function state_ready_for_inputs(){
 				if (world_y < array_length(manager.world_map[0]) - 1){
 					grid_set_visible(manager.game_grid, false)
 					y_pos = 1;
+					player_set_sprite_pos(self);
 					world_y ++;
-					camera_set_position_to_player();
 					manager.game_grid = manager.zone_map[world_x][world_y];
 				}
 			}

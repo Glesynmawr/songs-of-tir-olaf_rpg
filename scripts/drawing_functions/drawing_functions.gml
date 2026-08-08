@@ -8,24 +8,35 @@ function game_draw_grid(){
 	var ww = array_length(game_grid);
 	var hh = array_length(game_grid[0]);
 	
-	if (!surface_exists(gamemap_surface)){
-		gamemap_surface = surface_create(gamemap_width - cell_width, gamemap_height - cell_height);
-	}
+	var player_x			= actor_registry.player.x_pos;
+	var player_y			= actor_registry.player.y_pos;
+	var draw_width_half		= ceil(cells_draw_width  / 2);
+	var draw_height_half	= ceil(cells_draw_height / 2);
+	var player_spr_x		= actor_registry.player.sprite_x;
+	var player_spr_y		= actor_registry.player.sprite_y;
 	
-	surface_set_target(gamemap_surface);
-	draw_clear(colour_bg_main);
-	
-	var player_x = actor_registry.player.x_pos;
-	var player_y = actor_registry.player.y_pos;
-	
-	var x_from = max(min(player_x - ceil(cells_draw_width  / 2), ww - (cells_draw_width)),  0);
-	var y_from = max(min(player_y - ceil(cells_draw_height / 2), hh - (cells_draw_height)), 0);
+	// Get grid drawing position
+	var x_from = max(min(player_x - draw_width_half,  ww - (cells_draw_width)),  0);
+	var y_from = max(min(player_y - draw_height_half, hh - (cells_draw_height)), 0);
 	var x_to   = min(x_from + cells_draw_width,  ww)
 	var y_to   = min(y_from + cells_draw_height, hh);
+	
+	// Set map offset
+	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
+	var map_offset_y = actor_registry.player.sprite_target_y - actor_registry.player.sprite_y;
+	if (player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width){
+		map_offset_x = 0;
+	}
+	if (player_spr_y < draw_height_half * cell_height) or (player_spr_y > (hh - draw_height_half) * cell_height){
+		map_offset_y = 0;
+	}
 	
 	for (var xx = x_from; xx < x_to; xx ++){
 		for (var yy = y_from; yy < y_to; yy ++){
 			if (game_grid[xx][yy].explored or debugging_mode){
+				
+				var screen_x = (xx - x_from) * cell_width  + map_offset_x;
+				var screen_y = (yy - y_from) * cell_height + map_offset_y;
 				
 				var draw_actor = false;
 				var draw_item  = false;
@@ -33,26 +44,49 @@ function game_draw_grid(){
 				// Check for actor on tile
 				for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 					
+					// Actor cell position
 					var actor_x = actor_registry.actor_list[i].x_pos;
 					var actor_y = actor_registry.actor_list[i].y_pos;
 					
 					if (actor_x == xx and actor_y == yy){
 						if (actor_registry.actor_list[i].is_visible){
 							// Draw actor sprite
-							var spr = actor_registry.actor_list[i].sprite[0];
-							var ind = actor_registry.actor_list[i].sprite[1];
-							draw_sprite(spr, ind, (actor_x - x_from) * manager.cell_width, (actor_y - y_from) * manager.cell_height)
+							with (actor_registry.actor_list[i]){
+								var spr = sprite;
+								
+								// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
+								var spr_offset_x = sprite_x - sprite_target_x;
+								var spr_offset_y = sprite_y - sprite_target_y;
+								
+								// ACTOR ANIMATION ------------------------------------------------------------------------
+								ind = actor_animate();
+								
+								var col = colour_fg;
+							}
+							if (col != noone){
+								
+								var r = colour_get_red(col)   / 255;
+								var g = colour_get_green(col) / 255;
+								var b = colour_get_blue(col)  / 255;
+								
+								col = [r, g, b, 1.0];
+								
+								shader_set(colour_overlay_shd);
+								shader_set_uniform_f_array(uni_overlay, col);
+							}
+							
+							draw_sprite(spr, ind, screen_x + spr_offset_x, screen_y + spr_offset_y)
+							
+							shader_reset();
 							
 							draw_actor = true;
 							
 							if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
-								var dir_ind_x = ((actor_x - x_from) * manager.cell_width)  + cell_width  / 2;
-								var dir_ind_y = ((actor_y - y_from) * manager.cell_height) + cell_height / 2;
+								var dir_ind_x = screen_x + cell_width  / 2;
+								var dir_ind_y = screen_y + cell_height / 2;
 								
-								var arrow_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
-								var arrow_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
-								
-								draw_sprite_ext(direction_arrow_spr, direction_indicator, arrow_x, arrow_y, 1, 1, 0, c_white, 1);
+								direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
+								direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
 							}
 						}
 					}
@@ -60,7 +94,12 @@ function game_draw_grid(){
 				
 				// Check for items on tile
 				if (!draw_actor){
-					
+					if (struct_exists(game_grid[xx][yy], "items")){
+						if (array_length(game_grid[xx][yy].items) > 0){
+							draw_sprite(item_spr, 0, screen_x, screen_y);
+							draw_item = true;
+						}
+					}
 				}
 				
 				// Draw tile
@@ -70,9 +109,6 @@ function game_draw_grid(){
 				
 					var fg = game_grid[xx][yy].colour_fg;
 					var bg = game_grid[xx][yy].colour_bg;
-			
-					var x_pos = (xx - x_from) * cell_width;
-					var y_pos = (yy - y_from) * cell_height;
 			
 					if (!game_grid[xx][yy].is_visible and !debugging_mode){
 						fg = C_BLUE;
@@ -84,31 +120,27 @@ function game_draw_grid(){
 					
 					// Draw background rectangle
 					if (bg != noone){
-						draw_rectangle_colour(x_pos, y_pos, x_pos + cell_width, y_pos + cell_height, bg, bg, bg, bg, false);
+						draw_rectangle_colour(screen_x, screen_y, screen_x + cell_width, screen_y + cell_height, bg, bg, bg, bg, false);
 					}
 					
 					// Get tile spritesheet position
 					var tile_x = ind mod 8;
 					var tile_y = ind div 8;
 			
-					draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, x_pos, y_pos, 1, 1, draw_col_fg, 1);
-				
-					if (struct_exists(game_grid[xx][yy], "items")){
-						if (array_length(game_grid[xx][yy].items) > 0){
-							draw_sprite(item_spr, 0, x_pos, y_pos);
-						}
-					}
+					draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, screen_x, screen_y, 1, 1, draw_col_fg, 1);
 				}
 			}
 		}
 	}
 	
-	surface_reset_target();
+	// Draw move direction indicator
+	if (direction_indicator != noone){
+		draw_sprite_ext(direction_arrow_spr, direction_indicator, direction_indicator_x, direction_indicator_y, 1, 1, 0, c_white, 1);
+	}
 	
-	draw_surface(gamemap_surface, ui_width + gamemap_x_buffer, gamemap_y_buffer);
-	
-	draw_sprite_stretched_ext(game_window_border_spr, 1, ui_width, 0, gamemap_width, gamemap_height, colour_bg_main, 1);
-	draw_sprite_stretched_ext(game_window_border_spr, 0, ui_width, 0, gamemap_width, gamemap_height, C_ORANGE,  1);
+	// Game window border
+	//draw_sprite_stretched_ext(game_window_border_spr, 1, ui_width, 0, gamemap_width, gamemap_height, colour_bg_main, 1);
+	//draw_sprite_stretched_ext(game_window_border_spr, 0, ui_width, 0, gamemap_width, gamemap_height, C_ORANGE,  1);
 }
 
 
@@ -222,8 +254,8 @@ function draw_main_menu(){
 	title_y = floor(screen_height / 3);
 	draw_sprite(title_spr, 0, box_center_x, title_y);
 	
-	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y, 1)
-	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y, 1)
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y)
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y)
 	
 	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
 	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
@@ -325,7 +357,7 @@ function ui_draw_box(x_pos, y_pos, width, height, title = "", control_keys = "")
 		ui_draw_box_title(x_pos + (text_width * 2), y_pos, title);
 	}
 	if (control_keys != ""){
-		ui_draw_box_controls(x_pos + (text_width * 2), y_pos + height - text_height, control_keys);
+		ui_draw_box_controls(x_pos + (text_width * 2), y_pos + height - text_height + 2, control_keys);
 	}
 }
 	
@@ -432,7 +464,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var control_list = $"{key_1} or {key_2} to exit / {key_3} to select";
 	
 	// Background
-	ui_draw_box(x_pos, y_pos, width, height);
+	ui_draw_box(x_pos, y_pos, width, height, , control_list);
 	
 	// INVENTORY ----------------------------------------------------------------------------------
 	// Title
@@ -508,14 +540,6 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var menu = actor.inventory.context_menu;
 	if (menu != noone){
 		draw_context_menu(actor, menu[1], menu[2], menu[3], menu[4]);
-	}
-	
-	
-	// Draw box controls
-	if (show_controls){
-		xx = x_pos + (text_width * 2);
-		yy = y_pos + height - text_height;
-		ui_draw_box_controls(xx, yy, control_list);
 	}
 }
 

@@ -75,13 +75,12 @@ enum TRANSITION{
 #macro SCREEN_HEIGHT 360
 
 #macro ENERGY_PER_TURN 100
-#macro LOG_MAX_ENTRIES 10
+#macro LOG_MAX_ENTRIES 8
 
 #macro WORLD_WIDTH	27
 #macro WORLD_HEIGHT	16
 
-#macro ZONE_SIZE	35
-
+#macro ZONE_SIZE	39
 
 #macro C_BLACK	 make_colour_rgb(0,   0,   0)
 #macro C_WHITE	 make_colour_rgb(255, 255, 255)
@@ -89,7 +88,7 @@ enum TRANSITION{
 #macro C_CYAN	 make_colour_rgb(122, 191, 199)
 #macro C_PURPLE	 make_colour_rgb(138, 70,  174)
 #macro C_GREEN	 make_colour_rgb(104, 169, 65)
-#macro C_BLUE	 make_colour_rgb(62,  49,  162)
+#macro C_BLUE	 make_colour_rgb(50,  39,  140)
 #macro C_YELLOW  make_colour_rgb(208, 220, 113)
 #macro C_ORANGE  make_colour_rgb(192, 120, 33)
 #macro C_BROWN	 make_colour_rgb(92,  71,  0)

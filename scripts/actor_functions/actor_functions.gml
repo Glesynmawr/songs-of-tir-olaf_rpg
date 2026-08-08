@@ -1,5 +1,26 @@
 
-function spawn_actor(actor_type, cell_x, cell_y){
+// ANIMATION --------------------------------------------------------------------------------------
+function actor_animate(){
+	image_index += image_speed;
+	if (image_index >= sprite_get_number(sprite)) image_index -= sprite_get_number(sprite);
+	return(image_index);
+}
+
+function actors_move_sprite(){
+	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+		with (actor_registry.actor_list[i]){
+			if (sprite_x != sprite_target_x){
+				sprite_x += (sprite_target_x - sprite_x) * manager.actor_move_speed;
+			}
+			if (sprite_y != sprite_target_y){
+				sprite_y += (sprite_target_y - sprite_y) * manager.actor_move_speed;
+			}
+		}
+	}
+}
+
+// SPAWNING	 --------------------------------------------------------------------------------------
+function spawn_new_actor(actor_type, cell_x, cell_y){
 	
 	var new_actor = new actor_type();
 	
@@ -8,12 +29,22 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	new_actor.x_pos			= cell_x;
 	new_actor.y_pos			= cell_y;
 	
+	new_actor.colour_fg		= noone;
+	new_actor.colour_bg		= noone;
+	
+	// Sprite and Animation
+	new_actor.sprite_x			= cell_x * cell_width;
+	new_actor.sprite_y			= cell_y * cell_height;
+	new_actor.sprite_target_x	= cell_x * cell_width;
+	new_actor.sprite_target_y	= cell_y * cell_height;
+	
+	new_actor.image_index		= irandom(new_actor.sprite);
+	new_actor.image_speed		= sprite_get_speed(new_actor.sprite) / game_get_speed(gamespeed_fps);
+	
 	// Turn structure variables
 	new_actor.energy	= 0;
 	new_actor.has_acted = false;
 	
-	// Push to actor registry
-	array_push(actor_registry.actor_list, new_actor);
 	if (actor_type == actor_player){
 		actor_registry.player	= new_actor;
 		new_actor.is_visible	= false;
@@ -27,12 +58,24 @@ function spawn_actor(actor_type, cell_x, cell_y){
 	new_actor.inventory = inventory_initialise();
 	new_actor.inventory.equipment = equipment_initialise(new_actor.body_plan);
 	new_actor.inventory.slot_selection = noone;
+	
+	// Push to actor registry
+	array_push(actor_registry.actor_list, new_actor);
 }
 
+function spawn_zone_mob(mob){
+	var new_mob = mob;
+	new_mob.is_visible = false;
+	
+	// Push to actor registry
+	array_push(actor_registry.actor_list, new_mob);
+}
+
+// DATA -------------------------------------------------------------------------------------------
 function actor_player()constructor{
 	name			= "Player";
-	sprite			= [actor_spr, 0];
-	range			= 8;
+	sprite			= boggul_spr;
+	range			= 7;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;
 	strength		= 50;
@@ -47,7 +90,7 @@ function actor_player()constructor{
 
 function actor_goblin()constructor{
 	name			= "Goblin";
-	sprite			= [actor_spr, 0];
+	sprite			= actor_spr;
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
@@ -60,7 +103,7 @@ function actor_goblin()constructor{
 
 function actor_orc()constructor{
 	name			= "Orc";
-	sprite			= [actor_spr, 0];
+	sprite			= actor_spr;
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;
@@ -73,7 +116,7 @@ function actor_orc()constructor{
 
 function actor_assassin()constructor{
 	name			= "Assassin";
-	sprite			= [actor_spr, 0];
+	sprite			= actor_spr;
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_idle;

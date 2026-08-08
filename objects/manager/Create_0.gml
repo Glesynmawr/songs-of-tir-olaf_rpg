@@ -11,6 +11,8 @@ colour_ui_main		= C_ORANGE;
 // STATE TRANSITION
 transition = noone;
 
+uni_overlay = shader_get_uniform(colour_overlay_shd, "uColour");
+
 #region// MENUS -----------------------------------------------------------------------------------
 control_menu_hover = 0;
 control_menu[0] = "Rebind keys";
@@ -68,7 +70,8 @@ init_particle_system();
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
 direction_indicator = noone;
-
+direction_indicator_x = 0;
+direction_indicator_y = 0;
 
 
 
@@ -109,17 +112,8 @@ minimap_x		= screen_width - ui_width;
 minimap_y		= 0;
 
 // Map drawing
-gamemap_surface		= noone;
-gamemap_width		= screen_width - (2 * ui_width);
-gamemap_height		= screen_height - log_height;
-cells_draw_width	= floor(gamemap_width  / cell_width) - 1;
-cells_draw_height	= floor(gamemap_height / cell_width) - 1;
-
-var gamemap_width_actual  = cells_draw_width  * cell_width;
-var gamemap_height_actual = cells_draw_height * cell_height;
-
-gamemap_x_buffer = (gamemap_width  - gamemap_width_actual)  / 2;
-gamemap_y_buffer = (gamemap_height - gamemap_height_actual) / 2;
+cells_draw_width	= 34;
+cells_draw_height	= 18;
 
 #endregion
 
@@ -151,11 +145,11 @@ actor_registry = {
 
 // Initialise player
 
-spawn_actor(actor_player, entry_pos[0],   entry_pos[1]);
+spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
 //distance_map_player = create_distance_map(game_grid, entry_pos[0],   entry_pos[1]);
 set_player_los(game_grid, actor_registry.player);
-initialise_camera(actor_registry.player);
 
+actor_move_speed = 0.2;
 
 action_list = [];
 turn_order_initialise();

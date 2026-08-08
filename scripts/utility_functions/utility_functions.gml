@@ -1,19 +1,5 @@
 
 // CAMERA
-function initialise_camera(following){
-	//camera_pos[0] = floor((following.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	//camera_pos[1] = floor((following.y_pos * cell_height) - (screen_height / 2) + (cell_height / 2)) + floor(log_height / 2);
-}
-
-function camera_set_position_to_player(){
-	//with (manager){
-	//	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	//	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) + (cell_height / 2));
-
-	//	move_camera(target_x, target_y + floor(log_height / 2), 1);
-	//}
-}
-
 function move_camera(target_x, target_y, camera_spd){
 	//if (camera_pos[0] != target_x){
 	//	camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
@@ -59,11 +45,19 @@ function resolution_scale(){
 	display_set_gui_size(width / scale, height / scale)
 	
 	// SET SCREEN SIZE VARIABLES
-	screen_width	= width  / scale;
-	screen_height	= height / scale;
+	screen_width	= floor(width  / scale);
+	screen_height	= floor(height / scale) - 2;
 	
 }
 
+function player_set_sprite_pos(struct){
+	with (struct){
+		sprite_x = x_pos * manager.cell_width;
+		sprite_y = y_pos * manager.cell_height;
+		sprite_target_x = x_pos * manager.cell_width;
+		sprite_target_y = y_pos * manager.cell_height;
+	}
+}
 
 // CONTROLS
 function input_direction(x_move, y_move){

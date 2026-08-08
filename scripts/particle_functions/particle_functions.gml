@@ -1,5 +1,7 @@
 
 function init_particle_system(){
+	particle_count = 0;
+	
 	globalvar particle_system;
 	particle_system = part_system_create();
 
@@ -18,14 +20,12 @@ function init_particle_system(){
 	part_type_direction(part_title_fire, 90, 90, 0, 7);
 	part_type_life(part_title_fire, 45, 180);
 	part_type_sprite(part_title_fire, fire_spr, true, true, false);
-	part_type_speed(part_title_fire, 0.13, 0.4, 0, 0.15);
+	part_type_speed(part_title_fire, 0.1, 0.3, 0.001, 0.15);
 }
 
-function particle_create_title_fire(particle, x_pos, y_pos, quantity){
-	repeat(quantity){
-		var xx = irandom_range(x_pos - 4, x_pos + 4);
-		part_particles_create(particle_system, xx, y_pos, particle, 1);
-	}
+function particle_create_title_fire(particle, x_pos, y_pos){
+	var xx = irandom_range(x_pos - 4, x_pos + 4);
+	part_particles_create(particle_system, xx, y_pos, particle, 1);
 }
 
 function particle_create_actor(particle_type, grid_x, grid_y, number = 3, dist = 4){

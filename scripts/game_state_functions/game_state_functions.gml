@@ -140,13 +140,7 @@ function game_state_control_menu(){
 		}
 	}
 }
-
 function game_state_dungeon(){
-	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
-
-	move_camera(target_x, target_y + (cell_height) + floor(log_height / 2), 0.1);
-
 	if (!game_paused and transition == noone){
 		turn_order_update();
 	}
@@ -226,11 +220,6 @@ function game_state_pause_menu(){
 }
 
 function game_state_world(){
-	var target_x = floor((actor_registry.player.x_pos * cell_width)  - (screen_width  / 2) + (cell_width  / 2));
-	var target_y = floor((actor_registry.player.y_pos * cell_height) - (screen_height / 2) - (cell_height / 2));
-
-	move_camera(target_x, target_y + floor(log_height / 2), 0.1);
-	
 	if (!game_paused and transition == noone){
 		turn_order_update();
 	}
@@ -266,6 +255,8 @@ function goto_world(){
 	actor_registry.player.x_pos = actor_registry.player.world_x;
 	actor_registry.player.y_pos = actor_registry.player.world_y;
 	
+	player_set_sprite_pos(actor_registry.player);
+	
 	// Set camera bounds
 	camera_min_x = -ui_width;
 	camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, -ui_width);
@@ -291,13 +282,13 @@ function goto_zone(world_x, world_y){
 	actor_registry.player.x_pos = floor(array_length(game_grid)    * 0.5);
 	actor_registry.player.y_pos = floor(array_length(game_grid[0]) * 0.5);
 	
+	player_set_sprite_pos(actor_registry.player);
+	
 	// Set camera bounds
 	camera_min_x = -ui_width;
 	camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, 0);
 	camera_min_y = 0;
 	camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
-	
-	camera_set_position_to_player();
 	
 	// Set game state
 	game_state = game_state_dungeon;

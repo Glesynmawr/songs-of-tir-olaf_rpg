@@ -37,6 +37,9 @@ function action_move(grid, move_x, move_y){
 	// Move actor
 	x_pos += move_x;
 	y_pos += move_y;
+
+	sprite_target_x = x_pos * manager.cell_width;
+	sprite_target_y = y_pos * manager.cell_height;
 	
 	if (grid[x_pos][y_pos].tile == "closed door") or (grid[x_pos][y_pos].tile == "secret door"){
 		

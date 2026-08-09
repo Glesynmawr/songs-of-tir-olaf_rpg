@@ -10,6 +10,10 @@ function action_move(grid, move_x, move_y){
 	x_move = x_pos + move_x;
 	y_move = y_pos + move_y;
 	
+	// Sprite flipping
+	if (move_x > 0) xscale = 1;
+	if (move_x < 0) xscale = -1;
+	
 	// Check target in bounds
 	if (x_move < 0 or x_move >= grid_w or y_move < 0 or y_move >= grid_h) return(false);
 	

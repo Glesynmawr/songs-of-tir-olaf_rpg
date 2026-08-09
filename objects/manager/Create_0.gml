@@ -1,5 +1,7 @@
 /// @desc Initialise 
 
+randomise();
+
 debugging_mode		= false;
 game_paused			= false;
 
@@ -73,9 +75,6 @@ direction_indicator = noone;
 direction_indicator_x = 0;
 direction_indicator_y = 0;
 
-
-
-
 // Actor equipment
 equip_data[EQUIP.HEAD] = ["head",			"headwear",			3];
 equip_data[EQUIP.NECK] = ["neck",			"necklace",			3];
@@ -88,73 +87,74 @@ equip_data[EQUIP.GUNS] = ["ranged item",	"Ranged item",		2];
 equip_data[EQUIP.FEET] = ["feet",			"Footwear",	 		3];
 
 
-// Sets cell size using monospaced font
-draw_set_font(mono_fnt);
-cell_width  = 16;
-cell_height = 16;
-
-
 #region// UI
+ui_width	   = 96;
+ui_position	   = 0;
+ui_x_pos[0][0] = screen_width - ui_width;
+ui_x_pos[0][1] = 0;
+ui_x_pos[1][0] = 0;
+ui_x_pos[1][1] = ui_width;
+
 text_height = string_height("M") + 2;
 text_width  = string_width("M");
 
 // Game log
 log_height = (LOG_MAX_ENTRIES + 2) * text_height;
 
-ui_width	= 96;
-
 // Minimap
 minimap_scale	= 2;
 minimap_surface = noone;
 minimap_width	= ui_width;
-minimap_height	= ui_width + 2;
-minimap_x		= screen_width - ui_width;
+minimap_height	= ui_width;
 minimap_y		= 0;
 
-// Map drawing
-cells_draw_width	= 34;
-cells_draw_height	= 18;
+// Info box
+infobox_width   = ui_width;
+infobox_height  = screen_height - minimap_height - log_height + 10;
+infobox_y       = minimap_height - 5;
 
 #endregion
+
+
+// World generation
+
+entry_pos = [0, 0];
+init_world();
+
+
 
 // Level Sprite Indices
 door_index = 0;
 floor_sprite = floor_00_spr;
 
-// Set distance maps
-globalvar distance_map_player;
-distance_map_player = [];
-
-// Initialise game log
-initialise_log();
-
-entry_pos = [0, 0];
-
-// World generation
-init_world();
-
-// Level generation
-//dungeon_map = dungeon_generate();
 game_grid = world_map;
 
-// Initialise actor lists
+#region// ACTORS -----------------------------------------------------------------------------------------
+// Actor registry - Active actors only
 actor_registry = {
 	actor_list:	[],
 	player:		noone
 }
 
-// Initialise player
-
+// Player
 spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
-//distance_map_player = create_distance_map(game_grid, entry_pos[0],   entry_pos[1]);
 set_player_los(game_grid, actor_registry.player);
 
+// Game log
+initialise_log();
+
+// Distance maps
+globalvar distance_map_player;
+distance_map_player = [];
+
+// Move speed - multiplier
 actor_move_speed = 0.2;
 
+// Actoion list and turn order
 action_list = [];
 turn_order_initialise();
 
-
+#endregion
 
 
 

@@ -71,16 +71,16 @@ enum TRANSITION{
 }
 
 
-#macro SCREEN_WIDTH  640
-#macro SCREEN_HEIGHT 360
+#macro SCREEN_WIDTH		640
+#macro SCREEN_HEIGHT	360
 
-#macro ENERGY_PER_TURN 100
-#macro LOG_MAX_ENTRIES 8
+#macro MAP_WIDTH		34
+#macro MAP_HEIGHT		18
 
-#macro WORLD_WIDTH	27
-#macro WORLD_HEIGHT	16
+#macro ENERGY_PER_TURN	100
+#macro LOG_MAX_ENTRIES	8
 
-#macro ZONE_SIZE	39
+#macro ZONE_SIZE		40
 
 #macro C_BLACK	 make_colour_rgb(0,   0,   0)
 #macro C_WHITE	 make_colour_rgb(255, 255, 255)

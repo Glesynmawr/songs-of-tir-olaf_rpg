@@ -2,10 +2,9 @@
 function world_generate(){
 	
 	tiles_per_biome = 8;
-	zone_size		= ZONE_SIZE;
-	zone_third		= floor(zone_size / 3);
+	zone_third		= floor(ZONE_SIZE / 3);
 	
-	// Biome counts
+	// Biomes
 	biome[0] = 25;	// Mountains
 	biome[1] = 35;	// Hills
 	biome[2] = 55;	// Canyon
@@ -28,6 +27,7 @@ function world_generate(){
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
 	
+	// Terrain
 	terrain_lookup[BIOME.MOUNTAIN]	= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.HILL]		= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.CANYON]	= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
@@ -37,6 +37,7 @@ function world_generate(){
 	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
 	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
 	
+	// Zone mobs
 	mob_lookup[BIOME.MOUNTAIN]	= noone;
 	mob_lookup[BIOME.HILL]		= noone;
 	mob_lookup[BIOME.CANYON]	= noone;
@@ -47,7 +48,7 @@ function world_generate(){
 	mob_lookup[BIOME.WATER]		= [5, [actor_goblin, 5]];
 	
 	// Initialise world grid
-	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
+	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);
 	
 	// Add texture
 	world_grid = noise_generate(world_grid);
@@ -64,18 +65,18 @@ function world_generate(){
 	// Generate zone maps
 	zone_map  = [];
 	zone_mobs = [];
-	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
-		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
+	for (var xx = 0; xx < MAP_WIDTH; xx ++){
+		for (var yy = 0; yy < MAP_HEIGHT; yy ++){
 			var new_zone = zone_map_generate(world_grid, xx, yy);
 			zone_map[xx][yy]  = new_zone[0];
 			zone_mobs[xx][yy] = new_zone[1];
-			initialise_item_grid(zone_map[xx][yy], zone_size, zone_size);
+			initialise_item_grid(zone_map[xx][yy], ZONE_SIZE, ZONE_SIZE);
 		}
 	}
 	
 	// Set player start position
-	for (xx = 0; xx < WORLD_WIDTH; xx ++){
-		for (yy = 0; yy < WORLD_HEIGHT; yy ++){
+	for (xx = 0; xx < MAP_WIDTH; xx ++){
+		for (yy = 0; yy < MAP_HEIGHT; yy ++){
 			if (world_grid[xx][yy].tile == "marsh"){
 				player_start_x = xx;
 				player_start_y = yy;
@@ -91,44 +92,44 @@ function world_grid_initialise(width, height){
 	
 	// Initialise grid
 	var grid = [];
-	for (var i = 0; i < WORLD_WIDTH; i ++){
-		for (var j = 0; j < WORLD_HEIGHT; j ++){
+	for (var i = 0; i < MAP_WIDTH; i ++){
+		for (var j = 0; j < MAP_HEIGHT; j ++){
 			grid[i][j] = 0;
 		}
 	}
 	
 	// Initial anchors
 	grid[0][0] = 0;
-	grid[0][WORLD_HEIGHT - 1] = 30;
-	grid[WORLD_WIDTH - 1][0] = 60;
-	grid[WORLD_WIDTH - 1][WORLD_HEIGHT - 1] = 90;
+	grid[0][MAP_HEIGHT - 1] = 30;
+	grid[MAP_WIDTH - 1][0] = 60;
+	grid[MAP_WIDTH - 1][MAP_HEIGHT - 1] = 90;
 	
 	var anchor1 = grid[0][0];
-	var anchor2 = grid[0][WORLD_HEIGHT - 1];
-	var anchor3 = grid[WORLD_WIDTH - 1][0];
-	var anchor4 = grid[WORLD_WIDTH - 1][WORLD_HEIGHT - 1];
+	var anchor2 = grid[0][MAP_HEIGHT - 1];
+	var anchor3 = grid[MAP_WIDTH - 1][0];
+	var anchor4 = grid[MAP_WIDTH - 1][MAP_HEIGHT - 1];
 		
 	// Vertical lerp
-	for (j = 0; j < WORLD_HEIGHT; j ++){
+	for (j = 0; j < MAP_HEIGHT; j ++){
 		
-		var lerp_amount = j / (WORLD_HEIGHT - 1);
+		var lerp_amount = j / (MAP_HEIGHT - 1);
 		var lerp_value = lerp(anchor1, anchor2, lerp_amount);
 		grid[0][j] = round(lerp_value);
 		
 		var lerp_value = lerp(anchor3, anchor4, lerp_amount);
-		grid[WORLD_WIDTH - 1][j] = round(lerp_value);
+		grid[MAP_WIDTH - 1][j] = round(lerp_value);
 	}
 	
 	// Horizontal lerp
-	for (i = 0; i < WORLD_WIDTH; i ++){
-		for (j = 0; j < WORLD_HEIGHT; j ++){
+	for (i = 0; i < MAP_WIDTH; i ++){
+		for (j = 0; j < MAP_HEIGHT; j ++){
 			if (grid[i][j] != 0){
 				continue;
 			}
 			anchor1 = grid[0][j];
-			anchor2 = grid[WORLD_WIDTH - 1][j];
+			anchor2 = grid[MAP_WIDTH - 1][j];
 			
-			var lerp_amount = i / (WORLD_WIDTH - 1);
+			var lerp_amount = i / (MAP_WIDTH - 1);
 			var lerp_value = lerp(anchor1, anchor2, lerp_amount);
 			grid[i][j] = round(lerp_value);
 		}
@@ -148,14 +149,14 @@ function noise_generate(grid){
 	for (p = 0; p < passes; p ++){
 		
 		// Create anchor points
-		for (i = 0; i <  WORLD_WIDTH; i ++){
-			for (j = 0; j < WORLD_HEIGHT; j ++){
+		for (i = 0; i <  MAP_WIDTH; i ++){
+			for (j = 0; j < MAP_HEIGHT; j ++){
 				temp_map[p][i][j] = 0;
 				
 				if (i mod chunk_size == 0) and (j mod chunk_size == 0){
 					temp_map[p][i][j] = irandom_range(-amplitude, amplitude);
 				}
-				else if (i == WORLD_WIDTH - 1) or (j == WORLD_HEIGHT - 1){
+				else if (i == MAP_WIDTH - 1) or (j == MAP_HEIGHT - 1){
 					temp_map[p][i][j] = 10;
 				}
 				else temp_map[p][i][j] = 0;
@@ -163,13 +164,13 @@ function noise_generate(grid){
 		}
 		
 		// Verrtical interpolation
-		for (i = 0; i < WORLD_WIDTH; i ++){
-			for (j = 0; j < WORLD_HEIGHT; j ++){
+		for (i = 0; i < MAP_WIDTH; i ++){
+			for (j = 0; j < MAP_HEIGHT; j ++){
 				if (i mod chunk_size != 0) continue;
 				
 				var anchor_t = floor(j / chunk_size) * chunk_size;
 				var anchor_b = ceil(j / chunk_size) * chunk_size;
-				if (anchor_b >= WORLD_HEIGHT) anchor_b = WORLD_HEIGHT - 1;
+				if (anchor_b >= MAP_HEIGHT) anchor_b = MAP_HEIGHT - 1;
 				
 				var lerp_amount = (j - anchor_t) / chunk_size;
 				var value1 = temp_map[p][i][anchor_t];
@@ -181,12 +182,12 @@ function noise_generate(grid){
 		}
 		
 		// Horizontal interpolation
-		for (i = 0; i < WORLD_WIDTH; i ++){
-			for (j = 0; j < WORLD_HEIGHT; j ++){
+		for (i = 0; i < MAP_WIDTH; i ++){
+			for (j = 0; j < MAP_HEIGHT; j ++){
 				
 				var anchor_l = floor(i / chunk_size) * chunk_size;
 				var anchor_r = ceil(i / chunk_size) * chunk_size;
-				if (anchor_r >= WORLD_WIDTH) anchor_r = WORLD_WIDTH - 1;
+				if (anchor_r >= MAP_WIDTH) anchor_r = MAP_WIDTH - 1;
 				
 				var lerp_amount = (i - anchor_l) / chunk_size;
 				var value1 = temp_map[p][anchor_l][j];
@@ -202,8 +203,8 @@ function noise_generate(grid){
 	}
 	
 	// Combine maps
-	for (i = 0; i < WORLD_WIDTH; i ++){
-		for (j = 0; j < WORLD_HEIGHT; j ++){
+	for (i = 0; i < MAP_WIDTH; i ++){
+		for (j = 0; j < MAP_HEIGHT; j ++){
 			for (p = 0; p < passes; p ++){
 				grid[i][j] += temp_map[p][i][j];
 				grid[i][j] = clamp(round(grid[i][j]), 0, 100);

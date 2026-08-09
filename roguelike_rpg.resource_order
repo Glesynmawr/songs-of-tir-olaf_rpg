@@ -35,7 +35,6 @@
     {"name":"dragonfly_spr","order":16,"path":"sprites/dragonfly_spr/dragonfly_spr.yy",},
     {"name":"fire_spr","order":3,"path":"sprites/fire_spr/fire_spr.yy",},
     {"name":"floor_00_spr","order":2,"path":"sprites/floor_00_spr/floor_00_spr.yy",},
-    {"name":"game_window_border_spr","order":7,"path":"sprites/game_window_border_spr/game_window_border_spr.yy",},
     {"name":"gamemaker_logo_small_spr","order":1,"path":"sprites/gamemaker_logo_small_spr/gamemaker_logo_small_spr.yy",},
     {"name":"glesynmawr_logo_small_spr","order":2,"path":"sprites/glesynmawr_logo_small_spr/glesynmawr_logo_small_spr.yy",},
     {"name":"grindylow_spr","order":15,"path":"sprites/grindylow_spr/grindylow_spr.yy",},

@@ -31,8 +31,8 @@ function generate_zone_tile(tile_type){
 
 function water_tile_placement(map){
 	var xx, yy;
-	for (xx = 0; xx < zone_size; xx ++){
-		for (yy = 0; yy < zone_size; yy ++){
+	for (xx = 0; xx < ZONE_SIZE; xx ++){
+		for (yy = 0; yy < ZONE_SIZE; yy ++){
 			if (map[xx][yy].tile == "water"){
 				if (map[xx][yy].index >= 46){
 					var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);

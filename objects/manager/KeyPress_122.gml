@@ -1,3 +1,3 @@
-/// @desc RESTART GAME
+/// @desc REMOVE FROM FINAL BUILD
 game_restart();
 

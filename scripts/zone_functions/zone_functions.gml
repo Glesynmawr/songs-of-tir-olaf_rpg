@@ -1,8 +1,8 @@
 
 function zone_mountain(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.MOUNTAIN]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -12,8 +12,8 @@ function zone_mountain(){
 
 function zone_hill(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.HILL]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -23,8 +23,8 @@ function zone_hill(){
 
 function zone_canyon(world_index){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			temp_list[xx][yy] = new tile_world_canyon();
 			temp_list[xx][yy].sprite = zone_tiles_spr;
 			temp_list[xx][yy].index += irandom(tiles_per_biome - 1);
@@ -37,8 +37,8 @@ function zone_canyon(world_index){
 
 function zone_salt_plain(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.DESERT]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -48,8 +48,8 @@ function zone_salt_plain(){
 
 function zone_scrubland(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.SCRUB]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -59,8 +59,8 @@ function zone_scrubland(){
 
 function zone_marsh(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.MARSH]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -73,8 +73,8 @@ function zone_marsh(){
 
 function zone_mangrove(){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
 			temp_list[xx][yy] = generate_zone_tile(new_tile);
 		}
@@ -89,8 +89,8 @@ function zone_mangrove(){
 
 function zone_water(world_index){
 	var temp_list = [];
-	for (var xx = 0; xx < zone_size; xx ++){
-		for (var yy = 0; yy < zone_size; yy ++){
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			temp_list[xx][yy] = generate_zone_tile(tile_zone_water);
 		}
 	}
@@ -160,9 +160,9 @@ function zone_water(world_index){
 	
 	// Right edge fill
 	if (tile_fill[0] == true){
-		anchor_x = zone_size - 1;
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
+		anchor_x = ZONE_SIZE - 1;
+		for (x2 = 0; x2 < ZONE_SIZE; x2 ++){
+			for (y2 = 0; y2 < ZONE_SIZE; y2 ++){
 				anchor_y = y2;
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
@@ -177,9 +177,9 @@ function zone_water(world_index){
 	// Top edge tiling
 	if (tile_fill[1] == true){
 		anchor_y = 0;
-		for (x2 = 0; x2 < zone_size; x2 ++){
+		for (x2 = 0; x2 < ZONE_SIZE; x2 ++){
 			anchor_x = x2;
-			for (y2 = 0; y2 < zone_size; y2 ++){
+			for (y2 = 0; y2 < ZONE_SIZE; y2 ++){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
@@ -193,8 +193,8 @@ function zone_water(world_index){
 	// Left edge fill
 	if (tile_fill[2] == true){
 		anchor_x = 0;
-		for (x2 = 0; x2 < zone_size; x2 ++){
-			for (y2 = 0; y2 < zone_size; y2 ++){
+		for (x2 = 0; x2 < ZONE_SIZE; x2 ++){
+			for (y2 = 0; y2 < ZONE_SIZE; y2 ++){
 				anchor_y = y2;
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
@@ -208,10 +208,10 @@ function zone_water(world_index){
 	
 	// Bottom edge fill
 	if (tile_fill[3] == true){
-		anchor_y = zone_size - 1;
-		for (x2 = 0; x2 < zone_size; x2 ++){
+		anchor_y = ZONE_SIZE - 1;
+		for (x2 = 0; x2 < ZONE_SIZE; x2 ++){
 			anchor_x = x2;
-			for (y2 = 0; y2 < zone_size; y2 ++){
+			for (y2 = 0; y2 < ZONE_SIZE; y2 ++){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
@@ -227,14 +227,14 @@ function zone_water(world_index){
 		if (tile_fill[i] == true){
 			
 			switch(i){
-				case 4: anchor_x = zone_size - 1 anchor_y = 0; break;
+				case 4: anchor_x = ZONE_SIZE - 1 anchor_y = 0; break;
 				case 5: anchor_x = 0 anchor_y = 0; break;
-				case 6: anchor_x = 0 anchor_y = zone_size - 1; break;
-				case 7: anchor_x = zone_size - 1 anchor_y = zone_size - 1; break;
+				case 6: anchor_x = 0 anchor_y = ZONE_SIZE - 1; break;
+				case 7: anchor_x = ZONE_SIZE - 1 anchor_y = ZONE_SIZE - 1; break;
 			}
 		
-			for (x2 = 0; x2 < zone_size; x2 ++){
-				for (y2 = 0; y2 < zone_size; y2 ++){
+			for (x2 = 0; x2 < ZONE_SIZE; x2 ++){
+				for (y2 = 0; y2 < ZONE_SIZE; y2 ++){
 					dist = point_distance(x2, y2, anchor_x, anchor_y);
 					tile_chance = dist / zone_third;
 					if (random(1) >= tile_chance){

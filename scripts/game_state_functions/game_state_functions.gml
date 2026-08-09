@@ -27,22 +27,33 @@ function init_dungeon(){
 }
 
 function init_main(){
+	
+	// Set resolution and scale
 	resolution_scale();
 	
+	// Initialise camera limits
 	camera_min_x = 0;
 	camera_max_x = 0;
 	camera_min_y = 0;
 	camera_max_y = 0;
 	
+	// Initialise game states
 	game_state				= noone;
 	game_state_previous		= noone;
 	control_state_previous	= noone;
 	map_mode				= noone;
 	
+	// UI animation timer
 	ui_flip				= true;
 	ui_flip_timer_max	= 30;
 	ui_flip_timer		= ui_flip_timer_max;
 	
+	// Set text font and cell size
+	draw_set_font(mono_fnt);
+	cell_width  = 16;
+	cell_height = 16;
+	
+	// Transition into initial room
 	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 }
 	

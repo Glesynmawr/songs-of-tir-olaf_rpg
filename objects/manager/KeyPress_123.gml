@@ -1,3 +1,3 @@
-/// @desc EXIT GAME
+/// @desc REMOVE FROM FINAL BUILD
 transition_set(TRANSITION.GAME_QUIT, C_BLACK);
 

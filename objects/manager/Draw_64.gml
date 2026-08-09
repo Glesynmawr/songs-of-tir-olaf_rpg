@@ -12,7 +12,6 @@ if (transition != noone){
 	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
 }
 
-draw_text(10, 10, "Draw W: " + string(cells_draw_width));
-draw_text(10, 20, "Draw H: " + string(cells_draw_height));
+
 
 

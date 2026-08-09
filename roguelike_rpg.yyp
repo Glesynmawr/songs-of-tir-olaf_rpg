@@ -62,7 +62,6 @@
     {"id":{"name":"dragonfly_spr","path":"sprites/dragonfly_spr/dragonfly_spr.yy",},},
     {"id":{"name":"fire_spr","path":"sprites/fire_spr/fire_spr.yy",},},
     {"id":{"name":"floor_00_spr","path":"sprites/floor_00_spr/floor_00_spr.yy",},},
-    {"id":{"name":"game_window_border_spr","path":"sprites/game_window_border_spr/game_window_border_spr.yy",},},
     {"id":{"name":"gamemaker_logo_small_spr","path":"sprites/gamemaker_logo_small_spr/gamemaker_logo_small_spr.yy",},},
     {"id":{"name":"glesynmawr_logo_small_spr","path":"sprites/glesynmawr_logo_small_spr/glesynmawr_logo_small_spr.yy",},},
     {"id":{"name":"grindylow_spr","path":"sprites/grindylow_spr/grindylow_spr.yy",},},

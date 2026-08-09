@@ -5,23 +5,26 @@ function game_draw_character_select(){
 }
 
 function game_draw_grid(){
+	
+	// Get grid size
 	var ww = array_length(game_grid);
 	var hh = array_length(game_grid[0]);
 	
+	// Get drawing position variables
 	var player_x			= actor_registry.player.x_pos;
 	var player_y			= actor_registry.player.y_pos;
-	var draw_width_half		= ceil(cells_draw_width  / 2);
-	var draw_height_half	= ceil(cells_draw_height / 2);
+	var draw_width_half		= ceil(MAP_WIDTH  / 2);
+	var draw_height_half	= ceil(MAP_HEIGHT / 2);
 	var player_spr_x		= actor_registry.player.sprite_x;
 	var player_spr_y		= actor_registry.player.sprite_y;
 	
 	// Get grid drawing position
-	var x_from = max(min(player_x - draw_width_half,  ww - (cells_draw_width)),  0);
-	var y_from = max(min(player_y - draw_height_half, hh - (cells_draw_height)), 0);
-	var x_to   = min(x_from + cells_draw_width,  ww)
-	var y_to   = min(y_from + cells_draw_height, hh);
+	var x_from = max(min(player_x - draw_width_half,  ww - (MAP_WIDTH)),  0);
+	var y_from = max(min(player_y - draw_height_half, hh - (MAP_HEIGHT)), 0);
+	var x_to   = min(x_from + MAP_WIDTH,  ww)
+	var y_to   = min(y_from + MAP_HEIGHT, hh);
 	
-	// Set map offset
+	// Set map offset using player sprite position, checking for edges
 	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
 	var map_offset_y = actor_registry.player.sprite_target_y - actor_registry.player.sprite_y;
 	if (player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width){
@@ -35,9 +38,11 @@ function game_draw_grid(){
 		for (var yy = y_from; yy < y_to; yy ++){
 			if (game_grid[xx][yy].explored or debugging_mode){
 				
-				var screen_x = (xx - x_from) * cell_width  + map_offset_x;
-				var screen_y = (yy - y_from) * cell_height + map_offset_y;
+				// Set screen pixel position
+				var screen_x = ((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1];
+				var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
 				
+				// Initialise drawing variables
 				var draw_actor = false;
 				var draw_item  = false;
 				
@@ -48,21 +53,26 @@ function game_draw_grid(){
 					var actor_x = actor_registry.actor_list[i].x_pos;
 					var actor_y = actor_registry.actor_list[i].y_pos;
 					
+					// If actor is in current cell
 					if (actor_x == xx and actor_y == yy){
 						if (actor_registry.actor_list[i].is_visible){
-							// Draw actor sprite
+							
+							// Get actor variables
 							with (actor_registry.actor_list[i]){
 								var spr = sprite;
 								
 								// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
 								var spr_offset_x = sprite_x - sprite_target_x;
 								var spr_offset_y = sprite_y - sprite_target_y;
+								var x_scale		 = xscale;
 								
 								// ACTOR ANIMATION ------------------------------------------------------------------------
 								ind = actor_animate();
 								
 								var col = colour_fg;
 							}
+							
+							// Set sprite overlay shader
 							if (col != noone){
 								
 								var r = colour_get_red(col)   / 255;
@@ -75,12 +85,13 @@ function game_draw_grid(){
 								shader_set_uniform_f_array(uni_overlay, col);
 							}
 							
-							draw_sprite(spr, ind, screen_x + spr_offset_x, screen_y + spr_offset_y)
-							
+							// Draw actor sprite and reset shader
+							draw_sprite_ext(spr, ind, screen_x + spr_offset_x + (cell_width / 2), screen_y + spr_offset_y, x_scale, 1, 0, c_white, 1);
 							shader_reset();
 							
 							draw_actor = true;
 							
+							// If actor is player, set direction indicator position and direction
 							if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
 								var dir_ind_x = screen_x + cell_width  / 2;
 								var dir_ind_y = screen_y + cell_height / 2;
@@ -137,10 +148,6 @@ function game_draw_grid(){
 	if (direction_indicator != noone){
 		draw_sprite_ext(direction_arrow_spr, direction_indicator, direction_indicator_x, direction_indicator_y, 1, 1, 0, c_white, 1);
 	}
-	
-	// Game window border
-	//draw_sprite_stretched_ext(game_window_border_spr, 1, ui_width, 0, gamemap_width, gamemap_height, colour_bg_main, 1);
-	//draw_sprite_stretched_ext(game_window_border_spr, 0, ui_width, 0, gamemap_width, gamemap_height, C_ORANGE,  1);
 }
 
 
@@ -151,12 +158,15 @@ function draw_game_ui(){
 	var xx = 0;
 	var yy = 0;
 	
-	// Player hit points
-	draw_text(text_width, text_height, $"HP: {actor_registry.player.hit_points}");
-	
 	// Game log
 	draw_game_log(0, hh - log_height, ww, log_height);
 
+	// Minimap
+	draw_minimap();
+	
+	// Info box
+	draw_info_box();
+	
 	// Inventory and pick-up menus
 	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
 		draw_inventory(actor_registry.player, xx, yy, ww, hh);
@@ -164,10 +174,6 @@ function draw_game_ui(){
 	if (actor_registry.player.state == state_pickup){
 		draw_pickup(actor_registry.player);
 	}
-	
-	// Minimap
-	draw_minimap();
-	
 }
 
 function draw_control_menu(){
@@ -449,6 +455,19 @@ function draw_game_log(x_pos, y_pos, width, height){
 	}
 }
 
+function draw_info_box(){
+	
+	// Background and border
+	var xx = ui_x_pos[ui_position][0];
+	var yy = infobox_y;
+	ui_draw_box(xx, yy, infobox_width, infobox_height);
+	
+	// Player hit points
+	xx += text_width * 2;
+	yy += text_height;
+	draw_text(xx, yy, $"HP: {actor_registry.player.hit_points}");
+}
+
 function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	var tc = colour_text_main;
@@ -594,11 +613,11 @@ function draw_minimap(){
 	
 	surface_reset_target();
 		
-	draw_surface(minimap_surface, minimap_x, minimap_y);
+	draw_surface(minimap_surface, ui_x_pos[ui_position][0], minimap_y);
 		
 	// Draw Map Border
-	draw_sprite_stretched_ext(ui_border_spr, 1, minimap_x, minimap_y, minimap_width, minimap_height, bg, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, minimap_x, minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
+	draw_sprite_stretched_ext(ui_border_spr, 1, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
 	
 }
 

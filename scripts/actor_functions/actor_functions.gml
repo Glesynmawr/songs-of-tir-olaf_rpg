@@ -40,6 +40,7 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	
 	new_actor.image_index		= irandom(new_actor.sprite);
 	new_actor.image_speed		= sprite_get_speed(new_actor.sprite) / game_get_speed(gamespeed_fps);
+	new_actor.xscale			= 1;
 	
 	// Turn structure variables
 	new_actor.energy	= 0;
@@ -74,7 +75,7 @@ function spawn_zone_mob(mob){
 // DATA -------------------------------------------------------------------------------------------
 function actor_player()constructor{
 	name			= "Player";
-	sprite			= boggul_spr;
+	sprite			= actor_spr;
 	range			= 7;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;

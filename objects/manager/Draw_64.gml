@@ -12,6 +12,6 @@ if (transition != noone){
 	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
 }
 
-
-
+draw_text(10, 10, string(array_length(actor_registry.actor_list)));
+draw_text(10, 20, string(array_length(action_list)));
 

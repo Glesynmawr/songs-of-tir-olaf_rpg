@@ -1,5 +1,5 @@
 
-function zone_mountain(){
+function zone_mountain(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
@@ -10,7 +10,7 @@ function zone_mountain(){
 	return(temp_list);
 }
 
-function zone_hill(){
+function zone_hill(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
@@ -35,7 +35,7 @@ function zone_canyon(world_index){
 	return(temp_list);
 }
 
-function zone_salt_plain(){
+function zone_salt_plain(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
@@ -46,7 +46,7 @@ function zone_salt_plain(){
 	return(temp_list);
 }
 
-function zone_scrubland(){
+function zone_scrubland(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
@@ -57,7 +57,7 @@ function zone_scrubland(){
 	return(temp_list);
 }
 
-function zone_marsh(){
+function zone_marsh(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
@@ -71,7 +71,7 @@ function zone_marsh(){
 	return(temp_list);
 }
 
-function zone_mangrove(){
+function zone_mangrove(world_index){
 	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){

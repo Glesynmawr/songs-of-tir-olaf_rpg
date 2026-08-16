@@ -1,22 +1,5 @@
 
 // CAMERA
-function move_camera(target_x, target_y, camera_spd){
-	//if (camera_pos[0] != target_x){
-	//	camera_pos[0] += (target_x - camera_pos[0]) * camera_spd;
-	//}
-	//if (camera_pos[1] != target_y){
-	//	camera_pos[1] += (target_y - camera_pos[1]) * camera_spd;
-	//}
-	
-	//if (abs(camera_pos[0] - target_x) < 0.1) camera_pos[0] = target_x;
-	//if (abs(camera_pos[1] - target_y) < 0.1) camera_pos[1] = target_y;
-	
-	//camera_pos[0] = clamp(camera_pos[0], camera_min_x, camera_max_x);
-	//camera_pos[1] = clamp(camera_pos[1], camera_min_y, camera_max_y);
-	
-	//camera_set_view_pos(view_camera[0], camera_pos[0], camera_pos[1]);
-}
-
 function resolution_scale(){
 	
 	// INITIALISE VARIABLES
@@ -294,13 +277,20 @@ function transition_update(){
 			case TRANSITION.CONTROL_MENU:	
 				control_state_previous = game_state;
 				game_state = init_control_menu;									break;
+				
 			case TRANSITION.CONTROL_EXIT:	
 				game_state = control_state_previous;							break;	
-			case TRANSITION.GAME_BOOT:		game_state = game_state_main_menu;	break;
+				
+			case TRANSITION.GAME_BOOT:	
+				game_state = game_state_main_menu;
+				init_world();													break;
+				
 			case TRANSITION.GAME_DUNGEON:	init_dungeon();						break;
 			case TRANSITION.GAME_QUIT:		game_end();							break;
 			case TRANSITION.GAME_WORLD:		grid_set_visible(manager.game_grid, false) goto_world(); break;
-			case TRANSITION.GAME_ZONE:		grid_set_visible(manager.game_grid, false) goto_zone(actor_registry.player.world_x, actor_registry.player.world_y); break;
+			case TRANSITION.GAME_ZONE:		
+				grid_set_visible(manager.game_grid, false) 
+				goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;
 			
 			default: show_message("Transition type not set!");					break;
 		}
@@ -402,24 +392,25 @@ function turn_order_initialise(){
 function turn_order_update(){
 	var len = array_length(action_list);
 
-	if (action_index < len){
-	
-			with (action_list[action_index]){
-				state();
-				if (has_acted){
-					other.action_index ++;
-				}
-			}
+	for (var i = 0; i < len; i ++){
 		
-		if (action_index >= array_length(action_list)){
+		if (i >= array_length(action_list)) break;
+		
+		action_list[i].state();
+		
+		if (i >= array_length(action_list)) break;
+		
+		if (!action_list[i].has_acted) break;
+		action_index ++;
+	}
+	
+	if (action_index >= array_length(action_list)){
 						
-			// Create New Action List
-			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-				actor_registry.actor_list[i].has_acted = false;
-			}
-			turn_order_initialise();
-			
+		// Create New Action List
+		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+			actor_registry.actor_list[i].has_acted = false;
 		}
+		turn_order_initialise();
 	}
 }
 

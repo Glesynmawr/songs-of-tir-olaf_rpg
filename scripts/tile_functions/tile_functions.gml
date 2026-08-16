@@ -157,6 +157,7 @@ function tile_wall()constructor{
 // WORLD TILES
 function tile_world_mountain()constructor{
 	tile			= "mountain";
+	biome			= BIOME.MOUNTAIN;
 	sprite			= world_tiles_spr;
 	index			= 0;
 	colour_fg		= C_WHITE;
@@ -170,6 +171,7 @@ function tile_world_mountain()constructor{
 
 function tile_world_hill()constructor{
 	tile			= "hill";
+	biome			= BIOME.HILL;
 	sprite			= world_tiles_spr;
 	index			= 8;
 	colour_fg		= C_DKGREY;
@@ -183,6 +185,7 @@ function tile_world_hill()constructor{
 
 function tile_world_canyon()constructor{
 	tile			= "canyon";
+	biome			= BIOME.CANYON;
 	sprite			= world_tiles_spr;
 	index			= 16;
 	colour_fg		= C_RED;
@@ -196,6 +199,7 @@ function tile_world_canyon()constructor{
 
 function tile_world_salt_plain()constructor{
 	tile			= "salt plain";
+	biome			= BIOME.DESERT;
 	sprite			= world_tiles_spr;
 	index			= 24;
 	colour_fg		= C_MIDGREY;
@@ -209,6 +213,7 @@ function tile_world_salt_plain()constructor{
 
 function tile_world_scrubland()constructor{
 	tile			= "scrubland";
+	biome			= BIOME.SCRUB;
 	sprite			= world_tiles_spr;
 	index			= 32;
 	colour_fg		= C_BROWN;
@@ -222,6 +227,7 @@ function tile_world_scrubland()constructor{
 
 function tile_world_mangrove()constructor{
 	tile			= "mangrove";
+	biome			= BIOME.FOREST;
 	sprite			= world_tiles_spr;
 	index			= 40;
 	colour_fg		= C_LIME;
@@ -235,6 +241,7 @@ function tile_world_mangrove()constructor{
 
 function tile_world_marsh()constructor{
 	tile			= "marsh";
+	biome			= BIOME.MARSH;
 	sprite			= world_tiles_spr;
 	index			= 48;
 	colour_fg		= C_GREEN;
@@ -248,6 +255,7 @@ function tile_world_marsh()constructor{
 
 function tile_world_water()constructor{
 	tile			= "water";
+	biome			= BIOME.WATER;
 	sprite			= world_tiles_spr;
 	index			= 56;
 	colour_fg		= C_LTBLUE;

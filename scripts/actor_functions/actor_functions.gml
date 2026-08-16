@@ -64,12 +64,65 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	array_push(actor_registry.actor_list, new_actor);
 }
 
-function spawn_zone_mob(mob){
-	var new_mob = mob;
-	new_mob.is_visible = false;
+function spawn_actor_to_zone_list(actor_type, cell_x, cell_y){
+	var new_actor = new actor_type();
 	
-	// Push to actor registry
-	array_push(actor_registry.actor_list, new_mob);
+	// Replacement variables
+	new_actor.is_visible	= false;
+	new_actor.x_pos			= cell_x;
+	new_actor.y_pos			= cell_y;
+	
+	new_actor.colour_fg		= noone;
+	new_actor.colour_bg		= noone;
+	
+	// Sprite and Animation
+	new_actor.sprite_x			= cell_x * cell_width;
+	new_actor.sprite_y			= cell_y * cell_height;
+	new_actor.sprite_target_x	= cell_x * cell_width;
+	new_actor.sprite_target_y	= cell_y * cell_height;
+	
+	new_actor.image_index		= irandom(new_actor.sprite);
+	new_actor.image_speed		= sprite_get_speed(new_actor.sprite) / game_get_speed(gamespeed_fps);
+	new_actor.xscale			= 1;
+	
+	// Turn structure variables
+	new_actor.energy	= 0;
+	new_actor.has_acted = false;
+	
+	if (actor_type == actor_player){
+		actor_registry.player	= new_actor;
+		new_actor.is_visible	= false;
+	}
+	else{
+		new_actor.world_x = noone;
+		new_actor.world_y = noone;
+	}
+	
+	// Inventory
+	new_actor.inventory = inventory_initialise();
+	new_actor.inventory.equipment = equipment_initialise(new_actor.body_plan);
+	new_actor.inventory.slot_selection = noone;
+	
+	return(new_actor);
+}
+
+// DESPAWNING -------------------------------------------------------------------------------------
+function action_list_clear_all(include_player){
+	if (include_player){
+		array_resize(manager.action_list, 0);
+	}
+	else{
+		array_resize(manager.action_list, 1);
+	}
+}
+
+function actor_list_clear_all(include_player){
+	if (include_player){
+		array_resize(manager.actor_registry.actor_list, 0);
+	}
+	else{
+		array_resize(manager.actor_registry.actor_list, 1);
+	}
 }
 
 // DATA -------------------------------------------------------------------------------------------
@@ -90,10 +143,11 @@ function actor_player()constructor{
 }
 
 function actor_goblin()constructor{
-	name			= "Goblin";
-	sprite			= actor_spr;
+	name			= "Reed weevil";
+	sprite			= boggul_spr;
 	range			= 6;
-	body_plan		= [1, 1, 2, 2];
+	body_plan		= [1, 1, 0, 4];
+	demeanour		= DEMEANOUR.TIMID;
 	state			= state_idle;
 	strength		= 20;
 	agility			= 20;
@@ -103,10 +157,11 @@ function actor_goblin()constructor{
 }
 
 function actor_orc()constructor{
-	name			= "Orc";
-	sprite			= actor_spr;
+	name			= "Leech";
+	sprite			= grindylow_spr;
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
+	demeanour		= DEMEANOUR.AMBUSH;
 	state			= state_idle;
 	strength		= 50;
 	agility			= 20;
@@ -116,10 +171,11 @@ function actor_orc()constructor{
 }
 
 function actor_assassin()constructor{
-	name			= "Assassin";
-	sprite			= actor_spr;
+	name			= "Dragonfly";
+	sprite			= dragonfly_spr;
 	range			= 6;
 	body_plan		= [1, 1, 2, 2];
+	demeanour		= DEMEANOUR.AGGRESSIVE;
 	state			= state_idle;
 	strength		= 20;
 	agility			= 50;

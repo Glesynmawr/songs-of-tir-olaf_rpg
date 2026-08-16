@@ -55,7 +55,7 @@ function game_draw_grid(){
 					
 					// If actor is in current cell
 					if (actor_x == xx and actor_y == yy){
-						if (actor_registry.actor_list[i].is_visible){
+						if (actor_registry.actor_list[i].is_visible or debugging_mode){
 							
 							// Get actor variables
 							with (actor_registry.actor_list[i]){

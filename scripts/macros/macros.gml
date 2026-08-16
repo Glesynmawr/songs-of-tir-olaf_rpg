@@ -17,6 +17,13 @@ enum BODY_PART{
 	LEGS
 }
 
+enum DEMEANOUR{
+	AGGRESSIVE,
+	AMBUSH,
+	PASSIVE,
+	TIMID
+}
+
 enum EQUIP{
 	HEAD,
 	NECK,

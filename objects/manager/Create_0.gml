@@ -68,14 +68,16 @@ move_timer = 0;
 init_main();
 init_particle_system();
 
-// Cell positioning data
+#region // MOVEMENT -------------------------------------------------------------------------------
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
 direction_indicator = noone;
 direction_indicator_x = 0;
 direction_indicator_y = 0;
 
-// Actor equipment
+#endregion
+
+#region // EQUIPMENT SLOTS ------------------------------------------------------------------------
 equip_data[EQUIP.HEAD] = ["head",			"headwear",			3];
 equip_data[EQUIP.NECK] = ["neck",			"necklace",			3];
 equip_data[EQUIP.BODY] = ["body",			"armour",			1];
@@ -86,8 +88,9 @@ equip_data[EQUIP.MITT] = ["gloves",			"Gloves",		 	3];
 equip_data[EQUIP.GUNS] = ["ranged item",	"Ranged item",		2];
 equip_data[EQUIP.FEET] = ["feet",			"Footwear",	 		3];
 
+#endregion
 
-#region// UI
+#region// UI -------------------------------------------------------------------------------------
 ui_width	   = 96;
 ui_position	   = 0;
 ui_x_pos[0][0] = screen_width - ui_width;
@@ -116,43 +119,19 @@ infobox_y       = minimap_height - 5;
 #endregion
 
 
-// World generation
-
-entry_pos = [0, 0];
-init_world();
-
-
-
 // Level Sprite Indices
 door_index = 0;
 floor_sprite = floor_00_spr;
 
-game_grid = world_map;
 
-#region// ACTORS -----------------------------------------------------------------------------------------
+
+#region// ACTORS ----------------------------------------------------------------------------------
 // Actor registry - Active actors only
 actor_registry = {
 	actor_list:	[],
 	player:		noone
 }
-
-// Player
-spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
-set_player_los(game_grid, actor_registry.player);
-
-// Game log
-initialise_log();
-
-// Distance maps
-globalvar distance_map_player;
-distance_map_player = [];
-
-// Move speed - multiplier
-actor_move_speed = 0.2;
-
-// Actoion list and turn order
 action_list = [];
-turn_order_initialise();
 
 #endregion
 

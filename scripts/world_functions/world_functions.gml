@@ -27,6 +27,16 @@ function world_generate(){
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
 	
+	// Zone function 
+	zone_function[BIOME.MOUNTAIN]	= zone_mountain;
+	zone_function[BIOME.HILL]		= zone_hill;
+	zone_function[BIOME.CANYON]		= zone_canyon;
+	zone_function[BIOME.DESERT]		= zone_salt_plain;
+	zone_function[BIOME.SCRUB]		= zone_scrubland;
+	zone_function[BIOME.MARSH]		= zone_marsh;
+	zone_function[BIOME.FOREST]		= zone_mangrove;
+	zone_function[BIOME.WATER]		= zone_water;
+	
 	// Terrain
 	terrain_lookup[BIOME.MOUNTAIN]	= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.HILL]		= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
@@ -45,7 +55,7 @@ function world_generate(){
 	mob_lookup[BIOME.SCRUB]		= noone;
 	mob_lookup[BIOME.MARSH]		= noone;
 	mob_lookup[BIOME.FOREST]	= noone;
-	mob_lookup[BIOME.WATER]		= [5, [actor_goblin, 5]];
+	mob_lookup[BIOME.WATER]		= [10, [actor_goblin, 100]];
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);
@@ -346,87 +356,110 @@ function autotile_map(grid){
 }
 
 function zone_map_generate(grid, cell_x, cell_y){
-	var tile = grid[cell_x][cell_y].tile;
+	var tile  = grid[cell_x][cell_y].biome;
 	var index = grid[cell_x][cell_y].index;
+	var mobs  = noone;
 	
-	if (tile == "mountain"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.MOUNTAIN];
+	if (tile == BIOME.MOUNTAIN){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_mountain(), mobs]);
+		return([zone_mountain(index), mobs]);
 	}
-	else if (tile == "hill"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.HILL];
+	else if (tile == BIOME.HILL){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_hill(), mobs]);
+		return([zone_hill(index), mobs]);
 	}
-	else if (tile == "canyon"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.CANYON];
+	else if (tile == BIOME.CANYON){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		if (array_length(mobs) <= 0) mobs = noone;
 		return([zone_canyon(index), mobs]);
 	}
-	else if (tile == "salt plain"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.DESERT];
+	else if (tile == BIOME.DESERT){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_salt_plain(), mobs]);
+		return([zone_salt_plain(index), mobs]);
 	}
-	else if (tile == "scrubland"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.SCRUB];
+	else if (tile == BIOME.SCRUB){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_scrubland(), mobs]);
+		return([zone_scrubland(index), mobs]);
 	}
-	else if (tile == "mangrove"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.FOREST];
+	else if (tile == BIOME.FOREST){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_mangrove(), mobs]);
+		return([zone_mangrove(index), mobs]);
 	}
-	else if (tile == "marsh"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.MARSH];
+	else if (tile == BIOME.MARSH){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
 		}
-		else mobs = noone;
-		return([zone_marsh(), mobs]);
+		return([zone_marsh(index), mobs]);
 	}
-	else if (tile == "water"){
-		var mobs = noone;
-		var mob_list = mob_lookup[BIOME.WATER];
+	else if (tile == BIOME.WATER){
+		var mob_list = mob_lookup[tile];
 		if (mob_list != noone){
 			mobs = [];
 			
+			// How many mobs
+			var mob_count = mob_list[0];
+			
+			repeat(mob_count){
+				
+				// Find spawn position
+				var cand_list = [];
+				for (var i = 2; i < ZONE_SIZE - 2; i ++){
+					for (var j = 2; j < ZONE_SIZE - 2; j ++){
+						var cell_is_valid = true;
+						
+						// Check for existing mobs
+						if (array_length(mobs) > 0){
+							for (var m = 0; m < array_length(mobs); m ++){
+								if (mobs[m].x_pos == i and mobs[m].y_pos == j){
+									cell_is_valid = false;
+								}
+							}
+						}
+						if (cell_is_valid){
+							array_push(cand_list, [i, j]);
+						}
+					}
+				}
+				var len = array_length(cand_list);
+				if (len > 0){
+					
+					// Spawn mob
+					var c = irandom(len - 1);
+					var xx = cand_list[c][0];
+					var yy = cand_list[c][1];
+					
+					// Select mob to spawn
+					var new_mob = spawn_actor_to_zone_list(mob_list[1][0], xx, yy);
+					array_push(mobs, new_mob);
+				}
+			}
 		}
-		return([zone_water(index), mob_list]);
+		return([zone_function[tile](index), mobs]);
 	}
 	
 	return(false);

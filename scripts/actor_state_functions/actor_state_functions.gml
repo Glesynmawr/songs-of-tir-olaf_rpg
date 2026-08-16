@@ -98,38 +98,54 @@ function state_ready_for_inputs(){
 		if (manager.map_mode ==	MAP_MODE.ZONE){
 			if (x_pos == 0){
 				if (world_x > 0){
+					
+					// Reset visibility on current map
 					grid_set_visible(manager.game_grid, false)
-					x_pos = ZONE_SIZE - 2;
-					player_set_sprite_pos(self);
+					
+					// Move world grid position
 					world_x --;
-					manager.game_grid = manager.zone_map[world_x][world_y];
+					
+					// Set game_grid to new zone
+					goto_zone(world_x, world_y, ZONE_SIZE - 2, y_pos);
 				}
 			}
 			else if (x_pos == ZONE_SIZE - 1){
 				if (world_x < array_length(manager.world_map) - 1){
+					
+					// Reset visibility on current map
 					grid_set_visible(manager.game_grid, false)
-					x_pos = 1;
-					player_set_sprite_pos(self);
+					
+					// Move world grid position
 					world_x ++;
-					manager.game_grid = manager.zone_map[world_x][world_y];
+					
+					// Set game_grid to new zone
+					goto_zone(world_x, world_y, 1, y_pos);
 				}
 			}
 			if (y_pos == 0){
 				if (world_y > 0){
+
+					// Reset visibility on current map
 					grid_set_visible(manager.game_grid, false)
-					y_pos = ZONE_SIZE - 2;
-					player_set_sprite_pos(self);
+					
+					// Move world grid position
 					world_y --;
-					manager.game_grid = manager.zone_map[world_x][world_y];
+					
+					// Set game_grid to new zone
+					goto_zone(world_x, world_y, x_pos, ZONE_SIZE - 2);
 				}
 			}
 			else if (y_pos == ZONE_SIZE - 1){
 				if (world_y < array_length(manager.world_map[0]) - 1){
+					
+					// Reset visibility on current map
 					grid_set_visible(manager.game_grid, false)
-					y_pos = 1;
-					player_set_sprite_pos(self);
+					
+					// Move world grid position
 					world_y ++;
-					manager.game_grid = manager.zone_map[world_x][world_y];
+					
+					// Set game_grid to new zone
+					goto_zone(world_x, world_y, x_pos, 1);
 				}
 			}
 		}
@@ -369,7 +385,12 @@ function state_idle(){
 	// Check if player is in range and visible
 	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_grid[x_pos][y_pos].is_visible == true){
 		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
-		state = state_chase;
+		
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE: state = state_chase; break;
+			case DEMEANOUR.TIMID:      state = state_flee;  break;
+		}
+		
 	}
 	
 	has_acted = true;
@@ -383,8 +404,10 @@ function state_chase(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (distance_map_player[target_x][target_y] < lowest_dist){
-			lowest_dist = distance_map_player[target_x][target_y];
+		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+			if (distance_map_player[target_x][target_y] < lowest_dist){
+				lowest_dist = distance_map_player[target_x][target_y];
+			}
 		}
 	}
 	
@@ -394,8 +417,10 @@ function state_chase(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (distance_map_player[target_x][target_y] <= lowest_dist){
-			array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
+		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+			if (distance_map_player[target_x][target_y] <= lowest_dist){
+				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
+			}
 		}
 	}
 	
@@ -405,6 +430,51 @@ function state_chase(){
 		var choice = irandom(len - 1);
 		
 		// execute move
+		action_move(manager.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
+	}
+	
+	has_acted = true;
+}
+
+function state_flee(){
+		
+	// Find lowest distance value of neighbours
+	var highest_dist = 0;
+	for (var i = 0; i < 8; i ++){
+		var target_x = x_pos + manager.cell_x_neighbours[i];
+		var target_y = y_pos + manager.cell_y_neighbours[i];
+		
+		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+			if (distance_map_player[target_x][target_y] > highest_dist){
+				highest_dist = distance_map_player[target_x][target_y];
+			}
+		}
+		else {
+			has_acted = true;
+			action_remove_actor(self);
+			exit;
+		}
+	}
+	
+	// Make list of unoccupied neighbours with lowest value
+	var candidate_list = [];
+	for (i = 0; i < 8; i ++){
+		var target_x = x_pos + manager.cell_x_neighbours[i];
+		var target_y = y_pos + manager.cell_y_neighbours[i];
+		
+		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+			if (distance_map_player[target_x][target_y] >= highest_dist){
+				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
+			}
+		}
+	}
+	
+	// Choose movement direction from candidate list
+	var len = array_length(candidate_list);
+	if (len > 0){
+		var choice = irandom(len - 1);
+		
+		// Execute move
 		action_move(manager.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
 	}
 	

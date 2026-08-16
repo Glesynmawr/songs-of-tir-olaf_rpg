@@ -58,7 +58,30 @@ function init_main(){
 }
 	
 function init_world(){
+	// Create world and set starting map
 	world_map = world_generate();
+	game_grid = world_map;
+	
+	// Set player entry position
+	entry_pos = [0, 0];
+																
+	// Player
+	spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
+	set_player_los(game_grid, actor_registry.player);
+
+	// Game log
+	initialise_log();
+
+	// Distance maps
+	globalvar distance_map_player;
+	distance_map_player = [];
+
+	// Move speed - multiplier
+	actor_move_speed = 0.2;
+
+	// Actoion list and turn order
+	action_list = [];
+	turn_order_initialise();
 }
 
 
@@ -151,6 +174,7 @@ function game_state_control_menu(){
 		}
 	}
 }
+	
 function game_state_dungeon(){
 	if (!game_paused and transition == noone){
 		turn_order_update();
@@ -256,6 +280,10 @@ function goto_dungeon(dungeon_id, level){
 
 function goto_world(){
 	
+	// reset actor and action lists
+	actor_list_clear_all(false);
+	action_list_clear_all(false);
+	
 	// Set game grid
 	game_grid = world_map;
 	var grid_w = array_length(game_grid);
@@ -281,31 +309,52 @@ function goto_world(){
 	set_player_los(game_grid, actor_registry.player);
 }
 
-function goto_zone(world_x, world_y){
+function goto_zone(world_x, world_y, entry_x, entry_y){
 	
-	// Set game grid
-	game_grid = zone_map[world_x][world_y];
-	var grid_w = array_length(game_grid);
-	var grid_h = array_length(game_grid[0]);
-	map_mode  = MAP_MODE.ZONE;
+	with (manager){
+		// reset actor and action lists
+		actor_list_clear_all(false);
+		action_list_clear_all(false);
 	
-	// Set player position
-	actor_registry.player.x_pos = floor(array_length(game_grid)    * 0.5);
-	actor_registry.player.y_pos = floor(array_length(game_grid[0]) * 0.5);
+		// Set game grid
+		game_grid = zone_map[world_x][world_y];
+		var grid_w = array_length(game_grid);
+		var grid_h = array_length(game_grid[0]);
+		map_mode  = MAP_MODE.ZONE;
 	
-	player_set_sprite_pos(actor_registry.player);
+		// Set player position
+		actor_registry.player.x_pos = entry_x;
+		actor_registry.player.y_pos = entry_y;
 	
-	// Set camera bounds
-	camera_min_x = -ui_width;
-	camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, 0);
-	camera_min_y = 0;
-	camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
+		player_set_sprite_pos(actor_registry.player);
 	
-	// Set game state
-	game_state = game_state_dungeon;
+		// Set camera bounds
+		camera_min_x = -ui_width;
+		camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, 0);
+		camera_min_y = 0;
+		camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
 	
-	// Update player LOS
-	set_player_los(game_grid, actor_registry.player);
+		// Set game state
+		game_state = game_state_dungeon;
+	
+		// Spawn mobs
+		if (is_array(zone_mobs[world_x][world_y])){
+			var len = array_length(zone_mobs[world_x][world_y]);
+			if (len > 0){
+				for (var i = 0; i < len; i ++){
+				
+					var new_mob = zone_mobs[world_x][world_y][i];
+					new_mob.is_visible = false;
+	
+					// Push to actor registry
+					array_push(actor_registry.actor_list, new_mob);
+				}
+			}
+		}
+	
+		// Update player LOS
+		set_player_los(game_grid, actor_registry.player);
+	}
 }
 
 

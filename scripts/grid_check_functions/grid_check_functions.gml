@@ -11,7 +11,7 @@ function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
 	x_max = width - border;
 	y_max = height - border;
 	
-	if (x_pos > x_min and x_pos < x_max) and (y_pos > y_min and y_pos < y_max){
+	if (x_pos >= x_min and x_pos < x_max) and (y_pos >= y_min and y_pos < y_max){
 		return(true)
 	}
 	return(false);
@@ -144,8 +144,8 @@ function set_player_los(grid, actor){
 			}
 		}
 	}
-	for (var i = 0; i < array_length(other.actor_registry.actor_list); i ++){
-		with (other.actor_registry.actor_list[i]){
+	for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
+		with (manager.actor_registry.actor_list[i]){
 			if (grid[self.x_pos][self.y_pos].is_visible){
 				self.is_visible = true;
 			}
@@ -200,6 +200,8 @@ function draw_los_line(grid, x_from, y_from, x_to, y_to){
 	return(true);
 }
 
+
+// MAP VISIBILITY RESETTING
 function grid_set_visible(grid, visibility){
 	for (var i = 0; i < array_length(grid); i ++){
 		for (var j = 0; j < array_length(grid[0]); j ++){

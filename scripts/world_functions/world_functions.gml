@@ -55,7 +55,7 @@ function world_generate(){
 	mob_lookup[BIOME.SCRUB]		= noone;
 	mob_lookup[BIOME.MARSH]		= noone;
 	mob_lookup[BIOME.FOREST]	= noone;
-	mob_lookup[BIOME.WATER]		= [10, [actor_goblin, 100]];
+	mob_lookup[BIOME.WATER]		= [10, [actor_reed_weevil, 100]];
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);

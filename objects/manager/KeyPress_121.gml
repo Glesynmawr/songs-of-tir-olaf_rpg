@@ -1,6 +1,4 @@
 /// @desc REMOVE FROM FINAL BUILD
-world_map = world_generate();
-game_grid = world_map;
-
+set_colour_flash(actor_registry.player, C_YELLOW, 20)
 
 

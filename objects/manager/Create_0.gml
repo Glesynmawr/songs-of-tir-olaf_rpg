@@ -13,7 +13,7 @@ colour_ui_main		= C_ORANGE;
 // STATE TRANSITION
 transition = noone;
 
-uni_overlay = shader_get_uniform(colour_overlay_shd, "uColour");
+
 
 #region// MENUS -----------------------------------------------------------------------------------
 control_menu_hover = 0;
@@ -124,6 +124,21 @@ door_index = 0;
 floor_sprite = floor_00_spr;
 
 
+#region// SHADER SET-UP
+// Colour overlay
+uni_overlay		= shader_get_uniform(colour_overlay_shd, "uColour");
+
+// Outline
+outline_colour = C_BLACK;
+var r = colour_get_red(outline_colour)   / 255;
+var g = colour_get_green(outline_colour) / 255;
+var b = colour_get_blue(outline_colour)  / 255;
+
+outline_colour  = [r, g, b, 1.0];
+uni_texel_size	= shader_get_uniform(outline_shd, "utexel_size");
+uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
+
+#endregion
 
 #region// ACTORS ----------------------------------------------------------------------------------
 // Actor registry - Active actors only

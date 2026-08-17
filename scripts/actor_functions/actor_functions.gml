@@ -31,6 +31,7 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	
 	new_actor.colour_fg		= noone;
 	new_actor.colour_bg		= noone;
+	new_actor.colour_timer  = 0;
 	
 	// Sprite and Animation
 	new_actor.sprite_x			= cell_x * cell_width;
@@ -74,6 +75,7 @@ function spawn_actor_to_zone_list(actor_type, cell_x, cell_y){
 	
 	new_actor.colour_fg		= noone;
 	new_actor.colour_bg		= noone;
+	new_actor.colour_timer  = 0;
 	
 	// Sprite and Animation
 	new_actor.sprite_x			= cell_x * cell_width;
@@ -125,6 +127,24 @@ function actor_list_clear_all(include_player){
 	}
 }
 
+// EFFECTS ----------------------------------------------------------------------------------------
+function set_colour_flash(actor, colour, duration){
+	with (actor){
+		colour_fg		= colour;
+		colour_timer	= duration;
+	}
+}
+
+function flash_timer_reduce(){
+
+	if (colour_timer > 0){
+		colour_timer --;
+		if (colour_timer <= 0){
+			colour_fg = noone;
+		}
+	}
+}
+
 // DATA -------------------------------------------------------------------------------------------
 function actor_player()constructor{
 	name			= "Player";
@@ -142,9 +162,9 @@ function actor_player()constructor{
 	
 }
 
-function actor_goblin()constructor{
+function actor_reed_weevil()constructor{
 	name			= "Reed weevil";
-	sprite			= boggul_spr;
+	sprite			= reed_weevil_spr;
 	range			= 6;
 	body_plan		= [1, 1, 0, 4];
 	demeanour		= DEMEANOUR.TIMID;
@@ -158,7 +178,7 @@ function actor_goblin()constructor{
 
 function actor_orc()constructor{
 	name			= "Leech";
-	sprite			= grindylow_spr;
+	sprite			= leech_spr;
 	range			= 8;
 	body_plan		= [1, 1, 2, 2];
 	demeanour		= DEMEANOUR.AMBUSH;

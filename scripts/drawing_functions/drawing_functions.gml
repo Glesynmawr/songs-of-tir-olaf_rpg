@@ -61,6 +61,8 @@ function game_draw_grid(){
 							with (actor_registry.actor_list[i]){
 								var spr = sprite;
 								
+								flash_timer_reduce();
+								
 								// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
 								var spr_offset_x = sprite_x - sprite_target_x;
 								var spr_offset_y = sprite_y - sprite_target_y;
@@ -83,6 +85,15 @@ function game_draw_grid(){
 								
 								shader_set(colour_overlay_shd);
 								shader_set_uniform_f_array(uni_overlay, col);
+							}
+							else{
+								var tex		= sprite_get_texture(spr, ind);
+								var texel_w = texture_get_texel_width(tex);
+								var texel_h = texture_get_texel_height(tex);
+								
+								shader_set(outline_shd);
+								shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
+								shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
 							}
 							
 							// Draw actor sprite and reset shader

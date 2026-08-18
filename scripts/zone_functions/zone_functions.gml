@@ -1,97 +1,37 @@
 
-function zone_mountain(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.MOUNTAIN]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
+function zone_canyon(world_index, dungeon, terrain){
+	var temp_list = initialise_temp_list();
+	
+	if (dungeon){
+		temp_list = zone_add_dungeon(temp_list, terrain);
 	}
-	return(temp_list);
-}
-
-function zone_hill(world_index){
-	var temp_list = [];
+	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.HILL]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
-	}
-	return(temp_list);
-}
-
-function zone_canyon(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			temp_list[xx][yy] = new tile_world_canyon();
-			temp_list[xx][yy].sprite = zone_tiles_spr;
-			temp_list[xx][yy].index += irandom(tiles_per_biome - 1);
+			if (temp_list[xx][yy] == noone){
+				temp_list[xx][yy] = new tile_world_canyon();
+				temp_list[xx][yy].sprite = zone_tiles_spr;
+				temp_list[xx][yy].index += irandom(tiles_per_biome - 1);
 			
-			// Get tile image index for canyon wall position
+				// Get tile image index for canyon wall position
+			}
 		}
 	}
 	return(temp_list);
 }
 
-function zone_salt_plain(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.DESERT]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
-	}
-	return(temp_list);
-}
-
-function zone_scrubland(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.SCRUB]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
-	}
-	return(temp_list);
-}
-
-function zone_marsh(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.MARSH]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
-	}
-	// Water Feature Placement
-	temp_list = water_tile_placement(temp_list);
+function zone_river(world_index, dungeon, terrain){
+	var temp_list = initialise_temp_list();
 	
-	return(temp_list);
-}
-
-function zone_mangrove(world_index){
-	var temp_list = [];
-	for (var xx = 0; xx < ZONE_SIZE; xx ++){
-		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
-			temp_list[xx][yy] = generate_zone_tile(new_tile);
-		}
+	if (dungeon){
+		temp_list = zone_add_dungeon(temp_list, terrain);
 	}
-	temp_list = autotile_map(temp_list);
 	
-	// Water Feature Placement
-	temp_list = water_tile_placement(temp_list);
-	
-	return(temp_list);
-}
-
-function zone_water(world_index){
-	var temp_list = [];
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			temp_list[xx][yy] = generate_zone_tile(tile_zone_water);
+			if (temp_list[xx][yy] == noone){
+				temp_list[xx][yy] = generate_zone_tile(tile_zone_water);
+			}
 		}
 	}
 	
@@ -167,7 +107,7 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
 					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
@@ -183,7 +123,7 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
 					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
@@ -199,7 +139,7 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
 					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
@@ -215,7 +155,7 @@ function zone_water(world_index){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
 					temp_list[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
@@ -238,7 +178,7 @@ function zone_water(world_index){
 					dist = point_distance(x2, y2, anchor_x, anchor_y);
 					tile_chance = dist / zone_third;
 					if (random(1) >= tile_chance){
-						var new_tile = tile_lookup(terrain_lookup[BIOME.FOREST]);
+						var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
 						temp_list[x2][y2] = generate_zone_tile(new_tile);
 					}
 				}
@@ -252,6 +192,51 @@ function zone_water(world_index){
 	temp_list = water_tile_placement(temp_list);
 	
 	return(temp_list);
+}
+
+function zone_standard(world_index, dungeon, terrain){
+	var temp_list = initialise_temp_list();
+	
+	if (dungeon){
+		temp_list = zone_add_dungeon(temp_list, terrain);
+	}
+	
+	for (var xx = 0; xx < ZONE_SIZE; xx ++){
+		for (var yy = 0; yy < ZONE_SIZE; yy ++){
+			if (temp_list[xx][yy] == noone){
+				var new_tile = tile_lookup(terrain_lookup[terrain]);
+				temp_list[xx][yy] = generate_zone_tile(new_tile);
+			}
+		}
+	}
+	
+	// Water Feature Placement
+	temp_list = autotile_map(temp_list);
+	temp_list = water_tile_placement(temp_list);
+	
+	return(temp_list);
+}
+
+// Dungeon placement
+function initialise_temp_list(){
+	var temp_list = [];
+	for (var i = 0; i < ZONE_SIZE; i ++){
+		for (var j = 0; j < ZONE_SIZE; j ++){
+			temp_list[i][j] = noone;
+		}
+	}
+	return(temp_list);
+}
+
+function zone_add_dungeon(grid, type){
+	var dx = irandom_range(zone_third, ZONE_SIZE - zone_third);
+	var dy = irandom_range(zone_third, ZONE_SIZE - zone_third);
+	
+	grid[dx][dy]		= new tile_dungeon_entrance();
+	grid[dx][dy].index	= type;
+	
+	return(grid);
+	
 }
 
 

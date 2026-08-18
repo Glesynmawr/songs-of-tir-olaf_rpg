@@ -1,61 +1,68 @@
 
 function world_generate(){
 	
-	tiles_per_biome = 8;
-	zone_third		= floor(ZONE_SIZE / 3);
+	tiles_per_biome			= 8;
+	zone_third				= floor(ZONE_SIZE / 3);
+	dungeon_count_divisor	= 40;
 	
 	// Biomes
-	biome[0] = 25;	// Mountains
-	biome[1] = 35;	// Hills
-	biome[2] = 55;	// Canyon
-	biome[3] = 100;	// Salt plains
-	biome[4] = 60;	// Scrubland
-	biome[5] = 40;	// Marsh
-	biome[6] = 60;	// Mangrove
-	biome[7] = 50;	// Water
-	biome[8] = 35;	// Mangrove
-	biome[9] = 30;	// Marsh
+	biome[0] = 20;	// Mountains
+	biome[1] = 20;	// Hills
+	biome[2] = 20;	// Canyon
+	biome[3] = 20;	// Salt plains
+	biome[4] = 20;	// Scrubland
+	biome[5] = 20;	// Swamp
+	biome[6] = 20;	// Dense Mangrove
+	biome[7] = 20;	// Water
+	biome[8] = 20;	// Mangrove
+	biome[9] = 20;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
 	tile[2] = tile_world_canyon;
 	tile[3] = tile_world_salt_plain;
 	tile[4] = tile_world_scrubland;
-	tile[5] = tile_world_marsh;
-	tile[6] = tile_world_mangrove;
+	tile[5] = tile_world_swamp;
+	tile[6] = tile_world_dense_mangrove;
 	tile[7] = tile_world_water;
 	tile[8] = tile_world_mangrove;
 	tile[9] = tile_world_marsh;
 	
 	// Zone function 
-	zone_function[BIOME.MOUNTAIN]	= zone_mountain;
-	zone_function[BIOME.HILL]		= zone_hill;
-	zone_function[BIOME.CANYON]		= zone_canyon;
-	zone_function[BIOME.DESERT]		= zone_salt_plain;
-	zone_function[BIOME.SCRUB]		= zone_scrubland;
-	zone_function[BIOME.MARSH]		= zone_marsh;
-	zone_function[BIOME.FOREST]		= zone_mangrove;
-	zone_function[BIOME.WATER]		= zone_water;
-	
-	// Terrain
-	terrain_lookup[BIOME.MOUNTAIN]	= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.HILL]		= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.CANYON]	= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.DESERT]	= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
-	terrain_lookup[BIOME.SCRUB]		= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.MARSH]		= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
-	terrain_lookup[BIOME.FOREST]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.WATER]		= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
+	zone_function[BIOME.MOUNTAIN]			= zone_standard;
+	zone_function[BIOME.HILL]				= zone_standard;
+	zone_function[BIOME.CANYON]				= zone_canyon;
+	zone_function[BIOME.DESERT]				= zone_standard;
+	zone_function[BIOME.SCRUB]				= zone_standard;
+	zone_function[BIOME.SWAMP]				= zone_standard;
+	zone_function[BIOME.DENSE_MANGROVE]		= zone_standard;
+	zone_function[BIOME.WATER]				= zone_river;
+	zone_function[BIOME.MANGROVE]			= zone_standard;
+	zone_function[BIOME.MARSH]				= zone_standard;
+											
+	// Terrain								
+	terrain_lookup[BIOME.MOUNTAIN]			= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.HILL]				= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.CANYON]			= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.DESERT]			= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
+	terrain_lookup[BIOME.SCRUB]				= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
+	terrain_lookup[BIOME.SWAMP]				= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
+	terrain_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.WATER]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.MANGROVE]			= [[tile_zone_rocks, 2], [tile_zone_tree, 10], [tile_zone_dirt, 60], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.MARSH]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_dirt, 50], [tile_zone_marsh, 100]];
 	
 	// Zone mobs
-	mob_lookup[BIOME.MOUNTAIN]	= noone;
-	mob_lookup[BIOME.HILL]		= noone;
-	mob_lookup[BIOME.CANYON]	= noone;
-	mob_lookup[BIOME.DESERT]	= noone;
-	mob_lookup[BIOME.SCRUB]		= noone;
-	mob_lookup[BIOME.MARSH]		= noone;
-	mob_lookup[BIOME.FOREST]	= noone;
-	mob_lookup[BIOME.WATER]		= [10, [actor_reed_weevil, 100]];
+	mob_lookup[BIOME.MOUNTAIN]			= noone;
+	mob_lookup[BIOME.HILL]				= noone;
+	mob_lookup[BIOME.CANYON]			= noone;
+	mob_lookup[BIOME.DESERT]			= noone;
+	mob_lookup[BIOME.SCRUB]				= noone;
+	mob_lookup[BIOME.SWAMP]				= noone;
+	mob_lookup[BIOME.DENSE_MANGROVE]	= noone;
+	mob_lookup[BIOME.WATER]				= [5, [actor_reed_weevil, 100]];
+	mob_lookup[BIOME.MANGROVE]			= noone;
+	mob_lookup[BIOME.MARSH]				= noone;
 	
 	// Initialise world grid
 	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);
@@ -72,6 +79,9 @@ function world_generate(){
 	// Autotile river and canyon
 	world_grid = autotile_map(world_grid);
 	
+	// Add dungeons
+	world_grid = dungeons_add(world_grid);
+	
 	// Generate zone maps
 	zone_map  = [];
 	zone_mobs = [];
@@ -87,7 +97,7 @@ function world_generate(){
 	// Set player start position
 	for (xx = 0; xx < MAP_WIDTH; xx ++){
 		for (yy = 0; yy < MAP_HEIGHT; yy ++){
-			if (world_grid[xx][yy].tile == "marsh"){
+			if (world_grid[xx][yy].tile == "swamp"){
 				player_start_x = xx;
 				player_start_y = yy;
 				break;
@@ -267,7 +277,7 @@ function biomes_add(grid){
 	for (i = 0; i < width; i ++){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
-				grid[i][j] = new tile_world_marsh();
+				grid[i][j] = new tile_world_swamp();
 				grid[i][j].index += irandom(tiles_per_biome - 1);
 			}
 		}
@@ -358,113 +368,92 @@ function autotile_map(grid){
 function zone_map_generate(grid, cell_x, cell_y){
 	var tile  = grid[cell_x][cell_y].biome;
 	var index = grid[cell_x][cell_y].index;
+	var dng   = grid[cell_x][cell_y].dungeon;
 	var mobs  = noone;
 	
-	if (tile == BIOME.MOUNTAIN){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
+	var mob_list = mob_lookup[tile];
+	if (mob_list != noone){
+		mobs = [];
 			
-		}
-		return([zone_mountain(index), mobs]);
-	}
-	else if (tile == BIOME.HILL){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
+		// How many mobs
+		var mob_count = mob_list[0];
 			
-		}
-		return([zone_hill(index), mobs]);
-	}
-	else if (tile == BIOME.CANYON){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-		}
-		return([zone_canyon(index), mobs]);
-	}
-	else if (tile == BIOME.DESERT){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-		}
-		return([zone_salt_plain(index), mobs]);
-	}
-	else if (tile == BIOME.SCRUB){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-		}
-		return([zone_scrubland(index), mobs]);
-	}
-	else if (tile == BIOME.FOREST){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-		}
-		return([zone_mangrove(index), mobs]);
-	}
-	else if (tile == BIOME.MARSH){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-		}
-		return([zone_marsh(index), mobs]);
-	}
-	else if (tile == BIOME.WATER){
-		var mob_list = mob_lookup[tile];
-		if (mob_list != noone){
-			mobs = [];
-			
-			// How many mobs
-			var mob_count = mob_list[0];
-			
-			repeat(mob_count){
+		repeat(mob_count){
 				
-				// Find spawn position
-				var cand_list = [];
-				for (var i = 2; i < ZONE_SIZE - 2; i ++){
-					for (var j = 2; j < ZONE_SIZE - 2; j ++){
-						var cell_is_valid = true;
+			// Find spawn position
+			var cand_list = [];
+			for (var i = 2; i < ZONE_SIZE - 2; i ++){
+				for (var j = 2; j < ZONE_SIZE - 2; j ++){
+					var cell_is_valid = true;
 						
-						// Check for existing mobs
-						if (array_length(mobs) > 0){
-							for (var m = 0; m < array_length(mobs); m ++){
-								if (mobs[m].x_pos == i and mobs[m].y_pos == j){
-									cell_is_valid = false;
-								}
+					// Check for existing mobs
+					if (array_length(mobs) > 0){
+						for (var m = 0; m < array_length(mobs); m ++){
+							if (mobs[m].x_pos == i and mobs[m].y_pos == j){
+								cell_is_valid = false;
 							}
 						}
-						if (cell_is_valid){
-							array_push(cand_list, [i, j]);
-						}
+					}
+					if (cell_is_valid){
+						array_push(cand_list, [i, j]);
 					}
 				}
-				var len = array_length(cand_list);
-				if (len > 0){
+			}
+			var len = array_length(cand_list);
+			if (len > 0){
 					
-					// Spawn mob
-					var c = irandom(len - 1);
-					var xx = cand_list[c][0];
-					var yy = cand_list[c][1];
+				// Spawn mob
+				var c = irandom(len - 1);
+				var xx = cand_list[c][0];
+				var yy = cand_list[c][1];
 					
-					// Select mob to spawn
-					var new_mob = spawn_actor_to_zone_list(mob_list[1][0], xx, yy);
-					array_push(mobs, new_mob);
-				}
+				// Select mob to spawn
+				var new_mob = spawn_actor_to_zone_list(mob_list[1][0], xx, yy);
+				array_push(mobs, new_mob);
 			}
 		}
-		return([zone_function[tile](index), mobs]);
 	}
 	
-	return(false);
+	return([zone_function[tile](index, dng, tile), mobs]);
 }
 
+function dungeons_add(grid){
+	
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	// Initialise dungeon variable
+	for (var i = 0; i < ww; i ++){
+		for (var j = 0; j < hh; j ++){
+			grid[i][j].dungeon = noone;
+		}
+	}
+	
+	// Loop through biomes
+	for (var b = 0; b < array_length(biome); b ++){
+		
+		var dungeon_count = ceil(biome[b] / dungeon_count_divisor);
+		
+		repeat(dungeon_count){
+			var cand_list = [];
+			for (i = 0; i < ww; i ++){
+				for (j = 0; j < hh; j ++){
+					if (grid[i][j].biome == b and grid[i][j].dungeon == noone){
+						array_push(cand_list, [i, j]);
+					}
+				}
+			}
+			var len = array_length(cand_list)
+			if (len > 0){
+				var c	= irandom(len - 1);
+				var xx	= cand_list[c][0];
+				var yy	= cand_list[c][1];
+				grid[xx][yy].dungeon = true;
+			}
+		}
+	}
+	return(grid);
+}
 
 
 

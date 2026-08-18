@@ -29,22 +29,19 @@ function generate_zone_tile(tile_type){
 	return(new_tile);
 }
 
-function water_tile_placement(map){
+function water_tile_placement(grid){
 	var xx, yy;
 	for (xx = 0; xx < ZONE_SIZE; xx ++){
 		for (yy = 0; yy < ZONE_SIZE; yy ++){
-			if (map[xx][yy].tile == "water"){
-				if (map[xx][yy].index >= 46){
+			if (grid[xx][yy].tile == "water"){
+				if (grid[xx][yy].index >= 46){
 					var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);
-					map[xx][yy] = generate_zone_tile(new_tile);
-				}
-				else{
-					map[xx][yy].colour_fg = C_BROWN;
+					grid[xx][yy] = generate_zone_tile(new_tile);
 				}
 			}
 		}
 	}
-	return(map);
+	return(grid);
 }
 
 
@@ -86,6 +83,20 @@ function tile_door_secret()constructor{
 	is_visible		= false;
 	explored		= false;
 	tile_script		= door_set_open;
+}
+
+function tile_dungeon_entrance()constructor{
+	tile			= "dungeon entrance";
+	sprite			= zone_tile_dungeon_entrance_spr;
+	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= dungeon_enter;
+	dungeon_list	= [];
 }
 
 function tile_hall()constructor{
@@ -160,7 +171,7 @@ function tile_world_mountain()constructor{
 	biome			= BIOME.MOUNTAIN;
 	sprite			= world_tiles_spr;
 	index			= 0;
-	colour_fg		= C_WHITE;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -174,7 +185,7 @@ function tile_world_hill()constructor{
 	biome			= BIOME.HILL;
 	sprite			= world_tiles_spr;
 	index			= 8;
-	colour_fg		= C_DKGREY;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -188,7 +199,7 @@ function tile_world_canyon()constructor{
 	biome			= BIOME.CANYON;
 	sprite			= world_tiles_spr;
 	index			= 16;
-	colour_fg		= C_RED;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -202,7 +213,7 @@ function tile_world_salt_plain()constructor{
 	biome			= BIOME.DESERT;
 	sprite			= world_tiles_spr;
 	index			= 24;
-	colour_fg		= C_MIDGREY;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -216,7 +227,7 @@ function tile_world_scrubland()constructor{
 	biome			= BIOME.SCRUB;
 	sprite			= world_tiles_spr;
 	index			= 32;
-	colour_fg		= C_BROWN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -225,12 +236,12 @@ function tile_world_scrubland()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_mangrove()constructor{
-	tile			= "mangrove";
-	biome			= BIOME.FOREST;
+function tile_world_dense_mangrove()constructor{
+	tile			= "dense mangrove";
+	biome			= BIOME.DENSE_MANGROVE;
 	sprite			= world_tiles_spr;
 	index			= 40;
-	colour_fg		= C_LIME;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -239,12 +250,12 @@ function tile_world_mangrove()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_marsh()constructor{
-	tile			= "marsh";
-	biome			= BIOME.MARSH;
+function tile_world_swamp()constructor{
+	tile			= "swamp";
+	biome			= BIOME.SWAMP;
 	sprite			= world_tiles_spr;
 	index			= 48;
-	colour_fg		= C_GREEN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -258,7 +269,35 @@ function tile_world_water()constructor{
 	biome			= BIOME.WATER;
 	sprite			= world_tiles_spr;
 	index			= 56;
-	colour_fg		= C_LTBLUE;
+	colour_fg		= noone;
+	colour_bg		= noone;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_mangrove()constructor{
+	tile			= "mangrove";
+	biome			= BIOME.MANGROVE;
+	sprite			= world_tiles_spr;
+	index			= 40;
+	colour_fg		= noone;
+	colour_bg		= noone;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_marsh()constructor{
+	tile			= "marsh";
+	biome			= BIOME.MARSH;
+	sprite			= world_tiles_spr;
+	index			= 48;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -273,7 +312,7 @@ function tile_zone_bush()constructor{
 	tile			= "bush";
 	sprite			= zone_tile_bush_spr;
 	index			= 0;
-	colour_fg		= C_PINK;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -286,7 +325,7 @@ function tile_zone_dirt()constructor{
 	tile			= "dirt";
 	sprite			= zone_tile_dirt_spr;
 	index			= 0;
-	colour_fg		= C_BROWN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -299,7 +338,7 @@ function tile_zone_grass()constructor{
 	tile			= "grass";
 	sprite			= zone_tile_grass_spr;
 	index			= 0;
-	colour_fg		= C_GREEN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -312,7 +351,7 @@ function tile_zone_lilypad()constructor{
 	tile			= "lilypad";
 	sprite			= zone_tile_lilypad_spr;
 	index			= 0;
-	colour_fg		= C_GREEN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -322,10 +361,10 @@ function tile_zone_lilypad()constructor{
 }
 
 function tile_zone_marsh()constructor{
-	tile			= "marsh";
+	tile			= "swamp";
 	sprite			= zone_tile_marsh_spr;
 	index			= 0;
-	colour_fg		= C_LTBLUE;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -338,7 +377,7 @@ function tile_zone_reeds()constructor{
 	tile			= "reeds";
 	sprite			= zone_tile_reeds_spr;
 	index			= 0;
-	colour_fg		= C_GREEN;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -351,7 +390,7 @@ function tile_zone_rocks()constructor{
 	tile			= "rocks";
 	sprite			= zone_tile_rocks_spr;
 	index			= 0;
-	colour_fg		= C_MIDGREY;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -364,7 +403,7 @@ function tile_zone_salt()constructor{
 	tile			= "salt";
 	sprite			= zone_tile_salt_spr;
 	index			= 0;
-	colour_fg		= C_PURPLE;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;
@@ -377,7 +416,7 @@ function tile_zone_tree()constructor{
 	tile			= "tree";
 	sprite			= zone_tile_tree_spr;
 	index			= 0;
-	colour_fg		= C_LIME;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= false;
@@ -390,7 +429,7 @@ function tile_zone_water()constructor{
 	tile			= "water";
 	sprite			= zone_tile_water_spr;
 	index			= 0;
-	colour_fg		= C_LTBLUE;
+	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
 	transparent		= true;

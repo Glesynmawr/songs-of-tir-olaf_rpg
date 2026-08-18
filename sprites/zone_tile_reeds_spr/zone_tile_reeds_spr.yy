@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"zone_tile_reeds_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":15,
   "bbox_left":1,
   "bbox_right":126,
   "bbox_top":1,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"4e188bea-ac5b-42e3-b660-aa56a890a9ab","name":"4e188bea-ac5b-42e3-b660-aa56a890a9ab","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"3909ff98-d60a-4c24-87db-4d86f443e068","name":"3909ff98-d60a-4c24-87db-4d86f443e068","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"6874e158-68d3-4f97-a888-fc4b3389dc53","blendMode":0,"displayName":"default","isLocked":false,"name":"6874e158-68d3-4f97-a888-fc4b3389dc53","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"3c0ff166-0f94-46ae-b34c-2dafde52846b","blendMode":0,"displayName":"default","isLocked":false,"name":"3c0ff166-0f94-46ae-b34c-2dafde52846b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"zone_tile_reeds_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"4e188bea-ac5b-42e3-b660-aa56a890a9ab","path":"sprites/zone_tile_reeds_spr/zone_tile_reeds_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"b42b7ba2-220b-4760-bd4b-4620bb7b9533","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3909ff98-d60a-4c24-87db-4d86f443e068","path":"sprites/zone_tile_reeds_spr/zone_tile_reeds_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"b35294ca-c0e9-4764-a4e2-95cacf4b7b27","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

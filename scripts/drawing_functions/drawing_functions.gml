@@ -42,115 +42,15 @@ function game_draw_grid(){
 				var screen_x = ((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1];
 				var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
 				
-				// Initialise drawing variables
-				var draw_actor = false;
-				var draw_item  = false;
-				
-				// Check for actor on tile
-				for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-					
-					// Actor cell position
-					var actor_x = actor_registry.actor_list[i].x_pos;
-					var actor_y = actor_registry.actor_list[i].y_pos;
-					
-					// If actor is in current cell
-					if (actor_x == xx and actor_y == yy){
-						if (actor_registry.actor_list[i].is_visible or debugging_mode){
-							
-							// Get actor variables
-							with (actor_registry.actor_list[i]){
-								var spr = sprite;
-								
-								flash_timer_reduce();
-								
-								// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
-								var spr_offset_x = sprite_x - sprite_target_x;
-								var spr_offset_y = sprite_y - sprite_target_y;
-								var x_scale		 = xscale;
-								
-								// ACTOR ANIMATION ------------------------------------------------------------------------
-								ind = actor_animate();
-								
-								var col = colour_fg;
-							}
-							
-							// Set sprite overlay shader
-							if (col != noone){
-								
-								var r = colour_get_red(col)   / 255;
-								var g = colour_get_green(col) / 255;
-								var b = colour_get_blue(col)  / 255;
-								
-								col = [r, g, b, 1.0];
-								
-								shader_set(colour_overlay_shd);
-								shader_set_uniform_f_array(uni_overlay, col);
-							}
-							else{
-								var tex		= sprite_get_texture(spr, ind);
-								var texel_w = texture_get_texel_width(tex);
-								var texel_h = texture_get_texel_height(tex);
-								
-								shader_set(outline_shd);
-								shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
-								shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
-							}
-							
-							// Draw actor sprite and reset shader
-							draw_sprite_ext(spr, ind, screen_x + spr_offset_x + (cell_width / 2), screen_y + spr_offset_y, x_scale, 1, 0, c_white, 1);
-							shader_reset();
-							
-							draw_actor = true;
-							
-							// If actor is player, set direction indicator position and direction
-							if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
-								var dir_ind_x = screen_x + cell_width  / 2;
-								var dir_ind_y = screen_y + cell_height / 2;
-								
-								direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
-								direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
-							}
-						}
-					}
-				}
-				
-				// Check for items on tile
-				if (!draw_actor){
-					if (struct_exists(game_grid[xx][yy], "items")){
-						if (array_length(game_grid[xx][yy].items) > 0){
-							draw_sprite(item_spr, 0, screen_x, screen_y);
-							draw_item = true;
-						}
-					}
-				}
-				
 				// Draw tile
-				if (!draw_actor and !draw_item){
-					var spr = game_grid[xx][yy].sprite;
-					var ind = game_grid[xx][yy].index;
+				game_draw_tile(xx, yy, screen_x, screen_y)
 				
-					var fg = game_grid[xx][yy].colour_fg;
-					var bg = game_grid[xx][yy].colour_bg;
-			
-					if (!game_grid[xx][yy].is_visible and !debugging_mode){
-						fg = C_BLUE;
-					}
-					
-					// Set foreground draw colour
-					var draw_col_fg = c_white;
-					if (fg != noone) draw_col_fg = fg;
-					
-					// Draw background rectangle
-					if (bg != noone){
-						draw_rectangle_colour(screen_x, screen_y, screen_x + cell_width, screen_y + cell_height, bg, bg, bg, bg, false);
-					}
-					
-					// Get tile spritesheet position
-					var tile_x = ind mod 8;
-					var tile_y = ind div 8;
-			
-					draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, screen_x, screen_y, 1, 1, draw_col_fg, 1);
-				}
+				// Draw items
+				game_draw_items(xx, yy, screen_x, screen_y)
+				
+				// Draw Actor
+				game_draw_actor(xx, yy, screen_x, screen_y)
+				
 			}
 		}
 	}
@@ -159,6 +59,139 @@ function game_draw_grid(){
 	if (direction_indicator != noone){
 		draw_sprite_ext(direction_arrow_spr, direction_indicator, direction_indicator_x, direction_indicator_y, 1, 1, 0, c_white, 1);
 	}
+}
+
+function game_draw_actor(xx, yy, screen_x, screen_y){
+	
+	// Check for actor on tile
+	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+					
+		// Actor cell position
+		var actor_x = actor_registry.actor_list[i].x_pos;
+		var actor_y = actor_registry.actor_list[i].y_pos;
+					
+		// If actor is in current cell
+		if (actor_x == xx and actor_y == yy){
+			if (actor_registry.actor_list[i].is_visible or debugging_mode){
+							
+				// Get actor variables
+				with (actor_registry.actor_list[i]){
+					var spr = sprite;
+								
+					flash_timer_reduce();
+								
+					// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
+					var spr_offset_x = sprite_x - sprite_target_x;
+					var spr_offset_y = sprite_y - sprite_target_y;
+					var x_scale		 = xscale;
+								
+					// ACTOR ANIMATION ------------------------------------------------------------------------
+					var ind = actor_animate();
+								
+					var col = colour_fg;
+				}
+							
+				// Set sprite overlay shader
+				if (col != noone){
+								
+					var r = colour_get_red(col)   / 255;
+					var g = colour_get_green(col) / 255;
+					var b = colour_get_blue(col)  / 255;
+								
+					col = [r, g, b, 1.0];
+								
+					shader_set(colour_overlay_shd);
+					shader_set_uniform_f_array(uni_overlay, col);
+				}
+				else{
+					var tex		= sprite_get_texture(spr, ind);
+					var texel_w = texture_get_texel_width(tex);
+					var texel_h = texture_get_texel_height(tex);
+								
+					shader_set(outline_shd);
+					shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
+					shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
+				}
+							
+				// Draw actor sprite and reset shader
+				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + (cell_width / 2), screen_y + spr_offset_y, x_scale, 1, 0, c_white, 1);
+				shader_reset();
+							
+				// If actor is player, set direction indicator position and direction
+				if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
+					var dir_ind_x = screen_x + cell_width  / 2;
+					var dir_ind_y = screen_y + cell_height / 2;
+								
+					direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
+					direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
+				}
+			}
+		}
+	}		
+}
+
+function game_draw_items(xx, yy, screen_x, screen_y){
+	if (struct_exists(game_grid[xx][yy], "items")){
+		if (array_length(game_grid[xx][yy].items) > 0){
+			draw_sprite(item_spr, 0, screen_x, screen_y);
+		}
+	}
+}
+
+function game_draw_tile(xx, yy, screen_x, screen_y){
+	
+	var spr = game_grid[xx][yy].sprite;
+	var ind = game_grid[xx][yy].index;
+				
+	var col = noone;
+	var bg = game_grid[xx][yy].colour_bg;
+	
+	var dng = noone;
+	if (struct_exists(game_grid[xx][yy], "dungeon")){
+		var dng = game_grid[xx][yy].dungeon;
+	}
+	
+	// Set sprite overlay shader
+	if (!game_grid[xx][yy].is_visible and game_grid[xx][yy].explored) and (!debugging_mode){
+		col = C_BLUE;
+	}
+	if (col != noone){
+								
+		var r = colour_get_red(col)   / 255;
+		var g = colour_get_green(col) / 255;
+		var b = colour_get_blue(col)  / 255;
+								
+		col = [r, g, b, 1.0];
+								
+		shader_set(colour_overlay_shd);
+		shader_set_uniform_f_array(uni_overlay, col);
+	}
+	else{
+		var tex		= sprite_get_texture(spr, ind);
+		var texel_w = texture_get_texel_width(tex);
+		var texel_h = texture_get_texel_height(tex);
+								
+		shader_set(outline_shd);
+		shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
+		shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
+	}
+					
+	// Draw background rectangle
+	if (bg != noone){
+		draw_rectangle_colour(screen_x, screen_y, screen_x + cell_width, screen_y + cell_height, bg, bg, bg, bg, false);
+	}
+					
+	// Get tile spritesheet position
+	var tile_x = ind mod 8;
+	var tile_y = ind div 8;
+			
+	draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, screen_x, screen_y, 1, 1, C_WHITE, 1);
+	
+	if (dng != noone){
+		draw_sprite(tile_world_dungeon_entrance_spr, 0, screen_x, screen_y);
+	}
+	
+	shader_reset();
 }
 
 

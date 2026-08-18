@@ -286,8 +286,11 @@ function transition_update(){
 				init_world();													break;
 				
 			case TRANSITION.GAME_DUNGEON:	init_dungeon();						break;
+			
 			case TRANSITION.GAME_QUIT:		game_end();							break;
+			
 			case TRANSITION.GAME_WORLD:		grid_set_visible(manager.game_grid, false) goto_world(); break;
+			
 			case TRANSITION.GAME_ZONE:		
 				grid_set_visible(manager.game_grid, false) 
 				goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;

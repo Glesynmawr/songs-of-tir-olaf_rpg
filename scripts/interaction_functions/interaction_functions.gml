@@ -29,6 +29,10 @@ function door_set_close(actor, x_pos, y_pos){
 	}
 }
 
+function dungeon_enter(actor, x_pos, y_pos){
+	
+}
+
 function found_a_secret(actor){
 	if (actor == manager.actor_registry.player){
 		var text = $"{actor.name} found a secret!";

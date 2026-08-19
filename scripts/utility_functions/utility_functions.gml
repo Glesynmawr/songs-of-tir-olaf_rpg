@@ -285,7 +285,7 @@ function transition_update(){
 				game_state = game_state_main_menu;
 				init_world();													break;
 				
-			case TRANSITION.GAME_DUNGEON:	init_dungeon();						break;
+			case TRANSITION.GAME_DUNGEON:	goto_dungeon(0);					break;
 			
 			case TRANSITION.GAME_QUIT:		game_end();							break;
 			

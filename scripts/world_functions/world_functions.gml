@@ -3,19 +3,19 @@ function world_generate(){
 	
 	tiles_per_biome			= 8;
 	zone_third				= floor(ZONE_SIZE / 3);
-	dungeon_count_divisor	= 40;
+	dungeon_count_divisor	= 50;
 	
 	// Biomes
-	biome[0] = 20;	// Mountains
-	biome[1] = 20;	// Hills
-	biome[2] = 20;	// Canyon
-	biome[3] = 20;	// Salt plains
-	biome[4] = 20;	// Scrubland
-	biome[5] = 20;	// Swamp
-	biome[6] = 20;	// Dense Mangrove
-	biome[7] = 20;	// Water
-	biome[8] = 20;	// Mangrove
-	biome[9] = 20;	// Marsh
+	biome[0] = 25;	// Mountains
+	biome[1] = 35;	// Hills
+	biome[2] = 90;	// Canyon
+	biome[3] = 100;	// Salt plains
+	biome[4] = 90;	// Scrubland
+	biome[5] = 50;	// Swamp
+	biome[6] = 50;	// Dense Mangrove
+	biome[7] = 90;	// Water
+	biome[8] = 40;	// Mangrove
+	biome[9] = 30;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
@@ -163,7 +163,7 @@ function noise_generate(grid){
 	var temp_map = [];
 	var passes = 3;
 	var chunk_size = 8;
-	var amplitude = 16;
+	var amplitude = 12;
 	
 	var i, j, p;
 	for (p = 0; p < passes; p ++){

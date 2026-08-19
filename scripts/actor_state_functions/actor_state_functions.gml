@@ -46,7 +46,7 @@ function state_ready_for_inputs(){
 			}
 		}
 		
-		// Interaction
+		// Interaction with direction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
 			if (manager.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
 				found_a_secret(self);
@@ -61,12 +61,17 @@ function state_ready_for_inputs(){
 			if (direction_indicator != noone) direction_indicator = noone;
 		}
 		
+		// Interaction with no direction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			
+			var items_exist = false;
 			if (struct_exists(manager.game_grid[x_pos][y_pos], "items")){
 				if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
+					items_exist = true;
 					pickup_menu_initialise(self);
 				}
+			}
+			if (!items_exist){
+				player_moved = tile_interaction(self, x_pos, y_pos);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_move_confirm)){

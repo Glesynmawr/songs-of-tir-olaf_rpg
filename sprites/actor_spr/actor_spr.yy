@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":1,
   "parent":{
-    "name":"Sprites and Fonts",
-    "path":"folders/Sprites and Fonts.yy",
+    "name":"Entities",
+    "path":"folders/Sprites and Fonts/Entities.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

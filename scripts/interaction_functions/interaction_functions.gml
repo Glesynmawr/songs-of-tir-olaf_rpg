@@ -1,7 +1,7 @@
 
 function tile_interaction(actor, x_pos, y_pos){			
-	if (other.game_grid[x_pos][y_pos].tile_script != noone){
-		other.game_grid[x_pos][y_pos].tile_script(self, x_pos, y_pos);
+	if (manager.game_grid[x_pos][y_pos].tile_script != noone){
+		manager.game_grid[x_pos][y_pos].tile_script(self, x_pos, y_pos);
 		
 		return(true);
 	}
@@ -9,12 +9,11 @@ function tile_interaction(actor, x_pos, y_pos){
 }
 
 function door_set_open(actor, x_pos, y_pos){
-	var text = "";
 	
 	cell_replace_tile(x_pos, y_pos, tile_door_open);
 	
 	// Create log entry
-	text = $"{actor.name} opens the door.";
+	var text = $"{actor.name} opens the door.";
 	log_add_entry(text, manager.colour_text_main);
 }
 
@@ -31,6 +30,14 @@ function door_set_close(actor, x_pos, y_pos){
 
 function dungeon_enter(actor, x_pos, y_pos){
 	
+	dungeon_entry_x = x_pos;
+	dungeon_entry_y = y_pos;
+	dungeon_index   = manager.game_grid[x_pos][y_pos].index;
+	
+	// Create log entry
+	var text = $"{actor.name} enters dungeon {dungeon_index} at x {dungeon_entry_x} and y {dungeon_entry_y}.";
+	log_add_entry(text, manager.colour_text_main);
+		
 }
 
 function found_a_secret(actor){

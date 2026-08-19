@@ -15,17 +15,6 @@ function init_control_menu(){
 	game_state = game_state_control_menu;
 }
 
-function init_dungeon(){
-	dungeon_map = dungeon_generate();
-	game_grid = dungeon_map;
-	
-	camera_min_x = -(array_length(game_grid) * cell_width);
-	camera_max_x = array_length(game_grid) * cell_width;
-	camera_min_y = -(array_length(game_grid[0]) * cell_height);
-	camera_max_y = array_length(game_grid[0]) * cell_height;
-
-}
-
 function init_main(){
 	
 	// Set resolution and scale
@@ -262,17 +251,29 @@ function game_state_world(){
 
 
 // LOCATION GOTO FUNCTIONS
-function goto_dungeon(dungeon_id, level){
+function goto_dungeon(dungeon_id, is_descending = true){
+	
+	if (is_descending) current_depth ++ else current_depth --
+	
+	// reset actor and action lists
+	actor_list_clear_all(false);
+	action_list_clear_all(false);
 	
 	// Set game grid
-	
-	map_mode  = MAP_MODE.DUNGEON;
+	dungeon_map = dungeon_generate(0); //  Replace 0 with dungeon type id
+	game_grid	= dungeon_map;
+	map_mode	= MAP_MODE.DUNGEON;
 	
 	// Set player position
 	
 	// Set camera bounds
+	camera_min_x = -(array_length(game_grid) * cell_width);
+	camera_max_x = array_length(game_grid) * cell_width;
+	camera_min_y = -(array_length(game_grid[0]) * cell_height);
+	camera_max_y = array_length(game_grid[0]) * cell_height;
 	
 	// Set game state
+	game_state = game_state_dungeon;
 	
 	// Update player LOS
 	set_player_los(game_grid, actor_registry.player);

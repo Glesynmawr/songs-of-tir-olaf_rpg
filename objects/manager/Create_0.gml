@@ -13,6 +13,10 @@ colour_ui_main		= C_ORANGE;
 // STATE TRANSITION
 transition = noone;
 
+// DUNGEON PROGRESS
+current_depth   = noone;;
+dungeon_entry_x = noone;
+dungeon_entry_y = noone;
 
 
 #region// MENUS -----------------------------------------------------------------------------------
@@ -65,6 +69,7 @@ move_timer = 0;
 
 #endregion
 
+dungeon_data();
 init_main();
 init_particle_system();
 

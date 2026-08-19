@@ -1,5 +1,5 @@
 
-function dungeon_generate(){
+function dungeon_generate(index){
 	
 	dungeon_grid = [];
 	

@@ -232,8 +232,9 @@ function zone_add_dungeon(grid, type){
 	var dx = irandom_range(zone_third, ZONE_SIZE - zone_third);
 	var dy = irandom_range(zone_third, ZONE_SIZE - zone_third);
 	
-	grid[dx][dy]		= new tile_dungeon_entrance();
-	grid[dx][dy].index	= type;
+	grid[dx][dy]				= new tile_dungeon_entrance();
+	grid[dx][dy].index			= 0;
+	grid[dx][dy].dungeon_list	= [];
 	
 	return(grid);
 	

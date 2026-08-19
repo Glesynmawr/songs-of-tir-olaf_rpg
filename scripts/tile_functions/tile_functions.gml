@@ -96,7 +96,6 @@ function tile_dungeon_entrance()constructor{
 	is_visible		= false;
 	explored		= false;
 	tile_script		= dungeon_enter;
-	dungeon_list	= [];
 }
 
 function tile_hall()constructor{

@@ -43,15 +43,21 @@ function game_draw_grid(){
 				var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
 				
 				// Draw tile
-				game_draw_tile(xx, yy, screen_x, screen_y)
+				game_draw_tile(xx, yy, screen_x, screen_y);
 				
 				// Draw items
-				game_draw_items(xx, yy, screen_x, screen_y)
-				
-				// Draw Actor
-				game_draw_actor(xx, yy, screen_x, screen_y)
-				
+				game_draw_items(xx, yy, screen_x, screen_y);
 			}
+		}
+	}
+	for (xx = x_from; xx < x_to; xx ++){
+		for (yy = y_from; yy < y_to; yy ++){
+
+			// Set screen pixel position
+			var screen_x = ((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1];
+			var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
+				
+			game_draw_actor(xx, yy, screen_x, screen_y);
 		}
 	}
 	

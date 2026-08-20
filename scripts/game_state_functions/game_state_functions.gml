@@ -251,20 +251,41 @@ function game_state_world(){
 
 
 // LOCATION GOTO FUNCTIONS
-function goto_dungeon(dungeon_id, is_descending = true){
+function goto_dungeon(dungeon_id, is_descending){
 	
-	if (is_descending) current_depth ++ else current_depth --
+	var world_x = actor_registry.player.world_x;
+	var world_y = actor_registry.player.world_y;
+
+	// Exit dungeon
+	if (current_depth < 0){
+		transition_set(TRANSITION.GAME_DUNGEON_EXIT, C_BLACK);
+		exit;
+	}
 	
 	// reset actor and action lists
 	actor_list_clear_all(false);
 	action_list_clear_all(false);
 	
 	// Set game grid
-	dungeon_map = dungeon_generate(0); //  Replace 0 with dungeon type id
-	game_grid	= dungeon_map;
+	var new_dungeon = zone_map[world_x][world_y][dungeon_entry_x][dungeon_entry_y].dungeon_list[current_depth];
+	if (new_dungeon == noone){
+		var new_dungeon = dungeon_generate(dungeon_id);
+		zone_map[world_x][world_y][dungeon_entry_x][dungeon_entry_y].dungeon_list[current_depth] = new_dungeon;
+	}
+	
+	game_grid	= new_dungeon[0];
 	map_mode	= MAP_MODE.DUNGEON;
 	
 	// Set player position
+	if (is_descending == true){
+		actor_registry.player.x_pos = new_dungeon[1][0];
+		actor_registry.player.y_pos = new_dungeon[1][1];
+	}
+	else{
+		actor_registry.player.x_pos = new_dungeon[2][0];
+		actor_registry.player.y_pos = new_dungeon[2][1];
+	}
+	actor_set_sprite_pos(actor_registry.player);
 	
 	// Set camera bounds
 	camera_min_x = -(array_length(game_grid) * cell_width);
@@ -295,7 +316,7 @@ function goto_world(){
 	actor_registry.player.x_pos = actor_registry.player.world_x;
 	actor_registry.player.y_pos = actor_registry.player.world_y;
 	
-	player_set_sprite_pos(actor_registry.player);
+	actor_set_sprite_pos(actor_registry.player);
 	
 	// Set camera bounds
 	camera_min_x = -ui_width;
@@ -327,7 +348,7 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		actor_registry.player.x_pos = entry_x;
 		actor_registry.player.y_pos = entry_y;
 	
-		player_set_sprite_pos(actor_registry.player);
+		actor_set_sprite_pos(actor_registry.player);
 	
 		// Set camera bounds
 		camera_min_x = -ui_width;

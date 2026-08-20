@@ -3,7 +3,7 @@ function zone_canyon(world_index, dungeon, terrain){
 	var temp_list = initialise_temp_list();
 	
 	if (dungeon){
-		temp_list = zone_add_dungeon(temp_list, terrain);
+		temp_list = dungeons_add_to_zone(temp_list, terrain);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
@@ -24,7 +24,7 @@ function zone_river(world_index, dungeon, terrain){
 	var temp_list = initialise_temp_list();
 	
 	if (dungeon){
-		temp_list = zone_add_dungeon(temp_list, terrain);
+		temp_list = dungeons_add_to_zone(temp_list, terrain);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
@@ -198,7 +198,7 @@ function zone_standard(world_index, dungeon, terrain){
 	var temp_list = initialise_temp_list();
 	
 	if (dungeon){
-		temp_list = zone_add_dungeon(temp_list, terrain);
+		temp_list = dungeons_add_to_zone(temp_list, terrain);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
@@ -228,13 +228,13 @@ function initialise_temp_list(){
 	return(temp_list);
 }
 
-function zone_add_dungeon(grid, type){
+function dungeons_add_to_zone(grid, type){
 	var dx = irandom_range(zone_third, ZONE_SIZE - zone_third);
 	var dy = irandom_range(zone_third, ZONE_SIZE - zone_third);
 	
 	grid[dx][dy]				= new tile_dungeon_entrance();
 	grid[dx][dy].index			= 0;
-	grid[dx][dy].dungeon_list	= [];
+	grid[dx][dy].dungeon_list	= array_create(dungeons[0].max_depth, noone);
 	
 	return(grid);
 	

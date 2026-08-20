@@ -33,8 +33,8 @@ function resolution_scale(){
 	
 }
 
-function player_set_sprite_pos(struct){
-	with (struct){
+function actor_set_sprite_pos(actor){
+	with (actor){
 		sprite_x = x_pos * manager.cell_width;
 		sprite_y = y_pos * manager.cell_height;
 		sprite_target_x = x_pos * manager.cell_width;
@@ -285,7 +285,16 @@ function transition_update(){
 				game_state = game_state_main_menu;
 				init_world();													break;
 				
-			case TRANSITION.GAME_DUNGEON:	goto_dungeon(0);					break;
+			case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(0, true);			break;
+			
+			case TRANSITION.GAME_DUNGEON_EXIT:	
+				var wx = actor_registry.player.world_x;
+				var wy = actor_registry.player.world_y;
+				goto_zone(wx, wy, dungeon_entry_x, dungeon_entry_y);			break;
+				
+			case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(0, true);			break;
+			
+			case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(0, false);			break;
 			
 			case TRANSITION.GAME_QUIT:		game_end();							break;
 			

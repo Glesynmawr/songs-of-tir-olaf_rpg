@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-randomise();
+//randomise();
 
 debugging_mode		= false;
 game_paused			= false;
@@ -122,12 +122,6 @@ infobox_height  = screen_height - minimap_height - log_height + 10;
 infobox_y       = minimap_height - 5;
 
 #endregion
-
-
-// Level Sprite Indices
-door_index = 0;
-floor_sprite = floor_00_spr;
-
 
 #region// SHADER SET-UP
 // Colour overlay

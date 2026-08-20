@@ -80,7 +80,7 @@ function world_generate(){
 	world_grid = autotile_map(world_grid);
 	
 	// Add dungeons
-	world_grid = dungeons_add(world_grid);
+	world_grid = dungeons_add_to_world(world_grid);
 	
 	// Generate zone maps
 	zone_map  = [];
@@ -97,7 +97,7 @@ function world_generate(){
 	// Set player start position
 	for (xx = 0; xx < MAP_WIDTH; xx ++){
 		for (yy = 0; yy < MAP_HEIGHT; yy ++){
-			if (world_grid[xx][yy].tile == "swamp"){
+			if (world_grid[xx][yy].tile == "marsh"){
 				player_start_x = xx;
 				player_start_y = yy;
 				break;
@@ -417,7 +417,7 @@ function zone_map_generate(grid, cell_x, cell_y){
 	return([zone_function[tile](index, dng, tile), mobs]);
 }
 
-function dungeons_add(grid){
+function dungeons_add_to_world(grid){
 	
 	var ww = array_length(grid);
 	var hh = array_length(grid[0]);
@@ -454,6 +454,7 @@ function dungeons_add(grid){
 	}
 	return(grid);
 }
+
 
 
 

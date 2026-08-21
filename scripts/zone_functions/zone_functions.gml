@@ -231,10 +231,11 @@ function initialise_temp_list(){
 function dungeons_add_to_zone(grid, type){
 	var dx = irandom_range(zone_third, ZONE_SIZE - zone_third);
 	var dy = irandom_range(zone_third, ZONE_SIZE - zone_third);
+	var ind = 9 - type;
 	
 	grid[dx][dy]				= new tile_dungeon_entrance();
-	grid[dx][dy].index			= 0;
-	grid[dx][dy].dungeon_list	= array_create(dungeons[0].max_depth, noone);
+	grid[dx][dy].index			= ind;
+	grid[dx][dy].dungeon_list	= array_create(dungeons[ind].max_depth, noone);
 	
 	return(grid);
 	

@@ -75,17 +75,23 @@ function state_ready_for_inputs(){
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_move_confirm)){
-			if (manager.game_grid == manager.world_map){
-				with(manager){
-					transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
+			if (array_length(manager.action_list) == 1){
+				if (manager.game_grid == manager.world_map){
+					with(manager){
+						transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
+					}
+				}
+				else if (manager.game_grid == manager.zone_map[world_x][world_y]){
+					with(manager){
+						transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
+					}
 				}
 			}
-			else if (manager.game_grid == manager.zone_map[world_x][world_y]){
-				with(manager){
-					transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
-				}
+			else{
+				player_moved = true;
+				var txt = $"{self.name} skips turn";
+				log_add_entry(txt, manager.colour_text_main);
 			}
-			else player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
 		}
 	}
 

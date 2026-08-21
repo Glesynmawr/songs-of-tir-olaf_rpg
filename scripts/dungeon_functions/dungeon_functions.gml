@@ -55,7 +55,7 @@ function dungeon_generate(index){
 	
 	// Add exit
 	if (current_depth < max_depth - 1){
-		exit_position = add_exit(dungeon_grid, entry_pos[0], entry_pos[1]);
+		exit_position = add_exit(dungeon_grid, entry_position[0], entry_position[1]);
 	}
 	else exit_position = noone;
 	
@@ -596,9 +596,10 @@ function add_exit(grid, entry_x, entry_y){
 	
 	for (var x_pos = 1; x_pos < grid_w - 1; x_pos ++){
 		for (var y_pos = 1; y_pos < grid_h - 1; y_pos ++){
-			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > grid_width / 2){
-				var count = grid_check_neighbour_count(grid, x_pos, y_pos, "room")
-				if (count > 4){
+			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > grid_width / 3){
+				var count_door = grid_check_neighbour_count(grid, x_pos, y_pos, "closed door");
+				var count_hall = grid_check_neighbour_count(grid, x_pos, y_pos, "hall");
+				if (count_door == 0) and (count_hall == 0){
 					array_push(candidate_list, [x_pos, y_pos]);
 				}
 			}

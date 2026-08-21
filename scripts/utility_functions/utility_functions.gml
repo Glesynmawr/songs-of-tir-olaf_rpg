@@ -276,27 +276,27 @@ function transition_update(){
 			
 			case TRANSITION.CONTROL_MENU:	
 				control_state_previous = game_state;
-				game_state = init_control_menu;									break;
+				game_state = init_control_menu;										break;
+																					
+			case TRANSITION.CONTROL_EXIT:											
+				game_state = control_state_previous;								break;	
+																					
+			case TRANSITION.GAME_BOOT:												
+				game_state = game_state_main_menu;									
+				init_world();														break;
 				
-			case TRANSITION.CONTROL_EXIT:	
-				game_state = control_state_previous;							break;	
-				
-			case TRANSITION.GAME_BOOT:	
-				game_state = game_state_main_menu;
-				init_world();													break;
-				
-			case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(0, true);			break;
+			case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(dungeon_index, true);	break;
 			
 			case TRANSITION.GAME_DUNGEON_EXIT:	
 				var wx = actor_registry.player.world_x;
 				var wy = actor_registry.player.world_y;
-				goto_zone(wx, wy, dungeon_entry_x, dungeon_entry_y);			break;
+				goto_zone(wx, wy, dungeon_entry_x, dungeon_entry_y);				break;
 				
-			case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(0, true);			break;
+			case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(dungeon_index, true);	break;
 			
-			case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(0, false);			break;
+			case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(dungeon_index, false);	break;
 			
-			case TRANSITION.GAME_QUIT:		game_end();							break;
+			case TRANSITION.GAME_QUIT:		game_end();								break;
 			
 			case TRANSITION.GAME_WORLD:		grid_set_visible(manager.game_grid, false) goto_world(); break;
 			
@@ -304,7 +304,7 @@ function transition_update(){
 				grid_set_visible(manager.game_grid, false) 
 				goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;
 			
-			default: show_message("Transition type not set!");					break;
+			default: show_message("Transition type not set!");						break;
 		}
 	}
 	else if (transition.index <= 0){

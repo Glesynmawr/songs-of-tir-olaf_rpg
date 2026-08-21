@@ -53,6 +53,7 @@
     {"name":"ui_border_spr","order":6,"path":"sprites/ui_border_spr/ui_border_spr.yy",},
     {"name":"ui_icons_spr","order":8,"path":"sprites/ui_icons_spr/ui_icons_spr.yy",},
     {"name":"wall_00_spr","order":4,"path":"sprites/wall_00_spr/wall_00_spr.yy",},
+    {"name":"wall_01_spr","order":5,"path":"sprites/wall_01_spr/wall_01_spr.yy",},
     {"name":"water_00_spr","order":2,"path":"sprites/water_00_spr/water_00_spr.yy",},
     {"name":"world_tiles_spr","order":1,"path":"sprites/world_tiles_spr/world_tiles_spr.yy",},
     {"name":"zone_tile_bush_spr","order":11,"path":"sprites/zone_tile_bush_spr/zone_tile_bush_spr.yy",},

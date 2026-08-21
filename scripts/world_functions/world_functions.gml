@@ -371,49 +371,6 @@ function zone_map_generate(grid, cell_x, cell_y){
 	var dng   = grid[cell_x][cell_y].dungeon;
 	var mobs  = noone;
 	
-	var mob_list = mob_lookup[tile];
-	if (mob_list != noone){
-		mobs = [];
-			
-		// How many mobs
-		var mob_count = mob_list[0];
-			
-		repeat(mob_count){
-				
-			// Find spawn position
-			var cand_list = [];
-			for (var i = 2; i < ZONE_SIZE - 2; i ++){
-				for (var j = 2; j < ZONE_SIZE - 2; j ++){
-					var cell_is_valid = true;
-						
-					// Check for existing mobs
-					if (array_length(mobs) > 0){
-						for (var m = 0; m < array_length(mobs); m ++){
-							if (mobs[m].x_pos == i and mobs[m].y_pos == j){
-								cell_is_valid = false;
-							}
-						}
-					}
-					if (cell_is_valid){
-						array_push(cand_list, [i, j]);
-					}
-				}
-			}
-			var len = array_length(cand_list);
-			if (len > 0){
-					
-				// Spawn mob
-				var c = irandom(len - 1);
-				var xx = cand_list[c][0];
-				var yy = cand_list[c][1];
-					
-				// Select mob to spawn
-				var new_mob = spawn_actor_to_zone_list(mob_list[1][0], xx, yy);
-				array_push(mobs, new_mob);
-			}
-		}
-	}
-	
 	return([zone_function[tile](index, dng, tile), mobs]);
 }
 

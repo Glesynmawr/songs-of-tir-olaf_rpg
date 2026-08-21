@@ -81,6 +81,7 @@
     {"id":{"name":"ui_border_spr","path":"sprites/ui_border_spr/ui_border_spr.yy",},},
     {"id":{"name":"ui_icons_spr","path":"sprites/ui_icons_spr/ui_icons_spr.yy",},},
     {"id":{"name":"wall_00_spr","path":"sprites/wall_00_spr/wall_00_spr.yy",},},
+    {"id":{"name":"wall_01_spr","path":"sprites/wall_01_spr/wall_01_spr.yy",},},
     {"id":{"name":"water_00_spr","path":"sprites/water_00_spr/water_00_spr.yy",},},
     {"id":{"name":"world_tiles_spr","path":"sprites/world_tiles_spr/world_tiles_spr.yy",},},
     {"id":{"name":"zone_tile_bush_spr","path":"sprites/zone_tile_bush_spr/zone_tile_bush_spr.yy",},},

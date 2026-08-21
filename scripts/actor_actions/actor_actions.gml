@@ -54,6 +54,7 @@ function action_move(grid, move_x, move_y){
 		}
 			
 		cell_replace_tile(x_pos, y_pos, tile_door_open);
+		grid[x_pos][y_pos].index = manager.door_index;
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";

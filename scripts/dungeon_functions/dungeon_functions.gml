@@ -65,7 +65,7 @@ function dungeon_generate(index){
 	// Initialise item grid
 	initialise_item_grid(dungeon_grid, grid_width, grid_height);
 	
-	return([dungeon_grid, entry_position, exit_position]);
+	return([dungeon_grid, entry_position, exit_position, door_index]);
 }
 
 // INITIALISE

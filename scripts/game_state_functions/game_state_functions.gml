@@ -275,6 +275,7 @@ function goto_dungeon(dungeon_id, is_descending){
 	
 	game_grid	= new_dungeon[0];
 	map_mode	= MAP_MODE.DUNGEON;
+	door_index  = new_dungeon[3];
 	
 	// Set player position
 	if (is_descending == true){

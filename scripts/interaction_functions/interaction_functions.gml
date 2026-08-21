@@ -11,6 +11,7 @@ function tile_interaction(actor, x_pos, y_pos){
 function door_set_open(actor, x_pos, y_pos){
 	
 	cell_replace_tile(x_pos, y_pos, tile_door_open);
+	manager.game_grid[x_pos][y_pos].index = manager.door_index;
 	
 	// Create log entry
 	var text = $"{actor.name} opens the door.";
@@ -20,7 +21,9 @@ function door_set_open(actor, x_pos, y_pos){
 function door_set_close(actor, x_pos, y_pos){
 	
 	if (actor.x_pos != x_pos or actor.y_pos != y_pos){
+		
 		cell_replace_tile(x_pos, y_pos, tile_door_closed);
+		manager.game_grid[x_pos][y_pos].index = manager.door_index;
 	
 		// Create log entry
 		var text = $"{actor.name} closes the door.";

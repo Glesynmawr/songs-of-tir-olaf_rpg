@@ -9,11 +9,10 @@ function zone_canyon(world_index, dungeon, terrain){
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			if (temp_list[xx][yy] == noone){
-				temp_list[xx][yy] = new tile_world_canyon();
-				temp_list[xx][yy].sprite = zone_tiles_spr;
-				temp_list[xx][yy].index += irandom(tiles_per_biome - 1);
-			
+
 				// Get tile image index for canyon wall position
+				var new_tile = tile_lookup(terrain_lookup[terrain]);
+				temp_list[xx][yy] = generate_zone_tile(new_tile);
 			}
 		}
 	}
@@ -35,6 +34,7 @@ function zone_river(world_index, dungeon, terrain){
 		}
 	}
 	
+	#region// MAP NEIGHBOURS ----------------------------------------------------------------------
 	var tile_fill;
 	tile_fill[0] = false;	// Right edge
 	tile_fill[1] = false;	// Top edge
@@ -96,6 +96,9 @@ function zone_river(world_index, dungeon, terrain){
 		case 46: ;																								break;
 				
 	}
+	
+	#endregion
+	
 	var x2, y2, dist, anchor_x, anchor_y, tile_chance;
 	
 	// Right edge fill

@@ -396,6 +396,9 @@ function turn_order_initialise(){
 				actor_registry.actor_list[i].energy += ENERGY_PER_TURN;
 			}
 			actor_registry.player.has_acted = false;
+			
+			increment_time_and_date();
+			
 			turn_order_initialise();
 		}
 	}
@@ -423,6 +426,25 @@ function turn_order_update(){
 			actor_registry.actor_list[i].has_acted = false;
 		}
 		turn_order_initialise();
+	}
+}
+
+function increment_time_and_date(){
+	// Increase current TURN
+	game_current_time[TIME.TURN] += timescale;
+	
+	if (game_current_time[TIME.TURN] >= turns_per_hour){
+		
+		game_current_time[TIME.TURN] -= turns_per_hour
+		
+		// Increase current HOUR
+		game_current_time[TIME.HOUR] ++;
+		if (game_current_time[TIME.HOUR] >= hours_per_day){
+			game_current_time[TIME.HOUR] -= hours_per_day
+			
+			// Increase current DAY
+			game_current_time[TIME.DAY] ++;
+		}
 	}
 }
 

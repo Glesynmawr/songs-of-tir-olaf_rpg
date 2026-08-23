@@ -168,7 +168,7 @@ function tile_wall()constructor{
 function tile_world_mountain()constructor{
 	tile			= "mountain";
 	biome			= BIOME.MOUNTAIN;
-	sprite			= world_tiles_spr;
+	sprite			= world_tile_mountain_spr;
 	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
@@ -182,8 +182,8 @@ function tile_world_mountain()constructor{
 function tile_world_hill()constructor{
 	tile			= "hill";
 	biome			= BIOME.HILL;
-	sprite			= world_tiles_spr;
-	index			= 8;
+	sprite			= world_tile_hill_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -196,8 +196,8 @@ function tile_world_hill()constructor{
 function tile_world_canyon()constructor{
 	tile			= "canyon";
 	biome			= BIOME.CANYON;
-	sprite			= world_tiles_spr;
-	index			= 16;
+	sprite			= world_tile_canyon_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -210,8 +210,8 @@ function tile_world_canyon()constructor{
 function tile_world_salt_plain()constructor{
 	tile			= "salt plain";
 	biome			= BIOME.DESERT;
-	sprite			= world_tiles_spr;
-	index			= 24;
+	sprite			= world_tile_salt_desert_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -224,8 +224,8 @@ function tile_world_salt_plain()constructor{
 function tile_world_scrubland()constructor{
 	tile			= "scrubland";
 	biome			= BIOME.SCRUB;
-	sprite			= world_tiles_spr;
-	index			= 32;
+	sprite			= world_tile_scrubland_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -238,8 +238,8 @@ function tile_world_scrubland()constructor{
 function tile_world_dense_mangrove()constructor{
 	tile			= "dense mangrove";
 	biome			= BIOME.DENSE_MANGROVE;
-	sprite			= world_tiles_spr;
-	index			= 40;
+	sprite			= world_tile_dense_mangrove_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -252,8 +252,8 @@ function tile_world_dense_mangrove()constructor{
 function tile_world_swamp()constructor{
 	tile			= "swamp";
 	biome			= BIOME.SWAMP;
-	sprite			= world_tiles_spr;
-	index			= 48;
+	sprite			= world_tile_swamp_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -266,8 +266,8 @@ function tile_world_swamp()constructor{
 function tile_world_water()constructor{
 	tile			= "water";
 	biome			= BIOME.WATER;
-	sprite			= world_tiles_spr;
-	index			= 56;
+	sprite			= world_tile_water_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -280,8 +280,8 @@ function tile_world_water()constructor{
 function tile_world_mangrove()constructor{
 	tile			= "mangrove";
 	biome			= BIOME.MANGROVE;
-	sprite			= world_tiles_spr;
-	index			= 40;
+	sprite			= world_tile_mangrove_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;
@@ -294,8 +294,8 @@ function tile_world_mangrove()constructor{
 function tile_world_marsh()constructor{
 	tile			= "marsh";
 	biome			= BIOME.MARSH;
-	sprite			= world_tiles_spr;
-	index			= 48;
+	sprite			= world_tile_marsh_spr;
+	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;
 	walkable		= true;

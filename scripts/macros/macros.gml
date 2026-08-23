@@ -69,6 +69,12 @@ enum TAG{
 	TWO_SLOTS
 }
 
+enum TIME{
+	TURN,
+	HOUR,
+	DAY
+}
+
 enum TRANSITION{
 	CONTROL_MENU,
 	CONTROL_EXIT,

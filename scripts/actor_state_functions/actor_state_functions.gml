@@ -96,6 +96,10 @@ function state_ready_for_inputs(){
 	}
 
 	if (player_moved){
+		
+		// Increment player turn counter
+		 manager.current_turn += 1;
+		
 		// Set has-acted flag
 		has_acted = true;
 		

@@ -211,11 +211,11 @@ function draw_game_ui(){
 	// Game log
 	draw_game_log(0, hh - log_height, ww, log_height);
 
-	// Minimap
-	draw_minimap();
-	
 	// Info box
 	draw_info_box();
+
+	// Minimap
+	draw_minimap();
 	
 	// Inventory and pick-up menus
 	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
@@ -516,6 +516,15 @@ function draw_info_box(){
 	xx += text_width * 2;
 	yy += text_height;
 	draw_text(xx, yy, $"HP: {actor_registry.player.hit_points}");
+	
+	yy += text_height;
+	draw_text(xx, yy, $"Turn: {current_turn}"); 
+	
+	yy += text_height;
+	draw_text(xx, yy, $"Hour: {game_current_time[TIME.HOUR]}"); 
+	
+	yy += text_height;
+	draw_text(xx, yy, $"Day:  {game_current_time[TIME.DAY]}"); 
 }
 
 function draw_inventory(actor, x_pos, y_pos, width, height){
@@ -669,6 +678,13 @@ function draw_minimap(){
 	draw_sprite_stretched_ext(ui_border_spr, 1, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, bg, 1);
 	draw_sprite_stretched_ext(ui_border_spr, 0, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
 	
+	// Draw box text
+	if (minimap_title_text != ""){
+		ui_draw_box_title(ui_x_pos[ui_position][0] + (text_width * 2), minimap_y, minimap_title_text);
+	}
+	if (minimap_sub_text != ""){
+		ui_draw_box_controls(ui_x_pos[ui_position][0] + (text_width * 2), minimap_height - 5, minimap_sub_text);
+	}
 }
 
 function draw_pickup(actor){

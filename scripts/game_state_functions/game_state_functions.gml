@@ -52,7 +52,7 @@ function init_world(){
 	game_grid = world_map;
 	
 	// Set player entry position
-	entry_pos = [0, 0];
+	entry_pos = [player_start_x, player_start_y];
 																
 	// Player
 	spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
@@ -261,7 +261,7 @@ function goto_dungeon(dungeon_id, is_descending){
 		transition_set(TRANSITION.GAME_DUNGEON_EXIT, C_BLACK);
 		exit;
 	}
-	
+
 	// reset actor and action lists
 	actor_list_clear_all(false);
 	action_list_clear_all(false);
@@ -299,6 +299,13 @@ function goto_dungeon(dungeon_id, is_descending){
 	
 	// Update player LOS
 	set_player_los(game_grid, actor_registry.player);
+	
+	// Update Minimap text
+	minimap_title_text = dungeons[dungeon_index].name;
+	minimap_sub_text  = "Level: " + string(current_depth + 1);
+	
+	// Set timescale
+	timescale = timescale_zone;
 }
 
 function goto_world(){
@@ -330,6 +337,13 @@ function goto_world(){
 	
 	// Update player LOS
 	set_player_los(game_grid, actor_registry.player);
+	
+	// Update Minimap text
+	minimap_title_text = "Tir Olaf";
+	minimap_sub_text  = "";
+	
+	// Set timescale
+	timescale = timescale_world;
 }
 
 function goto_zone(world_x, world_y, entry_x, entry_y){
@@ -377,6 +391,13 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Update player LOS
 		set_player_los(game_grid, actor_registry.player);
+		
+		// Update Minimap text
+		minimap_title_text = world_grid[world_x][world_y].tile;
+		minimap_sub_text  = "";
+		
+		// Set timescale
+		timescale = timescale_zone;
 	}
 }
 

@@ -1,21 +1,24 @@
 
 function world_generate(){
 	
-	tiles_per_biome			= 8;
 	zone_third				= floor(ZONE_SIZE / 3);
 	dungeon_count_divisor	= 50;
 	
+	world_generate_pass_count = 2;
+	world_generate_chunk_size = 4;
+	world_generate_amplitude  = 8;
+
 	// Biomes
-	biome[0] = 25;	// Mountains
-	biome[1] = 35;	// Hills
+	biome[0] = 30;	// Mountains
+	biome[1] = 40;	// Hills
 	biome[2] = 90;	// Canyon
-	biome[3] = 100;	// Salt plains
-	biome[4] = 90;	// Scrubland
+	biome[3] = 80;	// Salt plains
+	biome[4] = 70;	// Scrubland
 	biome[5] = 50;	// Swamp
-	biome[6] = 50;	// Dense Mangrove
-	biome[7] = 90;	// Water
-	biome[8] = 40;	// Mangrove
-	biome[9] = 30;	// Marsh
+	biome[6] = 70;	// Dense Mangrove
+	biome[7] = 80;	// Water
+	biome[8] = 70;	// Mangrove
+	biome[9] = 60;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
@@ -160,10 +163,10 @@ function world_grid_initialise(width, height){
 
 function noise_generate(grid){
 	
-	var temp_map = [];
-	var passes = 3;
-	var chunk_size = 8;
-	var amplitude = 12;
+	var temp_map	= [];
+	var passes		= world_generate_pass_count;
+	var chunk_size	= world_generate_chunk_size;
+	var amplitude	= world_generate_amplitude;
 	
 	var i, j, p;
 	for (p = 0; p < passes; p ++){
@@ -267,7 +270,8 @@ function biomes_add(grid){
 				var cell_y = highest_cell[1];
 			
 				grid[cell_x][cell_y] = new tile[current_biome]();
-				grid[cell_x][cell_y].index += irandom(tiles_per_biome - 1);
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width);
+				grid[cell_x][cell_y].index += irandom(tiles_in_biome - 1);
 			}
 		}
 		current_biome ++;
@@ -277,8 +281,9 @@ function biomes_add(grid){
 	for (i = 0; i < width; i ++){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
-				grid[i][j] = new tile_world_swamp();
-				grid[i][j].index += irandom(tiles_per_biome - 1);
+				grid[i][j] = new tile_world_marsh();
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width);
+				grid[i][j].index += irandom(tiles_in_biome - 1);
 			}
 		}
 	}

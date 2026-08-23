@@ -148,7 +148,7 @@ function flash_timer_reduce(){
 // DATA -------------------------------------------------------------------------------------------
 function actor_player()constructor{
 	name			= "Player";
-	sprite			= actor_spr;
+	sprite			= rogue_spr;
 	range			= 7;
 	body_plan		= [1, 1, 2, 2];
 	state			= state_ready_for_inputs;

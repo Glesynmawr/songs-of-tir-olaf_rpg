@@ -95,7 +95,7 @@ equip_data[EQUIP.FEET] = ["feet",			"Footwear",	 		3];
 
 #endregion
 
-#region// UI -------------------------------------------------------------------------------------
+#region// UI --------------------------------------------------------------------------------------
 ui_width	   = 96;
 ui_position	   = 0;
 ui_x_pos[0][0] = screen_width - ui_width;
@@ -116,6 +116,10 @@ minimap_width	= ui_width;
 minimap_height	= ui_width;
 minimap_y		= 0;
 
+// Minimap text
+minimap_title_text = "";
+minimap_sub_text  = "";
+
 // Info box
 infobox_width   = ui_width;
 infobox_height  = screen_height - minimap_height - log_height + 10;
@@ -123,7 +127,7 @@ infobox_y       = minimap_height - 5;
 
 #endregion
 
-#region// SHADER SET-UP
+#region// SHADER SET-UP ---------------------------------------------------------------------------
 // Colour overlay
 uni_overlay		= shader_get_uniform(colour_overlay_shd, "uColour");
 
@@ -146,6 +150,18 @@ actor_registry = {
 	player:		noone
 }
 action_list = [];
+
+#endregion
+
+#region// TIME SYSTEM -----------------------------------------------------------------------------
+current_turn		= 0;
+game_current_time   = [0, 0, 0];
+timescale_zone      = 1;
+timescale_world		= 60;
+timescale			= 0;
+
+turns_per_hour	= 30;
+hours_per_day	= 24;
 
 #endregion
 

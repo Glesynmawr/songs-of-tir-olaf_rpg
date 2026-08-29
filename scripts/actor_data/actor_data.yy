@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"actor_actions",
+  "%Name":"actor_data",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"actor_actions",
+  "name":"actor_data",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

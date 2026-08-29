@@ -19,34 +19,45 @@ function game_draw_grid(){
 	var player_spr_y		= actor_registry.player.sprite_y;
 	
 	// Get grid drawing position
-	var x_from = max(min(player_x - draw_width_half,  ww - (MAP_WIDTH)),  0);
-	var y_from = max(min(player_y - draw_height_half, hh - (MAP_HEIGHT)), 0);
-	var x_to   = min(x_from + MAP_WIDTH,  ww)
-	var y_to   = min(y_from + MAP_HEIGHT, hh);
+	if (!map_borders_are_clamped){
+		var x_from = player_x - draw_width_half;
+		var y_from = player_y - draw_height_half;
+	}
+	else {
+		var x_from = max(min(player_x - draw_width_half, ww - (MAP_WIDTH)), 0);
+		var y_from = max(min(player_y - draw_height_half, hh - (MAP_HEIGHT)), 0);
+	}
+	
+	var x_to = x_from + MAP_WIDTH;
+	var y_to = y_from + MAP_HEIGHT;
 	
 	// Set map offset using player sprite position, checking for edges
 	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
 	var map_offset_y = actor_registry.player.sprite_target_y - actor_registry.player.sprite_y;
-	if (player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width){
+	
+	if ((player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width)) and (map_borders_are_clamped){
 		map_offset_x = 0;
 	}
-	if (player_spr_y < draw_height_half * cell_height) or (player_spr_y > (hh - draw_height_half) * cell_height){
+	if ((player_spr_y <= draw_height_half * cell_height) or (player_spr_y >= (hh - draw_height_half) * cell_height)) and (map_borders_are_clamped){
 		map_offset_y = 0;
 	}
 	
 	for (var xx = x_from; xx < x_to; xx ++){
 		for (var yy = y_from; yy < y_to; yy ++){
-			if (game_grid[xx][yy].explored or debugging_mode){
+			
+			if (grid_check_position_in_bounds(game_grid, xx, yy)){
+				if (game_grid[xx][yy].explored or debugging_mode){
 				
-				// Set screen pixel position
-				var screen_x = ((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1];
-				var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
+					// Set screen pixel position
+					var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1]);
+					var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
 				
-				// Draw tile
-				game_draw_tile(xx, yy, screen_x, screen_y);
+					// Draw tile
+					game_draw_tile(xx, yy, screen_x, screen_y);
 				
-				// Draw items
-				game_draw_items(xx, yy, screen_x, screen_y);
+					// Draw items
+					game_draw_items(xx, yy, screen_x, screen_y);
+				}
 			}
 		}
 	}
@@ -54,8 +65,8 @@ function game_draw_grid(){
 		for (yy = y_from; yy < y_to; yy ++){
 
 			// Set screen pixel position
-			var screen_x = ((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1];
-			var screen_y = ((yy - y_from) * cell_height) + map_offset_y;
+			var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1]);
+			var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
 				
 			game_draw_actor(xx, yy, screen_x, screen_y);
 		}
@@ -308,7 +319,7 @@ function draw_main_menu(){
 	
 	// Title
 	title_y = floor(screen_height / 3);
-	draw_sprite(title_spr, 0, box_center_x, title_y);
+	//draw_sprite(title_spr, 0, box_center_x, title_y);
 	
 	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y)
 	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y)

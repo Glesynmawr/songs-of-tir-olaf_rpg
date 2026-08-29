@@ -289,10 +289,7 @@ function goto_dungeon(dungeon_id, is_descending){
 	actor_set_sprite_pos(actor_registry.player);
 	
 	// Set camera bounds
-	camera_min_x = -(array_length(game_grid) * cell_width);
-	camera_max_x = array_length(game_grid) * cell_width;
-	camera_min_y = -(array_length(game_grid[0]) * cell_height);
-	camera_max_y = array_length(game_grid[0]) * cell_height;
+	map_borders_are_clamped = false;
 	
 	// Set game state
 	game_state = game_state_dungeon;
@@ -316,8 +313,6 @@ function goto_world(){
 	
 	// Set game grid
 	game_grid = world_map;
-	var grid_w = array_length(game_grid);
-	var grid_h = array_length(game_grid[0]);
 	map_mode  = MAP_MODE.WORLD;
 	
 	// Set player position
@@ -327,10 +322,7 @@ function goto_world(){
 	actor_set_sprite_pos(actor_registry.player);
 	
 	// Set camera bounds
-	camera_min_x = -ui_width;
-	camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, -ui_width);
-	camera_min_y = 0;
-	camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
+	map_borders_are_clamped = true;
 	
 	// Set game state
 	game_state = game_state_world;
@@ -355,8 +347,6 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Set game grid
 		game_grid = zone_map[world_x][world_y];
-		var grid_w = array_length(game_grid);
-		var grid_h = array_length(game_grid[0]);
 		map_mode  = MAP_MODE.ZONE;
 	
 		// Set player position
@@ -366,27 +356,19 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		actor_set_sprite_pos(actor_registry.player);
 	
 		// Set camera bounds
-		camera_min_x = -ui_width;
-		camera_max_x = max(((grid_w * cell_width) - screen_width) + ui_width, 0);
-		camera_min_y = 0;
-		camera_max_y = max(((grid_h * cell_height) - screen_height) + log_height, 0);
+		map_borders_are_clamped = true;
 	
 		// Set game state
 		game_state = game_state_dungeon;
 	
 		// Spawn mobs
-		if (is_array(zone_mobs[world_x][world_y])){
-			var len = array_length(zone_mobs[world_x][world_y]);
-			if (len > 0){
-				for (var i = 0; i < len; i ++){
-				
-					var new_mob = zone_mobs[world_x][world_y][i];
-					new_mob.is_visible = false;
-	
-					// Push to actor registry
-					array_push(actor_registry.actor_list, new_mob);
-				}
-			}
+		var b = world_map[world_x][world_y].biome;
+		var mob_count = mob_lookup[b][0];
+		repeat(mob_count){
+			var xx = irandom_range(10, ZONE_SIZE - 10);
+			var yy = irandom_range(10, ZONE_SIZE - 10);
+			
+			spawn_new_actor(mob_lookup[b][1][0], xx, yy);
 		}
 	
 		// Update player LOS

@@ -136,14 +136,6 @@ function action_remove_actor(actor){
 		}
 	}
 	
-	// Remove from zone mob list
-	var world_x = manager.actor_registry.player.world_x;
-	var world_y = manager.actor_registry.player.world_y;
-	if (array_contains(manager.zone_mobs[world_x][world_y], actor)){
-		index = array_get_index(manager.zone_mobs[world_x][world_y], actor);
-		array_delete(manager.zone_mobs[world_x][world_y], index, 1);
-	}
-	
 	// Remove from action list
 	var index = array_get_index(manager.action_list, actor);
 	array_delete(manager.action_list, index, 1);
@@ -154,31 +146,36 @@ function action_remove_actor(actor){
 }
 
 
+// DICE ROLL --------------------------------------------------------------------------------------
+function dice_roll(value){
+	return(irandom_range(1, value));
+}
+
+
 // COMBAT ACTIONS ---------------------------------------------------------------------------------
 function combat_get_hit(attacker, defender){
-	// 80% base to-hit chance
-	var base_hit_chance = 0.8;
 	
-	// Get attacker agility + bonuses
-	var att_agility = attacker.agility;
+	// Get attack and defence stats
+	var att_stat = attacker.agility;
+	var def_stat = defender.agility;
 	
-	// Get defender agility + bonuses
-	var def_agility = defender.agility;
-	
-	// Get difference between attacker and defender agility
-	var agility_diff = att_agility - def_agility;		
-	
-	// Difference equals 2% change either way
-	var hit_chance = base_hit_chance + (agility_diff * 0.02);	
-	
-	// Hit chance clamped to prevent auto hit or miss
-	hit_chance = clamp(hit_chance, 0.05, 0.95);
+	// Determine success chance
+	var success_chance = 22 - (round(att_stat / (att_stat + def_stat) * 18) + 2);
 	
 	// Roll dice
-	if (random(1) > hit_chance){
+	var attack_roll = dice_roll(10) + dice_roll(10);
+	
+	// Success comparison
+	if (attack_roll >= success_chance){
+		var txt = $"Att: {att_stat} - Def: {def_stat} - to hit: {success_chance} - roll: {attack_roll}";
+		log_add_entry(txt, C_GREEN);
+		return(true);
+	}
+	else {
+		var txt = $"Att: {att_stat} - Def: {def_stat} - to hit: {success_chance} - roll: {attack_roll}";
+		log_add_entry(txt, C_RED);
 		return(false);
 	}
-	else return(true);
 }
 
 function combat_get_melee_damage_modifier(attacker, defender){

@@ -14,6 +14,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"manager","order":4,"path":"objects/manager/manager.yy",},
+    {"name":"actor_data","order":16,"path":"scripts/actor_data/actor_data.yy",},
     {"name":"actor_functions","order":1,"path":"scripts/actor_functions/actor_functions.yy",},
     {"name":"actor_state_functions","order":8,"path":"scripts/actor_state_functions/actor_state_functions.yy",},
     {"name":"drawing_functions","order":11,"path":"scripts/drawing_functions/drawing_functions.yy",},

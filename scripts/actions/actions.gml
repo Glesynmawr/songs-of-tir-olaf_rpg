@@ -66,7 +66,7 @@ function action_move(grid, move_x, move_y){
 function action_attack_melee(attacker, defender){
 	
 	var first_log = "";
-	var log_col	  = c_ltgrey;
+	var log_col	  = manager.colour_text_main;
 	var second_log = "";
 	
 	var att_name = attacker.name;
@@ -85,32 +85,46 @@ function action_attack_melee(attacker, defender){
 		log_col = c_aqua;
 	}
 	else{
-		
-		// 3) Determine damage dealt
-		var damage_modifier = combat_get_melee_damage_modifier(attacker, defender);
-		var weapon_damage = round(irandom_range(1, 3) * damage_modifier);
-		
-		var weapon_damage = max(0, weapon_damage - defender.armour);
-		
-		defender.hit_points -= weapon_damage;
-		
-		if (weapon_damage > 0){
-			first_log += $" for {weapon_damage} damage!";
-			if (defender.armour > 0){
-				first_log += $" {defender.armour} damage was blocked by armour.";
+		with (defender){
+			// 1) Determine hit location
+			var total_weight = 0;
+			var len = array_length(hit_weights);
+			for (var i = 0; i < len; i ++){
+				total_weight += hit_weights[i];
 			}
-			log_col = c_fuchsia;
-		}
-		else{
-			first_log += $" but does not pierce {defender.name}s armour.";
-			log_col = c_orange;
-		}
 		
-		// 4) Kill target
-		if (defender.hit_points <= 0){
+			var selected_category = noone;
+			var rolled_location = dice_roll(total_weight);
+			var accumulator = 0;
+			for (i = 0; i < len; i ++){
+				accumulator += hit_weights[i];
+				if (rolled_location <= accumulator){
+					selected_category = i;
+					break;
+				}
+			}
 			
-			second_log = $"{defender.name} was killed!";
-			action_remove_actor(defender);
+			// 2) Check location for armour
+			if (selected_category != noone){
+				var part_count = body_plan[selected_category];
+				var specific_part_hit = irandom_range(0, part_count - 1);
+				
+				first_log += $" and hits their ";
+				first_log += manager.body_types[body_index][2][selected_category][specific_part_hit];
+			}
+		
+			// 3) Apply damage - armour (minimum zero)
+		
+		
+			// 4) Kill target OR hitflash
+			if (defender.hit_points <= 0){
+			
+				second_log = $"{defender.name} was killed!";
+				action_remove_actor(defender);
+			}
+			else{
+				set_colour_flash(defender, C_WHITE, 10);
+			}
 		}
 	}
 			

@@ -15,28 +15,6 @@ function context_menu_initialise(){
 			if (w > ww) ww = w;
 		}
 	}
-	else if (inventory.selected == 0){
-		
-		var type = inventory.equ_hover[0];
-		var slot = inventory.equ_hover[1];
-		
-		if (!is_struct(inventory.equipment[type][slot])) return(false);
-		
-		var h1 = inventory.equ_hover[0];
-		var h2 = inventory.equ_hover[1];
-		var type_y = h1 * (manager.text_height * 2);
-		var slot_y = h2 * manager.text_height;
-		
-		content = ["Remove", "Drop"];
-		yy = 0 + (manager.text_height * 3) + type_y + slot_y;
-		xx = floor(manager.screen_width / 4);
-		
-		ww = 0;
-		for (i = 0; i < array_length(content); i ++){
-			var w = string_width(content[i]);
-			if (w > ww) ww = w;
-		}
-	}
 	
 	hh = (array_length(content) * manager.text_height) + (manager.text_height * 4);
 	
@@ -45,37 +23,30 @@ function context_menu_initialise(){
 	state = state_context_menu;
 }
 
-function equipment_initialise(body_layout){
-	var equipment = [];
+function equipment_initialise(equipment_body_layout){
 
-	// Head and neck
-	for (var i = 0; i < body_layout[0]; i ++){
-		equipment[EQUIP.HEAD][i] = noone;
-		equipment[EQUIP.NECK][i] = noone;
-	}
+	for (var cat = 0; cat < array_length(equipment_body_layout); cat ++){
+		var len = array_length(equipment_body_layout[cat]);
 		
-	// Body and back
-	equipment[EQUIP.BODY][0] = noone;
-	equipment[EQUIP.BACK][0] = noone;
-		
-	// Arms and hands
-	for (i = 0; i < body_layout[2]; i ++){
-		equipment[EQUIP.ARMS][i] = noone;
-		equipment[EQUIP.HAND][i] = noone;
-		if (i < 2){
-			equipment[EQUIP.GUNS][i] = noone;
+		for (var ind = 0; ind < len; ind ++){
+			
+			var repeats = 1;
+			switch(cat){
+				case BODY_PART_CATEGORY.HEAD: repeats = HEAD_INDEX.COUNT; break;
+				case BODY_PART_CATEGORY.BODY: repeats = BODY_INDEX.COUNT; break;
+				case BODY_PART_CATEGORY.ARMS: repeats = ARMS_INDEX.COUNT; break;
+				case BODY_PART_CATEGORY.LEGS: repeats = LEGS_INDEX.COUNT; break;
+				case BODY_PART_CATEGORY.WING: repeats = WING_INDEX.COUNT; break;
+				default: repeats = 0;
+			}
+			
+			repeat(repeats){
+				array_push(equipment_body_layout[cat][ind], noone)
+			}
 		}
 	}
-	for (i = 0; i < floor(body_layout[2] / 2); i ++){
-		equipment[EQUIP.MITT][i] = noone;
-	}
-		
-	// Legs
-	for (i = 0; i < floor(body_layout[3] / 2); i ++){
-		equipment[EQUIP.FEET][i] = noone;
-	}
 	
-	return(equipment);
+	return(equipment_body_layout);
 }
 
 function inventory_initialise(){
@@ -83,10 +54,8 @@ function inventory_initialise(){
 	
 	inv = {
 		items:			[],
-		equipment:		[],
 		selected:		1,
 		inv_hover:		0,
-		equ_hover:		[0, 0],
 		context_menu:	noone
 	}
 	
@@ -141,78 +110,7 @@ function inventory_drop_slot(actor, slot, stack){
 
 
 // EQUIPMENT INTERACTION
-function equipment_add_item(actor, item, type, slot){
-	
-	var new_item = variable_clone(item);
-	var empty_prev_slot = false;
-	var empty_next_slot = false;
-	
-	// CHECK ITEM TWO HANDED ----------------------------------------------------------------------
-	// Get Item Two Handed Status
-	if (array_contains(new_item.tags, TAG.TWO_SLOTS)){
-		empty_next_slot = true;
-	}
-	
-	// Check Previous Slot
-	if (actor.inventory.equipment[type][slot] == -3){
-		empty_prev_slot = true;
-	}
-	
-	if (empty_prev_slot == true){
-		
-		var prev_slot = slot - 1;
-		if (prev_slot < 0) prev_slot = array_length(actor.inventory.equipment[type]) - 1;
-		
-		if (is_struct(actor.inventory.equipment[type][prev_slot])){
-			inventory_add_item(actor, actor.inventory.equipment[type][prev_slot]);
-			actor.inventory.equipment[type][prev_slot] = noone;
-		}
-		else if (actor.inventory.equipment[type][prev_slot] == -3){
-			actor.inventory.equipment[type][prev_slot] = noone;
-		}
-	}
-	
-	var next_slot = slot + 1;
-	if (next_slot >= array_length(actor.inventory.equipment[type])) next_slot = 0;
-		
-	if (empty_next_slot == true){
-		
-		if (is_struct(actor.inventory.equipment[type][next_slot])){
-			inventory_add_item(actor, actor.inventory.equipment[type][next_slot]);
-			actor.inventory.equipment[type][next_slot] = noone;
-		}
-		else if (actor.inventory.equipment[type][next_slot] == -3){
-			actor.inventory.equipment[type][next_slot] = noone;
-		}
-	}
-	else{
-		
-		if (actor.inventory.equipment[type][next_slot] == -3){
-			actor.inventory.equipment[type][next_slot] = noone;
-		}
-	}
-	
-	// SET EQUIPMENT ITEM AND REMOVE EXISTING ITEM ------------------------------------------------
-	if (is_struct(actor.inventory.equipment[type][slot])){
-		inventory_add_item(actor, actor.inventory.equipment[type][slot]);
-	}
-	actor.inventory.equipment[type][slot] = noone;
-	actor.inventory.equipment[type][slot] = new_item;
-	if (empty_next_slot){
-		actor.inventory.equipment[type][next_slot] = -3;
-	}
-}
 
-function equipment_drop_slot(actor, type, slot){
-	// Reset equipment slot to noone
-	actor.inventory.equipment[type][slot] = noone;
-	
-	var next_slot = slot + 1;
-	if (next_slot >= array_length(actor.inventory.equipment[type])) next_slot = 0;
-	if (actor.inventory.equipment[type][next_slot] == -3){
-		actor.inventory.equipment[type][next_slot] = noone;
-	}
-}
 
 
 

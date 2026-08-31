@@ -12,12 +12,63 @@ enum BIOME{
 	MARSH
 }
 
-enum BODY_PART{
+
+#region// BODY PLAN ENUMS --------------------------------------------------------------------------------
+enum BODY_PRESET{
+	BASE,
+	HUMANOID,
+	QUADRUPED,
+	WINGED_BIPED
+}
+
+enum BODY_PART_CATEGORY{
 	HEAD,
 	BODY,
 	ARMS,
-	LEGS
+	LEGS,
+	WING
 }
+
+enum HEAD_INDEX{
+	HEAD,
+	FACE,
+	COUNT
+}
+
+enum BODY_INDEX{
+	BODY,
+	BACK,
+	AMMO,
+	COUNT
+}
+
+enum ARMS_INDEX{
+	BRACER,
+	GLOVE,
+	HAND,
+	COUNT
+}
+
+enum LEGS_INDEX{
+	GREAVE,
+	BOOT,
+	COUNT
+}
+
+enum WING_INDEX{
+	COVER,
+	COUNT
+}
+
+enum BODY_PART_STATS{
+	PART_EXISTS,
+	PART_NAME,
+	PART_SLOT_1,
+	PART_SLOT_2,
+	PART_SLOT_3
+}
+
+#endregion
 
 enum DEMEANOUR{
 	AGGRESSIVE,
@@ -29,7 +80,7 @@ enum DEMEANOUR{
 enum EQUIP{
 	HEAD,
 	NECK,
-	BODY,
+	BODY_PRESET,
 	BACK,
 	ARMS,
 	HAND,

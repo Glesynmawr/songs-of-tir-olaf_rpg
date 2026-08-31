@@ -20,12 +20,6 @@ function init_main(){
 	// Set resolution and scale
 	resolution_scale();
 	
-	// Initialise camera limits
-	camera_min_x = 0;
-	camera_max_x = 0;
-	camera_min_y = 0;
-	camera_max_y = 0;
-	
 	// Initialise game states
 	game_state				= noone;
 	game_state_previous		= noone;
@@ -75,10 +69,6 @@ function init_world(){
 
 
 // GAME STATE FUNCTIONS
-function game_state_character_select(){
-	
-}
-
 function game_state_control_menu(){
 	if (!is_rebinding_keys){
 		if (keyboard_check_pressed(controls.key_cancel)){

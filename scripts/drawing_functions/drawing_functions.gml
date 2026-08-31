@@ -582,47 +582,31 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	// EQUIPMENT ----------------------------------------------------------------------------------
 	// Title
 	ui_draw_box_title(equ_x + text_width, y_pos, "Equipment");
-	var j;
 	
-	var type = actor.inventory.equ_hover[0];
-	var slot = actor.inventory.equ_hover[1];
-	yy = y_pos + (text_height * 2);
+	var box_size = sprite_get_width(equipment_box_spr);
 	xx = equ_x + (text_width * 2);
+	yy = y_pos + (text_height * 2);
 	
-	// Equipment slots
-	for (i = 0; i < array_length(actor.inventory.equipment); i ++){
-		draw_text_colour(xx, yy, equip_data[i][0], tc, tc, tc, tc, 1);
-		yy += text_height;
-		
-		for (j = 0; j < array_length(actor.inventory.equipment[i]); j ++){
-			var col = tc;
-			
-			// Text
-			var text = "";
-			if (type == i and slot == j and actor.inventory.selected == 0){
-				text += "> ";
-			}
-			if (actor.inventory.slot_selection != noone){
-				if (actor.inventory.slot_selection[0] == i and actor.inventory.slot_selection[1] == j){
-					text += "> ";
+	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
+		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
+			if (body_part_is_present(actor, cat, ind)){
+				
+				var col = colour_text_main;
+				len = body_part_equipment_slot_count(actor, cat, ind)
+				if (len > 0){
+					repeat(len){
+					
+						draw_sprite(equipment_box_spr, 0, xx, yy);
+						xx += box_size;
+					}
+					
+					draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
 				}
+				
+				xx = equ_x + (text_width * 2);
+				yy += box_size;
 			}
-			if (!is_struct(actor.inventory.equipment[i][j])){
-				if (actor.inventory.equipment[i][j] == -3){
-					var prev_slot = j - 1;
-					if (prev_slot < 0) prev_slot = array_length(actor.inventory.equipment[i]) - 1;
-					text += actor.inventory.equipment[i][prev_slot].name;
-					col = c_dkgrey;
-				}
-				else text += $" - No {equip_data[i][1]} equipped - "
-			}
-			else text += actor.inventory.equipment[i][j].name;
-		
-			draw_text_colour(xx + text_width, yy, text, col, col, col, col, 1);
-			
-			yy += text_height;
 		}
-		yy += text_height;
 	}
 	
 	// Interaction context menu

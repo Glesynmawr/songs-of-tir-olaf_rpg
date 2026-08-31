@@ -4,7 +4,7 @@ function actor_player()constructor{
 	name			= "Player";
 	sprite			= rogue_spr;
 	range			= 7;
-	body_plan		= [1, 1, 2, 2];
+	body_index		= BODY_PRESET.HUMANOID;
 	state			= state_ready_for_inputs;
 	strength		= 50;
 	agility			= 10;
@@ -20,7 +20,7 @@ function actor_reed_weevil()constructor{
 	name			= "Reed weevil";
 	sprite			= reed_weevil_spr;
 	range			= 6;
-	body_plan		= [1, 1, 0, 4];
+	body_index		= BODY_PRESET.HUMANOID;
 	demeanour		= DEMEANOUR.AGGRESSIVE;
 	state			= state_idle;
 	strength		= 20;
@@ -29,4 +29,7 @@ function actor_reed_weevil()constructor{
 	hit_points		= 6;
 	action_speed	= 50;
 }
+
+
+
 

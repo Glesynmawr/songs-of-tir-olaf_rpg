@@ -174,7 +174,7 @@ function state_ready_for_inputs(){
 }
 
 function state_inventory(){
-	var len, slots;
+	var len;
 	
 	if (keyboard_check_pressed(controls.key_right)) inventory.selected ++;
 	if (keyboard_check_pressed(controls.key_left))  inventory.selected --;
@@ -208,46 +208,7 @@ function state_inventory(){
 		}
 	}
 	else {
-		len = array_length(inventory.equipment);
 		
-		if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
-			// Exit INVENTORY state
-			state = state_ready_for_inputs;
-		}
-		else if (keyboard_check_pressed(controls.key_up)){
-			// Move up equipment
-			
-			inventory.equ_hover[1] --;
-			if (inventory.equ_hover[1] < 0){
-				inventory.equ_hover[0] --;
-				if (inventory.equ_hover[0] < 0){
-					inventory.equ_hover[0] += len;
-				}
-				slots = array_length(inventory.equipment[inventory.equ_hover[0]]);
-				inventory.equ_hover[1] += slots;
-			}
-			
-		}
-		else if (keyboard_check_pressed(controls.key_down)){
-			slots = array_length(inventory.equipment[inventory.equ_hover[0]]);
-			
-			// Move down equipment
-			inventory.equ_hover[1] ++;
-			if (inventory.equ_hover[1] >= slots){
-				inventory.equ_hover[0] ++;
-				if (inventory.equ_hover[0] >= len){
-					inventory.equ_hover[0] -= len;
-				}
-				inventory.equ_hover[1] = 0;
-			}
-		}
-		else if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (is_struct(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]])){
-				if (inventory.context_menu == noone){
-					context_menu_initialise();
-				}
-			}
-		}
 	}
 }
 
@@ -277,11 +238,7 @@ function state_context_menu(){
 		// Inventory or equipment
 		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
 			if (inventory.selected == 0){
-				var type = inventory.equ_hover[0];
-				var slot = inventory.equ_hover[1];
-				spawn_existing_item(inventory.equipment[type][slot], 1, x_pos, y_pos);
 				
-				equipment_drop_slot(self, type, slot);
 			}
 			else if (inventory.selected == 1){
 				
@@ -317,11 +274,7 @@ function state_context_menu(){
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
 			// Equipment only
-			var item_to_remove = variable_clone(inventory.equipment[inventory.equ_hover[0]][inventory.equ_hover[1]]);
-			equipment_drop_slot(self, inventory.equ_hover[0], inventory.equ_hover[1]);
-			if (is_struct(item_to_remove)){
-				inventory_add_item(self, item_to_remove);
-			}
+			
 			
 			// Exit context menu
 			inventory.context_menu = noone;

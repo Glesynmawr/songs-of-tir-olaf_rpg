@@ -355,6 +355,10 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		action_list_clear_all(false);
 	
 		// Set game grid
+		if (zone_map[world_x][world_y] == noone){
+			zone_map[world_x][world_y] = zone_map_generate(world_grid, world_x, world_y);
+			initialise_item_grid(zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
+		}
 		game_grid = zone_map[world_x][world_y];
 		map_mode  = MAP_MODE.ZONE;
 	
@@ -372,12 +376,14 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Spawn mobs
 		var b = world_map[world_x][world_y].biome;
-		var mob_count = mob_lookup[b][0];
-		repeat(mob_count){
-			var xx = irandom_range(10, ZONE_SIZE - 10);
-			var yy = irandom_range(10, ZONE_SIZE - 10);
+		if (mob_lookup[b] != noone){
+			var mob_count = mob_lookup[b][0];
+			repeat(mob_count){
+				var xx = irandom_range(10, ZONE_SIZE - 10);
+				var yy = irandom_range(10, ZONE_SIZE - 10);
 			
-			spawn_new_actor(mob_lookup[b][1][0], xx, yy);
+				spawn_new_actor(mob_lookup[b][1][0], xx, yy);
+			}
 		}
 	
 		// Update player LOS

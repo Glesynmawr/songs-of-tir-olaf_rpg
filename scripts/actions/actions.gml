@@ -87,31 +87,27 @@ function action_attack_melee(attacker, defender){
 	else{
 		with (defender){
 			// 1) Determine hit location
-			var total_weight = 0;
-			var len = array_length(hit_weights);
-			for (var i = 0; i < len; i ++){
-				total_weight += hit_weights[i];
-			}
+			//var total_weight = 0;
+			//var len = array_length(hit_weights);
+			//for (var i = 0; i < len; i ++){
+			//	total_weight += hit_weights[i];
+			//}
 		
-			var selected_category = noone;
-			var rolled_location = dice_roll(total_weight);
-			var accumulator = 0;
-			for (i = 0; i < len; i ++){
-				accumulator += hit_weights[i];
-				if (rolled_location <= accumulator){
-					selected_category = i;
-					break;
-				}
-			}
+			//var selected_category = noone;
+			//var rolled_location = dice_roll(total_weight);
+			//var accumulator = 0;
+			//for (i = 0; i < len; i ++){
+			//	accumulator += hit_weights[i];
+			//	if (rolled_location <= accumulator){
+			//		selected_category = i;
+			//		break;
+			//	}
+			//}
 			
 			// 2) Check location for armour
-			if (selected_category != noone){
-				var part_count = body_plan[selected_category];
-				var specific_part_hit = irandom_range(0, part_count - 1);
+			//if (selected_category != noone){
 				
-				first_log += $" and hits their ";
-				first_log += manager.body_types[body_index][2][selected_category][specific_part_hit];
-			}
+			//}
 		
 			// 3) Apply damage - armour (minimum zero)
 		

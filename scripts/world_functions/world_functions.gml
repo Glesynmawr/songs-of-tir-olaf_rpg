@@ -42,6 +42,18 @@ function world_generate(){
 	zone_function[BIOME.WATER]				= zone_river;
 	zone_function[BIOME.MANGROVE]			= zone_standard;
 	zone_function[BIOME.MARSH]				= zone_standard;
+	
+	// Zone lakes
+	zone_lakes[BIOME.MOUNTAIN]			= noone;
+	zone_lakes[BIOME.HILL]				= noone;
+	zone_lakes[BIOME.CANYON]			= noone;
+	zone_lakes[BIOME.DESERT]			= noone;
+	zone_lakes[BIOME.SCRUB]				= noone;
+	zone_lakes[BIOME.SWAMP]				= [0, 2, 4, 0.15]
+	zone_lakes[BIOME.DENSE_MANGROVE]	= [0, 1, 3, 0.20]
+	zone_lakes[BIOME.WATER]				= noone;
+	zone_lakes[BIOME.MANGROVE]			= [0, 1, 4, 0.20]
+	zone_lakes[BIOME.MARSH]				= [1, 2, 6, 0.15]
 											
 	// Terrain								
 	terrain_lookup[BIOME.MOUNTAIN]			= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
@@ -50,10 +62,10 @@ function world_generate(){
 	terrain_lookup[BIOME.DESERT]			= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
 	terrain_lookup[BIOME.SCRUB]				= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.SWAMP]				= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
-	terrain_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt, 60], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt,  60], [tile_zone_water, 100]];
 	terrain_lookup[BIOME.WATER]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.MANGROVE]			= [[tile_zone_rocks, 2], [tile_zone_tree, 10], [tile_zone_dirt, 60], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.MARSH]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_dirt, 50], [tile_zone_marsh, 100]];
+	terrain_lookup[BIOME.MANGROVE]			= [[tile_zone_rocks, 2], [tile_zone_tree, 10], [tile_zone_dirt,  60], [tile_zone_water, 100]];
+	terrain_lookup[BIOME.MARSH]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_water, 25], [tile_zone_dirt, 50], [tile_zone_marsh, 100]];
 	
 	// Zone mobs
 	mob_lookup[BIOME.MOUNTAIN]			= noone;
@@ -87,13 +99,9 @@ function world_generate(){
 	
 	// Generate zone maps
 	zone_map  = [];
-	zone_mobs = [];
 	for (var xx = 0; xx < MAP_WIDTH; xx ++){
 		for (var yy = 0; yy < MAP_HEIGHT; yy ++){
-			var new_zone = zone_map_generate(world_grid, xx, yy);
-			zone_map[xx][yy]  = new_zone[0];
-			zone_mobs[xx][yy] = new_zone[1];
-			initialise_item_grid(zone_map[xx][yy], ZONE_SIZE, ZONE_SIZE);
+			zone_map[xx][yy]  = noone;
 		}
 	}
 	
@@ -371,12 +379,11 @@ function autotile_map(grid){
 }
 
 function zone_map_generate(grid, cell_x, cell_y){
-	var tile  = grid[cell_x][cell_y].biome;
-	var index = grid[cell_x][cell_y].index;
-	var dng   = grid[cell_x][cell_y].dungeon;
-	var mobs  = noone;
+	var biome_index		= grid[cell_x][cell_y].biome;
+	var autotile_index	= grid[cell_x][cell_y].index;
+	var has_dungeon		= grid[cell_x][cell_y].dungeon;
 	
-	return([zone_function[tile](index, dng, tile), mobs]);
+	return(zone_function[biome_index](autotile_index, has_dungeon, biome_index));
 }
 
 function dungeons_add_to_world(grid){

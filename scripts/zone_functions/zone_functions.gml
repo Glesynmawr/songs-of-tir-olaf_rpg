@@ -197,27 +197,77 @@ function zone_river(world_index, dungeon, terrain){
 	return(temp_list);
 }
 
-function zone_standard(world_index, dungeon, terrain){
-	var temp_list = initialise_temp_list();
+function zone_standard(world_index, dungeon, biome_index){
+	var new_map = initialise_temp_list();
 	
 	if (dungeon){
-		temp_list = dungeons_add_to_zone(temp_list, terrain);
+		new_map = dungeons_add_to_zone(new_map, biome_index);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			if (temp_list[xx][yy] == noone){
-				var new_tile = tile_lookup(terrain_lookup[terrain]);
-				temp_list[xx][yy] = generate_zone_tile(new_tile);
+			if (new_map[xx][yy] == noone){
+				var new_tile = tile_lookup(terrain_lookup[biome_index]);
+				new_map[xx][yy] = generate_zone_tile(new_tile);
+			}
+		}
+	}
+	
+	// Add lakes
+	if (zone_lakes[biome_index] != noone){
+		var lakes_min = zone_lakes[biome_index][0];
+		var lakes_max = zone_lakes[biome_index][1];
+		var lake_count = irandom_range(lakes_min, lakes_max);
+		
+		var min_radius				= zone_lakes[biome_index][2];
+		var grow_diminish_amount	= zone_lakes[biome_index][3];
+		
+		repeat(lake_count){
+			var grow_count		= 0;
+			var grow_chance		= 1;
+			var lake_start_x	= irandom(ZONE_SIZE);
+			var lake_start_y	= irandom(ZONE_SIZE);
+		
+			var lake_temp_list;
+			lake_temp_list[0] = [lake_start_x, lake_start_y];
+		
+			while(array_length(lake_temp_list) > 0){
+				var candidate_list = [];
+			
+				grow_count ++;
+				if (grow_count > min_radius){
+					grow_chance -= grow_diminish_amount;
+				}
+			
+				for (var i = 0; i < array_length(lake_temp_list); i ++){
+				
+					var cell_x = lake_temp_list[i][0];
+					var cell_y = lake_temp_list[i][1];
+				
+					for (var j = 0; j < 4; j ++){
+						var dir = j * 90;
+						xx = cell_x + lengthdir_x(1, dir);
+						yy = cell_y + lengthdir_y(1, dir);
+						var in_bounds = grid_check_position_in_bounds(new_map, xx, yy);
+						if (in_bounds){
+							var chance_roll = random(1);
+							if (chance_roll < grow_chance and new_map[xx][yy].tile != "water"){
+								array_push(candidate_list, [xx, yy]);
+								new_map[xx][yy] = generate_zone_tile(tile_zone_water);
+							}
+						}
+					}
+				}
+				lake_temp_list = candidate_list;
 			}
 		}
 	}
 	
 	// Water Feature Placement
-	temp_list = autotile_map(temp_list);
-	temp_list = water_tile_placement(temp_list);
+	new_map = autotile_map(new_map);
+	new_map = water_tile_placement(new_map);
 	
-	return(temp_list);
+	return(new_map);
 }
 
 // Dungeon placement

@@ -125,6 +125,11 @@ infobox_width   = ui_width;
 infobox_height  = screen_height - minimap_height - log_height + 10;
 infobox_y       = minimap_height - 5;
 
+// Inventory and equipment
+equipment_box_sprite_size = sprite_get_width(equipment_box_spr);
+equipment_hovered_x_pos = noone;
+equipment_hovered_y_pos = noone;
+
 #endregion
 
 #region// SHADER SET-UP ---------------------------------------------------------------------------
@@ -152,33 +157,29 @@ actor_registry = {
 action_list = [];
 
 // Base body plan (all FALSE)
-body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, "Head"], [false, "Left head"], [false, "Right head"]];
-body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.BODY] = [[false, "Body"]];
-body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.ARMS] = [[false, "Right arm"], [false, "Left arm"], [false, "Right front arm"], [false, "Left front arm"], [false, "Right rear arm"], [false, "Left rear arm"]];
-body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.LEGS] = [[false, "Right leg"], [false, "Left leg"], [false, "Right front leg"], [false, "Left front leg"], [false, "Right rear leg"], [false, "Left rear leg"]];
-body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.WING] = [[false, "Right wing"], [false, "Left wing"]]
+body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
+body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.BODY] = [[false, false, "Body"]];
+body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
+body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.LEGS] = [[false, false, "Right leg"], [false, false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
 
 // Presets
 // HUMANOID
-body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.HEAD] = [[true, "Head"], [false, "Left head"], [false, "Right head"]];
-body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.BODY] = [[true, "Body"]];
-body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.ARMS] = [[true, "Right arm"], [true, "Left arm"], [false, "Right front arm"], [false, "Left front arm"], [false, "Right rear arm"], [false, "Left rear arm"]];
-body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.LEGS] = [[true, "Right leg"], [true, "Left leg"], [false, "Right front leg"], [false, "Left front leg"], [false, "Right rear leg"], [false, "Left rear leg"]];
-body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.WING] = [[false, "Right wing"], [false, "Left wing"]]
+body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.HEAD] = [[true, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
+body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
+body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.ARMS] = [[true, true,  "Right arm"], [true, true,  "Left arm"], [false, true,  "Right front arm"], [false, true,  "Left front arm"], [false, true,  "Right rear arm"], [false, true,  "Left rear arm"]];
+body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.LEGS] = [[true, false, "Right leg"], [true, false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
 
 // QUADRUPED
-body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.HEAD] = [[true, "Head"], [false, "Left head"], [false, "Right head"]];
-body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.BODY] = [[true, "Body"]];
-body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.ARMS] = [[false, "Right arm"], [false, "Left arm"], [false, "Right front arm"], [false, "Left front arm"], [false, "Right rear arm"], [false, "Left rear arm"]];
-body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.LEGS] = [[false, "Right leg"], [false, "Left leg"], [true, "Right front leg"], [true, "Left front leg"], [true, "Right rear leg"], [true, "Left rear leg"]];
-body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.WING] = [[false, "Right wing"], [false, "Left wing"]]
+body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.HEAD] = [[true, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
+body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
+body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
+body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.LEGS] = [[false, false, "Right leg"], [false, false, "Left leg"], [true, false,  "Right front leg"], [true, false,  "Left front leg"], [true,  false, "Right rear leg"], [true,  false, "Left rear leg"]];
 
 // WINGED BIPED
-body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.HEAD] = [[true, "Head"], [false, "Left head"], [false, "Right head"]];
-body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.BODY] = [[true, "Body"]];
-body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.ARMS] = [[false, "Right arm"], [false, "Left arm"], [false, "Right front arm"], [false, "Left front arm"], [false, "Right rear arm"], [false, "Left rear arm"]];
-body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true, "Right leg"], [true, "Left leg"], [false, "Right front leg"], [false, "Left front leg"], [false, "Right rear leg"], [false, "Left rear leg"]];
-body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.WING] = [[true, "Right wing"], [true, "Left wing"]]
+body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.HEAD] = [[true, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
+body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
+body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
+body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  false, "Right leg"], [true,  false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
 
 #endregion
 

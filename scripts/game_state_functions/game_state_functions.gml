@@ -51,7 +51,26 @@ function init_world(){
 	// Player
 	spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
 	set_player_los(game_grid, actor_registry.player);
-
+	
+	spawn_new_item(item_hat1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_hat2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_mask1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_mask2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_armour1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_armour2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_cloak1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_cloak2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_vambrace1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_vambrace2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_glove2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_greave1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_greave2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_boot1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+	
 	// Game log
 	initialise_log();
 

@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"equipment_box_spr",
   "bboxMode":0,
-  "bbox_bottom":21,
+  "bbox_bottom":19,
   "bbox_left":0,
-  "bbox_right":21,
+  "bbox_right":19,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":22,
+  "height":20,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"cf06eca5-9fd4-4eab-ad85-d6b04d6714aa","blendMode":0,"displayName":"default","isLocked":false,"name":"cf06eca5-9fd4-4eab-ad85-d6b04d6714aa","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":22,
+  "width":20,
 }

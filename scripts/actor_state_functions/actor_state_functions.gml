@@ -176,14 +176,16 @@ function state_ready_for_inputs(){
 function state_inventory(){
 	var len;
 	
-	if (keyboard_check_pressed(controls.key_right)) inventory.selected ++;
-	if (keyboard_check_pressed(controls.key_left))  inventory.selected --;
-	inventory.selected = clamp(inventory.selected, 0, 1);
+	// Toggle between inventory/equipment
+	if (keyboard_check_pressed(controls.key_inventory)) inventory.selected = !inventory.selected;
 	
+	// Exit inventory state
+	if (keyboard_check_pressed(controls.key_cancel))    state = state_ready_for_inputs;
+
 	if (inventory.selected == 1){
 		len = array_length(inventory.items);
 		
-		if (keyboard_check_pressed(controls.key_inventory) or keyboard_check_pressed(controls.key_cancel)){
+		if (keyboard_check_pressed(controls.key_cancel)){
 			// Exit INVENTORY state
 			state = state_ready_for_inputs;
 		}
@@ -193,7 +195,7 @@ function state_inventory(){
 			if (inventory.inv_hover < 0){
 				inventory.inv_hover += len;
 			}
-		}
+		}    
 		else if (keyboard_check_pressed(controls.key_down)){
 			// Move down inventory
 			inventory.inv_hover ++;
@@ -208,7 +210,51 @@ function state_inventory(){
 		}
 	}
 	else {
-		
+		if (keyboard_check_pressed(controls.key_up)){
+			// Move up inventory
+			var prev_slot = body_part_find_prev_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			if (prev_slot != noone){
+				inventory.equ_hover[0] = prev_slot[0];
+				inventory.equ_hover[1] = prev_slot[1];
+				
+				var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+				if (inventory.equ_hover[2] > max_slot) inventory.equ_hover[2] = max_slot;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_down)){
+			// Move down inventory
+			var next_slot = body_part_find_next_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			if (next_slot != noone){
+				inventory.equ_hover[0] = next_slot[0];
+				inventory.equ_hover[1] = next_slot[1];
+
+				var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+				if (inventory.equ_hover[2] > max_slot) inventory.equ_hover[2] = max_slot;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_right)){
+			var min_slot = BODY_PART_STATS.PART_SLOT_1;
+			var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			
+			inventory.equ_hover[2] ++;
+			if (inventory.equ_hover[2] > max_slot){
+				inventory.equ_hover[2] = min_slot;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_left)){
+			var min_slot = BODY_PART_STATS.PART_SLOT_1;
+			var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			
+			inventory.equ_hover[2] --;
+			if (inventory.equ_hover[2] < min_slot){
+				inventory.equ_hover[2] = max_slot;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			if (inventory.context_menu == noone){
+				equipment_context_menu_initialise();
+			}
+		}
 	}
 }
 
@@ -237,10 +283,7 @@ function state_context_menu(){
 		
 		// Inventory or equipment
 		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
-			if (inventory.selected == 0){
-				
-			}
-			else if (inventory.selected == 1){
+			if (inventory.selected == 1){
 				
 				// Spawn item on ground
 				spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
@@ -248,33 +291,35 @@ function state_context_menu(){
 				// DROP item
 				inventory_drop_slot(self, inventory.inv_hover, 1);
 			}
+			else{
+				var target_cat     = inventory.equ_hover[0];
+				var target_ind     = inventory.equ_hover[1];
+				var target_slot    = inventory.equ_hover[2];
+				
+				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
+				
+				spawn_existing_item(item_to_move, , x_pos, y_pos);
+				body_plan[target_cat][target_ind][target_slot] = noone;
+			}
 			// Exit context menu
 			inventory.context_menu = noone;
 			state = state_inventory;
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
 			
-			var item_to_equip = variable_clone(inventory.items[inventory.inv_hover]);
-			var target_type = item_to_equip.slot[0];
-			if (array_length(inventory.equipment[target_type]) > 1){
-				// Enter slot selection state
-				inventory.context_menu = noone;
-				inventory.slot_selection = [target_type, 0];	
-				state = state_slot_selection;
-			}
-			else{
-				// Equip item
-				inventory_drop_slot(self, inventory.inv_hover, 1);
-				equipment_add_item(self, item_to_equip, target_type, 0);
-			
-				// Exit context menu
-				inventory.context_menu = noone;
-				state = state_inventory;
-			}
+			// Initialise slot select menu
+			equipment_slot_select_initialise()
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
 			// Equipment only
+			var target_cat     = inventory.equ_hover[0];
+			var target_ind     = inventory.equ_hover[1];
+			var target_slot    = inventory.equ_hover[2];
+				
+			var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
 			
+			inventory_add_item(self, item_to_move);
+			body_plan[target_cat][target_ind][target_slot] = noone;
 			
 			// Exit context menu
 			inventory.context_menu = noone;
@@ -284,34 +329,39 @@ function state_context_menu(){
 }
 
 function state_slot_selection(){
-	var len = array_length(inventory.equipment[inventory.slot_selection[0]]);
+	var len = array_length(inventory.slot_select_menu[0]);
+	
 	if (keyboard_check_pressed(controls.key_cancel)){
 		
-		// Exit slot select state
-		inventory.slot_selection = noone;
-		state = state_inventory;
+		// Exit context menu
+		inventory.slot_select_menu = noone;
+		state = state_context_menu;
 	}
-	if (keyboard_check_pressed(controls.key_up)){
-		inventory.slot_selection[1] --;
-		if (inventory.slot_selection[1] < 0){
-			inventory.slot_selection[1] += len;
+	else if (keyboard_check_pressed(controls.key_up)){
+		inventory.slot_select_menu[5] --;
+		if (inventory.slot_select_menu[5] < 0){
+			inventory.slot_select_menu[5] += len;
 		}
 	}
-	if (keyboard_check_pressed(controls.key_down)){
-		inventory.slot_selection[1] ++;
-		if (inventory.slot_selection[1] >= len){
-			inventory.slot_selection[1] -= len;
+	else if (keyboard_check_pressed(controls.key_down)){
+		inventory.slot_select_menu[5] ++;
+		if (inventory.slot_select_menu[5] >= len){
+			inventory.slot_select_menu[5] -= len;
 		}
 	}
-	if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var type = inventory.slot_selection[0];
-		var slot = inventory.slot_selection[1];
-		var item_to_copy = variable_clone(inventory.items[inventory.inv_hover]);
-		equipment_add_item(self, item_to_copy, type, slot);
-		inventory_drop_slot(self, inventory.inv_hover, 1);
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var menu_hover   = inventory.slot_select_menu[5];
 		
-		// Exit slot select state
-		inventory.slot_selection = noone;
+		var item_to_move = variable_clone(inventory.items[inventory.inv_hover]);
+		var dest_cat     = inventory.slot_select_menu[0][menu_hover][1];
+		var dest_ind     = inventory.slot_select_menu[0][menu_hover][2];
+		var dest_slot    = inventory.slot_select_menu[0][menu_hover][3];
+		
+		equipment_add_item(self, item_to_move, dest_cat, dest_ind, dest_slot)
+		inventory_drop_slot(self, inventory.inv_hover, inventory.items[inventory.inv_hover].stack);
+		
+		inventory.context_menu		= noone;
+		inventory.slot_select_menu	= noone;
 		state = state_inventory;
 	}
 }

@@ -1,9 +1,5 @@
 
 // GAME DRAWING -----------------------------------------------------------------------------------
-function game_draw_character_select(){
-	
-}
-
 function game_draw_grid(){
 	
 	// Get grid size
@@ -499,6 +495,46 @@ function draw_context_menu(actor, x_pos, y_pos, width, height){
 	}
 }
 
+function draw_context_slot_select_menu(actor, x_pos, y_pos, width, height){
+	
+	var xx, yy;
+	var menu_list = actor.inventory.slot_select_menu;
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_3 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} to exit / {key_3} to select item";
+	
+	var box_width = max(width, string_width(control_list));
+	box_width += (text_width * 6);
+	
+	// Draw box border
+	ui_draw_box(x_pos, y_pos, box_width, height);
+	
+	// Draw box title 
+	ui_draw_box_title(x_pos + text_width, y_pos, "Select Slot");
+	
+	// Draw context menu choices
+	for (var i = 0; i < array_length(menu_list[0]); i ++){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + (text_height * 2) + (text_height * i);
+		var text = "";
+		if (menu_list[5] == i){
+			text += "> ";
+		}
+		text += string(menu_list[0][i]);
+		
+		draw_text_colour(xx, yy, text, colour_text_main, colour_text_main, colour_text_main, colour_text_main, 1);
+	}
+	
+	// Draw box controls
+	if (show_controls){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + height - text_height;
+		ui_draw_box_controls(xx, yy, control_list);
+	}
+}
+
 function draw_game_log(x_pos, y_pos, width, height){
 	
 	ui_draw_box(x_pos, y_pos, width, height);
@@ -550,7 +586,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var key_1 = keybinding_get_text(controls.key_cancel);
 	var key_2 = keybinding_get_text(controls.key_inventory);
 	var key_3 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} or {key_2} to exit / {key_3} to select";
+	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
 	
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height, , control_list);
@@ -576,32 +612,100 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			text += actor.inventory.items[i].name;
 			
 			draw_text_colour(xx + text_width, yy, text, tc, tc, tc, tc, 1);
+			
 		}
+		draw_text_colour(text_width, screen_height - 70, string(actor.inventory.items[actor.inventory.inv_hover]), tc, tc, tc, tc, 1);
 	}
 	
 	// EQUIPMENT ----------------------------------------------------------------------------------
 	// Title
 	ui_draw_box_title(equ_x + text_width, y_pos, "Equipment");
 	
-	var box_size = sprite_get_width(equipment_box_spr);
+	var box_size = equipment_box_sprite_size;
+	
+	
+	// Held equipment
+	xx = 10 + (text_width * 2);
+	yy = y_pos + (text_height * 2);
+	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
+		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
+			if (body_part_is_present(actor, cat, ind)){
+				if (body_part_has_hand(actor, cat, ind)){
+					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, C_YELLOW, 1);
+					yy += box_size;
+				}
+			}
+		}
+	}
+	
+	// Aux equipment
+	xx = 34 + (text_width * 2);
+	yy = y_pos + (text_height * 2);
+	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
+		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
+			if (body_part_is_present(actor, cat, ind)){
+				if (body_part_has_hand(actor, cat, ind)){
+					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, C_CYAN, 1);
+					yy += box_size;
+				}
+			}
+		}
+	}
+	
+	// Worn Equipment
 	xx = equ_x + (text_width * 2);
 	yy = y_pos + (text_height * 2);
-	
 	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
 		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
 			if (body_part_is_present(actor, cat, ind)){
 				
-				var col = colour_text_main;
-				len = body_part_equipment_slot_count(actor, cat, ind)
-				if (len > 0){
-					repeat(len){
+				var from = BODY_PART_STATS.PART_SLOT_1;
+				var to   = array_length(actor.body_plan[cat][ind]);
+				
+				for (var slot = from; slot < to; slot ++){
 					
-						draw_sprite(equipment_box_spr, 0, xx, yy);
-						xx += box_size;
+					if (slot >= BODY_PART_STATS.PART_HAND_SLOT){
+						if (!body_part_has_hand(actor, cat, ind)){
+							continue;
+						}
 					}
 					
-					draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
+					var col = C_LTGREY;
+					if (slot == BODY_PART_STATS.PART_HAND_SLOT) col = C_RED;
+					if (slot == BODY_PART_STATS.PART_AUX_SLOT)  col = C_PURPLE;
+					
+					if (actor.inventory.equ_hover[0] == cat and actor.inventory.equ_hover[1] == ind and actor.inventory.equ_hover[2] == slot){
+						col = C_WHITE;
+						
+						equipment_hovered_x_pos = xx;
+						equipment_hovered_y_pos = yy;
+					}
+					
+					// Draw equipment box
+					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
+					draw_text_colour(xx, yy, $"{cat},{ind},{slot}", C_PINK, C_PINK, C_PINK, C_PINK, 1);
+					
+					
+					// Draw equipment sprite
+					if (is_struct(actor.body_plan[cat][ind][slot])){
+						
+						var slot_item = actor.body_plan[cat][ind][slot];
+
+						var item_sprite = slot_item.sprite_index;
+						var item_index  = slot_item.image_index;
+						
+						var sheet_x = (item_index mod 2) * 16;
+						var sheet_y = (item_index div 2) * 16;
+						
+						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, 16, 16, xx + 3, yy + 3);
+					}
+					
+					// Increment box X position
+					xx += box_size;
 				}
+				
+				var col = colour_text_main;
+				draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
 				
 				xx = equ_x + (text_width * 2);
 				yy += box_size;
@@ -610,9 +714,15 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	}
 	
 	// Interaction context menu
-	var menu = actor.inventory.context_menu;
-	if (menu != noone){
-		draw_context_menu(actor, menu[1], menu[2], menu[3], menu[4]);
+	var menu_cont = actor.inventory.context_menu;
+	var menu_equi = actor.inventory.slot_select_menu;
+	if (menu_cont != noone and menu_equi == noone){
+		draw_context_menu(actor, menu_cont[1], menu_cont[2], menu_cont[3], menu_cont[4]);
+	}
+	
+	// Equipment slot context menu
+	if (menu_equi != noone){
+		draw_context_slot_select_menu(actor, menu_equi[1], menu_equi[2], menu_equi[3], menu_equi[4]);
 	}
 }
 

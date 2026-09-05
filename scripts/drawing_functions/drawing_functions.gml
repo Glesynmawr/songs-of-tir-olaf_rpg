@@ -522,7 +522,7 @@ function draw_context_slot_select_menu(actor, x_pos, y_pos, width, height){
 		if (menu_list[5] == i){
 			text += "> ";
 		}
-		text += string(menu_list[0][i]);
+		text += menu_list[0][i][0];
 		
 		draw_text_colour(xx, yy, text, colour_text_main, colour_text_main, colour_text_main, colour_text_main, 1);
 	}
@@ -612,9 +612,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			text += actor.inventory.items[i].name;
 			
 			draw_text_colour(xx + text_width, yy, text, tc, tc, tc, tc, 1);
-			
 		}
-		draw_text_colour(text_width, screen_height - 70, string(actor.inventory.items[actor.inventory.inv_hover]), tc, tc, tc, tc, 1);
 	}
 	
 	// EQUIPMENT ----------------------------------------------------------------------------------
@@ -683,8 +681,6 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 					
 					// Draw equipment box
 					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
-					draw_text_colour(xx, yy, $"{cat},{ind},{slot}", C_PINK, C_PINK, C_PINK, C_PINK, 1);
-					
 					
 					// Draw equipment sprite
 					if (is_struct(actor.body_plan[cat][ind][slot])){
@@ -693,11 +689,10 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 
 						var item_sprite = slot_item.sprite_index;
 						var item_index  = slot_item.image_index;
+						var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
+						var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 						
-						var sheet_x = (item_index mod 2) * 16;
-						var sheet_y = (item_index div 2) * 16;
-						
-						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, 16, 16, xx + 3, yy + 3);
+						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + 3, yy + 3);
 					}
 					
 					// Increment box X position

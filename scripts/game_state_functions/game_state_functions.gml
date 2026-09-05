@@ -41,9 +41,20 @@ function init_main(){
 }
 	
 function init_world(){
+	
+	// Actor registry - Active actors only
+	actor_registry = {
+		actor_list:	[],
+		player:		noone
+	}
+	action_list = [];
+
 	// Create world and set starting map
 	world_map = world_generate();
 	game_grid = world_map;
+	
+	// Game state
+	game_state = game_state_world;
 	
 	// Set player entry position
 	entry_pos = [player_start_x, player_start_y];
@@ -81,9 +92,12 @@ function init_world(){
 	// Move speed - multiplier
 	actor_move_speed = 0.2;
 
-	// Actoion list and turn order
+	// Action list and turn order
 	action_list = [];
 	turn_order_initialise();
+	
+	// Go to world
+	goto_world();
 }
 
 
@@ -195,7 +209,7 @@ function game_state_main_menu(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var txt = main_menu[main_menu_hover];
 		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
+			transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
 		}
 		else if (txt == "Load game"){
 			

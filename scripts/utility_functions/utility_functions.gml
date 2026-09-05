@@ -274,16 +274,16 @@ function transition_update(){
 		
 		switch(transition.type){
 			
+			case TRANSITION.CONTROL_EXIT:											
+				game_state = control_state_previous;								break;	
+							
+			
 			case TRANSITION.CONTROL_MENU:	
 				control_state_previous = game_state;
 				game_state = init_control_menu;										break;
-																					
-			case TRANSITION.CONTROL_EXIT:											
-				game_state = control_state_previous;								break;	
-																					
+																																		
 			case TRANSITION.GAME_BOOT:												
-				game_state = game_state_main_menu;									
-				init_world();														break;
+				game_state = game_state_main_menu;									break;
 				
 			case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(dungeon_index, true);	break;
 			
@@ -296,9 +296,15 @@ function transition_update(){
 			
 			case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(dungeon_index, false);	break;
 			
-			case TRANSITION.GAME_QUIT:		game_end();								break;
+			case TRANSITION.GAME_QUIT:		    game_end();							break;
 			
-			case TRANSITION.GAME_WORLD:		grid_set_visible(manager.game_grid, false) goto_world(); break;
+			case TRANSITION.GAME_RESET:			game_state = game_state_main_menu;	break;
+			
+			case TRANSITION.GAME_START_NEW:		init_world();						break;
+			
+			case TRANSITION.GAME_WORLD:			
+				grid_set_visible(manager.game_grid, false) 
+				goto_world();														break;
 			
 			case TRANSITION.GAME_ZONE:		
 				grid_set_visible(manager.game_grid, false) 

@@ -43,18 +43,29 @@ function world_generate(){
 	zone_function[BIOME.MANGROVE]			= zone_standard;
 	zone_function[BIOME.MARSH]				= zone_standard;
 	
-	// Zone lakes
-	zone_lakes[BIOME.MOUNTAIN]			= noone;
-	zone_lakes[BIOME.HILL]				= noone;
-	zone_lakes[BIOME.CANYON]			= noone;
-	zone_lakes[BIOME.DESERT]			= noone;
-	zone_lakes[BIOME.SCRUB]				= noone;
-	zone_lakes[BIOME.SWAMP]				= [0, 2, 4, 0.15]
-	zone_lakes[BIOME.DENSE_MANGROVE]	= [0, 1, 3, 0.20]
-	zone_lakes[BIOME.WATER]				= noone;
-	zone_lakes[BIOME.MANGROVE]			= [0, 1, 4, 0.20]
-	zone_lakes[BIOME.MARSH]				= [1, 2, 6, 0.15]
-											
+	// Zone Features
+	zone_autotile_feature[BIOME.MOUNTAIN]		= noone;
+	zone_autotile_feature[BIOME.HILL]			= noone;
+	zone_autotile_feature[BIOME.CANYON]			= noone;
+	zone_autotile_feature[BIOME.DESERT]			= noone;
+	zone_autotile_feature[BIOME.SCRUB]			= noone;
+	zone_autotile_feature[BIOME.SWAMP]			= noone;
+	zone_autotile_feature[BIOME.DENSE_MANGROVE]	= noone;
+	zone_autotile_feature[BIOME.WATER]			= noone;
+	zone_autotile_feature[BIOME.MANGROVE]		= noone;
+	zone_autotile_feature[BIOME.MARSH]			= [[1, 1, 1, 1, 2, 3], tile_zone_water, 6, 0.15]
+	
+	zone_clump_feature[BIOME.MOUNTAIN]			= noone;
+	zone_clump_feature[BIOME.HILL]				= noone;
+	zone_clump_feature[BIOME.CANYON]			= noone;
+	zone_clump_feature[BIOME.DESERT]			= noone;
+	zone_clump_feature[BIOME.SCRUB]				= noone;
+	zone_clump_feature[BIOME.SWAMP]				= noone;
+	zone_clump_feature[BIOME.DENSE_MANGROVE]	= noone;
+	zone_clump_feature[BIOME.WATER]				= noone;
+	zone_clump_feature[BIOME.MANGROVE]			= noone;
+	zone_clump_feature[BIOME.MARSH]				= [[1, 1, 1, 2, 2, 3], tile_zone_tree, 8, 1]
+	
 	// Terrain								
 	terrain_lookup[BIOME.MOUNTAIN]			= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
 	terrain_lookup[BIOME.HILL]				= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
@@ -106,15 +117,8 @@ function world_generate(){
 	}
 	
 	// Set player start position
-	for (xx = 0; xx < MAP_WIDTH; xx ++){
-		for (yy = 0; yy < MAP_HEIGHT; yy ++){
-			if (world_grid[xx][yy].tile == "marsh"){
-				player_start_x = xx;
-				player_start_y = yy;
-				break;
-			}
-		}
-	}
+	player_start_x = 0;
+	player_start_y = 0;
 	
 	return(world_grid);
 }

@@ -149,12 +149,7 @@ uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
 #endregion
 
 #region// ACTORS ----------------------------------------------------------------------------------
-// Actor registry - Active actors only
-actor_registry = {
-	actor_list:	[],
-	player:		noone
-}
-action_list = [];
+
 
 // Base body plan (all FALSE)
 body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];

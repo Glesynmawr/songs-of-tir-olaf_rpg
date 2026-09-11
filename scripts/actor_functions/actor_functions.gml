@@ -62,79 +62,19 @@ function body_part_equipment_slot_count(actor, category, index){
 	return(array_length(actor.body_plan[category][index]) - BODY_PART_STATS.PART_SLOT_1);
 }
 
-function body_part_find_max_slot(actor, category, index){
-	var max_slot = BODY_PART_STATS.PART_SLOT_2;
-	if (body_part_has_hand(self, category, index)){
-		max_slot = BODY_PART_STATS.PART_AUX_SLOT;
-	}
-	return(max_slot);
-}
+function body_part_empty_hand_slot_count(actor){
+	var free_hand_count = 0;
+	for (var category = 0; category < array_length(actor.body_plan); category ++){
+		for (var index = 0; index < array_length(actor.body_plan[category]); index ++){
+			if (body_part_has_hand(actor, category, index)){
 
-function body_part_find_next_exists(actor, cat_start, ind_start){
-	var cat_count = array_length(actor.body_plan);
-	var ind_count = array_length(actor.body_plan[cat_start]);
-	
-	var cat_current = cat_start;
-	var ind_current = ind_start + 1;
-	if (ind_current >= ind_count){
-		ind_current = 0;
-		cat_current ++;
-		if (cat_current >= cat_count){
-			cat_current = 0;
-		}
-	}
-	repeat(cat_count){
-		
-		ind_count = array_length(actor.body_plan[cat_current]);
-		
-		for (var i = ind_current; i < ind_count; i ++){
-			if (body_part_is_present(actor, cat_current, i)){
-				return([cat_current, i]);
+				if (!is_struct(actor.body_plan[category][index][item_set_equipped])){
+					free_hand_count ++;
+				}
 			}
 		}
-		
-		ind_current = 0;
-		cat_current ++;
-		if (cat_current >= cat_count){
-			cat_current = 0;
-		}
 	}
-	return(noone);
-}
-
-function body_part_find_prev_exists(actor, cat_start, ind_start){
-	var cat_count = array_length(actor.body_plan);
-	var ind_count = array_length(actor.body_plan[cat_start]);
-	
-	var cat_current = cat_start;
-	var ind_current = ind_start - 1;
-	if (ind_current < 0){
-		
-		cat_current --;
-		if (cat_current < 0){
-			cat_current = cat_count - 1;
-		}
-		ind_count = array_length(actor.body_plan[cat_current]);
-		ind_current = ind_count - 1;
-	}
-	repeat(cat_count){
-		
-		ind_count = array_length(actor.body_plan[cat_current]);
-		
-		for (var i = ind_current; i >= 0; i --){
-			if (body_part_is_present(actor, cat_current, i)){
-				return([cat_current, i]);
-			}
-		}
-		
-		cat_current --;
-		if (cat_current < 0){
-			cat_current = cat_count - 1;
-		}
-		ind_count = array_length(actor.body_plan[cat_current]);
-		ind_current = ind_count - 1;
-	}
-	return(noone);
+	return(free_hand_count);
 }
 
 // SPAWNING	 --------------------------------------------------------------------------------------
@@ -175,8 +115,11 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	}
 	
 	// Inventory
-	new_actor.body_plan					= body_part_list_copy(new_actor.body_index);
-	new_actor.inventory					= inventory_initialise();
+	new_actor.body_plan				= body_part_list_copy(new_actor.body_index);
+	new_actor.inventory				= inventory_initialise();
+	new_actor.hit_weights			= hit_weights_calculate(new_actor, new_actor.body_plan);
+	new_actor.handedness			= [0,0];
+	new_actor.offhand_attack_chance = 0.2;
 	
 	// Push to actor registry
 	array_push(actor_registry.actor_list, new_actor);

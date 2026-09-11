@@ -46,7 +46,7 @@ function state_ready_for_inputs(){
 			}
 		}
 		
-		// Interaction with direction
+		// Interaction with tile in direction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
 			if (manager.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
 				found_a_secret(self);
@@ -61,8 +61,10 @@ function state_ready_for_inputs(){
 			if (direction_indicator != noone) direction_indicator = noone;
 		}
 		
-		// Interaction with no direction
+		// Interaction with tile no direction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
+			
+			// Pickup items
 			var items_exist = false;
 			if (struct_exists(manager.game_grid[x_pos][y_pos], "items")){
 				if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
@@ -71,11 +73,14 @@ function state_ready_for_inputs(){
 				}
 			}
 			if (!items_exist){
+				
+				// Interact with tile
 				player_moved = tile_interaction(self, x_pos, y_pos);
 			}
 		}
-		else if (keyboard_check_pressed(controls.key_move_confirm)){
-			if (array_length(manager.action_list) == 1){
+		// TOGGLE WORLD MAP
+		else if (keyboard_check_pressed(controls.key_map_mode)){
+			if (array_length(manager.actor_registry.actor_list) == 1){
 				if (manager.game_grid == manager.world_map){
 					with(manager){
 						transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
@@ -89,9 +94,12 @@ function state_ready_for_inputs(){
 			}
 			else{
 				player_moved = true;
-				var txt = $"{self.name} skips turn";
+				var txt = $"{self.name} can't leave with hostiles present!";
 				log_add_entry(txt, manager.colour_text_main);
 			}
+		}
+		else if (keyboard_check_pressed(controls.key_item_swap)){
+			player_swap_items();
 		}
 	}
 
@@ -212,42 +220,64 @@ function state_inventory(){
 	else {
 		if (keyboard_check_pressed(controls.key_up)){
 			// Move up inventory
+			var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
 			var prev_slot = body_part_find_prev_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
 			if (prev_slot != noone){
 				inventory.equ_hover[0] = prev_slot[0];
 				inventory.equ_hover[1] = prev_slot[1];
 				
-				var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-				if (inventory.equ_hover[2] > max_slot) inventory.equ_hover[2] = max_slot;
+				var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+				if (new_slot_relative_position != slot_relative_position){
+					inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
+				}
+				
+				var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+				if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
+				
+				var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
+				if (inventory.equ_hover[2] > max_slot){
+					inventory.equ_hover[2] = max_slot
+				}
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
 			// Move down inventory
+			var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
 			var next_slot = body_part_find_next_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
 			if (next_slot != noone){
 				inventory.equ_hover[0] = next_slot[0];
 				inventory.equ_hover[1] = next_slot[1];
 
-				var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-				if (inventory.equ_hover[2] > max_slot) inventory.equ_hover[2] = max_slot;
+				var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+				if (new_slot_relative_position != slot_relative_position){
+					inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
+				}
+				
+				var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+				if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
+				
+				var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
+				if (inventory.equ_hover[2] > max_slot){
+					inventory.equ_hover[2] = max_slot
+				}
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_right)){
-			var min_slot = BODY_PART_STATS.PART_SLOT_1;
-			var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-			
-			inventory.equ_hover[2] ++;
-			if (inventory.equ_hover[2] > max_slot){
-				inventory.equ_hover[2] = min_slot;
-			}
-		}
-		else if (keyboard_check_pressed(controls.key_left)){
-			var min_slot = BODY_PART_STATS.PART_SLOT_1;
-			var max_slot = body_part_find_max_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
+			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
 			
 			inventory.equ_hover[2] --;
 			if (inventory.equ_hover[2] < min_slot){
-				inventory.equ_hover[2] = max_slot;
+				inventory.equ_hover[2] = max_slot - 1;
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_left)){
+			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
+			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			
+			inventory.equ_hover[2] ++;
+			if (inventory.equ_hover[2] >= max_slot){
+				inventory.equ_hover[2] = min_slot;
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
@@ -299,7 +329,7 @@ function state_context_menu(){
 				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
 				
 				spawn_existing_item(item_to_move, , x_pos, y_pos);
-				body_plan[target_cat][target_ind][target_slot] = noone;
+				equipment_drop_slot(self, target_cat, target_ind, target_slot)
 			}
 			// Exit context menu
 			inventory.context_menu = noone;
@@ -308,7 +338,7 @@ function state_context_menu(){
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
 			
 			// Initialise slot select menu
-			equipment_slot_select_initialise()
+			equipment_slot_select_initialise();
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
 			// Equipment only
@@ -324,6 +354,10 @@ function state_context_menu(){
 			// Exit context menu
 			inventory.context_menu = noone;
 			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Hold"){
+			// Initialise slot select menu
+			hold_slot_select_initialise();
 		}
 	}
 }

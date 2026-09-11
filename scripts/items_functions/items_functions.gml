@@ -20,7 +20,7 @@ function spawn_existing_item(item, stack = -1, x_pos, y_pos){
 	}
 	
 	with (manager.game_grid[x_pos][y_pos]){
-		array_push(items, new_item);
+		array_insert(items, 0, new_item);
 	}
 }
 
@@ -67,6 +67,7 @@ function item_armour1()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BODY];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_armour2()constructor{
@@ -76,6 +77,7 @@ function item_armour2()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BODY];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_cloak1()constructor{
@@ -103,6 +105,7 @@ function item_vambrace1()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_vambrace2()constructor{
@@ -112,6 +115,7 @@ function item_vambrace2()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_glove1()constructor{
@@ -139,6 +143,7 @@ function item_greave1()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_greave2()constructor{
@@ -148,6 +153,7 @@ function item_greave2()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	armour			= 1;
 }
 
 function item_boot1()constructor{
@@ -175,6 +181,7 @@ function item_sword1()constructor{
 	slot			= [];
 	weight			= 1;
 	value			= 1;
+	damage			= [1, 3, 0];
 }
 
 function item_sword2()constructor{

@@ -18,6 +18,9 @@ current_depth   = noone;;
 dungeon_entry_x = noone;
 dungeon_entry_y = noone;
 
+// COMBAT
+offhand_agility_penalty = -4;
+
 
 #region// MENUS -----------------------------------------------------------------------------------
 control_menu_hover = 0;
@@ -52,14 +55,16 @@ globalvar controls;
 show_controls = true;
 
 controls_default = {
-	key_right: vk_right,
-	key_up: vk_up,
-	key_left: vk_left,
-	key_down: vk_down,
-	key_move_confirm: vk_space,
-	key_interact_confirm: vk_enter,
-	key_inventory: ord("I"),
-	key_cancel: vk_escape
+	key_right:				vk_right,
+	key_up:					vk_up,
+	key_left:				vk_left,
+	key_down:				vk_down,
+	key_move_confirm:		vk_space,
+	key_interact_confirm:	vk_enter,
+	key_inventory:			ord("I"),
+	key_map_mode:			ord("M"),
+	key_item_swap:			ord("E"),
+	key_cancel:				vk_escape
 }
 
 controls_read_settings();
@@ -149,7 +154,6 @@ uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
 #endregion
 
 #region// ACTORS ----------------------------------------------------------------------------------
-
 
 // Base body plan (all FALSE)
 body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];

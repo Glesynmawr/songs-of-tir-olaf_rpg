@@ -140,13 +140,23 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				}
 			}
 		}
-	}		
+	}	
 }
 
 function game_draw_items(xx, yy, screen_x, screen_y){
 	if (struct_exists(game_grid[xx][yy], "items")){
 		if (array_length(game_grid[xx][yy].items) > 0){
-			draw_sprite(item_spr, 0, screen_x, screen_y);
+
+			
+			var item_sprite = game_grid[xx][yy].items[0].sprite_index;
+			var item_index  = game_grid[xx][yy].items[0].image_index;
+			var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
+			var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
+			
+			var draw_x = screen_x + ((cell_width  - ITEM_SPRITE_SIZE) / 2);
+			var draw_y = screen_y + ((cell_height - ITEM_SPRITE_SIZE) / 2);
+			
+			draw_sprite_part(item_sprite, item_index, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, draw_x, draw_y);
 		}
 	}
 }
@@ -243,6 +253,8 @@ function draw_control_menu(){
 	control_text[4] = "Move";
 	control_text[5] = "Select/Interact";
 	control_text[6] = "Inventory";
+	control_text[7] = "Map";
+	control_text[8] = "Swap items";
 	
 	var box_height		= text_height * (array_length(control_menu) + array_length(control_text) + 6);
 	var box_width		= text_width * 60;
@@ -287,7 +299,7 @@ function draw_control_menu(){
 	
 	// Draw menu
 	for (i = 0; i < array_length(control_menu); i ++){
-		var yy = menu_y + (i * text_height);
+		var yy = menu_y + ((i + 2) * text_height);
 		var txt = "";
 		var x_mod = 0;
 		if (control_menu_hover == i){
@@ -621,35 +633,6 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	var box_size = equipment_box_sprite_size;
 	
-	
-	// Held equipment
-	xx = 10 + (text_width * 2);
-	yy = y_pos + (text_height * 2);
-	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
-		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
-			if (body_part_is_present(actor, cat, ind)){
-				if (body_part_has_hand(actor, cat, ind)){
-					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, C_YELLOW, 1);
-					yy += box_size;
-				}
-			}
-		}
-	}
-	
-	// Aux equipment
-	xx = 34 + (text_width * 2);
-	yy = y_pos + (text_height * 2);
-	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
-		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
-			if (body_part_is_present(actor, cat, ind)){
-				if (body_part_has_hand(actor, cat, ind)){
-					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, C_CYAN, 1);
-					yy += box_size;
-				}
-			}
-		}
-	}
-	
 	// Worn Equipment
 	xx = equ_x + (text_width * 2);
 	yy = y_pos + (text_height * 2);
@@ -657,12 +640,12 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
 			if (body_part_is_present(actor, cat, ind)){
 				
-				var from = BODY_PART_STATS.PART_SLOT_1;
-				var to   = array_length(actor.body_plan[cat][ind]);
+				var from = array_length(actor.body_plan[cat][ind]) - 1;
+				var to   = BODY_PART_STATS.PART_AUX_SLOT;
 				
-				for (var slot = from; slot < to; slot ++){
+				for (var slot = from; slot >= to; slot --){
 					
-					if (slot >= BODY_PART_STATS.PART_HAND_SLOT){
+					if (slot < BODY_PART_STATS.PART_SLOT_1){
 						if (!body_part_has_hand(actor, cat, ind)){
 							continue;
 						}

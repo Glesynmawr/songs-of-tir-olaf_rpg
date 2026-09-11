@@ -11,7 +11,9 @@ function init_control_menu(){
 	new_controls[4] = controls.key_move_confirm;
 	new_controls[5] = controls.key_interact_confirm;
 	new_controls[6] = controls.key_inventory;
-	
+	new_controls[7] = controls.key_map_mode;
+	new_controls[8] = controls.key_item_swap;
+				
 	game_state = game_state_control_menu;
 }
 
@@ -62,6 +64,7 @@ function init_world(){
 	// Player
 	spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
 	set_player_los(game_grid, actor_registry.player);
+	actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
 	
 	spawn_new_item(item_hat1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 	spawn_new_item(item_hat2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
@@ -137,6 +140,8 @@ function game_state_control_menu(){
 				new_controls[4] = controls.key_move_confirm;
 				new_controls[5] = controls.key_interact_confirm;
 				new_controls[6] = controls.key_inventory;
+				new_controls[7] = controls.key_map_mode;
+				new_controls[8] = controls.key_item_swap;
 			}
 			else if (txt == "Save and exit"){
 				controls_save_settings();
@@ -154,6 +159,8 @@ function game_state_control_menu(){
 			new_controls[4] = controls.key_move_confirm;
 			new_controls[5] = controls.key_interact_confirm;
 			new_controls[6] = controls.key_inventory;
+			new_controls[7] = controls.key_map_mode;
+			new_controls[8] = controls.key_item_swap;
 		}
 		
 		if (keyboard_check_pressed(vk_anykey)){
@@ -181,6 +188,8 @@ function game_state_control_menu(){
 					controls.key_move_confirm		= new_controls[4];
 					controls.key_interact_confirm	= new_controls[5];
 					controls.key_inventory			= new_controls[6];
+					controls.key_map_mode			= new_controls[7];
+					controls.key_item_swap		   	= new_controls[8];
 				}
 			}
 		}

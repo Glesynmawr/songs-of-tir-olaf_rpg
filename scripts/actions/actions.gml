@@ -67,73 +67,89 @@ function action_attack_melee(attacker, defender){
 	
 	var first_log = "";
 	var log_col	  = manager.colour_text_main;
-	var second_log = "";
-	
-	var att_name = attacker.name;
-	var def_name = defender.name;
-	
 	
 	// COMBAT CALCULATION -------------------------------------------------------------------------
-	
-	// 1) Initialise combat variables
-	var attack_hits = combat_get_hit(attacker, defender);
-	first_log = $"{att_name} attacks {def_name}";
-	
-	// 2) Determine if attack hits
-	if (!attack_hits){
-		first_log += " and misses!";
-		log_col = c_aqua;
-	}
-	else{
-		with (defender){
-			// 1) Determine hit location
-			//var total_weight = 0;
-			//var len = array_length(hit_weights);
-			//for (var i = 0; i < len; i ++){
-			//	total_weight += hit_weights[i];
-			//}
-		
-			//var selected_category = noone;
-			//var rolled_location = dice_roll(total_weight);
-			//var accumulator = 0;
-			//for (i = 0; i < len; i ++){
-			//	accumulator += hit_weights[i];
-			//	if (rolled_location <= accumulator){
-			//		selected_category = i;
-			//		break;
-			//	}
-			//}
+	for (var category = 0; category < array_length(attacker.body_plan); category ++){
+		for (var index = 0; index < array_length(attacker.body_plan[category]); index ++){
 			
-			// 2) Check location for armour
-			//if (selected_category != noone){
+			// Check body part for hand
+			if (body_part_is_present(attacker, category, index)){
 				
-			//}
-		
-			// 3) Apply damage - armour (minimum zero)
-		
-		
-			// 4) Kill target OR hitflash
-			if (defender.hit_points <= 0){
-			
-				second_log = $"{defender.name} was killed!";
-				action_remove_actor(defender);
-			}
-			else{
-				set_colour_flash(defender, C_WHITE, 10);
+				for (var slot = BODY_PART_STATS.PART_HAND_SLOT; slot < array_length(attacker.body_plan[category][index]); slot ++){
+					
+					var perform_attack	 = false;
+					var attacker_agility = attacker.agility;
+					var defender_agility = defender.agility;
+					var melee_item	     = attacker.body_plan[category][index][slot];
+					first_log			 = "";
+					
+					// Check if hand does not match handedness
+					if (handedness[0] == category and handedness[1] == index and slot == BODY_PART_STATS.PART_HAND_SLOT){
+						first_log      = $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
+						perform_attack = true;
+					}
+					else{
+						if (melee_item != noone){
+							if (struct_exists(melee_item, "damage")){
+							
+								var attack_chance = attacker.offhand_attack_chance;
+								var roll = random(1);
+							
+								if (roll <= attack_chance){
+									first_log = $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
+									attacker_agility += manager.offhand_agility_penalty;
+									perform_attack   = true;
+								}
+							}
+						}
+					}
+					
+					if (perform_attack){
+						
+						// Execute to-hit roll
+						var attack_hits = combat_get_hit(attacker_agility, defender_agility);
+						if (attack_hits){
+							first_log += " and hits ";
+							
+							// Get hit location
+							var hit_loc = combat_get_hit_location(defender);
+							if (hit_loc[0] != noone and hit_loc[1] != noone){
+								
+								// Get attack damage
+								if (is_struct(melee_item)){
+									if (!struct_exists(melee_item, "damage")){
+										melee_item = noone;
+									}
+								}
+								var damage = combat_get_melee_damage(attacker, melee_item);
+								
+								// Get location armour
+								var location_armour = combat_get_location_armour(defender, hit_loc);
+								
+								// Apply damage
+								if (damage > 0){
+									damage = max(damage - location_armour, 1);
+									first_log += $"for {damage} damage";
+								}
+								else{
+									first_log += "but causes no damage";
+								}
+								
+							}
+						}
+						else{
+							first_log += " and misses";
+						}
+					}
+					
+					// Create log entries
+					if (first_log != ""){
+						// Attack log entry
+						log_add_entry(first_log, log_col);
+					}
+				}
 			}
 		}
-	}
-			
-	// Create log entries
-	if (first_log != ""){
-		
-		// Damage log entry
-		log_add_entry(first_log, log_col);
-	}
-	if (second_log != ""){
-		
-		// Death log entry
-		log_add_entry(second_log, manager.colour_text_main);
 	}
 }
 
@@ -157,55 +173,103 @@ function action_remove_actor(actor){
 
 
 // DICE ROLL --------------------------------------------------------------------------------------
-function dice_roll(value){
-	return(irandom_range(1, value));
+function dice_roll(dice_count, dice_sides, modifier){
+	
+	var roll_total = 0;
+	
+	repeat(dice_count){
+		roll_total += irandom_range(1, dice_sides);
+	}
+	roll_total += modifier;
+	
+	return(roll_total);
 }
 
 
 // COMBAT ACTIONS ---------------------------------------------------------------------------------
-function combat_get_hit(attacker, defender){
+function combat_get_hit(attacker_agility, defender_agility){
 	
 	// Get attack and defence stats
-	var att_stat = attacker.agility;
-	var def_stat = defender.agility;
+	var att_stat = attacker_agility;
+	var def_stat = defender_agility;
 	
 	// Determine success chance
-	var success_chance = 22 - (round(att_stat / (att_stat + def_stat) * 18) + 2);
+	var success_chance = 21 - (round(att_stat / (att_stat + def_stat) * 19) + 1);
 	
 	// Roll dice
-	var attack_roll = dice_roll(10) + dice_roll(10);
+	var attack_roll = dice_roll(1, 20, 0);
 	
 	// Success comparison
 	if (attack_roll >= success_chance){
-		var txt = $"Att: {att_stat} - Def: {def_stat} - to hit: {success_chance} - roll: {attack_roll}";
-		log_add_entry(txt, C_GREEN);
 		return(true);
 	}
 	else {
-		var txt = $"Att: {att_stat} - Def: {def_stat} - to hit: {success_chance} - roll: {attack_roll}";
-		log_add_entry(txt, C_RED);
 		return(false);
 	}
 }
 
-function combat_get_melee_damage_modifier(attacker, defender){
-	var base_damage_modifier = 1;
+function combat_get_hit_location(defender){
 	
-	// Get attacker strength + bonuses
-	var att_strength = attacker.strength;
+	var total_weight = 0;
+			
+	// Get total weights
+	for (var i = 0; i < array_length(defender.hit_weights); i ++){
+		for (var j = 0; j < array_length(defender.hit_weights[i]); j ++){
+			total_weight += defender.hit_weights[i][j];
+		}
+	}
 	
-	// Get defender strength + bonuses
-	var def_strength = defender.strength;
-	
-	// Get difference between attacker and defender strength
-	var strength_diff = att_strength - def_strength;
-	
-	// Difference = 2% change either way
-	var damage_modifier = base_damage_modifier + (strength_diff * 0.02);
-	
-	return(damage_modifier);
+	var selected_category	= noone;
+	var selected_index		= noone;
+	var rolled_location		= dice_roll(1, total_weight, 0);
+	var accumulator			= 0;
+	var loop_ended			= false;
+			
+	for (i = 0; i < array_length(defender.hit_weights); i ++){
+		for (j = 0; j < array_length(defender.hit_weights[i]); j ++){
+			accumulator += defender.hit_weights[i][j];
+			if (rolled_location <= accumulator and !loop_ended){
+				selected_category = i;
+				selected_index    = j;
+				loop_ended = true;
+				break;
+			}
+		}
+		if (loop_ended) break;
+	}
+	return([selected_category, selected_index]);
 }
 
+function combat_get_location_armour(defender, hit_loc){
+	var location_armour = 0;
+	
+	for (var slot = BODY_PART_STATS.PART_SLOT_1; slot < array_length(defender.body_plan[hit_loc[0]][hit_loc[1]]); slot ++){
+		if (is_struct(defender.body_plan[hit_loc[0]][hit_loc[1]][slot])){
+			if (struct_exists(defender.body_plan[hit_loc[0]][hit_loc[1]][slot], "armour")){
+				location_armour = defender.body_plan[hit_loc[0]][hit_loc[1]][slot].armour;
+			}
+		}
+	}
+	
+	location_armour = irandom_range(0, location_armour);
+	
+	return(location_armour);
+}
 
+function combat_get_melee_damage(attacker, item = noone){
+	
+	var damage = 0;
+	if (item == noone){
+		damage = dice_roll(1, 2, -1);
+	}
+	else{
+		damage = dice_roll(item.damage[0], item.damage[1], item.damage[2]);
+	}
+	return(damage);
+}
+
+function player_swap_items(){
+	
+}
 
 

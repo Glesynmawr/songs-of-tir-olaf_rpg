@@ -66,10 +66,12 @@ function body_part_empty_hand_slot_count(actor){
 	var free_hand_count = 0;
 	for (var category = 0; category < array_length(actor.body_plan); category ++){
 		for (var index = 0; index < array_length(actor.body_plan[category]); index ++){
-			if (body_part_has_hand(actor, category, index)){
+			if (body_part_is_present(actor, category, index)){
+				if (body_part_has_hand(actor, category, index)){
 
-				if (!is_struct(actor.body_plan[category][index][item_set_equipped])){
-					free_hand_count ++;
+					if (!is_struct(actor.body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT])){
+						free_hand_count ++;
+					}
 				}
 			}
 		}
@@ -121,6 +123,12 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.handedness			= [0,0];
 	new_actor.offhand_attack_chance = 0.2;
 	
+	// Starting items
+	if (struct_exists(new_actor, "equipment")){
+		for (var i = 0; i < array_length(new_actor.equipment); i ++){
+			spawn_new_item(item_proboscis, 1, SPAWN_LOC.EQUIPPED, , , new_actor)
+		}
+	}
 	// Push to actor registry
 	array_push(actor_registry.actor_list, new_actor);
 }

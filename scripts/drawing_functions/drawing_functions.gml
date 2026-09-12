@@ -129,7 +129,15 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + (cell_width / 2), screen_y + spr_offset_y, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-							
+				
+				// DEBUGGING - DISABLE IN FINAL BUILD ---------------------------------------------
+				//with (actor_registry.actor_list[i]){
+				//	
+						
+				//		draw_text(screen_x + spr_offset_x + (manager.cell_width / 2), screen_y + spr_offset_y, string(body_plan[0][0][5]));
+				//	//}
+				//}
+				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
 					var dir_ind_x = screen_x + cell_width  / 2;

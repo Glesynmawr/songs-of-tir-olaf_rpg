@@ -77,29 +77,73 @@ function action_attack_melee(attacker, defender){
 				
 				for (var slot = BODY_PART_STATS.PART_HAND_SLOT; slot < array_length(attacker.body_plan[category][index]); slot ++){
 					
-					var perform_attack	 = false;
-					var attacker_agility = attacker.agility;
-					var defender_agility = defender.agility;
-					var melee_item	     = attacker.body_plan[category][index][slot];
-					first_log			 = "";
+					// Initialise combat variables
+					var perform_attack			= false;
+					var attacker_agility		= attacker.agility;
+					var defender_agility		= defender.agility;
+					var attacker_empty_hands	= body_part_empty_hand_slot_count(attacker);
 					
-					// Check if hand does not match handedness
-					if (handedness[0] == category and handedness[1] == index and slot == BODY_PART_STATS.PART_HAND_SLOT){
-						first_log      = $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
-						perform_attack = true;
+					// Gett attack item
+					var melee_item				= variable_clone(attacker.body_plan[category][index][slot]);
+					
+					// Get attack handedness
+					var item_is_in_correct_hand = false;
+					if (handedness[0] == category and handedness[1] == index){
+						item_is_in_correct_hand = true;
 					}
-					else{
-						if (melee_item != noone){
-							if (struct_exists(melee_item, "damage")){
+					
+					// Re-initialise log entry
+					first_log = "";
+					
+					if (melee_item != noone){
+						// Item is held
+						
+						if (struct_exists(melee_item, "damage")){
+							// Item has a damage stat
+							
+							var item_requires_two_hands = item_check_tag(melee_item, TAG.TWO_HANDED);
+							
+							// Check if hand does not match handedness
+							if (item_is_in_correct_hand){
+								if (item_requires_two_hands){
+									if (attacker_empty_hands < 1){
+										melee_item.damage[1] = round(melee_item.damage[1] * 0.5);
+										attacker_agility	 += manager.offhand_agility_penalty;
+										first_log += "needs 2 hands! ";
+									}
+								}
+								first_log      += $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
+								perform_attack = true;
+							}
+							else{
 							
 								var attack_chance = attacker.offhand_attack_chance;
 								var roll = random(1);
 							
 								if (roll <= attack_chance){
-									first_log = $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
+									first_log += "off-hand! ";
+									first_log += $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
 									attacker_agility += manager.offhand_agility_penalty;
 									perform_attack   = true;
 								}
+							}
+						}
+						else{
+							// Item has no damage stat
+							if (item_is_in_correct_hand and slot == BODY_PART_STATS.PART_HAND_SLOT){
+								if (body_part_has_hand(attacker, category, index)){
+									first_log      = $"{attacker.name} attacks {defender.name} with their bare hand";
+									perform_attack = true;
+								}
+							}
+						}
+					}
+					else{
+						// No item held
+						if (item_is_in_correct_hand and slot == BODY_PART_STATS.PART_HAND_SLOT){
+							if (body_part_has_hand(attacker, category, index)){
+								first_log      = $"{attacker.name} attacks {defender.name} with their bare hand";
+								perform_attack = true;
 							}
 						}
 					}
@@ -129,7 +173,7 @@ function action_attack_melee(attacker, defender){
 								// Apply damage
 								if (damage > 0){
 									damage = max(damage - location_armour, 1);
-									first_log += $"for {damage} damage";
+									first_log += $"causing {damage} damage";
 								}
 								else{
 									first_log += "but causes no damage";

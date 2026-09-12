@@ -26,6 +26,7 @@ function actor_reed_weevil()constructor{
 	agility			= 10;
 	hit_points		= 6;
 	action_speed	= 50;
+	equipment		= [[item_proboscis, 1]];
 }
 
 

@@ -153,6 +153,9 @@ uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
 
 #endregion
 
+// EFFECTS ---------------------------------------------------------------------------------
+dust_particles = [];
+
 #region// ACTORS ----------------------------------------------------------------------------------
 
 // Base body plan (all FALSE)

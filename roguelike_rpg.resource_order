@@ -42,6 +42,7 @@
     {"name":"direction_arrow_spr","order":3,"path":"sprites/direction_arrow_spr/direction_arrow_spr.yy",},
     {"name":"door_open_spr","order":1,"path":"sprites/door_open_spr/door_open_spr.yy",},
     {"name":"dragonfly_spr","order":1,"path":"sprites/dragonfly_spr/dragonfly_spr.yy",},
+    {"name":"dust_spr","order":4,"path":"sprites/dust_spr/dust_spr.yy",},
     {"name":"equipment_box_spr","order":9,"path":"sprites/equipment_box_spr/equipment_box_spr.yy",},
     {"name":"face_spr","order":1,"path":"sprites/face_spr/face_spr.yy",},
     {"name":"fire_spr","order":3,"path":"sprites/fire_spr/fire_spr.yy",},

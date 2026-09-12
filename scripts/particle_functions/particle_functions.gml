@@ -42,5 +42,43 @@ function particle_create_actor(particle_type, grid_x, grid_y, number = 3, dist =
 }
 
 
+// HIT DUST PARTICLES ----------------------------------------------------------------------
+function particle_create_hit_dust(actor, dir){
+	repeat(3){
+		var part_life = irandom_range(25, 35);
+		var new_part = {
+			sprite_index:	dust_spr,
+			image_index:	0,
+			x:				(actor.x_pos * manager.cell_width)  + (manager.cell_width / 2),
+			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2),
+			direction:		dir + irandom_range(-30, 30),
+			speed:			1,
+			life_max:		part_life,			
+			life_timer:		part_life 
+		}
+		array_push(manager.dust_particles, new_part);
+	}
+}
 
+function update_dust_particles(){
+	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
+		with (dust_particles[i]){
+			x += lengthdir_x(speed, direction);
+			y += lengthdir_y(speed, direction);
+			life_timer --;
+			if (life_timer <= 0){
+				array_delete(manager.dust_particles, i, 1);
+			}
+			image_index = ((life_max - life_timer) / life_max) * sprite_get_number(sprite_index);
+		}
+	}
+}
+
+function draw_dust_particles(offset_x, offset_y){
+	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
+		with (dust_particles[i]){
+			draw_sprite(sprite_index, image_index, x - offset_x, y - offset_y);
+		}
+	}
+}
 

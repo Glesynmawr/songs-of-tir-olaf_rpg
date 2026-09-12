@@ -98,6 +98,8 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.sprite_y			= cell_y * cell_height;
 	new_actor.sprite_target_x	= cell_x * cell_width;
 	new_actor.sprite_target_y	= cell_y * cell_height;
+	new_actor.melee_offset_x	= 0;
+	new_actor.melee_offset_y	= 0;
 	
 	new_actor.image_index		= irandom(new_actor.sprite);
 	new_actor.image_speed		= sprite_get_speed(new_actor.sprite) / game_get_speed(gamespeed_fps);

@@ -199,6 +199,7 @@ function game_state_control_menu(){
 function game_state_dungeon(){
 	if (!game_paused and transition == noone){
 		turn_order_update();
+		update_dust_particles();
 	}
 }
 
@@ -278,6 +279,7 @@ function game_state_pause_menu(){
 function game_state_world(){
 	if (!game_paused and transition == noone){
 		turn_order_update();
+		update_dust_particles();
 	}
 }
 

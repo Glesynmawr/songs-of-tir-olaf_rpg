@@ -68,6 +68,7 @@
     {"id":{"name":"door_closed_spr","path":"sprites/door_closed_spr/door_closed_spr.yy",},},
     {"id":{"name":"door_open_spr","path":"sprites/door_open_spr/door_open_spr.yy",},},
     {"id":{"name":"dragonfly_spr","path":"sprites/dragonfly_spr/dragonfly_spr.yy",},},
+    {"id":{"name":"dust_spr","path":"sprites/dust_spr/dust_spr.yy",},},
     {"id":{"name":"equipment_box_spr","path":"sprites/equipment_box_spr/equipment_box_spr.yy",},},
     {"id":{"name":"face_spr","path":"sprites/face_spr/face_spr.yy",},},
     {"id":{"name":"fire_spr","path":"sprites/fire_spr/fire_spr.yy",},},

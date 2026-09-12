@@ -67,6 +67,9 @@ function game_draw_grid(){
 			game_draw_actor(xx, yy, screen_x, screen_y);
 		}
 	}
+	screen_x = (x_from * cell_width)  + map_offset_x;
+	screen_y = (y_from * cell_height) + map_offset_y;
+	draw_dust_particles(screen_x, screen_y);
 	
 	// Draw move direction indicator
 	if (direction_indicator != noone){
@@ -94,8 +97,13 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					flash_timer_reduce();
 								
 					// ACTOR UPDATE SPRITE POSITION -----------------------------------------------------------
+					melee_offset_x *= 0.6;
+					melee_offset_y *= 0.6;
+					
 					var spr_offset_x = sprite_x - sprite_target_x;
 					var spr_offset_y = sprite_y - sprite_target_y;
+					var melee_x      = melee_offset_x;
+					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
 								
 					// ACTOR ANIMATION ------------------------------------------------------------------------
@@ -127,16 +135,8 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				}
 							
 				// Draw actor sprite and reset shader
-				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + (cell_width / 2), screen_y + spr_offset_y, x_scale, 1, 0, c_white, 1);
+				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-				
-				// DEBUGGING - DISABLE IN FINAL BUILD ---------------------------------------------
-				//with (actor_registry.actor_list[i]){
-				//	
-						
-				//		draw_text(screen_x + spr_offset_x + (manager.cell_width / 2), screen_y + spr_offset_y, string(body_plan[0][0][5]));
-				//	//}
-				//}
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){

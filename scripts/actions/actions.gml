@@ -68,6 +68,9 @@ function action_attack_melee(attacker, defender){
 	var first_log = "";
 	var log_col	  = manager.colour_text_main;
 	
+	attacker.melee_offset_x = (defender.sprite_x - attacker.sprite_x);
+	attacker.melee_offset_y = (defender.sprite_y - attacker.sprite_y);
+	
 	// COMBAT CALCULATION -------------------------------------------------------------------------
 	for (var category = 0; category < array_length(attacker.body_plan); category ++){
 		for (var index = 0; index < array_length(attacker.body_plan[category]); index ++){
@@ -154,6 +157,7 @@ function action_attack_melee(attacker, defender){
 						var attack_hits = combat_get_hit(attacker_agility, defender_agility);
 						if (attack_hits){
 							first_log += " and hits ";
+							particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos));
 							
 							// Get hit location
 							var hit_loc = combat_get_hit_location(defender);
@@ -173,9 +177,11 @@ function action_attack_melee(attacker, defender){
 								// Apply damage
 								if (damage > 0){
 									damage = max(damage - location_armour, 1);
+									set_colour_flash(defender, C_RED, 10);
 									first_log += $"causing {damage} damage";
 								}
 								else{
+									set_colour_flash(defender, C_WHITE, 10);
 									first_log += "but causes no damage";
 								}
 								

@@ -1,7 +1,6 @@
 /// @desc Initialise 
 
 //randomise();
-
 debugging_mode		= false;
 game_paused			= false;
 
@@ -13,14 +12,24 @@ colour_ui_main		= C_ORANGE;
 // STATE TRANSITION
 transition = noone;
 
-// DUNGEON PROGRESS
-current_depth   = noone;;
-dungeon_entry_x = noone;
-dungeon_entry_y = noone;
-
 // COMBAT
 offhand_agility_penalty = -4;
 
+#region// GAME STATE ------------------------------------------------------------------------------
+game_state = {
+	game_grid				: noone,
+	map_mode				: noone,
+	map_borders_are_clamped	: noone,
+	state_main				: noone,
+	world_map				: noone,
+	zone_map				: noone,
+	
+	current_depth			: noone,
+	dungeon_entry_x			: noone,
+	dungeon_entry_y			: noone
+}
+
+#endregion
 
 #region// MENUS -----------------------------------------------------------------------------------
 control_menu_hover = 0;
@@ -87,27 +96,23 @@ direction_indicator_y = 0;
 
 #endregion
 
-#region // EQUIPMENT SLOTS ------------------------------------------------------------------------
-equip_data[EQUIP.HEAD] = ["head",			"headwear",			3];
-equip_data[EQUIP.NECK] = ["neck",			"necklace",			3];
-equip_data[EQUIP.BODY_PRESET] = ["body",			"armour",			1];
-equip_data[EQUIP.BACK] = ["back",			"cloak",			1];
-equip_data[EQUIP.ARMS] = ["arm",			"Vambrace",			6];
-equip_data[EQUIP.HAND] = ["hand",			"Item",				6];
-equip_data[EQUIP.MITT] = ["gloves",			"Gloves",		 	3];
-equip_data[EQUIP.GUNS] = ["ranged item",	"Ranged item",		2];
-equip_data[EQUIP.FEET] = ["feet",			"Footwear",	 		3];
-
-#endregion
-
 #region// UI --------------------------------------------------------------------------------------
+
+// UI variables -----------------------------------------------------------------------------------
+ui_settings = {
+	ui_x_position		: 0,
+	minimap_title_text	: "",
+	minimap_sub_text	: ""
+}
+
+// UI constants -----------------------------------------------------------------------------------
 ui_width	   = 96;
-ui_position	   = 0;
 ui_x_pos[0][0] = screen_width - ui_width;
 ui_x_pos[0][1] = 0;
 ui_x_pos[1][0] = 0;
 ui_x_pos[1][1] = ui_width;
 
+draw_set_font(mono_fnt);
 text_height = string_height("M") + 2;
 text_width  = string_width("M");
 
@@ -120,10 +125,6 @@ minimap_surface = noone;
 minimap_width	= ui_width;
 minimap_height	= ui_width;
 minimap_y		= 0;
-
-// Minimap text
-minimap_title_text = "";
-minimap_sub_text  = "";
 
 // Info box
 infobox_width   = ui_width;
@@ -153,8 +154,10 @@ uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
 
 #endregion
 
-// EFFECTS ---------------------------------------------------------------------------------
+#region// EFFECTS ---------------------------------------------------------------------------------
 dust_particles = [];
+
+#endregion
 
 #region// ACTORS ----------------------------------------------------------------------------------
 
@@ -186,14 +189,19 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 #endregion
 
 #region// TIME SYSTEM -----------------------------------------------------------------------------
-current_turn		= 0;
-game_current_time   = [0, 0, 0];
-timescale_zone      = 1;
-timescale_world		= 60;
-timescale			= 0;
 
+// Timescale constants ----------------------------------------------------------------------------
 turns_per_hour	= 30;
 hours_per_day	= 24;
+timescale_zone  = 1;
+timescale_world	= 60;
+
+// Timescale variables ----------------------------------------------------------------------------
+time_system = {
+	current_turn		: 0,
+	game_current_time   : [0, 0, 0],
+	timescale			: 0
+}
 
 #endregion
 

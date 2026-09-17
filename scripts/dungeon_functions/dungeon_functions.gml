@@ -10,8 +10,8 @@ function dungeon_generate(index){
 	level_size_change = dungeons[index].size_change;
 	
 	// Increase level size based on depth
-	grid_width  += floor(current_depth * level_size_change);
-	grid_height += floor(current_depth * level_size_change);
+	grid_width  += floor(game_state.current_depth * level_size_change);
+	grid_height += floor(game_state.current_depth * level_size_change);
 	
 	// Ensures grid is odd number of cells
 	grid_width	= (floor(grid_width  / 2) * 2) + 1;
@@ -54,7 +54,7 @@ function dungeon_generate(index){
 	entry_position = add_entry(dungeon_grid);
 	
 	// Add exit
-	if (current_depth < max_depth - 1){
+	if (game_state.current_depth < max_depth - 1){
 		exit_position = add_exit(dungeon_grid, entry_position[0], entry_position[1]);
 	}
 	else exit_position = noone;
@@ -102,7 +102,7 @@ function generate_rooms(grid, number_of_rooms, min_size, max_size){
 		var height = irandom_range(min_size, max_size);
 		height = floor(height / 2) * 2 + 1;
 		
-		// Finds position for room on game_grid
+		// Finds position for room on game_state.game_grid
 		var position_list = [];
 		
 		for (var x_pos = 2; x_pos < array_length(grid) - (2 + width); x_pos += 2){

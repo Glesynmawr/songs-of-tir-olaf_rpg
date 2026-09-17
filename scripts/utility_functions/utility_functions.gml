@@ -253,68 +253,74 @@ function initialise_log(){
 }
 
 function log_add_entry(text, colour){
-	array_insert(game_log, 0, [text, colour]);
+	with (manager){
+		array_insert(game_log, 0, [text, colour]);
+	}
 }
 
 
 // GAME STATE TRANSITIONS
 function transition_set(transition_type, transition_colour){
+	with (manager){
 	transition = {
-		anim_speed:	0.5,
-		index:		0,
-		colour:		transition_colour,
-		type:		transition_type
+			anim_speed:	0.5,
+			index:		0,
+			colour:		transition_colour,
+			type:		transition_type
+		}
 	}
 }
 
 function transition_update(){
-	transition.index += transition.anim_speed;
-	if (transition.index >= sprite_get_number(transition_spr) - 1){
-		transition.anim_speed *= -1;
+	with (manager){
+		transition.index += transition.anim_speed;
+		if (transition.index >= sprite_get_number(transition_spr) - 1){
+			transition.anim_speed *= -1;
 		
-		switch(transition.type){
+			switch(transition.type){
 			
-			case TRANSITION.CONTROL_EXIT:											
-				game_state = control_state_previous;								break;	
+				case TRANSITION.CONTROL_EXIT:											
+					game_state.state_main = control_state_previous;								break;	
 							
 			
-			case TRANSITION.CONTROL_MENU:	
-				control_state_previous = game_state;
-				game_state = init_control_menu;										break;
+				case TRANSITION.CONTROL_MENU:	
+					control_state_previous = game_state.state_main;
+					game_state.state_main = init_control_menu;										break;
 																																		
-			case TRANSITION.GAME_BOOT:												
-				game_state = game_state_main_menu;									break;
+				case TRANSITION.GAME_BOOT:												
+					game_state.state_main = game_state_main_menu;									break;
 				
-			case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(dungeon_index, true);	break;
+				case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(dungeon_index, true);	break;
 			
-			case TRANSITION.GAME_DUNGEON_EXIT:	
-				var wx = actor_registry.player.world_x;
-				var wy = actor_registry.player.world_y;
-				goto_zone(wx, wy, dungeon_entry_x, dungeon_entry_y);				break;
+				case TRANSITION.GAME_DUNGEON_EXIT:	
+					var wx = actor_registry.player.world_x;
+					var wy = actor_registry.player.world_y;
+					goto_zone(wx, wy, game_state.dungeon_entry_x, game_state.dungeon_entry_y);				break;
 				
-			case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(dungeon_index, true);	break;
+				case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(dungeon_index, true);	break;
 			
-			case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(dungeon_index, false);	break;
+				case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(dungeon_index, false);	break;
 			
-			case TRANSITION.GAME_QUIT:		    game_end();							break;
+				case TRANSITION.GAME_QUIT:		    game_end();							break;
 			
-			case TRANSITION.GAME_RESET:			game_state = game_state_main_menu;	break;
+				case TRANSITION.GAME_RESET:			game_state.state_main = game_state_main_menu;	break;
 			
-			case TRANSITION.GAME_START_NEW:		init_world();						break;
+				case TRANSITION.GAME_START_NEW:		init_world();						break;
 			
-			case TRANSITION.GAME_WORLD:			
-				grid_set_visible(manager.game_grid, false) 
-				goto_world();														break;
+				case TRANSITION.GAME_WORLD:			
+					grid_set_visible(manager.game_state.game_grid, false) 
+					goto_world();														break;
 			
-			case TRANSITION.GAME_ZONE:		
-				grid_set_visible(manager.game_grid, false) 
-				goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;
+				case TRANSITION.GAME_ZONE:		
+					grid_set_visible(manager.game_state.game_grid, false) 
+					goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;
 			
-			default: show_message("Transition type not set!");						break;
+				default: show_message("Transition type not set!");						break;
+			}
 		}
-	}
-	else if (transition.index <= 0){
-		transition			= noone;
+		else if (transition.index <= 0){
+			transition			= noone;
+		}
 	}
 }
 
@@ -353,103 +359,109 @@ function controls_save_settings(){
 
 // TURN STRUCTURE
 function turn_order_initialise(){
-	action_list = [];
-	action_index = 0;
+	with (manager){
+		action_list = [];
+		action_index = 0;
 	
-	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 		
-		with (actor_registry.actor_list[i]){
+			with (actor_registry.actor_list[i]){
 	
-			// CHECK ACTOR ENERGY
-			if (energy > 0){
+				// CHECK ACTOR ENERGY
+				if (energy > 0){
 		
-				// GET ACTION ENERGY COST
-				var action_cost = 100;
-				if (action_speed > 0){
-					action_cost = 10000 / action_speed;
+					// GET ACTION ENERGY COST
+					var action_cost = 100;
+					if (action_speed > 0){
+						action_cost = 10000 / action_speed;
+					}
+		
+					// GET ACTOR DISTANCE FROM PLAYER
+					dist = 0;
+					if (self != manager.actor_registry.player){
+						var dist = distance_map_player[x_pos][y_pos];
+					}
+		
+					// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
+					energy -= action_cost;
+					array_push(other.action_list, [self, dist]);
 				}
-		
-				// GET ACTOR DISTANCE FROM PLAYER
-				dist = 0;
-				if (self != manager.actor_registry.player){
-					var dist = distance_map_player[x_pos][y_pos];
-				}
-		
-				// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
-				energy -= action_cost;
-				array_push(other.action_list, [self, dist]);
 			}
 		}
-	}
-	// IF ACTION LIST LENGTH IS GREATER THAN ZERO
-	var len = array_length(action_list);
-	if (len > 0){
+		// IF ACTION LIST LENGTH IS GREATER THAN ZERO
+		var len = array_length(action_list);
+		if (len > 0){
 	
-		// SORT ACTION LIST BY ASCENDING DISTANCE TO PLAYER
-		array_sort(action_list, function(elm1, elm2){
-			return(elm1[1] - elm2[1])
-		});
+			// SORT ACTION LIST BY ASCENDING DISTANCE TO PLAYER
+			array_sort(action_list, function(elm1, elm2){
+				return(elm1[1] - elm2[1])
+			});
 	
-		// CONVERT ARRAY TO 1D
-		for (i = 0; i < len; i ++){
-			action_list[i] = action_list[i][0];
-		}
-	}
-	else {
-		if (array_length(actor_registry.actor_list) > 0){
-			
-			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-				actor_registry.actor_list[i].energy += ENERGY_PER_TURN;
+			// CONVERT ARRAY TO 1D
+			for (i = 0; i < len; i ++){
+				action_list[i] = action_list[i][0];
 			}
-			actor_registry.player.has_acted = false;
+		}
+		else {
+			if (array_length(actor_registry.actor_list) > 0){
 			
-			increment_time_and_date();
+				for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+					actor_registry.actor_list[i].energy += ENERGY_PER_TURN;
+				}
+				actor_registry.player.has_acted = false;
 			
-			turn_order_initialise();
+				increment_time_and_date();
+			
+				turn_order_initialise();
+			}
 		}
 	}
 }
 
 function turn_order_update(){
-	var len = array_length(action_list);
+	with (manager){
+		var len = array_length(action_list);
 
-	for (var i = 0; i < len; i ++){
+		for (var i = 0; i < len; i ++){
 		
-		if (i >= array_length(action_list)) break;
+			if (i >= array_length(action_list)) break;
 		
-		action_list[i].state();
+			action_list[i].state();
 		
-		if (i >= array_length(action_list)) break;
+			if (i >= array_length(action_list)) break;
 		
-		if (!action_list[i].has_acted) break;
-		action_index ++;
-	}
-	
-	if (action_index >= array_length(action_list)){
-						
-		// Create New Action List
-		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
-			actor_registry.actor_list[i].has_acted = false;
+			if (!action_list[i].has_acted) break;
+			action_index ++;
 		}
-		turn_order_initialise();
+	
+		if (action_index >= array_length(action_list)){
+						
+			// Create New Action List
+			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+				actor_registry.actor_list[i].has_acted = false;
+			}
+			turn_order_initialise();
+		}
 	}
 }
 
 function increment_time_and_date(){
-	// Increase current TURN
-	game_current_time[TIME.TURN] += timescale;
+	with (manager){
+		// Increase current TURN
+		time_system.game_current_time[TIME.TURN] += time_system.timescale;
 	
-	if (game_current_time[TIME.TURN] >= turns_per_hour){
+		if (time_system.game_current_time[TIME.TURN] >= turns_per_hour){
 		
-		game_current_time[TIME.TURN] -= turns_per_hour
+			time_system.game_current_time[TIME.TURN] -= turns_per_hour
 		
-		// Increase current HOUR
-		game_current_time[TIME.HOUR] ++;
-		if (game_current_time[TIME.HOUR] >= hours_per_day){
-			game_current_time[TIME.HOUR] -= hours_per_day
+			// Increase current HOUR
+			time_system.game_current_time[TIME.HOUR] ++;
+			if (time_system.game_current_time[TIME.HOUR] >= hours_per_day){
+				time_system.game_current_time[TIME.HOUR] -= hours_per_day
 			
-			// Increase current DAY
-			game_current_time[TIME.DAY] ++;
+				// Increase current DAY
+				time_system.game_current_time[TIME.DAY] ++;
+			}
 		}
 	}
 }

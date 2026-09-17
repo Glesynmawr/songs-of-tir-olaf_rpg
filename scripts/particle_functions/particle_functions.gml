@@ -43,15 +43,15 @@ function particle_create_actor(particle_type, grid_x, grid_y, number = 3, dist =
 
 
 // HIT DUST PARTICLES ----------------------------------------------------------------------
-function particle_create_hit_dust(actor, dir){
-	repeat(3){
-		var part_life = irandom_range(25, 35);
+function particle_create_hit_dust(actor, dir, count){
+	repeat(count){
+		var part_life = irandom_range(20, 30);
 		var new_part = {
 			sprite_index:	dust_spr,
 			image_index:	0,
 			x:				(actor.x_pos * manager.cell_width)  + (manager.cell_width / 2),
 			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2),
-			direction:		dir + irandom_range(-30, 30),
+			direction:		dir + irandom_range(-60, 60),
 			speed:			1,
 			life_max:		part_life,			
 			life_timer:		part_life 
@@ -70,6 +70,7 @@ function update_dust_particles(){
 				array_delete(manager.dust_particles, i, 1);
 			}
 			image_index = ((life_max - life_timer) / life_max) * sprite_get_number(sprite_index);
+			speed *= random_range(0.93, 0.99);
 		}
 	}
 }
@@ -77,7 +78,7 @@ function update_dust_particles(){
 function draw_dust_particles(offset_x, offset_y){
 	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
 		with (dust_particles[i]){
-			draw_sprite(sprite_index, image_index, x - offset_x, y - offset_y);
+			draw_sprite(sprite_index, image_index, x - offset_x + manager.ui_x_pos[manager.ui_settings.ui_x_position][1], y - offset_y);
 		}
 	}
 }

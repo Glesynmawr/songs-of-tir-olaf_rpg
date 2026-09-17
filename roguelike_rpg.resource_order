@@ -85,10 +85,12 @@
     {"name":"zone_tile_grass_spr","order":2,"path":"sprites/zone_tile_grass_spr/zone_tile_grass_spr.yy",},
     {"name":"zone_tile_lilypad_spr","order":10,"path":"sprites/zone_tile_lilypad_spr/zone_tile_lilypad_spr.yy",},
     {"name":"zone_tile_marsh_spr","order":9,"path":"sprites/zone_tile_marsh_spr/zone_tile_marsh_spr.yy",},
+    {"name":"zone_tile_raised_ground_00_spr","order":14,"path":"sprites/zone_tile_raised_ground_00_spr/zone_tile_raised_ground_00_spr.yy",},
     {"name":"zone_tile_reeds_spr","order":8,"path":"sprites/zone_tile_reeds_spr/zone_tile_reeds_spr.yy",},
     {"name":"zone_tile_rocks_spr","order":3,"path":"sprites/zone_tile_rocks_spr/zone_tile_rocks_spr.yy",},
     {"name":"zone_tile_salt_spr","order":7,"path":"sprites/zone_tile_salt_spr/zone_tile_salt_spr.yy",},
     {"name":"zone_tile_tree_spr","order":4,"path":"sprites/zone_tile_tree_spr/zone_tile_tree_spr.yy",},
+    {"name":"zone_tile_wall_wood_00_spr","order":13,"path":"sprites/zone_tile_wall_wood_00_spr/zone_tile_wall_wood_00_spr.yy",},
     {"name":"zone_tile_water_spr","order":6,"path":"sprites/zone_tile_water_spr/zone_tile_water_spr.yy",},
   ],
 }

@@ -1,15 +1,15 @@
 
 // TILE SWAPPING
 function cell_replace_tile(x_pos, y_pos, new_tile){
-	var vis   = other.game_grid[x_pos][y_pos].is_visible;
-	var ex    = other.game_grid[x_pos][y_pos].explored;
-	var items = other.game_grid[x_pos][y_pos].items;
+	var vis   = other.game_state.game_grid[x_pos][y_pos].is_visible;
+	var ex    = other.game_state.game_grid[x_pos][y_pos].explored;
+	var items = other.game_state.game_grid[x_pos][y_pos].items;
 	
-	other.game_grid[x_pos][y_pos] = new new_tile();
+	other.game_state.game_grid[x_pos][y_pos] = new new_tile();
 	
-	other.game_grid[x_pos][y_pos].is_visible = vis;
-	other.game_grid[x_pos][y_pos].explored   = ex;
-	other.game_grid[x_pos][y_pos].items		 = items;
+	other.game_state.game_grid[x_pos][y_pos].is_visible = vis;
+	other.game_state.game_grid[x_pos][y_pos].explored   = ex;
+	other.game_state.game_grid[x_pos][y_pos].items		 = items;
 }
 
 function tile_lookup(list){
@@ -362,6 +362,19 @@ function tile_zone_lilypad()constructor{
 function tile_zone_marsh()constructor{
 	tile			= "swamp";
 	sprite			= zone_tile_marsh_spr;
+	index			= 0;
+	colour_fg		= noone;
+	colour_bg		= noone;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_raised_ground()constructor{
+	tile			= "raised ground";
+	sprite			= zone_tile_raised_ground_00_spr;
 	index			= 0;
 	colour_fg		= noone;
 	colour_bg		= noone;

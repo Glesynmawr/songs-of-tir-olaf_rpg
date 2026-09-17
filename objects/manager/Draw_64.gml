@@ -1,6 +1,6 @@
 /// @desc UI elements
 
-switch(game_state){
+switch(game_state.state_main){
 	case game_state_control_menu:	draw_control_menu();	break;
 	case game_state_main_menu:		draw_main_menu();		break;
 	case game_state_pause_menu:		draw_pause_menu();		break;

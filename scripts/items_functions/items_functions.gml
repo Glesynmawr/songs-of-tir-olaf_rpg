@@ -11,7 +11,7 @@ function spawn_new_item(item, stack, location, x_pos = 0, y_pos = 0, actor = noo
 	
 	// Check location spawn location
 	if (location == SPAWN_LOC.FLOOR){
-		array_push(game_grid[x_pos][y_pos].items, new_item);
+		array_push(game_state.game_grid[x_pos][y_pos].items, new_item);
 	}
 	else if (location == SPAWN_LOC.INVENTORY){
 		inventory_add_item(actor, new_item);
@@ -35,7 +35,7 @@ function spawn_existing_item(item, stack = -1, x_pos, y_pos){
 		new_item.stack = stack;
 	}
 	
-	with (manager.game_grid[x_pos][y_pos]){
+	with (manager.game_state.game_grid[x_pos][y_pos]){
 		array_insert(items, 0, new_item);
 	}
 }

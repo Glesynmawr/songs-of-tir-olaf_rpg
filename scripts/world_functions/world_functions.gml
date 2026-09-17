@@ -44,27 +44,16 @@ function world_generate(){
 	zone_function[BIOME.MARSH]				= zone_standard;
 	
 	// Zone Features
-	zone_autotile_feature[BIOME.MOUNTAIN]		= noone;
-	zone_autotile_feature[BIOME.HILL]			= noone;
-	zone_autotile_feature[BIOME.CANYON]			= noone;
-	zone_autotile_feature[BIOME.DESERT]			= noone;
-	zone_autotile_feature[BIOME.SCRUB]			= noone;
-	zone_autotile_feature[BIOME.SWAMP]			= noone;
-	zone_autotile_feature[BIOME.DENSE_MANGROVE]	= noone;
-	zone_autotile_feature[BIOME.WATER]			= noone;
-	zone_autotile_feature[BIOME.MANGROVE]		= noone;
-	zone_autotile_feature[BIOME.MARSH]			= [[1, 1, 1, 1, 2, 3], tile_zone_water, 6, 0.15]
-	
-	zone_clump_feature[BIOME.MOUNTAIN]			= noone;
-	zone_clump_feature[BIOME.HILL]				= noone;
-	zone_clump_feature[BIOME.CANYON]			= noone;
-	zone_clump_feature[BIOME.DESERT]			= noone;
-	zone_clump_feature[BIOME.SCRUB]				= noone;
-	zone_clump_feature[BIOME.SWAMP]				= noone;
-	zone_clump_feature[BIOME.DENSE_MANGROVE]	= noone;
-	zone_clump_feature[BIOME.WATER]				= noone;
-	zone_clump_feature[BIOME.MANGROVE]			= noone;
-	zone_clump_feature[BIOME.MARSH]				= [[1, 1, 1, 2, 2, 3], tile_zone_tree, 8, 1]
+	zone_feature[BIOME.MOUNTAIN]		= noone;
+	zone_feature[BIOME.HILL]			= noone;
+	zone_feature[BIOME.CANYON]			= noone;
+	zone_feature[BIOME.DESERT]			= noone;
+	zone_feature[BIOME.SCRUB]			= noone;
+	zone_feature[BIOME.SWAMP]			= noone;
+	zone_feature[BIOME.DENSE_MANGROVE]	= noone;
+	zone_feature[BIOME.WATER]			= noone;
+	zone_feature[BIOME.MANGROVE]		= noone;
+	zone_feature[BIOME.MARSH]			= [[[1, 1, 2, 2, 2, 3], tile_zone_water, 8, 0.5], [[0, 0, 1, 1, 1, 2], tile_zone_tree, 8, 1.5]];
 	
 	// Terrain								
 	terrain_lookup[BIOME.MOUNTAIN]			= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
@@ -109,10 +98,10 @@ function world_generate(){
 	world_grid = dungeons_add_to_world(world_grid);
 	
 	// Generate zone maps
-	zone_map  = [];
+	game_state.zone_map  = [];
 	for (var xx = 0; xx < MAP_WIDTH; xx ++){
 		for (var yy = 0; yy < MAP_HEIGHT; yy ++){
-			zone_map[xx][yy]  = noone;
+			game_state.zone_map[xx][yy]  = noone;
 		}
 	}
 	
@@ -369,13 +358,14 @@ function autotile_map(grid){
 			if (grid[i][j].tile == "water"){
 				grid[i][j].sprite = water_00_spr;
 				grid[i][j].index = autotile_47(grid, "water", i, j);
-				if (grid[i][j].index < 46){
-					grid[i][j].colour_fg = C_BROWN;
-				}
 			}
 			else if (grid[i][j].tile == "canyon"){
 				grid[i][j].sprite = canyon_00_spr;
 				grid[i][j].index = autotile_47(grid, "canyon", i, j);
+			}
+			else if (grid[i][j].tile == "raised ground"){
+				grid[i][j].sprite = zone_tile_raised_ground_00_spr;
+				grid[i][j].index = autotile_47(grid, "raised ground", i, j);
 			}
 		}
 	}

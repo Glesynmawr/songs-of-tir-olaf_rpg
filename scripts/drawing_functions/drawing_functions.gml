@@ -3,8 +3,8 @@
 function game_draw_grid(){
 	
 	// Get grid size
-	var ww = array_length(game_grid);
-	var hh = array_length(game_grid[0]);
+	var ww = array_length(game_state.game_grid);
+	var hh = array_length(game_state.game_grid[0]);
 	
 	// Get drawing position variables
 	var player_x			= actor_registry.player.x_pos;
@@ -15,7 +15,7 @@ function game_draw_grid(){
 	var player_spr_y		= actor_registry.player.sprite_y;
 	
 	// Get grid drawing position
-	if (!map_borders_are_clamped){
+	if (!game_state.map_borders_are_clamped){
 		var x_from = player_x - draw_width_half;
 		var y_from = player_y - draw_height_half;
 	}
@@ -31,21 +31,21 @@ function game_draw_grid(){
 	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
 	var map_offset_y = actor_registry.player.sprite_target_y - actor_registry.player.sprite_y;
 	
-	if ((player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width)) and (map_borders_are_clamped){
+	if ((player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width)) and (game_state.map_borders_are_clamped){
 		map_offset_x = 0;
 	}
-	if ((player_spr_y <= draw_height_half * cell_height) or (player_spr_y >= (hh - draw_height_half) * cell_height)) and (map_borders_are_clamped){
+	if ((player_spr_y <= draw_height_half * cell_height) or (player_spr_y >= (hh - draw_height_half) * cell_height)) and (game_state.map_borders_are_clamped){
 		map_offset_y = 0;
 	}
 	
 	for (var xx = x_from; xx < x_to; xx ++){
 		for (var yy = y_from; yy < y_to; yy ++){
 			
-			if (grid_check_position_in_bounds(game_grid, xx, yy)){
-				if (game_grid[xx][yy].explored or debugging_mode){
+			if (grid_check_position_in_bounds(game_state.game_grid, xx, yy)){
+				if (game_state.game_grid[xx][yy].explored or debugging_mode){
 				
 					// Set screen pixel position
-					var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1]);
+					var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
 					var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
 				
 					// Draw tile
@@ -61,7 +61,7 @@ function game_draw_grid(){
 		for (yy = y_from; yy < y_to; yy ++){
 
 			// Set screen pixel position
-			var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_position][1]);
+			var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
 			var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
 				
 			game_draw_actor(xx, yy, screen_x, screen_y);
@@ -152,12 +152,12 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 }
 
 function game_draw_items(xx, yy, screen_x, screen_y){
-	if (struct_exists(game_grid[xx][yy], "items")){
-		if (array_length(game_grid[xx][yy].items) > 0){
+	if (struct_exists(game_state.game_grid[xx][yy], "items")){
+		if (array_length(game_state.game_grid[xx][yy].items) > 0){
 
 			
-			var item_sprite = game_grid[xx][yy].items[0].sprite_index;
-			var item_index  = game_grid[xx][yy].items[0].image_index;
+			var item_sprite = game_state.game_grid[xx][yy].items[0].sprite_index;
+			var item_index  = game_state.game_grid[xx][yy].items[0].image_index;
 			var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
 			var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 			
@@ -171,19 +171,19 @@ function game_draw_items(xx, yy, screen_x, screen_y){
 
 function game_draw_tile(xx, yy, screen_x, screen_y){
 	
-	var spr = game_grid[xx][yy].sprite;
-	var ind = game_grid[xx][yy].index;
+	var spr = game_state.game_grid[xx][yy].sprite;
+	var ind = game_state.game_grid[xx][yy].index;
 				
 	var col = noone;
-	var bg = game_grid[xx][yy].colour_bg;
+	var bg = game_state.game_grid[xx][yy].colour_bg;
 	
 	var dng = noone;
-	if (struct_exists(game_grid[xx][yy], "dungeon")){
-		var dng = game_grid[xx][yy].dungeon;
+	if (struct_exists(game_state.game_grid[xx][yy], "dungeon")){
+		var dng = game_state.game_grid[xx][yy].dungeon;
 	}
 	
 	// Set sprite overlay shader
-	if (!game_grid[xx][yy].is_visible and game_grid[xx][yy].explored) and (!debugging_mode){
+	if (!game_state.game_grid[xx][yy].is_visible and game_state.game_grid[xx][yy].explored) and (!debugging_mode){
 		col = C_BLUE;
 	}
 	if (col != noone){
@@ -575,7 +575,7 @@ function draw_game_log(x_pos, y_pos, width, height){
 function draw_info_box(){
 	
 	// Background and border
-	var xx = ui_x_pos[ui_position][0];
+	var xx = ui_x_pos[ui_settings.ui_x_position][0];
 	var yy = infobox_y;
 	ui_draw_box(xx, yy, infobox_width, infobox_height);
 	
@@ -585,13 +585,13 @@ function draw_info_box(){
 	draw_text(xx, yy, $"HP: {actor_registry.player.hit_points}");
 	
 	yy += text_height;
-	draw_text(xx, yy, $"Turn: {current_turn}"); 
+	draw_text(xx, yy, $"Turn: {time_system.current_turn}"); 
 	
 	yy += text_height;
-	draw_text(xx, yy, $"Hour: {game_current_time[TIME.HOUR]}"); 
+	draw_text(xx, yy, $"Hour: {time_system.game_current_time[TIME.HOUR]}"); 
 	
 	yy += text_height;
-	draw_text(xx, yy, $"Day:  {game_current_time[TIME.DAY]}"); 
+	draw_text(xx, yy, $"Day:  {time_system.game_current_time[TIME.DAY]}"); 
 }
 
 function draw_inventory(actor, x_pos, y_pos, width, height){
@@ -717,8 +717,8 @@ function draw_minimap(){
 	
 	var bg = colour_bg_main;
 	
-	var grid_w = array_length(game_grid);
-	var grid_h = array_length(game_grid[0]);
+	var grid_w = array_length(game_state.game_grid);
+	var grid_h = array_length(game_state.game_grid[0]);
 	
 	s = minimap_scale;
 	if (!surface_exists(minimap_surface)){
@@ -741,13 +741,13 @@ function draw_minimap(){
 			mx  = (i * s) - (px * s) + (minimap_width  / 2);
 			my  = (j * s) - (py * s) + (minimap_height / 2);
 				
-			if(game_grid[i][j].is_visible){
-				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
+			if(game_state.game_grid[i][j].is_visible){
+				if (game_state.game_grid[i][j].tile != "wall") and (game_state.game_grid[i][j].tile != "secret door"){
 					col = c_grey;
 				}
 			}
-			else if (game_grid[i][j].explored){
-				if (game_grid[i][j].tile != "wall") and (game_grid[i][j].tile != "secret door"){
+			else if (game_state.game_grid[i][j].explored){
+				if (game_state.game_grid[i][j].tile != "wall") and (game_state.game_grid[i][j].tile != "secret door"){
 					col = c_dkgrey;
 				}
 			}
@@ -763,18 +763,18 @@ function draw_minimap(){
 	
 	surface_reset_target();
 		
-	draw_surface(minimap_surface, ui_x_pos[ui_position][0], minimap_y);
+	draw_surface(minimap_surface, ui_x_pos[ui_settings.ui_x_position][0], minimap_y);
 		
 	// Draw Map Border
-	draw_sprite_stretched_ext(ui_border_spr, 1, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, bg, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, ui_x_pos[ui_position][0], minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
+	draw_sprite_stretched_ext(ui_border_spr, 1, ui_x_pos[ui_settings.ui_x_position][0], minimap_y, minimap_width, minimap_height, bg, 1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, ui_x_pos[ui_settings.ui_x_position][0], minimap_y, minimap_width, minimap_height, C_ORANGE,  1);
 	
 	// Draw box text
-	if (minimap_title_text != ""){
-		ui_draw_box_title(ui_x_pos[ui_position][0] + (text_width * 2), minimap_y, minimap_title_text);
+	if (ui_settings.minimap_title_text != ""){
+		ui_draw_box_title(ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2), minimap_y, ui_settings.minimap_title_text);
 	}
-	if (minimap_sub_text != ""){
-		ui_draw_box_controls(ui_x_pos[ui_position][0] + (text_width * 2), minimap_height - 5, minimap_sub_text);
+	if (ui_settings.minimap_sub_text != ""){
+		ui_draw_box_controls(ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2), minimap_height - 5, ui_settings.minimap_sub_text);
 	}
 }
 

@@ -17,7 +17,7 @@ function action_move(grid, move_x, move_y){
 	// Check target in bounds
 	if (x_move < 0 or x_move >= grid_w or y_move < 0 or y_move >= grid_h) return(false);
 	
-	// Check game_grid for collision
+	// Check game_state.game_grid for collision
 	if (!grid[x_move][y_move].walkable) return(false);
 	
 	// Check actors for collision
@@ -157,7 +157,7 @@ function action_attack_melee(attacker, defender){
 						var attack_hits = combat_get_hit(attacker_agility, defender_agility);
 						if (attack_hits){
 							first_log += " and hits ";
-							particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos));
+							particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5);
 							
 							// Get hit location
 							var hit_loc = combat_get_hit_location(defender);

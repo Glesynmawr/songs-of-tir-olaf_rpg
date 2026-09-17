@@ -213,29 +213,22 @@ function zone_standard(world_index, dungeon, biome_index){
 		}
 	}
 	
-	// Add autotile features
-	if (zone_autotile_feature[biome_index] != noone){
+	// Add zone features
+	if (zone_feature[biome_index] != noone){
 		
-		var tile_type				= zone_autotile_feature[biome_index][1];
-		var choice					= irandom(array_length(zone_autotile_feature[biome_index][0]) - 1);
-		var number_of_features		= zone_autotile_feature[biome_index][0][choice];
-		var min_radius				= zone_autotile_feature[biome_index][2];
-		var grow_diminish_amount	= zone_autotile_feature[biome_index][3];
+		for (var i = 0; i < array_length(zone_feature[biome_index]); i ++){
 		
-		new_map = zone_add_autotile_feature(new_map, tile_type, number_of_features, min_radius, grow_diminish_amount);
+			var tile_type			= zone_feature[biome_index][i][1];
+			var choice				= irandom(array_length(zone_feature[biome_index][i][0]) - 1);
+			var number_of_features	= zone_feature[biome_index][i][0][choice];
+			var max_radius			= zone_feature[biome_index][i][2];
+			var density				= zone_feature[biome_index][i][3];
+		
+			new_map = zone_add_clump_feature(new_map, tile_type, number_of_features, max_radius, density);
+		}
 	}
 	
-	// Add clump features
-	if (zone_clump_feature[biome_index] != noone){
-		
-		var tile_type			= zone_clump_feature[biome_index][1];
-		var choice				= irandom(array_length(zone_clump_feature[biome_index][0]) - 1);
-		var number_of_features	= zone_clump_feature[biome_index][0][choice];
-		var max_radius			= zone_clump_feature[biome_index][2];
-		var density				= zone_clump_feature[biome_index][3];
-		
-		new_map = zone_add_clump_feature(new_map, tile_type, number_of_features, max_radius, density)
-	}
+	new_map = zone_add_clump_feature(new_map, tile_zone_raised_ground, 1, 4, 0.3, 20, 20);
 	
 	// Water Feature Placement
 	new_map = autotile_map(new_map);
@@ -243,6 +236,7 @@ function zone_standard(world_index, dungeon, biome_index){
 	
 	return(new_map);
 }
+
 
 // DUNGEON PLACEMENT ------------------------------------------------------------------------------
 function initialise_temp_list(){
@@ -270,64 +264,25 @@ function dungeons_add_to_zone(grid, type){
 
 
 // TERRAIN FEATURES -------------------------------------------------------------------------------
-function zone_add_autotile_feature(grid, tile_type, number_of_features, min_radius, grow_diminish_amount){
+function zone_add_clump_feature(grid, tile_type, number_of_features, max_radius, density, x_pos = noone, y_pos = noone){
+	
 	repeat(number_of_features){
-		var grow_count		= 0;
-		var grow_chance		= 1;
-		var lake_start_x	= irandom(ZONE_SIZE);
-		var lake_start_y	= irandom(ZONE_SIZE);
-		
-		var lake_temp_list;
-		lake_temp_list[0] = [lake_start_x, lake_start_y];
-		
-		while(array_length(lake_temp_list) > 0){
-			var candidate_list = [];
+		var xx = x_pos;
+		var yy = y_pos;
+		if (x_pos == noone) var xx = irandom(ZONE_SIZE);
+		if (y_pos == noone) var yy = irandom(ZONE_SIZE);
+	
+		for (var i = xx - max_radius; i < xx + max_radius; i ++){
+			for (var j = yy - max_radius; j < yy + max_radius; j ++){
 			
-			grow_count ++;
-			if (grow_count > min_radius){
-				grow_chance -= grow_diminish_amount;
-			}
+				if (grid_check_position_in_bounds(grid, i, j)){
+					var dist = round(point_distance(i, j, xx, yy));
 			
-			for (var i = 0; i < array_length(lake_temp_list); i ++){
-				
-				var cell_x = lake_temp_list[i][0];
-				var cell_y = lake_temp_list[i][1];
-				
-				for (var j = 0; j < 4; j ++){
-					var dir = j * 90;
-					var xx = cell_x + lengthdir_x(1, dir);
-					var yy = cell_y + lengthdir_y(1, dir);
-					var in_bounds = grid_check_position_in_bounds(grid, xx, yy);
-					if (in_bounds){
-						var chance_roll = random(1);
-						if (chance_roll < grow_chance and grid[xx][yy].tile != "water"){
-							array_push(candidate_list, [xx, yy]);
-							grid[xx][yy] = generate_zone_tile(tile_type);
-						}
+					var spawn_chance = ((max_radius - dist) / max_radius);
+					var roll = random(density);
+					if (roll < spawn_chance){
+						grid[i][j] = generate_zone_tile(tile_type);
 					}
-				}
-			}
-			lake_temp_list = candidate_list;
-		}
-	}
-	return(grid);
-}
-
-function zone_add_clump_feature(grid, tile_type, number_of_features, max_radius, density){
-	
-	var xx = irandom(ZONE_SIZE);
-	var yy = irandom(ZONE_SIZE);
-	
-	for (var i = xx - max_radius; i < xx + max_radius; i ++){
-		for (var j = yy - max_radius; j < yy + max_radius; j ++){
-			
-			if (grid_check_position_in_bounds(grid, i, j)){
-				var dist = round(point_distance(i, j, xx, yy));
-			
-				var spawn_chance = (max_radius - dist) / max_radius;
-				var roll = random(density);
-				if (roll < spawn_chance){
-					grid[i][j] = generate_zone_tile(tile_type);
 				}
 			}
 		}

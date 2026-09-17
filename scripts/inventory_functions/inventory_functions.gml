@@ -304,7 +304,7 @@ function hold_slot_select_initialise(){
 }
 
 function pickup_menu_initialise(actor){
-	var items = manager.game_grid[actor.x_pos][actor.y_pos].items;
+	var items = manager.game_state.game_grid[actor.x_pos][actor.y_pos].items;
 	if (array_length(items) <= 0){
 		return(false);
 	}

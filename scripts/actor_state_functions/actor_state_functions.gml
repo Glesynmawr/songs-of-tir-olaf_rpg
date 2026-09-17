@@ -5,13 +5,13 @@ function state_ready_for_inputs(){
 	if (keyboard_check_pressed(controls.key_cancel)){
 		with (manager){
 			pause_menu_hover = 0;
-			game_state_previous = game_state;
-			game_state = game_state_pause_menu;
+			game_state_previous = game_state.state_main;
+			game_state.state_main = game_state_pause_menu;
 			exit;
 		}
 	}
 	
-	if (keyboard_check_pressed(controls.key_inventory) and manager.game_state != game_state_world){
+	if (keyboard_check_pressed(controls.key_inventory) and manager.game_state.state_main != game_state_world){
 		state = state_inventory;
 		exit;
 	}
@@ -31,7 +31,7 @@ function state_ready_for_inputs(){
 				if (manager.move_timer <= 0){
 				var xx = manager.cell_x_neighbours[move_dir];
 				var yy = manager.cell_y_neighbours[move_dir];
-				player_moved = action_move(manager.game_grid, xx, yy);
+				player_moved = action_move(manager.game_state.game_grid, xx, yy);
 				manager.move_timer = manager.move_timer_max;
 			}
 			else {
@@ -48,7 +48,7 @@ function state_ready_for_inputs(){
 		
 		// Interaction with tile in direction
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (manager.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
+			if (manager.game_state.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
 				found_a_secret(self);
 			}
 			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
@@ -66,8 +66,8 @@ function state_ready_for_inputs(){
 			
 			// Pickup items
 			var items_exist = false;
-			if (struct_exists(manager.game_grid[x_pos][y_pos], "items")){
-				if (array_length(manager.game_grid[x_pos][y_pos].items) > 0){
+			if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "items")){
+				if (array_length(manager.game_state.game_grid[x_pos][y_pos].items) > 0){
 					items_exist = true;
 					pickup_menu_initialise(self);
 				}
@@ -81,12 +81,12 @@ function state_ready_for_inputs(){
 		// TOGGLE WORLD MAP
 		else if (keyboard_check_pressed(controls.key_map_mode)){
 			if (array_length(manager.actor_registry.actor_list) == 1){
-				if (manager.game_grid == manager.world_map){
+				if (manager.game_state.game_grid == manager.game_state.world_map){
 					with(manager){
 						transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
 					}
 				}
-				else if (manager.game_grid == manager.zone_map[world_x][world_y]){
+				else if (manager.game_state.game_grid == manager.game_state.zone_map[world_x][world_y]){
 					with(manager){
 						transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
 					}
@@ -106,42 +106,42 @@ function state_ready_for_inputs(){
 	if (player_moved){
 		
 		// Increment player turn counter
-		 manager.current_turn += 1;
+		 manager.time_system.current_turn += 1;
 		
 		// Set has-acted flag
 		has_acted = true;
 		
 		// Update world position
-		if (manager.map_mode == MAP_MODE.WORLD){
+		if (manager.game_state.map_mode == MAP_MODE.WORLD){
 			world_x = x_pos;
 			world_y = y_pos;
 		}
 		
 		// Check for map edge in zone mode
-		if (manager.map_mode ==	MAP_MODE.ZONE){
+		if (manager.game_state.map_mode ==	MAP_MODE.ZONE){
 			if (x_pos == 0){
 				if (world_x > 0){
 					
 					// Reset visibility on current map
-					grid_set_visible(manager.game_grid, false)
+					grid_set_visible(manager.game_state.game_grid, false)
 					
 					// Move world grid position
 					world_x --;
 					
-					// Set game_grid to new zone
+					// Set game_state.game_grid to new zone
 					goto_zone(world_x, world_y, ZONE_SIZE - 2, y_pos);
 				}
 			}
 			else if (x_pos == ZONE_SIZE - 1){
-				if (world_x < array_length(manager.world_map) - 1){
+				if (world_x < array_length(manager.game_state.world_map) - 1){
 					
 					// Reset visibility on current map
-					grid_set_visible(manager.game_grid, false)
+					grid_set_visible(manager.game_state.game_grid, false)
 					
 					// Move world grid position
 					world_x ++;
 					
-					// Set game_grid to new zone
+					// Set game_state.game_grid to new zone
 					goto_zone(world_x, world_y, 1, y_pos);
 				}
 			}
@@ -149,35 +149,35 @@ function state_ready_for_inputs(){
 				if (world_y > 0){
 
 					// Reset visibility on current map
-					grid_set_visible(manager.game_grid, false)
+					grid_set_visible(manager.game_state.game_grid, false)
 					
 					// Move world grid position
 					world_y --;
 					
-					// Set game_grid to new zone
+					// Set game_state.game_grid to new zone
 					goto_zone(world_x, world_y, x_pos, ZONE_SIZE - 2);
 				}
 			}
 			else if (y_pos == ZONE_SIZE - 1){
-				if (world_y < array_length(manager.world_map[0]) - 1){
+				if (world_y < array_length(manager.game_state.world_map[0]) - 1){
 					
 					// Reset visibility on current map
-					grid_set_visible(manager.game_grid, false)
+					grid_set_visible(manager.game_state.game_grid, false)
 					
 					// Move world grid position
 					world_y ++;
 					
-					// Set game_grid to new zone
+					// Set game_state.game_grid to new zone
 					goto_zone(world_x, world_y, x_pos, 1);
 				}
 			}
 		}
 		
 		// Update player LOS
-		set_player_los(other.game_grid, self);
+		set_player_los(other.game_state.game_grid, self);
 		
 		// Update player distance map
-		distance_map_player = create_distance_map(manager.game_grid, x_pos, y_pos);
+		distance_map_player = create_distance_map(manager.game_state.game_grid, x_pos, y_pos);
 	}
 }
 
@@ -418,8 +418,8 @@ function state_pickup(){
 		inventory_add_item(self, pickup_menu[pickup_hover]);
 		
 		// Find item on ground and delete it
-		var ind = array_get_index(manager.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
-		array_delete(manager.game_grid[x_pos][y_pos].items, ind, 1);
+		var ind = array_get_index(manager.game_state.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
+		array_delete(manager.game_state.game_grid[x_pos][y_pos].items, ind, 1);
 		
 		// Delete item from pickup menu
 		array_delete(pickup_menu, pickup_hover, 1);
@@ -435,7 +435,7 @@ function state_pickup(){
 
 function state_idle(){
 	// Check if player is in range and visible
-	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_grid[x_pos][y_pos].is_visible == true){
+	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_state.game_grid[x_pos][y_pos].is_visible == true){
 		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
 		
 		switch(demeanour){
@@ -456,7 +456,7 @@ function state_chase(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
 			if (distance_map_player[target_x][target_y] < lowest_dist){
 				lowest_dist = distance_map_player[target_x][target_y];
 			}
@@ -469,7 +469,7 @@ function state_chase(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
 			if (distance_map_player[target_x][target_y] <= lowest_dist){
 				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
 			}
@@ -482,7 +482,7 @@ function state_chase(){
 		var choice = irandom(len - 1);
 		
 		// execute move
-		action_move(manager.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
+		action_move(manager.game_state.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
 	}
 	
 	has_acted = true;
@@ -496,7 +496,7 @@ function state_flee(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
 			if (distance_map_player[target_x][target_y] > highest_dist){
 				highest_dist = distance_map_player[target_x][target_y];
 			}
@@ -514,7 +514,7 @@ function state_flee(){
 		var target_x = x_pos + manager.cell_x_neighbours[i];
 		var target_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_grid, target_x, target_y)){
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
 			if (distance_map_player[target_x][target_y] >= highest_dist){
 				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
 			}
@@ -527,7 +527,7 @@ function state_flee(){
 		var choice = irandom(len - 1);
 		
 		// Execute move
-		action_move(manager.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
+		action_move(manager.game_state.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
 	}
 	
 	has_acted = true;

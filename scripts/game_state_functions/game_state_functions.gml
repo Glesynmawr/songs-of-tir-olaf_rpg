@@ -1,138 +1,163 @@
 
 // INIT STATE FUNCTIONS
 function init_control_menu(){
-	is_rebinding_keys	= false;
-	current_key_rebind	= 0;
+	with (manager){
+		is_rebinding_keys	= false;
+		current_key_rebind	= 0;
 	
-	new_controls[0] = controls.key_up;
-	new_controls[1] = controls.key_down;
-	new_controls[2] = controls.key_left;
-	new_controls[3] = controls.key_right;
-	new_controls[4] = controls.key_move_confirm;
-	new_controls[5] = controls.key_interact_confirm;
-	new_controls[6] = controls.key_inventory;
-	new_controls[7] = controls.key_map_mode;
-	new_controls[8] = controls.key_item_swap;
+		new_controls[0] = controls.key_up;
+		new_controls[1] = controls.key_down;
+		new_controls[2] = controls.key_left;
+		new_controls[3] = controls.key_right;
+		new_controls[4] = controls.key_move_confirm;
+		new_controls[5] = controls.key_interact_confirm;
+		new_controls[6] = controls.key_inventory;
+		new_controls[7] = controls.key_map_mode;
+		new_controls[8] = controls.key_item_swap;
 				
-	game_state = game_state_control_menu;
+		game_state.state_main = game_state_control_menu;
+	}
 }
 
 function init_main(){
+	with (manager){
+		// Set resolution and scale
+		resolution_scale();
 	
-	// Set resolution and scale
-	resolution_scale();
+		// Initialise game states
+		game_state.state_main	= noone;
+		game_state_previous		= noone;
+		control_state_previous	= noone;
+		game_state.map_mode		= noone;
 	
-	// Initialise game states
-	game_state				= noone;
-	game_state_previous		= noone;
-	control_state_previous	= noone;
-	map_mode				= noone;
+		// UI animation timer
+		ui_flip				= true;
+		ui_flip_timer_max	= 30;
+		ui_flip_timer		= ui_flip_timer_max;
 	
-	// UI animation timer
-	ui_flip				= true;
-	ui_flip_timer_max	= 30;
-	ui_flip_timer		= ui_flip_timer_max;
+		// Set text font and cell size
+		draw_set_font(mono_fnt);
+		cell_width  = 16;
+		cell_height = 16;
 	
-	// Set text font and cell size
-	draw_set_font(mono_fnt);
-	cell_width  = 16;
-	cell_height = 16;
-	
-	// Transition into initial room
-	transition_set(TRANSITION.GAME_BOOT, C_BLACK);
+		// Transition into initial room
+		transition_set(TRANSITION.GAME_BOOT, C_BLACK);
+	}
 }
 	
 function init_world(){
 	
-	// Actor registry - Active actors only
-	actor_registry = {
-		actor_list:	[],
-		player:		noone
-	}
-	action_list = [];
+	with (manager){
+		// Actor registry - Active actors only
+		actor_registry = {
+			actor_list:	[],
+			player:		noone
+		}
+		action_list = [];
 
-	// Create world and set starting map
-	world_map = world_generate();
-	game_grid = world_map;
+		// Create world and set starting map
+		game_state.world_map = world_generate();
+		game_state.game_grid = game_state.world_map;
 	
-	// Game state
-	game_state = game_state_world;
+		// Game state
+		game_state.state_main = game_state_world;
 	
-	// Set player entry position
-	entry_pos = [player_start_x, player_start_y];
+		// Set player entry position
+		entry_pos = [player_start_x, player_start_y];
 																
-	// Player
-	spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
-	set_player_los(game_grid, actor_registry.player);
-	actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
+		// Player
+		spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
+		set_player_los(game_state.game_grid, actor_registry.player);
+		actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
 	
-	spawn_new_item(item_hat1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_hat2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_mask1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_mask2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_armour1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_armour2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_cloak1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_cloak2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_vambrace1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_vambrace2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_glove2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_greave1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_greave2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_boot1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_hat1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_hat2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_mask1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_mask2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_armour1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_armour2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_cloak1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_cloak2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 	
-	// Game log
-	initialise_log();
+		// Game log
+		initialise_log();
 
-	// Distance maps
-	globalvar distance_map_player;
-	distance_map_player = [];
+		// Distance maps
+		globalvar distance_map_player;
+		distance_map_player = [];
 
-	// Move speed - multiplier
-	actor_move_speed = 0.2;
+		// Move speed - multiplier
+		actor_move_speed = 0.2;
 
-	// Action list and turn order
-	action_list = [];
-	turn_order_initialise();
+		// Action list and turn order
+		action_list = [];
+		turn_order_initialise();
 	
-	// Go to world
-	goto_world();
+		// Go to world
+		goto_world();
+	}
 }
 
 
 // GAME STATE FUNCTIONS
 function game_state_control_menu(){
-	if (!is_rebinding_keys){
-		if (keyboard_check_pressed(controls.key_cancel)){
-			transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
-		}
-		else if (keyboard_check_pressed(controls.key_up)){
-			control_menu_hover --;
-			if (control_menu_hover < 0){
-				control_menu_hover += array_length(control_menu);
+	with (manager){
+		if (!is_rebinding_keys){
+			if (keyboard_check_pressed(controls.key_cancel)){
+				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 			}
-		}
-		else if (keyboard_check_pressed(controls.key_down)){
-			control_menu_hover ++;
-			if (control_menu_hover >= array_length(control_menu)){
-				control_menu_hover -= array_length(control_menu);
-			}
-		}
-		else if (keyboard_check_pressed(controls.key_interact_confirm)){
-			var txt = control_menu[control_menu_hover];
-			if (txt == "Rebind keys"){
-				for (var i = 0; i < array_length(new_controls); i ++){
-					new_controls[i] = noone;
+			else if (keyboard_check_pressed(controls.key_up)){
+				control_menu_hover --;
+				if (control_menu_hover < 0){
+					control_menu_hover += array_length(control_menu);
 				}
-				is_rebinding_keys = true;
 			}
-			else if (txt == "Set default keys"){
-				controls = variable_clone(controls_default);
+			else if (keyboard_check_pressed(controls.key_down)){
+				control_menu_hover ++;
+				if (control_menu_hover >= array_length(control_menu)){
+					control_menu_hover -= array_length(control_menu);
+				}
+			}
+			else if (keyboard_check_pressed(controls.key_interact_confirm)){
+				var txt = control_menu[control_menu_hover];
+				if (txt == "Rebind keys"){
+					for (var i = 0; i < array_length(new_controls); i ++){
+						new_controls[i] = noone;
+					}
+					is_rebinding_keys = true;
+				}
+				else if (txt == "Set default keys"){
+					controls = variable_clone(controls_default);
 				
+					new_controls[0] = controls.key_up;
+					new_controls[1] = controls.key_down;
+					new_controls[2] = controls.key_left;
+					new_controls[3] = controls.key_right;
+					new_controls[4] = controls.key_move_confirm;
+					new_controls[5] = controls.key_interact_confirm;
+					new_controls[6] = controls.key_inventory;
+					new_controls[7] = controls.key_map_mode;
+					new_controls[8] = controls.key_item_swap;
+				}
+				else if (txt == "Save and exit"){
+					controls_save_settings();
+					transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
+				}
+			}
+		}
+		else{
+			if (keyboard_check_pressed(controls.key_cancel)){
+				is_rebinding_keys	= false;
 				new_controls[0] = controls.key_up;
 				new_controls[1] = controls.key_down;
 				new_controls[2] = controls.key_left;
@@ -143,53 +168,35 @@ function game_state_control_menu(){
 				new_controls[7] = controls.key_map_mode;
 				new_controls[8] = controls.key_item_swap;
 			}
-			else if (txt == "Save and exit"){
-				controls_save_settings();
-				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
-			}
-		}
-	}
-	else{
-		if (keyboard_check_pressed(controls.key_cancel)){
-			is_rebinding_keys	= false;
-			new_controls[0] = controls.key_up;
-			new_controls[1] = controls.key_down;
-			new_controls[2] = controls.key_left;
-			new_controls[3] = controls.key_right;
-			new_controls[4] = controls.key_move_confirm;
-			new_controls[5] = controls.key_interact_confirm;
-			new_controls[6] = controls.key_inventory;
-			new_controls[7] = controls.key_map_mode;
-			new_controls[8] = controls.key_item_swap;
-		}
 		
-		if (keyboard_check_pressed(vk_anykey)){
-			// Check Assigned Keys for Duplicates
-			var can_assign = true;
-			if (keyboard_lastkey == vk_escape) can_assign = false;
-			for (var i = 0; i < array_length(new_controls); i ++){
-				if (new_controls[i] == keyboard_lastkey){
-					can_assign = false;
+			if (keyboard_check_pressed(vk_anykey)){
+				// Check Assigned Keys for Duplicates
+				var can_assign = true;
+				if (keyboard_lastkey == vk_escape) can_assign = false;
+				for (var i = 0; i < array_length(new_controls); i ++){
+					if (new_controls[i] == keyboard_lastkey){
+						can_assign = false;
+					}
 				}
-			}
 			
-			if (can_assign){
+				if (can_assign){
 
-				new_controls[current_key_rebind] = keyboard_lastkey;
-				current_key_rebind ++;
+					new_controls[current_key_rebind] = keyboard_lastkey;
+					current_key_rebind ++;
 			
-				if (current_key_rebind == array_length(new_controls)){
-					is_rebinding_keys = false;
+					if (current_key_rebind == array_length(new_controls)){
+						is_rebinding_keys = false;
 					
-					controls.key_up					= new_controls[0];
-					controls.key_down				= new_controls[1];
-					controls.key_left				= new_controls[2];
-					controls.key_right				= new_controls[3];
-					controls.key_move_confirm		= new_controls[4];
-					controls.key_interact_confirm	= new_controls[5];
-					controls.key_inventory			= new_controls[6];
-					controls.key_map_mode			= new_controls[7];
-					controls.key_item_swap		   	= new_controls[8];
+						controls.key_up					= new_controls[0];
+						controls.key_down				= new_controls[1];
+						controls.key_left				= new_controls[2];
+						controls.key_right				= new_controls[3];
+						controls.key_move_confirm		= new_controls[4];
+						controls.key_interact_confirm	= new_controls[5];
+						controls.key_inventory			= new_controls[6];
+						controls.key_map_mode			= new_controls[7];
+						controls.key_item_swap		   	= new_controls[8];
+					}
 				}
 			}
 		}
@@ -197,195 +204,204 @@ function game_state_control_menu(){
 }
 	
 function game_state_dungeon(){
-	if (!game_paused and transition == noone){
-		turn_order_update();
-		update_dust_particles();
+	with (manager){
+		if (!game_paused and transition == noone){
+			turn_order_update();
+			update_dust_particles();
+		}
 	}
 }
 
 function game_state_main_menu(){
-	if (keyboard_check_pressed(controls.key_up)){
-		main_menu_hover --;
-		if (main_menu_hover < 0){
-			main_menu_hover += array_length(main_menu);
+	with (manager){
+		if (keyboard_check_pressed(controls.key_up)){
+			main_menu_hover --;
+			if (main_menu_hover < 0){
+				main_menu_hover += array_length(main_menu);
+			}
 		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		main_menu_hover ++;
-		if (main_menu_hover >= array_length(main_menu)){
-			main_menu_hover -= array_length(main_menu);
+		else if (keyboard_check_pressed(controls.key_down)){
+			main_menu_hover ++;
+			if (main_menu_hover >= array_length(main_menu)){
+				main_menu_hover -= array_length(main_menu);
+			}
 		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = main_menu[main_menu_hover];
-		if (txt == "New game"){
-			transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
-		}
-		else if (txt == "Load game"){
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			var txt = main_menu[main_menu_hover];
+			if (txt == "New game"){
+				transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
+			}
+			else if (txt == "Load game"){
 			
-		}
-		else if (txt == "Controls"){
-			game_state_previous = game_state;
-			transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
-		}
-		else if (txt == "Settings"){
+			}
+			else if (txt == "Controls"){
+				game_state_previous = game_state.state_main;
+				transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
+			}
+			else if (txt == "Settings"){
 			
-		}
-		else if (txt == "Quit to desktop"){
-			transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+			}
+			else if (txt == "Quit to desktop"){
+				transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+			}
 		}
 	}
 }
 
 function game_state_pause_menu(){
-	if (keyboard_check_pressed(controls.key_cancel)){
-		game_state = game_state_previous;
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		pause_menu_hover --;
-		if (pause_menu_hover < 0){
-			pause_menu_hover += array_length(pause_menu);
+	with (manager){
+		if (keyboard_check_pressed(controls.key_cancel)){
+			game_state.state_main = game_state_previous;
 		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		pause_menu_hover ++;
-		if (pause_menu_hover >= array_length(pause_menu)){
-			pause_menu_hover -= array_length(pause_menu);
+		else if (keyboard_check_pressed(controls.key_up)){
+			pause_menu_hover --;
+			if (pause_menu_hover < 0){
+				pause_menu_hover += array_length(pause_menu);
+			}
 		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var txt = pause_menu[pause_menu_hover];
-		if (txt == "Continue"){
-			game_state = game_state_previous;
+		else if (keyboard_check_pressed(controls.key_down)){
+			pause_menu_hover ++;
+			if (pause_menu_hover >= array_length(pause_menu)){
+				pause_menu_hover -= array_length(pause_menu);
+			}
 		}
-		else if (txt == "Controls"){
-			transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
-		}
-		else if (txt == "Settings"){
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			var txt = pause_menu[pause_menu_hover];
+			if (txt == "Continue"){
+				game_state.state_main = game_state_previous;
+			}
+			else if (txt == "Controls"){
+				transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
+			}
+			else if (txt == "Settings"){
 			
-		}
-		else if (txt == "Save and quit"){
+			}
+			else if (txt == "Save and quit"){
 			
-		}
-		else if (txt == "Quit without saving"){
-			transition_set(TRANSITION.GAME_BOOT, colour_bg_main);
-		}
-		else if (txt == "Quit to desktop"){
-			transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+			}
+			else if (txt == "Quit without saving"){
+				transition_set(TRANSITION.GAME_BOOT, colour_bg_main);
+			}
+			else if (txt == "Quit to desktop"){
+				transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+			}
 		}
 	}
 }
 
 function game_state_world(){
-	if (!game_paused and transition == noone){
-		turn_order_update();
-		update_dust_particles();
+	with (manager){
+		if (!game_paused and transition == noone){
+			turn_order_update();
+			update_dust_particles();
+		}
 	}
 }
 
 
 // LOCATION GOTO FUNCTIONS
 function goto_dungeon(dungeon_id, is_descending){
-	
-	var world_x = actor_registry.player.world_x;
-	var world_y = actor_registry.player.world_y;
+	with (manager){
+		var world_x = actor_registry.player.world_x;
+		var world_y = actor_registry.player.world_y;
 
-	// Exit dungeon
-	if (current_depth < 0){
-		transition_set(TRANSITION.GAME_DUNGEON_EXIT, C_BLACK);
-		exit;
-	}
+		// Exit dungeon
+		if (game_state.current_depth < 0){
+			transition_set(TRANSITION.GAME_DUNGEON_EXIT, C_BLACK);
+			exit;
+		}
 
-	// reset actor and action lists
-	actor_list_clear_all(false);
-	action_list_clear_all(false);
+		// reset actor and action lists
+		actor_list_clear_all(false);
+		action_list_clear_all(false);
 	
-	// Set game grid
-	var new_dungeon = zone_map[world_x][world_y][dungeon_entry_x][dungeon_entry_y].dungeon_list[current_depth];
-	if (new_dungeon == noone){
-		var new_dungeon = dungeon_generate(dungeon_id);
-		zone_map[world_x][world_y][dungeon_entry_x][dungeon_entry_y].dungeon_list[current_depth] = new_dungeon;
+		// Set game grid
+		var new_dungeon = game_state.zone_map[world_x][world_y][game_state.dungeon_entry_x][game_state.dungeon_entry_y].dungeon_list[game_state.current_depth];
+		if (new_dungeon == noone){
+			var new_dungeon = dungeon_generate(dungeon_id);
+			game_state.zone_map[world_x][world_y][game_state.dungeon_entry_x][game_state.dungeon_entry_y].dungeon_list[game_state.current_depth] = new_dungeon;
+		}
+	
+		game_state.game_grid	= new_dungeon[0];
+		game_state.map_mode	= MAP_MODE.DUNGEON;
+		door_index  = new_dungeon[3];
+	
+		// Set player position
+		if (is_descending == true){
+			actor_registry.player.x_pos = new_dungeon[1][0];
+			actor_registry.player.y_pos = new_dungeon[1][1];
+		}
+		else{
+			actor_registry.player.x_pos = new_dungeon[2][0];
+			actor_registry.player.y_pos = new_dungeon[2][1];
+		}
+		actor_set_sprite_pos(actor_registry.player);
+	
+		// Set camera bounds
+		game_state.map_borders_are_clamped = false;
+	
+		// Set game state
+		game_state.state_main = game_state_dungeon;
+	
+		// Update player LOS
+		set_player_los(game_state.game_grid, actor_registry.player);
+	
+		// Update Minimap text
+		ui_settings.minimap_title_text = dungeons[dungeon_index].name;
+		ui_settings.minimap_sub_text  = "Level: " + string(game_state.current_depth + 1);
+	
+		// Set time_system.timescale
+		time_system.timescale = timescale_zone;
 	}
-	
-	game_grid	= new_dungeon[0];
-	map_mode	= MAP_MODE.DUNGEON;
-	door_index  = new_dungeon[3];
-	
-	// Set player position
-	if (is_descending == true){
-		actor_registry.player.x_pos = new_dungeon[1][0];
-		actor_registry.player.y_pos = new_dungeon[1][1];
-	}
-	else{
-		actor_registry.player.x_pos = new_dungeon[2][0];
-		actor_registry.player.y_pos = new_dungeon[2][1];
-	}
-	actor_set_sprite_pos(actor_registry.player);
-	
-	// Set camera bounds
-	map_borders_are_clamped = false;
-	
-	// Set game state
-	game_state = game_state_dungeon;
-	
-	// Update player LOS
-	set_player_los(game_grid, actor_registry.player);
-	
-	// Update Minimap text
-	minimap_title_text = dungeons[dungeon_index].name;
-	minimap_sub_text  = "Level: " + string(current_depth + 1);
-	
-	// Set timescale
-	timescale = timescale_zone;
 }
 
 function goto_world(){
-	
-	// reset actor and action lists
-	actor_list_clear_all(false);
-	action_list_clear_all(false);
-	
-	// Set game grid
-	game_grid = world_map;
-	map_mode  = MAP_MODE.WORLD;
-	
-	// Set player position
-	actor_registry.player.x_pos = actor_registry.player.world_x;
-	actor_registry.player.y_pos = actor_registry.player.world_y;
-	
-	actor_set_sprite_pos(actor_registry.player);
-	
-	// Set camera bounds
-	map_borders_are_clamped = true;
-	
-	// Set game state
-	game_state = game_state_world;
-	
-	// Update player LOS
-	set_player_los(game_grid, actor_registry.player);
-	
-	// Update Minimap text
-	minimap_title_text = "Tir Olaf";
-	minimap_sub_text  = "";
-	
-	// Set timescale
-	timescale = timescale_world;
-}
-
-function goto_zone(world_x, world_y, entry_x, entry_y){
-	
 	with (manager){
 		// reset actor and action lists
 		actor_list_clear_all(false);
 		action_list_clear_all(false);
 	
 		// Set game grid
-		if (zone_map[world_x][world_y] == noone){
-			zone_map[world_x][world_y] = zone_map_generate(world_grid, world_x, world_y);
-			initialise_item_grid(zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
+		game_state.game_grid = game_state.world_map;
+		game_state.map_mode  = MAP_MODE.WORLD;
+	
+		// Set player position
+		actor_registry.player.x_pos = actor_registry.player.world_x;
+		actor_registry.player.y_pos = actor_registry.player.world_y;
+	
+		actor_set_sprite_pos(actor_registry.player);
+	
+		// Set camera bounds
+		game_state.map_borders_are_clamped = true;
+	
+		// Set game state
+		game_state.state_main = game_state_world;
+	
+		// Update player LOS
+		set_player_los(game_state.game_grid, actor_registry.player);
+	
+		// Update Minimap text
+		ui_settings.minimap_title_text = "Tir Olaf";
+		ui_settings.minimap_sub_text  = "";
+	
+		// Set time_system.timescale
+		time_system.timescale = timescale_world;
+	}
+}
+
+function goto_zone(world_x, world_y, entry_x, entry_y){
+	with (manager){
+		// reset actor and action lists
+		actor_list_clear_all(false);
+		action_list_clear_all(false);
+	
+		// Set game grid
+		if (game_state.zone_map[world_x][world_y] == noone){
+			game_state.zone_map[world_x][world_y] = zone_map_generate(world_grid, world_x, world_y);
+			initialise_item_grid(game_state.zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
 		}
-		game_grid = zone_map[world_x][world_y];
-		map_mode  = MAP_MODE.ZONE;
+		game_state.game_grid = game_state.zone_map[world_x][world_y];
+		game_state.map_mode  = MAP_MODE.ZONE;
 	
 		// Set player position
 		actor_registry.player.x_pos = entry_x;
@@ -394,13 +410,13 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		actor_set_sprite_pos(actor_registry.player);
 	
 		// Set camera bounds
-		map_borders_are_clamped = true;
+		game_state.map_borders_are_clamped = true;
 	
 		// Set game state
-		game_state = game_state_dungeon;
+		game_state.state_main = game_state_dungeon;
 	
 		// Spawn mobs
-		var b = world_map[world_x][world_y].biome;
+		var b = game_state.world_map[world_x][world_y].biome;
 		if (mob_lookup[b] != noone){
 			var mob_count = mob_lookup[b][0];
 			repeat(mob_count){
@@ -412,14 +428,14 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		}
 	
 		// Update player LOS
-		set_player_los(game_grid, actor_registry.player);
+		set_player_los(game_state.game_grid, actor_registry.player);
 		
 		// Update Minimap text
-		minimap_title_text = world_grid[world_x][world_y].tile;
-		minimap_sub_text  = "";
+		ui_settings.minimap_title_text = world_grid[world_x][world_y].tile;
+		ui_settings.minimap_sub_text  = "";
 		
-		// Set timescale
-		timescale = timescale_zone;
+		// Set time_system.timescale
+		time_system.timescale = timescale_zone;
 	}
 }
 

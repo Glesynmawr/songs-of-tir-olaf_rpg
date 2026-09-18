@@ -108,9 +108,11 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	// Turn structure variables
 	new_actor.energy	= 0;
 	new_actor.has_acted = false;
+	new_actor.is_player = false;
 	
 	if (actor_type == actor_player){
 		actor_registry.player	= new_actor;
+		new_actor.is_player		= true;
 		new_actor.is_visible	= false;
 	}
 	else{
@@ -139,10 +141,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 // DESPAWNING -------------------------------------------------------------------------------------
 function action_list_clear_all(include_player){
 	if (include_player){
-		array_resize(manager.action_list, 0);
+		array_resize(manager.actor_registry.action_list, 0);
 	}
 	else{
-		array_resize(manager.action_list, 1);
+		array_resize(manager.actor_registry.action_list, 1);
 	}
 }
 

@@ -45,9 +45,9 @@ function game_draw_grid(){
 				if (game_state.game_grid[xx][yy].explored or debugging_mode){
 				
 					// Set screen pixel position
-					var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
-					var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
-				
+					var screen_x = floor((((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]));
+					var screen_y = floor((((yy - y_from) * cell_height) + map_offset_y));
+					
 					// Draw tile
 					game_draw_tile(xx, yy, screen_x, screen_y);
 				
@@ -72,8 +72,8 @@ function game_draw_grid(){
 	draw_dust_particles(screen_x, screen_y);
 	
 	// Draw move direction indicator
-	if (direction_indicator != noone){
-		draw_sprite_ext(direction_arrow_spr, direction_indicator, direction_indicator_x, direction_indicator_y, 1, 1, 0, c_white, 1);
+	if (game_state.direction_indicator != noone){
+		draw_sprite_ext(direction_arrow_spr, game_state.direction_indicator, game_state.direction_indicator_x, game_state.direction_indicator_y, 1, 1, 0, c_white, 1);
 	}
 }
 
@@ -139,12 +139,12 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				shader_reset();
 				
 				// If actor is player, set direction indicator position and direction
-				if (actor_registry.actor_list[i] == actor_registry.player and direction_indicator != noone){
+				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
 					var dir_ind_x = screen_x + cell_width  / 2;
 					var dir_ind_y = screen_y + cell_height / 2;
 								
-					direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  direction_indicator * 45);
-					direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, direction_indicator * 45);
+					game_state.direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  game_state.direction_indicator * 45);
+					game_state.direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, game_state.direction_indicator * 45);
 				}
 			}
 		}
@@ -175,7 +175,6 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 	var ind = game_state.game_grid[xx][yy].index;
 				
 	var col = noone;
-	var bg = game_state.game_grid[xx][yy].colour_bg;
 	
 	var dng = noone;
 	if (struct_exists(game_state.game_grid[xx][yy], "dungeon")){
@@ -197,32 +196,19 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 		shader_set(colour_overlay_shd);
 		shader_set_uniform_f_array(uni_overlay, col);
 	}
-	else{
-		var tex		= sprite_get_texture(spr, ind);
-		var texel_w = texture_get_texel_width(tex);
-		var texel_h = texture_get_texel_height(tex);
-								
-		shader_set(outline_shd);
-		shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
-		shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
-	}
-					
-	// Draw background rectangle
-	if (bg != noone){
-		draw_rectangle_colour(screen_x, screen_y, screen_x + cell_width, screen_y + cell_height, bg, bg, bg, bg, false);
-	}
 					
 	// Get tile spritesheet position
 	var tile_x = ind mod 8;
 	var tile_y = ind div 8;
 			
-	draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, screen_x, screen_y, 1, 1, C_WHITE, 1);
+	draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, floor(screen_x), floor(screen_y), 1, 1, C_WHITE, 1);
 	
 	if (dng != noone){
 		draw_sprite(tile_world_dungeon_entrance_spr, 0, screen_x, screen_y);
 	}
-	
-	shader_reset();
+	if (shader_current() != -1){
+		shader_reset();
+	}
 }
 
 
@@ -341,6 +327,7 @@ function draw_main_menu(){
 	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y)
 	
 	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
+	draw_text_outlined($"Version: {global.version[0]}.{global.version[1]}.{global.version[2]}", 24, screen_height - 12, colour_text_main);
 	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
 	
 	part_system_drawit(particle_system);
@@ -414,13 +401,13 @@ function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
 	draw_set_halign(h_align);
 	
 	// Outline
-	draw_text_colour(x_pos+1, y_pos, text, bg, bg, bg, bg, 1);
-	draw_text_colour(x_pos, y_pos-1, text, bg, bg, bg, bg, 1);
-	draw_text_colour(x_pos-1, y_pos, text, bg, bg, bg, bg, 1);
-	draw_text_colour(x_pos, y_pos+1, text, bg, bg, bg, bg, 1);
+	draw_text_ext_colour(x_pos+1, y_pos, text, text_height, screen_width, bg, bg, bg, bg, 1);
+	draw_text_ext_colour(x_pos, y_pos-1, text, text_height, screen_width, bg, bg, bg, bg, 1);
+	draw_text_ext_colour(x_pos-1, y_pos, text, text_height, screen_width, bg, bg, bg, bg, 1);
+	draw_text_ext_colour(x_pos, y_pos+1, text, text_height, screen_width, bg, bg, bg, bg, 1);
 	
 	// Fill text
-	draw_text_colour(x_pos, y_pos, text, tc, tc, tc, tc, 1);
+	draw_text_ext_colour(x_pos, y_pos, text, text_height, screen_width, tc, tc, tc, tc, 1);
 	
 	// Reset h align
 	draw_set_halign(fa_left);
@@ -562,11 +549,11 @@ function draw_game_log(x_pos, y_pos, width, height){
 	var xx = x_pos + (text_width * 2);
 	var yy = y_pos + text_height;
 	
-	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_log));
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_state.game_log));
 	for (var line = 0; line < draw_to; line ++){
 		
-		var text =		game_log[line][0];
-		var colour =	game_log[line][1];
+		var text =		game_state.game_log[line][0];
+		var colour =	game_state.game_log[line][1];
 		
 		draw_text_colour(xx, yy + (line * text_height), text, colour, colour, colour, colour, 1);
 	}
@@ -775,6 +762,33 @@ function draw_minimap(){
 	}
 	if (ui_settings.minimap_sub_text != ""){
 		ui_draw_box_controls(ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2), minimap_height - 5, ui_settings.minimap_sub_text);
+	}
+}
+
+function draw_notification(){
+	with (manager){
+		var xx = notification.x_pos;
+		var yy = notification.y_pos;
+		var ww = notification.width;
+		var hh = notification.height;
+		var txt = notification.text;
+		
+		// Create controls string
+		var control_list = "";
+		if (notification.cancel){
+			var key_1 = keybinding_get_text(controls.key_cancel);
+			control_list += $"{key_1} to exit";
+		}
+		if (notification.confirm){
+			var key_2 = keybinding_get_text(controls.key_interact_confirm);
+			control_list += $" / {key_2} to confirm";
+		}
+	
+		// Background
+		ui_draw_box(xx, yy, ww, hh, , control_list);
+		
+		// Notification text
+		draw_text_outlined(txt, xx + (text_width * 2), yy + (text_height * 2), colour_text_main);
 	}
 }
 

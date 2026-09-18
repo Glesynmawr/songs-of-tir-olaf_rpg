@@ -5,7 +5,7 @@ function state_ready_for_inputs(){
 	if (keyboard_check_pressed(controls.key_cancel)){
 		with (manager){
 			pause_menu_hover = 0;
-			game_state_previous = game_state.state_main;
+			game_state.state_previous = game_state.state_main;
 			game_state.state_main = game_state_pause_menu;
 			exit;
 		}
@@ -24,7 +24,7 @@ function state_ready_for_inputs(){
 	if (move_dir != noone){
 		
 		// Set manager direction indicator
-		with (manager) direction_indicator = move_dir;
+		with (manager) game_state.direction_indicator = move_dir;
 		
 		// Movement
 		if (keyboard_check(controls.key_move_confirm)){
@@ -58,7 +58,7 @@ function state_ready_for_inputs(){
 		
 		// Reset direction indicator
 		with (manager){
-			if (direction_indicator != noone) direction_indicator = noone;
+			if (game_state.direction_indicator != noone) game_state.direction_indicator = noone;
 		}
 		
 		// Interaction with tile no direction

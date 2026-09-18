@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"mp3_snd_knight_jump_up",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.2744671,
+  "exportDir":"",
+  "name":"mp3_snd_knight_jump_up",
+  "parent":{
+    "name":"Knight",
+    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Knight.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"mp3_snd_knight_jump_up.mp3",
+  "volume":1.0,
+}

@@ -21,10 +21,10 @@ function action_move(grid, move_x, move_y){
 	if (!grid[x_move][y_move].walkable) return(false);
 	
 	// Check actors for collision
-	var len = array_length(other.actor_registry.actor_list);
+	var len = array_length(manager.actor_registry.actor_list);
 	for (var i = 0; i < len; i ++){
 		
-		var other_actor = other.actor_registry.actor_list[i];
+		var other_actor = manager.actor_registry.actor_list[i];
 		
 		var actor_x = other_actor.x_pos;
 		var actor_y = other_actor.y_pos;
@@ -207,14 +207,14 @@ function action_remove_actor(actor){
 	
 	if (actor == manager.actor_registry.player){
 		with (manager){
-			direction_indicator = noone;
+			game_state.direction_indicator = noone;
 			game_paused = true;
 		}
 	}
 	
 	// Remove from action list
-	var index = array_get_index(manager.action_list, actor);
-	array_delete(manager.action_list, index, 1);
+	var index = array_get_index(manager.actor_registry.action_list, actor);
+	array_delete(manager.actor_registry.action_list, index, 1);
 	
 	// Remove from actor list
 	index = array_get_index(manager.actor_registry.actor_list, actor);

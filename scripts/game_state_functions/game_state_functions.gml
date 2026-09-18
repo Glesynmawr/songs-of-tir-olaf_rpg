@@ -2,6 +2,7 @@
 // INIT STATE FUNCTIONS
 function init_control_menu(){
 	with (manager){
+		menu_pos_reset();
 		is_rebinding_keys	= false;
 		current_key_rebind	= 0;
 	
@@ -25,8 +26,9 @@ function init_main(){
 		resolution_scale();
 	
 		// Initialise game states
+		menu_pos_reset();
 		game_state.state_main	= noone;
-		game_state_previous		= noone;
+		game_state.state_previous		= noone;
 		control_state_previous	= noone;
 		game_state.map_mode		= noone;
 	
@@ -48,13 +50,15 @@ function init_main(){
 function init_world(){
 	
 	with (manager){
+		
 		// Actor registry - Active actors only
 		actor_registry = {
-			actor_list:	[],
-			player:		noone
+			actor_list:		[],
+			player:			noone,
+			action_list:	[],
+			action_index:	0
 		}
-		action_list = [];
-
+		
 		// Create world and set starting map
 		game_state.world_map = world_generate();
 		game_state.game_grid = game_state.world_map;
@@ -88,19 +92,13 @@ function init_world(){
 		spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-	
-		// Game log
-		initialise_log();
 
 		// Distance maps
 		globalvar distance_map_player;
 		distance_map_player = [];
 
-		// Move speed - multiplier
-		actor_move_speed = 0.2;
-
 		// Action list and turn order
-		action_list = [];
+		actor_registry.action_list = [];
 		turn_order_initialise();
 	
 		// Go to world
@@ -109,9 +107,28 @@ function init_world(){
 }
 
 
+// NOTIFICATION CONTROL
+function notification_control(){
+	if (keyboard_check_pressed(controls.key_interact_confirm) and notification.confirm == true){
+		if (notification.action != noone){
+			notification.action();
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_cancel) and notification.cancel == true){
+		notification_reset();
+	}
+}
+
+
 // GAME STATE FUNCTIONS
 function game_state_control_menu(){
 	with (manager){
+		
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
 		if (!is_rebinding_keys){
 			if (keyboard_check_pressed(controls.key_cancel)){
 				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
@@ -205,6 +222,12 @@ function game_state_control_menu(){
 	
 function game_state_dungeon(){
 	with (manager){
+		
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
 		if (!game_paused and transition == noone){
 			turn_order_update();
 			update_dust_particles();
@@ -214,6 +237,11 @@ function game_state_dungeon(){
 
 function game_state_main_menu(){
 	with (manager){
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
 		if (keyboard_check_pressed(controls.key_up)){
 			main_menu_hover --;
 			if (main_menu_hover < 0){
@@ -232,10 +260,19 @@ function game_state_main_menu(){
 				transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
 			}
 			else if (txt == "Load game"){
-			
+				if (file_exists("game_save")){
+					transition_set(TRANSITION.GAME_LOAD, colour_bg_main);
+				}
+				else{
+					// No save file found
+					var txt = "No save file found.";
+					var xx = screen_width / 2;
+					var yy = screen_height / 2;
+					create_notification(txt, xx, yy, true, false);
+				}
 			}
 			else if (txt == "Controls"){
-				game_state_previous = game_state.state_main;
+				game_state.state_previous = game_state.state_main;
 				transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
 			}
 			else if (txt == "Settings"){
@@ -250,8 +287,14 @@ function game_state_main_menu(){
 
 function game_state_pause_menu(){
 	with (manager){
+		
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
 		if (keyboard_check_pressed(controls.key_cancel)){
-			game_state.state_main = game_state_previous;
+			game_state.state_main = game_state.state_previous;
 		}
 		else if (keyboard_check_pressed(controls.key_up)){
 			pause_menu_hover --;
@@ -268,7 +311,7 @@ function game_state_pause_menu(){
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
 			var txt = pause_menu[pause_menu_hover];
 			if (txt == "Continue"){
-				game_state.state_main = game_state_previous;
+				game_state.state_main = game_state.state_previous;
 			}
 			else if (txt == "Controls"){
 				transition_set(TRANSITION.CONTROL_MENU, colour_bg_main);
@@ -277,7 +320,8 @@ function game_state_pause_menu(){
 			
 			}
 			else if (txt == "Save and quit"){
-			
+				game_save_all();
+				transition_set(TRANSITION.GAME_BOOT, colour_bg_main);
 			}
 			else if (txt == "Quit without saving"){
 				transition_set(TRANSITION.GAME_BOOT, colour_bg_main);
@@ -291,6 +335,12 @@ function game_state_pause_menu(){
 
 function game_state_world(){
 	with (manager){
+		
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
 		if (!game_paused and transition == noone){
 			turn_order_update();
 			update_dust_particles();
@@ -397,7 +447,7 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Set game grid
 		if (game_state.zone_map[world_x][world_y] == noone){
-			game_state.zone_map[world_x][world_y] = zone_map_generate(world_grid, world_x, world_y);
+			game_state.zone_map[world_x][world_y] = zone_map_generate(game_state.world_map, world_x, world_y);
 			initialise_item_grid(game_state.zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
 		}
 		game_state.game_grid = game_state.zone_map[world_x][world_y];

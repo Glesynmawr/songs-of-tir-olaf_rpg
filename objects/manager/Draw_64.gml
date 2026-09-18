@@ -8,6 +8,10 @@ switch(game_state.state_main){
 	case game_state_world:			draw_game_ui();			break;
 }
 
+if (notification.text != ""){
+	draw_notification();
+}
+
 if (transition != noone){
 	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
 }

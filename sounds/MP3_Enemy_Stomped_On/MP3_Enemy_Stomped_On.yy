@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"MP3_Enemy_Stomped_On",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.18285714,
+  "exportDir":"",
+  "name":"MP3_Enemy_Stomped_On",
+  "parent":{
+    "name":"Sounds",
+    "path":"folders/Sounds/io.gamemaker.retroninjasfx-1.0.0/SFX - Retro Ninja/Sounds.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"MP3_Enemy_Stomped_On.mp3",
+  "volume":1.0,
+}

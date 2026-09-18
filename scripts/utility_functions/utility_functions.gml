@@ -24,7 +24,7 @@ function resolution_scale(){
 
 	// SET CAMERA AND SURFACE SIZES
 	camera_set_view_size(cam, width / scale, height / scale);
-	surface_resize(application_surface, width, height);
+	surface_resize(application_surface, max(width, SCREEN_WIDTH), max(height, SCREEN_HEIGHT));
 	display_set_gui_size(width / scale, height / scale)
 	
 	// SET SCREEN SIZE VARIABLES
@@ -41,6 +41,16 @@ function actor_set_sprite_pos(actor){
 		sprite_target_y = y_pos * manager.cell_height;
 	}
 }
+
+function menu_pos_reset(){
+	with (manager){
+		control_menu_hover		= 0;
+		game_over_menu_hover	= 0;
+		main_menu_hover			= 0;
+		pause_menu_hover		= 0;
+	}
+}
+
 
 // CONTROLS
 function input_direction(x_move, y_move){
@@ -247,14 +257,9 @@ function create_distance_map(grid, target_x, target_y){
 
 
 // GAME LOG	
-function initialise_log(){
-	globalvar game_log;
-	game_log = [];
-}
-
-function log_add_entry(text, colour){
+function log_add_entry(text, colour = colour_text_main){
 	with (manager){
-		array_insert(game_log, 0, [text, colour]);
+		array_insert(game_state.game_log, 0, [text, colour]);
 	}
 }
 
@@ -279,43 +284,59 @@ function transition_update(){
 		
 			switch(transition.type){
 			
-				case TRANSITION.CONTROL_EXIT:											
-					game_state.state_main = control_state_previous;								break;	
+				case TRANSITION.CONTROL_EXIT:	
+					menu_pos_reset();
+					game_state.state_main = control_state_previous;	break;	
 							
 			
 				case TRANSITION.CONTROL_MENU:	
+					menu_pos_reset();
 					control_state_previous = game_state.state_main;
-					game_state.state_main = init_control_menu;										break;
-																																		
-				case TRANSITION.GAME_BOOT:												
-					game_state.state_main = game_state_main_menu;									break;
+					game_state.state_main = init_control_menu;	break;
+																										
+				case TRANSITION.GAME_BOOT:		
+					menu_pos_reset();
+					game_state.state_main = game_state_main_menu;	break;
 				
-				case TRANSITION.GAME_DUNGEON_ENTER:	goto_dungeon(dungeon_index, true);	break;
+				case TRANSITION.GAME_DUNGEON_ENTER:	
+					menu_pos_reset();
+					goto_dungeon(dungeon_index, true);	break;
 			
 				case TRANSITION.GAME_DUNGEON_EXIT:	
+					menu_pos_reset();
 					var wx = actor_registry.player.world_x;
 					var wy = actor_registry.player.world_y;
-					goto_zone(wx, wy, game_state.dungeon_entry_x, game_state.dungeon_entry_y);				break;
+					goto_zone(wx, wy, game_state.dungeon_entry_x, game_state.dungeon_entry_y);	break;
 				
-				case TRANSITION.GAME_DUNGEON_NEXT:	goto_dungeon(dungeon_index, true);	break;
+				case TRANSITION.GAME_DUNGEON_NEXT:	
+					menu_pos_reset();
+					goto_dungeon(dungeon_index, true);	break;
+																									
+				case TRANSITION.GAME_DUNGEON_PREV:	
+					menu_pos_reset();
+					goto_dungeon(dungeon_index, false);	break;
+																									
+				case TRANSITION.GAME_LOAD:		    menu_pos_reset() game_load_all();	break;
+																									
+				case TRANSITION.GAME_QUIT:		    menu_pos_reset() game_end();	break;
 			
-				case TRANSITION.GAME_DUNGEON_PREV:	goto_dungeon(dungeon_index, false);	break;
+				case TRANSITION.GAME_RESET:			
+					menu_pos_reset();
+					game_state.state_main = game_state_main_menu;	break;
 			
-				case TRANSITION.GAME_QUIT:		    game_end();							break;
+				case TRANSITION.GAME_START_NEW:		menu_pos_reset() init_world();	break;
 			
-				case TRANSITION.GAME_RESET:			game_state.state_main = game_state_main_menu;	break;
-			
-				case TRANSITION.GAME_START_NEW:		init_world();						break;
-			
-				case TRANSITION.GAME_WORLD:			
+				case TRANSITION.GAME_WORLD:		
+					menu_pos_reset();
 					grid_set_visible(manager.game_state.game_grid, false) 
-					goto_world();														break;
+					goto_world();	break;
 			
-				case TRANSITION.GAME_ZONE:		
+				case TRANSITION.GAME_ZONE:	
+					menu_pos_reset();
 					grid_set_visible(manager.game_state.game_grid, false) 
 					goto_zone(actor_registry.player.world_x, actor_registry.player.world_y, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2)); break;
 			
-				default: show_message("Transition type not set!");						break;
+				default: show_message("Transition type not set!");									break;
 			}
 		}
 		else if (transition.index <= 0){
@@ -336,32 +357,182 @@ function transition_zoom_out(){
 // LOADING AND SAVING
 function controls_read_settings(){
 	
-	var struct_json = json_stringify(controls_default);
+	var control_data, loaded_data;
 
 	var file = file_text_open_read("player_settings_controls");
 	if (file != -1){
-		struct_json = file_text_read_string(file);
+		loaded_data = file_text_read_string(file);
+		loaded_data = json_parse(loaded_data);
+	}
+	else{
+		loaded_data = controls_default;
 	}
 	
-	var loaded = json_parse(struct_json);
-	controls = variable_clone(loaded);
+	// Check version number exists
+	if (struct_exists(loaded_data, "save_version")){
+		
+		// Check version number
+		if (loaded_data.save_version[0] == global.version[0]){
+			
+			// Valid version number
+			control_data = loaded_data.save_controls;
+		}
+		else{
+			
+			// Invalid version number
+			control_data = manager.controls_default;
+		}
+	}
+	else{
+		
+		// No version detected
+		control_data = manager.controls_default;
+	}
+	
+	controls = variable_clone(control_data);
+	file_text_close(file);
 }
 
 function controls_save_settings(){
 	
-	var struct_json = json_stringify(controls);
+	var control_save_data;
+	
+	control_save_data = {
+		save_version:	global.version,
+		save_controls:	controls
+	}
+	
+	var struct_json = json_stringify(control_save_data);
 	
 	var file = file_text_open_write("player_settings_controls");
 	file_text_write_string(file, struct_json);
 	file_text_close(file);
+}
+	
+function game_save_all(){
+	
+	var save_data;
+	
+	// Create save struct
+	save_data = {
+		save_version:	global.version,
+		save_actors:	actor_registry,
+		save_game:		game_state,
+		save_ui:		ui_settings,
+		save_time:		time_system
+	}
+	
+	// Save struct to file
+	var struct_json = json_stringify(save_data);
+	var file = file_text_open_write("game_save");
+	file_text_write_string(file, struct_json);
+	file_text_close(file);
+	
+	return(true);
+}
+
+function game_load_all(){
+	
+	var loaded_data;
+	
+	// Reaad from save file
+	var file = file_text_open_read("game_save");
+	
+	// If save file exists
+	if (file != -1){
+		
+		// Parse saved data
+		loaded_data = file_text_read_string(file);
+		loaded_data = json_parse(loaded_data);
+		
+		// Check version number
+		if (loaded_data.save_version[0] == global.version[0]){
+			
+			// Push data to game structs
+			manager.actor_registry	= loaded_data.save_actors;
+			manager.game_state		= loaded_data.save_game;
+			manager.ui_settings		= loaded_data.save_ui;
+			manager.time_system		= loaded_data.save_time;
+			
+			manager.game_state.state_main = manager.game_state.state_previous;
+			
+			// Find player instance
+			for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
+				if (manager.actor_registry.actor_list[i].is_player){
+					manager.actor_registry.player = manager.actor_registry.actor_list[i];
+					break;
+				}
+			}
+			if (loaded_data.save_version[1] != global.version[1]){
+				
+				// Save data may produce unexpected results
+				
+				var txt = "Save file is from an older version and\nmay cause errors or unexpected crashes.";
+				var xx = screen_width / 2;
+				var yy = screen_height / 2;
+				create_notification(txt, xx, yy, true, false);
+			}
+			
+			turn_order_initialise();
+			
+			file_text_close(file);
+			return(true);
+		}
+		else{
+			// Save file is not valid
+			var txt = "Save file is from an older version\nand is incompatible.";
+			var xx = screen_width / 2;
+			var yy = screen_height / 2;
+			create_notification(txt, xx, yy, true, false);
+		}
+	}
+			
+	file_text_close(file);
+	
+	return(false);
+}
+
+
+// NOTIFICATIONS
+function create_notification(text, x_pos, y_pos, needs_cancel, needs_confirm = true){
+	with (manager){
+		var ww = string_width(text) + (text_width * 4);
+		var hh = string_height(text) + (text_height * 4);
+		
+		notification.text		= text;
+								
+		notification.width		= ww;
+		notification.height		= hh;
+								
+		notification.x_pos		= floor(x_pos - (ww / 2));
+		notification.y_pos		= floor(y_pos - (hh / 2));
+		
+		notification.cancel		= needs_cancel;
+		notification.confirm	= needs_confirm;
+	}
+}
+
+function notification_reset(){
+	with (manager){
+		notification = {
+			text	: "",
+			x_pos	: 0,
+			y_pos	: 0,
+			width	: 0,
+			height	: 0,
+			cancel	: true,
+			confirm	: false,
+			action	: noone
+		}
+	}
 }
 
 
 // TURN STRUCTURE
 function turn_order_initialise(){
 	with (manager){
-		action_list = [];
-		action_index = 0;
+		actor_registry.action_list = [];
+		actor_registry.action_index = 0;
 	
 		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 		
@@ -384,22 +555,22 @@ function turn_order_initialise(){
 		
 					// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
 					energy -= action_cost;
-					array_push(other.action_list, [self, dist]);
+					array_push(other.actor_registry.action_list, [self, dist]);
 				}
 			}
 		}
 		// IF ACTION LIST LENGTH IS GREATER THAN ZERO
-		var len = array_length(action_list);
+		var len = array_length(actor_registry.action_list);
 		if (len > 0){
 	
 			// SORT ACTION LIST BY ASCENDING DISTANCE TO PLAYER
-			array_sort(action_list, function(elm1, elm2){
+			array_sort(actor_registry.action_list, function(elm1, elm2){
 				return(elm1[1] - elm2[1])
 			});
 	
 			// CONVERT ARRAY TO 1D
 			for (i = 0; i < len; i ++){
-				action_list[i] = action_list[i][0];
+				actor_registry.action_list[i] = actor_registry.action_list[i][0];
 			}
 		}
 		else {
@@ -420,21 +591,21 @@ function turn_order_initialise(){
 
 function turn_order_update(){
 	with (manager){
-		var len = array_length(action_list);
+		var len = array_length(actor_registry.action_list);
 
 		for (var i = 0; i < len; i ++){
 		
-			if (i >= array_length(action_list)) break;
+			if (i >= array_length(actor_registry.action_list)) break;
 		
-			action_list[i].state();
+			actor_registry.action_list[i].state();
 		
-			if (i >= array_length(action_list)) break;
+			if (i >= array_length(actor_registry.action_list)) break;
 		
-			if (!action_list[i].has_acted) break;
-			action_index ++;
+			if (!actor_registry.action_list[i].has_acted) break;
+			actor_registry.action_index ++;
 		}
 	
-		if (action_index >= array_length(action_list)){
+		if (actor_registry.action_index >= array_length(actor_registry.action_list)){
 						
 			// Create New Action List
 			for (var i = 0; i < array_length(actor_registry.actor_list); i ++){

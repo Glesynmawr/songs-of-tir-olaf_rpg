@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"mp3_snd_sfx_blood_splatter_02",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.9927438,
+  "exportDir":"",
+  "name":"mp3_snd_sfx_blood_splatter_02",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"mp3_snd_sfx_blood_splatter_02.mp3",
+  "volume":1.0,
+}

@@ -1,6 +1,5 @@
 
-function world_generate(){
-	
+function world_data(){
 	zone_third				= floor(ZONE_SIZE / 3);
 	dungeon_count_divisor	= 50;
 	
@@ -78,7 +77,9 @@ function world_generate(){
 	mob_lookup[BIOME.WATER]				= noone;
 	mob_lookup[BIOME.MANGROVE]			= noone;
 	mob_lookup[BIOME.MARSH]				= [5, [actor_reed_weevil, 100]];
-	
+}
+
+function world_generate(){
 	// Initialise world grid
 	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);
 	

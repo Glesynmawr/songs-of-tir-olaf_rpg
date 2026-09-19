@@ -616,6 +616,9 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			if (actor.inventory.inv_hover == i and actor.inventory.selected == 1){
 				text += "> ";
 			}
+			if (actor.inventory.items[i].stack > 1){
+				text += $"{actor.inventory.items[i].stack} x ";
+			}
 			text += actor.inventory.items[i].name;
 			
 			draw_text_colour(xx + text_width, yy, text, tc, tc, tc, tc, 1);

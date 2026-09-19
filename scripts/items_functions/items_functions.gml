@@ -14,14 +14,14 @@ function spawn_new_item(item, stack, location, x_pos = 0, y_pos = 0, actor = noo
 		array_push(game_state.game_grid[x_pos][y_pos].items, new_item);
 	}
 	else if (location == SPAWN_LOC.INVENTORY){
-		inventory_add_item(actor, new_item);
+		inventory_add_item(actor, new_item, new_item.stack);
 	}
 	else if (location == SPAWN_LOC.EQUIPPED and actor != noone){
 		var category = new_item.slot[0];
 		var slot_type = new_item.slot[1] + BODY_PART_STATS.PART_SLOT_1;
 		for (var index = 0; index < array_length(actor.body_plan[category]); index ++){
 			if (body_part_is_present(actor, category, index)){
-				equipment_add_item(actor, new_item, category, index, slot_type);
+				equipment_add_item(actor, stack, new_item, category, index, slot_type);
 			}
 		}
 	}
@@ -49,14 +49,15 @@ function item_check_tag(item, tag){
 			for (var i = 0; i < len; i ++){
 				if (tag == item.tags[i]) return(true);
 			}
-			return(false);
 		}
-		else return(false);
 	}
-	else return(false);
+	return(false);
 }
 
 
+// ITEMS ------------------------------------------------------------------------------------------
+
+// Head
 function item_hat1()constructor{
 	name			= "Hat 1";
 	sprite_index	= head_spr;
@@ -75,6 +76,7 @@ function item_hat2()constructor{
 	value			= 1;
 }
 
+// Face
 function item_mask1()constructor{
 	name			= "Mask 1";
 	sprite_index	= face_spr;
@@ -93,6 +95,7 @@ function item_mask2()constructor{
 	value			= 1;
 }
 
+// Body
 function item_armour1()constructor{
 	name			= "Armour 1";
 	sprite_index	= body_spr;
@@ -113,6 +116,7 @@ function item_armour2()constructor{
 	armour			= 1;
 }
 
+// Back
 function item_cloak1()constructor{
 	name			= "Cloak 1";
 	sprite_index	= back_spr;
@@ -131,6 +135,7 @@ function item_cloak2()constructor{
 	value			= 1;
 }
 
+// Arms
 function item_vambrace1()constructor{
 	name			= "Vambrace 1";
 	sprite_index	= bracer_spr;
@@ -138,6 +143,7 @@ function item_vambrace1()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
 
@@ -148,9 +154,11 @@ function item_vambrace2()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
 
+// Gloves
 function item_glove1()constructor{
 	name			= "Glove 1";
 	sprite_index	= glove_spr;
@@ -158,6 +166,7 @@ function item_glove1()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.GLOVE];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE, TAG.IS_AMMO];
 }
 
 function item_glove2()constructor{
@@ -167,8 +176,10 @@ function item_glove2()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.GLOVE];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 }
 
+// Legs
 function item_greave1()constructor{
 	name			= "Greave 1";
 	sprite_index	= greave_spr;
@@ -176,6 +187,7 @@ function item_greave1()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
 
@@ -186,9 +198,11 @@ function item_greave2()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
 
+// Feet
 function item_boot1()constructor{
 	name			= "Boot 1";
 	sprite_index	= boot_spr;
@@ -196,6 +210,7 @@ function item_boot1()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.BOOT];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 }
 
 function item_boot2()constructor{
@@ -205,8 +220,10 @@ function item_boot2()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.BOOT];
 	weight			= 1;
 	value			= 1;
+	tags			= [TAG.STACKABLE];
 }
 
+// Weapons - melee
 function item_sword1()constructor{
 	name			= "Sword";
 	sprite_index	= weapon_spr;
@@ -228,6 +245,7 @@ function item_sword2()constructor{
 	damage			= [1, 6, 0];
 }
 
+// Natural items
 function item_proboscis()constructor{
 	name			= "Proboscis";
 	sprite_index	= natural_item_spr;

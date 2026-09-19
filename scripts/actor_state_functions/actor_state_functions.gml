@@ -313,10 +313,12 @@ function state_context_menu(){
 		
 		// Inventory or equipment
 		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
+			
+			var number_to_drop = 1;
 			if (inventory.selected == 1){
 				
 				// Spawn item on ground
-				spawn_existing_item(inventory.items[inventory.inv_hover], 1, x_pos, y_pos);
+				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
 		
 				// DROP item
 				inventory_drop_slot(self, inventory.inv_hover, 1);
@@ -329,7 +331,32 @@ function state_context_menu(){
 				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
 				
 				spawn_existing_item(item_to_move, , x_pos, y_pos);
-				equipment_drop_slot(self, target_cat, target_ind, target_slot)
+				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
+			}
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop All"){
+			
+			var number_to_drop = inventory.items[inventory.inv_hover].stack;
+			if (inventory.selected == 1){
+				
+				// Spawn item on ground
+				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
+		
+				// DROP item
+				inventory_drop_slot(self, inventory.inv_hover, number_to_drop);
+			}
+			else{
+				var target_cat     = inventory.equ_hover[0];
+				var target_ind     = inventory.equ_hover[1];
+				var target_slot    = inventory.equ_hover[2];
+				
+				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
+				
+				spawn_existing_item(item_to_move, number_to_drop, x_pos, y_pos);
+				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
 			}
 			// Exit context menu
 			inventory.context_menu = noone;
@@ -348,7 +375,7 @@ function state_context_menu(){
 				
 			var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
 			
-			inventory_add_item(self, item_to_move);
+			inventory_add_item(self, item_to_move, item_to_move.stack);
 			body_plan[target_cat][target_ind][target_slot] = noone;
 			
 			// Exit context menu
@@ -385,14 +412,20 @@ function state_slot_selection(){
 	}
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var menu_hover   = inventory.slot_select_menu[5];
+		var number_to_move = 1;
+		if (struct_exists(inventory.items[inventory.inv_hover], "tags")){
+			if (item_check_tag(inventory.items[inventory.inv_hover], TAG.IS_AMMO)){
+				number_to_move = inventory.items[inventory.inv_hover].stack;
+			}
+		}
 		
 		var item_to_move = variable_clone(inventory.items[inventory.inv_hover]);
 		var dest_cat     = inventory.slot_select_menu[0][menu_hover][1];
 		var dest_ind     = inventory.slot_select_menu[0][menu_hover][2];
 		var dest_slot    = inventory.slot_select_menu[0][menu_hover][3];
 		
-		equipment_add_item(self, item_to_move, dest_cat, dest_ind, dest_slot)
-		inventory_drop_slot(self, inventory.inv_hover, inventory.items[inventory.inv_hover].stack);
+		equipment_add_item(self, number_to_move, item_to_move, dest_cat, dest_ind, dest_slot)
+		inventory_drop_slot(self, inventory.inv_hover, number_to_move);
 		
 		inventory.context_menu		= noone;
 		inventory.slot_select_menu	= noone;
@@ -415,7 +448,7 @@ function state_pickup(){
 	}
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		// Add item to inventory and remove from menu
-		inventory_add_item(self, pickup_menu[pickup_hover]);
+		inventory_add_item(self, pickup_menu[pickup_hover], pickup_menu[pickup_hover].stack);
 		
 		// Find item on ground and delete it
 		var ind = array_get_index(manager.game_state.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);

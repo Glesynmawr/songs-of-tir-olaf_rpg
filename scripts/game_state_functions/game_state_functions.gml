@@ -92,7 +92,11 @@ function init_world(){
 		spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-
+		
+		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		
 		// Distance maps
 		globalvar distance_map_player;
 		distance_map_player = [];

@@ -90,7 +90,6 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.y_pos			= cell_y;
 	
 	new_actor.colour_fg		= noone;
-	new_actor.colour_bg		= noone;
 	new_actor.colour_timer  = 0;
 	
 	// Sprite and Animation

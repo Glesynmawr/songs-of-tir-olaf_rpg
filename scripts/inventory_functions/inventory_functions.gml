@@ -60,8 +60,7 @@ function inventory_initialise(){
 		inv_hover:			0,
 		context_menu:		noone,
 		equ_hover:			[0, 0, BODY_PART_STATS.PART_SLOT_1],
-		slot_select_menu:	noone,
-		item_set_equipped:	BODY_PART_STATS.PART_HAND_SLOT
+		slot_select_menu:	noone
 	}
 	
 	return(inv);
@@ -152,6 +151,10 @@ function context_menu_initialise(){
 	
 	content = ["Hold", "Drop"];
 		
+	if (inventory.items[inventory.inv_hover].stack > 1){
+		content[1] += " One";
+		array_push(content, "Drop All");
+	}
 	if (array_length(inventory.items[inventory.inv_hover].slot) > 0){
 		array_insert(content, 1, "Equip");
 	}
@@ -176,7 +179,10 @@ function equipment_context_menu_initialise(){
 	var content, xx, yy, ww, hh, i;
 	
 	content = ["Remove", "Drop"];
-		
+	if (body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]][inventory.equ_hover[2]].stack > 1){
+		array_push(content, "Drop All");
+	}
+	
 	xx = manager.equipment_hovered_x_pos + manager.equipment_box_sprite_size;
 	yy = manager.equipment_hovered_y_pos;
 		
@@ -322,9 +328,30 @@ function pickup_menu_initialise(actor){
 
 
 // INVENTORY INTERACTION
-function inventory_add_item(actor, item){
+function inventory_add_item(actor, item, stack){
 	var new_item = variable_clone(item);
+	new_item.stack = stack;
+	
 	with (actor){
+		
+		// Check item has tags
+		if (struct_exists(new_item, "tags")){
+			
+			// Check for STACKABLE tag
+			if (item_check_tag(new_item, TAG.STACKABLE)){
+			
+				// Check for existing item of same type
+				if (array_length(inventory.items) > 0){
+					for (var i = 0; i < array_length(inventory.items); i ++){
+						if (new_item.name == inventory.items[i].name){
+							inventory.items[i].stack += stack;
+							return(true);
+						}
+					}
+				}
+			}
+		}
+		
 		array_push(inventory.items, new_item);
 		return(true);
 	}
@@ -351,21 +378,27 @@ function inventory_drop_slot(actor, slot, stack){
 
 
 // EQUIPMENT INTERACTION
-function equipment_add_item(actor, item_struct, dest_cat, dest_ind, dest_slot){
+function equipment_add_item(actor, stack, item_struct, dest_cat, dest_ind, dest_slot){
+	
+	var new_item = variable_clone(item_struct);
+	new_item.stack = stack;
 	
 	if (actor.body_plan[dest_cat][dest_ind][dest_slot] == noone){
-		actor.body_plan[dest_cat][dest_ind][dest_slot] = variable_clone(item_struct);
+		actor.body_plan[dest_cat][dest_ind][dest_slot] = new_item;
 	}
 	else{
 		var equipped_item_to_remove = variable_clone(actor.body_plan[dest_cat][dest_ind][dest_slot]);
-		actor.body_plan[dest_cat][dest_ind][dest_slot] = variable_clone(item_struct);
-		inventory_add_item(actor, equipped_item_to_remove);
+		actor.body_plan[dest_cat][dest_ind][dest_slot] = new_item;
+		inventory_add_item(actor, equipped_item_to_remove, equipped_item_to_remove.stack);
 	}
 }
 
-function equipment_drop_slot(actor, target_cat, target_ind, target_slot){
+function equipment_drop_slot(actor, stack, target_cat, target_ind, target_slot){
 	
-	actor.body_plan[target_cat][target_ind][target_slot] = noone;
+	actor.body_plan[target_cat][target_ind][target_slot].stack -= stack;
+	if (actor.body_plan[target_cat][target_ind][target_slot].stack <= 0){
+		actor.body_plan[target_cat][target_ind][target_slot] = noone;
+	}
 }
 
 

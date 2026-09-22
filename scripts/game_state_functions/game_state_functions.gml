@@ -27,10 +27,10 @@ function init_main(){
 	
 		// Initialise game states
 		menu_pos_reset();
-		game_state.state_main	= noone;
-		game_state.state_previous		= noone;
-		control_state_previous	= noone;
-		game_state.map_mode		= noone;
+		game_state.state_main		= noone;
+		game_state.state_previous	= noone;
+		control_state_previous		= noone;
+		game_state.map_mode			= noone;
 	
 		// UI animation timer
 		ui_flip				= true;
@@ -39,11 +39,10 @@ function init_main(){
 	
 		// Set text font and cell size
 		draw_set_font(mono_fnt);
+		text_height = string_height("M") + 2;
+		text_width  = string_width("M");
 		cell_width  = 16;
 		cell_height = 16;
-	
-		// Transition into initial room
-		transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 	}
 }
 	

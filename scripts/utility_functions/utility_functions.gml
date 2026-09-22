@@ -318,7 +318,7 @@ function transition_update(){
 																									
 				case TRANSITION.GAME_LOAD:		    menu_pos_reset() game_load_all();	break;
 																									
-				case TRANSITION.GAME_QUIT:		    menu_pos_reset() game_end();	break;
+				case TRANSITION.GAME_QUIT:		    menu_pos_reset() game_end();		break;
 			
 				case TRANSITION.GAME_RESET:			
 					menu_pos_reset();
@@ -473,6 +473,7 @@ function game_load_all(){
 				create_notification(txt, xx, yy, true, false);
 			}
 			
+			distance_map_player = create_distance_map(manager.game_state.game_grid, manager.actor_registry.player.x_pos, manager.actor_registry.player.y_pos);
 			turn_order_initialise();
 			
 			file_text_close(file);

@@ -86,6 +86,20 @@ enum EQUIP{
 	FEET
 }
 
+enum ITEM_SORT{
+	WEAPON_MELEE,
+	WEAPON_RANGED,
+	AMMO,
+	HEAD,
+	FACE,
+	BODY,
+	BACK,
+	ARMS,
+	HANDS,
+	LEGS,
+	FEET
+}
+
 enum MAP_MODE{
 	DUNGEON,
 	WORLD,

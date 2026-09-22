@@ -1,24 +1,48 @@
 /// @desc Initialise 
 
-global.version = [1, 1, 2];
+global.version = [1, 1, 3];
 
 //randomise();
 debugging_mode		= false;
 game_paused			= false;
+transition			= noone;
 
 // Colours
 colour_text_main	= C_LTGREY;
 colour_bg_main		= make_colour_rgb(0, 15, 0);
 colour_ui_main		= C_ORANGE;
 
+#region// GAME STATE ------------------------------------------------------------------------------
+game_state = {
+	game_grid				: noone,
+	game_log				: [],
+	map_mode				: noone,
+	map_borders_are_clamped	: noone,
+	state_main				: noone,
+	state_previous			: noone,
+	world_map				: noone,
+	zone_map				: noone,
+	
+	current_depth			: noone,
+	dungeon_entry_x			: noone,
+	dungeon_entry_y			: noone,
+	
+	direction_indicator		: noone,
+	direction_indicator_x	: 0,
+	direction_indicator_y	: 0
+}
 
-// STATE TRANSITION
-transition = noone;
+#endregion
 
-// COMBAT
-offhand_agility_penalty = -4;
+world_data();
+dungeon_data();
+init_main();
+init_particle_system();
 
 #region// ACTORS ----------------------------------------------------------------------------------
+
+// Combat modifiers
+offhand_agility_penalty = -4;
 
 // Actor registry - Active actors only
 actor_registry = {
@@ -55,25 +79,17 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 
 #endregion
 
-#region// GAME STATE ------------------------------------------------------------------------------
-game_state = {
-	game_grid				: noone,
-	game_log				: [],
-	map_mode				: noone,
-	map_borders_are_clamped	: noone,
-	state_main				: noone,
-	state_previous			: noone,
-	world_map				: noone,
-	zone_map				: noone,
-	
-	current_depth			: noone,
-	dungeon_entry_x			: noone,
-	dungeon_entry_y			: noone,
-	
-	direction_indicator		: noone,
-	direction_indicator_x	: 0,
-	direction_indicator_y	: 0
-}
+#region// INVENTORY SETUP -------------------------------------------------------------------------
+inv_spr_size		= ITEM_SPRITE_SIZE;
+inv_spacing			= inv_spr_size;
+inv_display_max		= 20;
+
+// Scroll bar
+scroll_x			= (screen_width / 2) - 1;
+scroll_y			= (text_height * 2);
+scroll_h			= (inv_display_max * inv_spacing) + (2 * 3);
+scroll_w			= 8;
+scroll_fill_max		= inv_display_max * inv_spacing;
 
 #endregion
 
@@ -104,11 +120,6 @@ pause_menu[4] = "Quit without saving";
 pause_menu[5] = "Quit to desktop";
 
 #endregion
-
-world_data();
-dungeon_data();
-init_main();
-init_particle_system();
 
 #region// SET CONTRLS------------------------------------------------------------------------------
 globalvar controls;
@@ -158,10 +169,6 @@ ui_x_pos[0][0] = screen_width - ui_width;
 ui_x_pos[0][1] = 0;
 ui_x_pos[1][0] = 0;
 ui_x_pos[1][1] = ui_width;
-
-draw_set_font(mono_fnt);
-text_height = string_height("M") + 2;
-text_width  = string_width("M");
 
 // Game log
 log_height = (LOG_MAX_ENTRIES + 2) * text_height;
@@ -226,6 +233,7 @@ time_system = {
 
 #endregion
 
-
+// Transition into initial room
+transition_set(TRANSITION.GAME_BOOT, C_BLACK);
 
 

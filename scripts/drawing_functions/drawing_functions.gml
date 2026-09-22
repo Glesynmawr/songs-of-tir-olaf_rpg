@@ -154,7 +154,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 function game_draw_items(xx, yy, screen_x, screen_y){
 	if (struct_exists(game_state.game_grid[xx][yy], "items")){
 		if (array_length(game_state.game_grid[xx][yy].items) > 0){
-
 			
 			var item_sprite = game_state.game_grid[xx][yy].items[0].sprite_index;
 			var item_index  = game_state.game_grid[xx][yy].items[0].image_index;
@@ -454,6 +453,249 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 }
 
 
+// Inventory --------------------------------------------------------------------------------------
+function draw_inventory(actor, x_pos, y_pos, width, height){
+	
+	var tc = colour_text_main;
+	
+	var inv_x = x_pos + floor(width / 2);
+	var equ_x = x_pos + floor(width / 4);
+	var xx, yy;
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_inventory);
+	var key_3 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
+	
+	// Background
+	ui_draw_box(x_pos, y_pos, width, height, , control_list);
+	
+	// Vertical divider
+	draw_sprite_stretched_ext(ui_divider_vertical_spr, 1, inv_x - 3, y_pos, 5, height, colour_bg_main, 1);
+	draw_sprite_stretched_ext(ui_divider_vertical_spr, 0, inv_x - 3, y_pos, 5, height, colour_ui_main, 1);
+	
+	// INVENTORY ----------------------------------------------------------------------------------
+	// Title
+	ui_draw_box_title(inv_x + text_width, y_pos, "Inventory");
+	
+	var display_inv = inventory_create_display_list(actor);
+	
+	// Scrolling
+	var len = array_length(display_inv[0]);
+	var scroll_data = inventory_draw_scrollbar(display_inv[0], display_inv[1]);
+	var draw_from = scroll_data[0];
+	var draw_to = scroll_data[1];
+	var yy = y_pos + (text_height * 2);
+	
+	// Items
+	if (len > 0){
+		for(var i = draw_from; i < draw_to; i ++){
+			
+			// X position
+			xx = inv_x + (text_width * 2);
+			// Item text 
+			if (array_length(display_inv[0][i]) > 1){
+				
+				var spr = display_inv[0][i][1];
+				var ind = display_inv[0][i][2];
+				var wei = display_inv[0][i][3];
+				var val = display_inv[0][i][4];
+				
+				xx += inv_spacing;
+				
+				var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
+				var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
+				draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx, yy);
+				
+				xx += inv_spacing;
+				var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+				draw_text_colour(xx + text_width, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
+			}
+			else{
+				var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+				draw_text_colour(xx + text_width, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
+			}
+			
+			// Increment y position
+			yy += inv_spacing;
+		}
+	}
+	
+	// EQUIPMENT ----------------------------------------------------------------------------------
+	// Title
+	ui_draw_box_title(equ_x + text_width, y_pos, "Equipment");
+	
+	var box_size = equipment_box_sprite_size;
+	
+	// Worn Equipment
+	xx = equ_x + (text_width * 2);
+	yy = y_pos + (text_height * 2);
+	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
+		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
+			if (body_part_is_present(actor, cat, ind)){
+				
+				var from = array_length(actor.body_plan[cat][ind]) - 1;
+				var to   = BODY_PART_STATS.PART_AUX_SLOT;
+				
+				for (var slot = from; slot >= to; slot --){
+					
+					if (slot < BODY_PART_STATS.PART_SLOT_1){
+						if (!body_part_has_hand(actor, cat, ind)){
+							continue;
+						}
+					}
+					
+					var col = C_LTGREY;
+					if (slot == BODY_PART_STATS.PART_HAND_SLOT) col = C_RED;
+					if (slot == BODY_PART_STATS.PART_AUX_SLOT)  col = C_PURPLE;
+					
+					if (actor.inventory.equ_hover[0] == cat and actor.inventory.equ_hover[1] == ind and actor.inventory.equ_hover[2] == slot and actor.inventory.selected == 0){
+						col = C_WHITE;
+						
+						equipment_hovered_x_pos = xx;
+						equipment_hovered_y_pos = yy;
+					}
+					
+					// Draw equipment box
+					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
+					
+					// Draw equipment sprite
+					if (is_struct(actor.body_plan[cat][ind][slot])){
+						
+						var slot_item = actor.body_plan[cat][ind][slot];
+
+						var item_sprite = slot_item.sprite_index;
+						var item_index  = slot_item.image_index;
+						var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
+						var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
+						
+						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + 3, yy + 3);
+					}
+					
+					// Increment box X position
+					xx += box_size;
+				}
+				
+				var col = colour_text_main;
+				draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
+				
+				xx = equ_x + (text_width * 2);
+				yy += box_size;
+			}
+		}
+	}
+	
+	// Interaction context menu
+	var menu_cont = actor.inventory.context_menu;
+	var menu_equi = actor.inventory.slot_select_menu;
+	if (menu_cont != noone and menu_equi == noone){
+		draw_context_menu(actor, menu_cont[1], menu_cont[2], menu_cont[3], menu_cont[4]);
+	}
+	
+	// Equipment slot context menu
+	if (menu_equi != noone){
+		draw_context_slot_select_menu(actor, menu_equi[1], menu_equi[2], menu_equi[3], menu_equi[4]);
+	}
+}
+
+function inventory_create_display_list(actor){
+	with (actor){
+		var new_list = [];
+		var hovered_index = noone;
+		
+		var len	= array_length(inventory.items);
+		
+		// If inventory contains items
+		if (len > 0){
+			var current_sort_index = noone;
+			
+			// Cycle through inventory
+			for (var i = 0; i < len; i ++){
+				var item_sort_index = inventory.items[i].sort_index;
+				if (current_sort_index != item_sort_index){
+					current_sort_index = item_sort_index;
+					
+					// Push header to list
+					array_push(new_list, [inventory_get_category_text(inventory.items[i])]);
+				}
+				var item_text = " ";
+				if (inventory.inv_hover == i and inventory.selected == 1) {
+					item_text += "> ";
+					hovered_index = array_length(new_list);
+				}
+				if (inventory.items[i].stack > 1){
+					item_text += $"{inventory.items[i].stack} x ";
+				}
+				item_text += inventory.items[i].name
+				
+				var item_sprite = inventory.items[i].sprite_index;
+				var item_index  = inventory.items[i].image_index;
+				var item_weight = inventory.items[i].weight;
+				var item_value  = inventory.items[i].value;
+				
+				// Push item to list
+				array_push(new_list, [item_text, item_sprite, item_index, item_weight, item_value]);
+			}
+		}
+		return([new_list, hovered_index]);
+	}
+}
+
+function inventory_draw_scrollbar(array, hover){
+	var inv_length			= array_length(array);
+	var scroll_start_index	= 0;
+	var scroll_end_index	= inv_length;
+
+	if (inv_length > inv_display_max){
+	
+		// Set scrolling limits
+		
+		scroll_start_index	= max(hover - (floor(inv_display_max / 2) - 1), 0);
+		scroll_start_index	= min(scroll_start_index, inv_length - inv_display_max);
+		
+		scroll_end_index	= scroll_start_index + inv_display_max;
+	
+		// Set scroll bar fill 
+		var fill_percent	= inv_display_max / inv_length
+		var fill_amount		= scroll_fill_max * fill_percent;
+	
+		var fill_pos_y		= scroll_start_index * (scroll_fill_max - fill_amount) / (inv_length - inv_display_max);
+		
+		// Background
+		draw_sprite_stretched_ext(scrollbar_spr, 1, scroll_x, scroll_y, scroll_w, scroll_h, colour_bg_main, 1);
+		
+		// Fill bar
+		draw_sprite_stretched_ext(pixel_spr, 0, scroll_x + 3, scroll_y + 3 + fill_pos_y, 2, fill_amount, C_ORANGE, 1);
+		
+		// Border
+		draw_sprite_stretched(scrollbar_spr, 0, scroll_x, scroll_y, scroll_w, scroll_h);
+		
+		return([scroll_start_index, scroll_end_index]);
+	}
+	else{
+		return([0, inv_length]);
+	}
+}
+
+function inventory_get_category_text(item){
+	var sort_index = item.sort_index;
+	switch(sort_index){
+		case ITEM_SORT.WEAPON_MELEE:	return("Melee Weapons");	break;
+		case ITEM_SORT.WEAPON_RANGED:	return("Ranged Weapons");	break;
+		case ITEM_SORT.AMMO:			return("Ammo");				break;
+		case ITEM_SORT.HEAD:			return("Head");				break;
+		case ITEM_SORT.FACE:			return("Face");				break;
+		case ITEM_SORT.BODY:			return("Body");				break;
+		case ITEM_SORT.BACK:			return("Back");				break;
+		case ITEM_SORT.ARMS:			return("Arms");				break;
+		case ITEM_SORT.HANDS:			return("Hands");			break;
+		case ITEM_SORT.LEGS:			return("Legs");				break;
+		case ITEM_SORT.FEET:			return("Feet");				break;
+	}
+}
+
+
 // Specific UI elements -----------------------------------------------------------------
 function ui_anim_flip(){
 	ui_flip_timer --;
@@ -579,127 +821,6 @@ function draw_info_box(){
 	
 	yy += text_height;
 	draw_text(xx, yy, $"Day:  {time_system.game_current_time[TIME.DAY]}"); 
-}
-
-function draw_inventory(actor, x_pos, y_pos, width, height){
-	
-	var tc = colour_text_main;
-	
-	var inv_x = x_pos + floor(width / 2);
-	var equ_x = x_pos + floor(width / 4);
-	var xx, yy;
-	
-	// Create controls string
-	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_inventory);
-	var key_3 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
-	
-	// Background
-	ui_draw_box(x_pos, y_pos, width, height, , control_list);
-	
-	// INVENTORY ----------------------------------------------------------------------------------
-	// Title
-	ui_draw_box_title(inv_x + text_width, y_pos, "Inventory");
-	
-	// Items
-	var len = array_length(actor.inventory.items);
-	if (len > 0){
-		for(var i = 0; i < len; i ++){
-			
-			// Position
-			xx = inv_x + (text_width * 2);
-			yy = y_pos + (text_height * 2) + (text_height * i);
-			
-			// Text
-			var text = "";
-			if (actor.inventory.inv_hover == i and actor.inventory.selected == 1){
-				text += "> ";
-			}
-			if (actor.inventory.items[i].stack > 1){
-				text += $"{actor.inventory.items[i].stack} x ";
-			}
-			text += actor.inventory.items[i].name;
-			
-			draw_text_colour(xx + text_width, yy, text, tc, tc, tc, tc, 1);
-		}
-	}
-	
-	// EQUIPMENT ----------------------------------------------------------------------------------
-	// Title
-	ui_draw_box_title(equ_x + text_width, y_pos, "Equipment");
-	
-	var box_size = equipment_box_sprite_size;
-	
-	// Worn Equipment
-	xx = equ_x + (text_width * 2);
-	yy = y_pos + (text_height * 2);
-	for (var cat = 0; cat < array_length(actor.body_plan); cat ++){
-		for (var ind = 0; ind < array_length(actor.body_plan[cat]); ind ++){
-			if (body_part_is_present(actor, cat, ind)){
-				
-				var from = array_length(actor.body_plan[cat][ind]) - 1;
-				var to   = BODY_PART_STATS.PART_AUX_SLOT;
-				
-				for (var slot = from; slot >= to; slot --){
-					
-					if (slot < BODY_PART_STATS.PART_SLOT_1){
-						if (!body_part_has_hand(actor, cat, ind)){
-							continue;
-						}
-					}
-					
-					var col = C_LTGREY;
-					if (slot == BODY_PART_STATS.PART_HAND_SLOT) col = C_RED;
-					if (slot == BODY_PART_STATS.PART_AUX_SLOT)  col = C_PURPLE;
-					
-					if (actor.inventory.equ_hover[0] == cat and actor.inventory.equ_hover[1] == ind and actor.inventory.equ_hover[2] == slot){
-						col = C_WHITE;
-						
-						equipment_hovered_x_pos = xx;
-						equipment_hovered_y_pos = yy;
-					}
-					
-					// Draw equipment box
-					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
-					
-					// Draw equipment sprite
-					if (is_struct(actor.body_plan[cat][ind][slot])){
-						
-						var slot_item = actor.body_plan[cat][ind][slot];
-
-						var item_sprite = slot_item.sprite_index;
-						var item_index  = slot_item.image_index;
-						var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
-						var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
-						
-						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + 3, yy + 3);
-					}
-					
-					// Increment box X position
-					xx += box_size;
-				}
-				
-				var col = colour_text_main;
-				draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
-				
-				xx = equ_x + (text_width * 2);
-				yy += box_size;
-			}
-		}
-	}
-	
-	// Interaction context menu
-	var menu_cont = actor.inventory.context_menu;
-	var menu_equi = actor.inventory.slot_select_menu;
-	if (menu_cont != noone and menu_equi == noone){
-		draw_context_menu(actor, menu_cont[1], menu_cont[2], menu_cont[3], menu_cont[4]);
-	}
-	
-	// Equipment slot context menu
-	if (menu_equi != noone){
-		draw_context_slot_select_menu(actor, menu_equi[1], menu_equi[2], menu_equi[3], menu_equi[4]);
-	}
 }
 
 function draw_minimap(){

@@ -197,23 +197,36 @@ function state_inventory(){
 			// Exit INVENTORY state
 			state = state_ready_for_inputs;
 		}
-		else if (keyboard_check_pressed(controls.key_up)){
-			// Move up inventory
-			inventory.inv_hover --;
-			if (inventory.inv_hover < 0){
-				inventory.inv_hover += len;
+		else if (keyboard_check(controls.key_up)){
+			manager.move_timer --;
+			if (manager.move_timer <= 0){
+				// Move up inventory
+				inventory.inv_hover --;
+				if (inventory.inv_hover < 0){
+					inventory.inv_hover += len;
+				}
+				manager.move_timer = manager.move_timer_max;
 			}
 		}    
-		else if (keyboard_check_pressed(controls.key_down)){
-			// Move down inventory
-			inventory.inv_hover ++;
-			if (inventory.inv_hover >= len){
-				inventory.inv_hover -= len;
+		else if (keyboard_check(controls.key_down)){
+			manager.move_timer --;
+			if (manager.move_timer <= 0){
+				// Move down inventory
+				inventory.inv_hover ++;
+				if (inventory.inv_hover >= len){
+					inventory.inv_hover -= len;
+				}
+				manager.move_timer = manager.move_timer_max;
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
 			if (len > 0 and inventory.context_menu == noone){
 				context_menu_initialise();
+			}
+		}
+		else{
+			if (manager.move_timer != 0){
+				manager.move_timer = 0;
 			}
 		}
 	}

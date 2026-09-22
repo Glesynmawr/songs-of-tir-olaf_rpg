@@ -352,6 +352,31 @@ function inventory_add_item(actor, item, stack){
 			}
 		}
 		
+		var item_sort	= item.sort_index;
+		var item_name   = item.name;
+			
+		for (i = 0; i < array_length(inventory.items); i ++){
+			var inv_slot_sort = inventory.items[i].sort_index;
+			var inv_slot_name = inventory.items[i].name;
+			
+			if (item_sort < inv_slot_sort){
+				
+				// Insert item into sorted position
+				array_insert(inventory.items, i, new_item);
+				return(true);
+			}
+				
+			if (inv_slot_sort == item_sort){
+				if (item_name < inv_slot_name){
+					
+					// Insert item into sorted position
+					array_insert(inventory.items, i, new_item);
+					return(true);
+				}
+			}
+		}
+		
+		// Push unsorted item onto inventory array
 		array_push(inventory.items, new_item);
 		return(true);
 	}

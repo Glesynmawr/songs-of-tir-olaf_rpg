@@ -65,6 +65,7 @@ function item_hat1()constructor{
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.HEAD];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.HEAD;
 }
 
 function item_hat2()constructor{
@@ -74,6 +75,7 @@ function item_hat2()constructor{
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.HEAD];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.HEAD;
 }
 
 // Face
@@ -84,6 +86,7 @@ function item_mask1()constructor{
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.FACE;
 }
 
 function item_mask2()constructor{
@@ -93,6 +96,7 @@ function item_mask2()constructor{
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.FACE;
 }
 
 // Body
@@ -103,6 +107,7 @@ function item_armour1()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BODY];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.BODY;
 	armour			= 1;
 }
 
@@ -113,6 +118,7 @@ function item_armour2()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BODY];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.BODY;
 	armour			= 1;
 }
 
@@ -124,6 +130,7 @@ function item_cloak1()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BACK];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.BACK;
 }
 
 function item_cloak2()constructor{
@@ -133,6 +140,7 @@ function item_cloak2()constructor{
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BACK];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.BACK;
 }
 
 // Arms
@@ -143,6 +151,7 @@ function item_vambrace1()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.ARMS;
 	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
@@ -154,6 +163,7 @@ function item_vambrace2()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.BRACER];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.ARMS;
 	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
@@ -166,6 +176,7 @@ function item_glove1()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.GLOVE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.HANDS;
 	tags			= [TAG.STACKABLE, TAG.IS_AMMO];
 }
 
@@ -176,6 +187,7 @@ function item_glove2()constructor{
 	slot			= [BODY_PART_CATEGORY.ARMS, ARMS_INDEX.GLOVE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.HANDS;
 	tags			= [TAG.STACKABLE];
 }
 
@@ -187,6 +199,7 @@ function item_greave1()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.LEGS;
 	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
@@ -198,6 +211,7 @@ function item_greave2()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.GREAVE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.LEGS;
 	tags			= [TAG.STACKABLE];
 	armour			= 1;
 }
@@ -210,6 +224,7 @@ function item_boot1()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.BOOT];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.FEET;
 	tags			= [TAG.STACKABLE];
 }
 
@@ -220,6 +235,7 @@ function item_boot2()constructor{
 	slot			= [BODY_PART_CATEGORY.LEGS, LEGS_INDEX.BOOT];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.FEET;
 	tags			= [TAG.STACKABLE];
 }
 
@@ -231,6 +247,7 @@ function item_sword1()constructor{
 	slot			= [];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.WEAPON_MELEE;
 	damage			= [1, 3, 0];
 }
 
@@ -241,6 +258,7 @@ function item_sword2()constructor{
 	slot			= [];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.WEAPON_MELEE;
 	tags			= [TAG.TWO_HANDED];
 	damage			= [1, 6, 0];
 }
@@ -253,6 +271,7 @@ function item_proboscis()constructor{
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
 	weight			= 1;
 	value			= 1;
+	sort_index		= ITEM_SORT.FACE;
 	tags			= [TAG.UNREMOVABLE];
 	damage			= [1, 3, 0];
 }

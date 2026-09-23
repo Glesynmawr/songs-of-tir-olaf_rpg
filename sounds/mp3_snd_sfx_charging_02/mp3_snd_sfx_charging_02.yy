@@ -15,7 +15,7 @@
   "name":"mp3_snd_sfx_charging_02",
   "parent":{
     "name":"SFX",
-    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/SFX.yy",
+    "path":"folders/Audio/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/SFX.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

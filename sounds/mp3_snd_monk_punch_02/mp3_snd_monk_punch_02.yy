@@ -15,7 +15,7 @@
   "name":"mp3_snd_monk_punch_02",
   "parent":{
     "name":"Monk",
-    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Monk.yy",
+    "path":"folders/Audio/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Monk.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

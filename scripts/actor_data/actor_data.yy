@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"actor_data",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Code",
+    "path":"folders/Code.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

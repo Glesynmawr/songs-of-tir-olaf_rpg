@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [1, 1, 3];
+global.version = [1, 1, 4];
 
 //randomise();
 debugging_mode		= false;
@@ -93,6 +93,10 @@ scroll_fill_max		= inv_display_max * inv_spacing;
 
 #endregion
 
+#region// LIGHTING --------------------------------------------------------------------------------
+
+#endregion
+
 #region// MENUS -----------------------------------------------------------------------------------
 control_menu_hover = 0;
 control_menu[0] = "Rebind keys";
@@ -145,7 +149,7 @@ move_timer = 0;
 
 #endregion
 
-#region // MOVEMENT -------------------------------------------------------------------------------
+#region// MOVEMENT --------------------------------------------------------------------------------
 cell_x_neighbours = [1,  1,  0, -1, -1, -1, 0, 1];
 cell_y_neighbours = [0, -1, -1, -1,  0,  1, 1, 1];
 
@@ -235,5 +239,7 @@ time_system = {
 
 // Transition into initial room
 transition_set(TRANSITION.GAME_BOOT, C_BLACK);
+
+
 
 

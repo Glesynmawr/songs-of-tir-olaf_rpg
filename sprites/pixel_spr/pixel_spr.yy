@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"Effect sprites",
-    "path":"folders/Sprites and Fonts/Effect sprites.yy",
+    "path":"folders/Art/Effect sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

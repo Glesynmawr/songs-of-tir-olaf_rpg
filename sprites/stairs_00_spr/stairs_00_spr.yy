@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"Dungeon tiles",
-    "path":"folders/Sprites and Fonts/Dungeon tiles.yy",
+    "path":"folders/Art/Dungeon tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

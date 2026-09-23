@@ -166,7 +166,7 @@ enum TRANSITION{
 #macro LOG_MAX_ENTRIES	8
 
 #macro ZONE_SIZE		40
-#macro ITEM_SPRITE_SIZE 16
+#macro ITEM_SPRITE_SIZE sprite_get_width(item_size_spr)
 
 #macro C_BLACK	 make_colour_rgb(0,   0,   0)
 #macro C_WHITE	 make_colour_rgb(255, 255, 255)

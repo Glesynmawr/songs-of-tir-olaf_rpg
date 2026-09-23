@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
-  "%Name":"weapon_spr",
+  "%Name":"weapon_melee_spr",
   "bboxMode":0,
-  "bbox_bottom":15,
+  "bbox_bottom":11,
   "bbox_left":0,
-  "bbox_right":31,
+  "bbox_right":23,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,24 +16,24 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":12,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"980634e9-723b-4df5-bd4f-c34a638130c8","blendMode":0,"displayName":"default","isLocked":false,"name":"980634e9-723b-4df5-bd4f-c34a638130c8","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"weapon_spr",
+  "name":"weapon_melee_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
     "name":"items",
-    "path":"folders/Sprites and Fonts/items.yy",
+    "path":"folders/Art/items.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"weapon_spr",
+    "%Name":"weapon_melee_spr",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"weapon_spr",
+    "name":"weapon_melee_spr",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -69,7 +69,7 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"62a7a7eb-9ecd-450d-a872-c713371ee4f3","path":"sprites/weapon_spr/weapon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"62a7a7eb-9ecd-450d-a872-c713371ee4f3","path":"sprites/weapon_melee_spr/weapon_melee_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"c6f8352b-5a09-43df-94b8-6f537946276f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":24,
 }

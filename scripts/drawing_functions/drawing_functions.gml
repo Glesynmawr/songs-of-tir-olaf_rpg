@@ -492,8 +492,10 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	if (len > 0){
 		for(var i = draw_from; i < draw_to; i ++){
 			
-			// X position
+			// X and Y positions
 			xx = inv_x + (text_width * 2);
+			var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+			
 			// Item text 
 			if (array_length(display_inv[0][i]) > 1){
 				
@@ -508,12 +510,14 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 				var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
 				draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx, yy);
 				
-				xx += inv_spacing;
-				var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
-				draw_text_colour(xx + text_width, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
+				var x_mod = 0;
+				if (ui_flip and display_inv[1] == i and actor.inventory.selected == 1){
+					x_mod = text_width;
+				}
+				xx += inv_spacing * 1.5;
+				draw_text_colour(xx + text_width - x_mod, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
 			}
 			else{
-				var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
 				draw_text_colour(xx + text_width, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
 			}
 			
@@ -619,9 +623,14 @@ function inventory_create_display_list(actor){
 					// Push header to list
 					array_push(new_list, [inventory_get_category_text(inventory.items[i])]);
 				}
-				var item_text = " ";
-				if (inventory.inv_hover == i and inventory.selected == 1) {
-					item_text += "> ";
+				var item_text = "";
+				if (inventory.inv_hover == i) {
+					if (inventory.selected == 1){
+						item_text += "> ";
+						if (manager.ui_flip){
+							item_text += " ";
+						}
+					}
 					hovered_index = array_length(new_list);
 				}
 				if (inventory.items[i].stack > 1){

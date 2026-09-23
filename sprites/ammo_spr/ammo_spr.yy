@@ -2,10 +2,10 @@
   "$GMSprite":"v2",
   "%Name":"ammo_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":2,
-  "bbox_right":30,
-  "bbox_top":2,
+  "bbox_bottom":10,
+  "bbox_left":1,
+  "bbox_right":22,
+  "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
@@ -14,9 +14,9 @@
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"18eb7b68-9583-41b9-905a-54bec30da6a8","name":"18eb7b68-9583-41b9-905a-54bec30da6a8","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":0,
-  "gridY":0,
-  "height":16,
+  "gridX":12,
+  "gridY":12,
+  "height":12,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"cc2cc6aa-6e5b-4f85-a089-dd18314d0f5a","blendMode":0,"displayName":"default","isLocked":false,"name":"cc2cc6aa-6e5b-4f85-a089-dd18314d0f5a","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"items",
-    "path":"folders/Sprites and Fonts/items.yy",
+    "path":"folders/Art/items.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":24,
 }

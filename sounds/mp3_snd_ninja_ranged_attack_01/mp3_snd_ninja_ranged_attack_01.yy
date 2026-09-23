@@ -15,7 +15,7 @@
   "name":"mp3_snd_ninja_ranged_attack_01",
   "parent":{
     "name":"Ninja",
-    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Ninja.yy",
+    "path":"folders/Audio/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Ninja.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

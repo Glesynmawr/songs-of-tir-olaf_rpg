@@ -15,7 +15,7 @@
   "name":"mp3_snd_knight_sword_swing_01",
   "parent":{
     "name":"Knight",
-    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Knight.yy",
+    "path":"folders/Audio/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Knight.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"greave_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":4,
-  "bbox_right":30,
+  "bbox_bottom":8,
+  "bbox_left":3,
+  "bbox_right":18,
   "bbox_top":2,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":12,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"a96998d8-6fd8-4aeb-b4f7-b18343ce38d4","blendMode":0,"displayName":"default","isLocked":false,"name":"a96998d8-6fd8-4aeb-b4f7-b18343ce38d4","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"items",
-    "path":"folders/Sprites and Fonts/items.yy",
+    "path":"folders/Art/items.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":24,
 }

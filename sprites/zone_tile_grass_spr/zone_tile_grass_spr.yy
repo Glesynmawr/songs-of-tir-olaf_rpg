@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"Zone tiles",
-    "path":"folders/Sprites and Fonts/Zone tiles.yy",
+    "path":"folders/Art/Zone tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

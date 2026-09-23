@@ -26,7 +26,7 @@
   "origin":8,
   "parent":{
     "name":"UI sprites",
-    "path":"folders/Sprites and Fonts/UI sprites.yy",
+    "path":"folders/Art/UI sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

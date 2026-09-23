@@ -15,7 +15,7 @@
   "name":"mp3_snd_wizard_attack_02",
   "parent":{
     "name":"Wizard",
-    "path":"folders/Sounds/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Wizard.yy",
+    "path":"folders/Audio/io.gamemaker.retrocharactersfx-1.0.0/SFX - Retro Character/Sounds/Wizard.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

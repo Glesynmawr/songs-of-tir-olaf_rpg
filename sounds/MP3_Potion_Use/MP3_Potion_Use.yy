@@ -15,7 +15,7 @@
   "name":"MP3_Potion_Use",
   "parent":{
     "name":"Sounds",
-    "path":"folders/Sounds/io.gamemaker.retroninjasfx-1.0.0/SFX - Retro Ninja/Sounds.yy",
+    "path":"folders/Audio/io.gamemaker.retroninjasfx-1.0.0/SFX - Retro Ninja/Sounds.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

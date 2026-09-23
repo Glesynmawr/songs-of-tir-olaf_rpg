@@ -147,7 +147,7 @@
   "name":"mono_fnt",
   "parent":{
     "name":"Fonts",
-    "path":"folders/Sprites and Fonts/Fonts.yy",
+    "path":"folders/Art/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

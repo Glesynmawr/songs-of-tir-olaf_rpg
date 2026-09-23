@@ -29,7 +29,7 @@
   "origin":0,
   "parent":{
     "name":"Entities",
-    "path":"folders/Sprites and Fonts/Entities.yy",
+    "path":"folders/Art/Entities.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

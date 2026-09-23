@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"grid_check_functions",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Code",
+    "path":"folders/Code.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

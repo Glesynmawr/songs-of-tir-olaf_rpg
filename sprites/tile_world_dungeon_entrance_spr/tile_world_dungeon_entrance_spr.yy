@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"World tiles",
-    "path":"folders/Sprites and Fonts/World tiles.yy",
+    "path":"folders/Art/World tiles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

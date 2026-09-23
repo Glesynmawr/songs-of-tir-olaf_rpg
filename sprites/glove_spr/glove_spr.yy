@@ -2,10 +2,10 @@
   "$GMSprite":"v2",
   "%Name":"glove_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":9,
   "bbox_left":2,
-  "bbox_right":30,
-  "bbox_top":4,
+  "bbox_right":21,
+  "bbox_top":3,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
@@ -14,9 +14,9 @@
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"3d6f90c9-3e7a-4886-b29e-9fe6d832f46c","name":"3d6f90c9-3e7a-4886-b29e-9fe6d832f46c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":0,
-  "gridY":0,
-  "height":16,
+  "gridX":12,
+  "gridY":12,
+  "height":12,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"d20e6e73-a1a7-4f42-893a-fe5379ac58f9","blendMode":0,"displayName":"default","isLocked":false,"name":"d20e6e73-a1a7-4f42-893a-fe5379ac58f9","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"items",
-    "path":"folders/Sprites and Fonts/items.yy",
+    "path":"folders/Art/items.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":24,
 }

@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"boot_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":3,
-  "bbox_right":30,
+  "bbox_bottom":10,
+  "bbox_left":2,
+  "bbox_right":21,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -14,9 +14,9 @@
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"36330893-a5ff-4ec9-a557-5c084c45daac","name":"36330893-a5ff-4ec9-a557-5c084c45daac","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":0,
-  "gridY":0,
-  "height":16,
+  "gridX":12,
+  "gridY":12,
+  "height":12,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"16325d7a-17e7-450d-868e-2e7076aee3af","blendMode":0,"displayName":"default","isLocked":false,"name":"16325d7a-17e7-450d-868e-2e7076aee3af","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"items",
-    "path":"folders/Sprites and Fonts/items.yy",
+    "path":"folders/Art/items.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":32,
+  "width":24,
 }

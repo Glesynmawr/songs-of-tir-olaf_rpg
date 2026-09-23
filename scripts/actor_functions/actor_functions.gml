@@ -58,10 +58,6 @@ function body_part_count(actor, category){
 	return(count);
 }
 
-function body_part_equipment_slot_count(actor, category, index){
-	return(array_length(actor.body_plan[category][index]) - BODY_PART_STATS.PART_SLOT_1);
-}
-
 function body_part_empty_hand_slot_count(actor){
 	var free_hand_count = 0;
 	for (var category = 0; category < array_length(actor.body_plan); category ++){
@@ -78,6 +74,7 @@ function body_part_empty_hand_slot_count(actor){
 	}
 	return(free_hand_count);
 }
+
 
 // SPAWNING	 --------------------------------------------------------------------------------------
 function spawn_new_actor(actor_type, cell_x, cell_y){

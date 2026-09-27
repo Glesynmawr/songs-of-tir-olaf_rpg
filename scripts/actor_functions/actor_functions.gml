@@ -102,9 +102,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.xscale			= 1;
 	
 	// Turn structure variables
-	new_actor.energy	= 0;
-	new_actor.has_acted = false;
-	new_actor.is_player = false;
+	new_actor.energy			= 0;
+	new_actor.has_acted			= false;
+	new_actor.is_player			= false;
+	new_actor.player_spotted	= false;
 	
 	if (actor_type == actor_player){
 		actor_registry.player	= new_actor;
@@ -115,6 +116,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 		new_actor.world_x = noone;
 		new_actor.world_y = noone;
 	}
+	
+	// Targetting
+	new_actor.target_actor	= noone;
+	new_actor.target_map	= noone;
 	
 	// Inventory
 	new_actor.body_plan				= body_part_list_copy(new_actor.body_index);

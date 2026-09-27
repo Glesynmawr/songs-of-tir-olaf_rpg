@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"natural_item_spr",
   "bboxMode":0,
-  "bbox_bottom":9,
+  "bbox_bottom":10,
   "bbox_left":2,
-  "bbox_right":22,
+  "bbox_right":58,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -14,8 +14,8 @@
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"62a7a7eb-9ecd-450d-a872-c713371ee4f3","name":"62a7a7eb-9ecd-450d-a872-c713371ee4f3","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":0,
-  "gridY":0,
+  "gridX":12,
+  "gridY":12,
   "height":12,
   "HTile":false,
   "layers":[
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":24,
+  "width":60,
 }

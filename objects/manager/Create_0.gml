@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [1, 1, 4];
+global.version = [2, 1, 4];
 
 //randomise();
 debugging_mode		= false;
@@ -29,7 +29,9 @@ game_state = {
 	
 	direction_indicator		: noone,
 	direction_indicator_x	: 0,
-	direction_indicator_y	: 0
+	direction_indicator_y	: 0,
+	
+	faction_list			: []
 }
 
 #endregion

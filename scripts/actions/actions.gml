@@ -86,7 +86,7 @@ function action_attack_melee(attacker, defender){
 					var defender_agility		= defender.agility;
 					var attacker_empty_hands	= body_part_empty_hand_slot_count(attacker);
 					
-					// Gett attack item
+					// Get attack item
 					var melee_item				= variable_clone(attacker.body_plan[category][index][slot]);
 					
 					// Get attack handedness
@@ -155,7 +155,15 @@ function action_attack_melee(attacker, defender){
 						
 						// Execute to-hit roll
 						var attack_hits = combat_get_hit(attacker_agility, defender_agility);
+						
+						// Attack hits
 						if (attack_hits){
+							
+							// Modify defender state
+							if (defender.state == state_idle or defender.state == state_wander){
+								defender.state_update = defender.state_react;
+							}
+							
 							first_log += " and hits ";
 							particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5);
 							
@@ -188,13 +196,13 @@ function action_attack_melee(attacker, defender){
 							}
 						}
 						else{
+							// Attack misses
 							first_log += " and misses";
 						}
 					}
 					
 					// Create log entries
 					if (first_log != ""){
-						// Attack log entry
 						log_add_entry(first_log, log_col);
 					}
 				}
@@ -219,6 +227,52 @@ function action_remove_actor(actor){
 	// Remove from actor list
 	index = array_get_index(manager.actor_registry.actor_list, actor);
 	array_delete(manager.actor_registry.actor_list, index, 1);
+}
+
+
+// ACTOR PASSIVES ---------------------------------------------------------------------------------
+function passive_check_actor_in_los(){
+	
+	// Player position
+	var player_x = manager.actor_registry.player.x_pos;
+	var player_y = manager.actor_registry.player.y_pos;
+	
+	// Distance to player
+	var dist = distance_map_player[x_pos][y_pos];
+	
+	// Visibility of player
+	var in_sight = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, player_x, player_y);
+	
+	if (dist <= range) and (in_sight == true) and (!struct_exists(self, "chase_count")){
+		
+		if (!player_spotted){
+			log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
+			player_spotted = true;
+		}
+		
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	state = state_chase; break;
+			case DEMEANOUR.TIMID:		state = state_flee;  break;
+		}
+		
+		if (state == state_chase or state == state_flee){
+			chase_count = range * 2;
+		}
+	}
+}
+
+function passive_state_update(){
+	if (struct_exists(self, "state_update")){
+		if (state_update != noone){
+			state = state_update;
+			//variable_struct_remove(self, "state_update");
+			if (state == state_chase or state == state_flee){
+				chase_count = range * 2;
+			}
+			return(true);
+		}
+	}
+	return(false);
 }
 
 
@@ -318,8 +372,20 @@ function combat_get_melee_damage(attacker, item = noone){
 	return(damage);
 }
 
-function player_swap_items(){
-	
+function player_swap_items(actor){
+	with (actor){
+		for (var category = 0; category < array_length(body_plan); category ++){
+			for (var index = 0; index < array_length(body_plan[category]); index ++){
+				var aux_item = variable_clone(body_plan[category][index][BODY_PART_STATS.PART_AUX_SLOT]);
+				var hand_item = variable_clone(body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT]);
+			
+				body_plan[category][index][BODY_PART_STATS.PART_AUX_SLOT] = hand_item;
+				body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT] = aux_item;
+			}
+		}
+	}
 }
+
+
 
 

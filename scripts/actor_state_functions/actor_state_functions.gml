@@ -99,7 +99,7 @@ function state_ready_for_inputs(){
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_item_swap)){
-			player_swap_items();
+			player_swap_items(self);
 		}
 	}
 
@@ -480,15 +480,8 @@ function state_pickup(){
 }
 
 function state_idle(){
-	// Check if player is in range and visible
-	if (distance_map_player[x_pos][y_pos] <= range) and (manager.game_state.game_grid[x_pos][y_pos].is_visible == true){
-		log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
-		
-		switch(demeanour){
-			case DEMEANOUR.AGGRESSIVE: state = state_chase; break;
-			case DEMEANOUR.TIMID:      state = state_flee;  break;
-		}
-		
+	if (!passive_state_update()){
+		passive_check_actor_in_los();
 	}
 	
 	has_acted = true;
@@ -574,6 +567,35 @@ function state_flee(){
 		
 		// Execute move
 		action_move(manager.game_state.game_grid, candidate_list[choice][0], candidate_list[choice][1]);
+	}
+	
+	// Player position
+	var player_x = manager.actor_registry.player.x_pos;
+	var player_y = manager.actor_registry.player.y_pos;
+	
+	// Visibility of player
+	var dist     = distance_map_player[x_pos][y_pos];
+	var in_sight = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, player_x, player_y);
+	if (!in_sight and dist > range){
+		player_spotted = false;
+		state = state_base;
+	}
+	
+	has_acted = true;
+}
+
+function state_wander(){
+	
+	if (!passive_state_update()){
+		var chance_to_move = random(1);
+		if (chance_to_move < 0.5){
+			var dir = irandom(7);
+			var move_x = manager.cell_x_neighbours[dir];
+			var move_y = manager.cell_y_neighbours[dir];
+			action_move(manager.game_state.game_grid, move_x, move_y);
+		}
+		
+		passive_check_actor_in_los();
 	}
 	
 	has_acted = true;

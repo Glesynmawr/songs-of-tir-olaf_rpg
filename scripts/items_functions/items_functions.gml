@@ -264,10 +264,22 @@ function item_sword2()constructor{
 }
 
 // Natural items
-function item_proboscis()constructor{
-	name			= "Proboscis";
+function item_beak()constructor{
+	name			= "Beak";
 	sprite_index	= natural_item_spr;
-	image_index		= 1;
+	image_index		= 3;
+	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.FACE;
+	tags			= [TAG.UNREMOVABLE];
+	damage			= [1, 2, 0];
+}
+
+function item_bite()constructor{
+	name			= "Bite";
+	sprite_index	= natural_item_spr;
+	image_index		= 4;
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
 	weight			= 1;
 	value			= 1;
@@ -276,6 +288,39 @@ function item_proboscis()constructor{
 	damage			= [1, 3, 0];
 }
 
+function item_carapace()constructor{
+	name			= "Carapace";
+	sprite_index	= natural_item_spr;
+	image_index		= 1;
+	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BODY];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.BODY;
+	tags			= [TAG.UNREMOVABLE];
+	armour			= 4;
+}
 
+function item_proboscis()constructor{
+	name			= "Proboscis";
+	sprite_index	= natural_item_spr;
+	image_index		= 0;
+	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.FACE;
+	tags			= [TAG.UNREMOVABLE];
+	damage			= [1, 3, 0];
+}
+
+function item_wings()constructor{
+	name			= "Wings";
+	sprite_index	= natural_item_spr;
+	image_index		= 2;
+	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.BACK];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.BACK;
+	tags			= [TAG.UNREMOVABLE];
+}
 
 

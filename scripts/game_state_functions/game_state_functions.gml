@@ -20,6 +20,27 @@ function init_control_menu(){
 	}
 }
 
+function init_faction_list(){
+	var list = [];
+	
+	list[FACTION.AMPHIBIAN_PREY][FACTION.AMPHIBIAN_PREY]		= 10;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.BIRD_PREY]				= 10;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.PLAYER]				= 10;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.REPTILE_PREDATOR]		= 0;
+	
+	list[FACTION.BIRD_PREY][FACTION.AMPHIBIAN_PREY]				= 0;
+	list[FACTION.BIRD_PREY][FACTION.BIRD_PREY]					= 10;
+	list[FACTION.BIRD_PREY][FACTION.PLAYER]						= 10;
+	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 0;
+	
+	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 0;
+	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 0;
+	list[FACTION.REPTILE_PREDATOR][FACTION.PLAYER]				= 10;
+	list[FACTION.REPTILE_PREDATOR][FACTION.REPTILE_PREDATOR]	= 10;
+	
+	return(list);
+}
+
 function init_main(){
 	with (manager){
 		// Set resolution and scale
@@ -81,20 +102,16 @@ function init_world(){
 		spawn_new_item(item_armour2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_cloak1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_cloak2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_vambrace1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_vambrace2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_greave1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_greave2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_boot1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_boot2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace1,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace2,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove1,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove2,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave1,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave2,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot1,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot2,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		
-		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		
 		// Distance maps
 		globalvar distance_map_player;
@@ -103,7 +120,9 @@ function init_world(){
 		// Action list and turn order
 		actor_registry.action_list = [];
 		turn_order_initialise();
-	
+		
+		game_state.faction_list = init_faction_list();
+		
 		// Go to world
 		goto_world();
 	}
@@ -471,12 +490,18 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		// Spawn mobs
 		var b = game_state.world_map[world_x][world_y].biome;
 		if (mob_lookup[b] != noone){
-			var mob_count = mob_lookup[b][0];
+			var mob_count = irandom_range(ceil(mob_lookup[b][0] / 2), mob_lookup[b][0]);
 			repeat(mob_count){
 				var xx = irandom_range(10, ZONE_SIZE - 10);
 				var yy = irandom_range(10, ZONE_SIZE - 10);
-			
-				spawn_new_actor(mob_lookup[b][1][0], xx, yy);
+				
+				var mob_roll = irandom(100);
+				for (var i = 1; i < array_length(mob_lookup[b]); i ++){
+					if (mob_roll <= mob_lookup[b][i][1]){
+						spawn_new_actor(mob_lookup[b][i][0], xx, yy);
+						break;
+					}
+				}
 			}
 		}
 	

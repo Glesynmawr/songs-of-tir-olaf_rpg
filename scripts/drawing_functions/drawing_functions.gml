@@ -105,7 +105,8 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_x      = melee_offset_x;
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
-								
+					var txt = string(state);
+							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
 								
@@ -137,6 +138,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y, x_scale, 1, 0, c_white, 1);
 				shader_reset();
+				draw_text(screen_x, screen_y, txt);
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
@@ -456,10 +458,14 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 // Inventory --------------------------------------------------------------------------------------
 function draw_inventory(actor, x_pos, y_pos, width, height){
 	
+	// Text colour
 	var tc = colour_text_main;
 	
+	// Position variables
 	var inv_x = x_pos + floor(width / 2);
+	var inv_w = floor(width / 4);
 	var equ_x = x_pos + floor(width / 4);
+	var equ_w = floor(width / 4);
 	var xx, yy;
 	
 	// Create controls string
@@ -486,15 +492,18 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var scroll_data = inventory_draw_scrollbar(display_inv[0], display_inv[1]);
 	var draw_from = scroll_data[0];
 	var draw_to = scroll_data[1];
-	var yy = y_pos + (text_height * 2);
+	
+	xx = inv_x + (text_width * 2);
+	yy = y_pos + (text_height * 2);
 	
 	// Items
 	if (len > 0){
 		for(var i = draw_from; i < draw_to; i ++){
 			
-			// X and Y positions
-			xx = inv_x + (text_width * 2);
+			// Y position
 			var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+			
+			var txt = display_inv[0][i][0];
 			
 			// Item text 
 			if (array_length(display_inv[0][i]) > 1){
@@ -515,15 +524,28 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 					x_mod = text_width;
 				}
 				xx += inv_spacing * 1.5;
-				draw_text_colour(xx + text_width - x_mod, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
+				
+				// Item name and stack
+				draw_text_outlined($"{wei} lb / $ {val}", inv_x + inv_w, yy + text_y_offset, tc, fa_right);
+				
+				// Weight (and value?)
+				draw_text_outlined(txt, xx + text_width - x_mod, yy + text_y_offset, tc);
 			}
 			else{
-				draw_text_colour(xx + text_width, yy + text_y_offset, display_inv[0][i][0], tc, tc, tc, tc, 1);
+				draw_text_outlined(txt, xx + text_width, yy + text_y_offset, tc);
 			}
+			
+			// Reset X position
+			xx = inv_x + (text_width * 2);
 			
 			// Increment y position
 			yy += inv_spacing;
 		}
+	}
+	else{
+		
+		// Inventory is empty
+		draw_text_outlined(" - No items held _ ", xx, yy, tc);
 	}
 	
 	// EQUIPMENT ----------------------------------------------------------------------------------
@@ -820,16 +842,44 @@ function draw_info_box(){
 	// Player hit points
 	xx += text_width * 2;
 	yy += text_height;
-	draw_text(xx, yy, $"HP: {actor_registry.player.hit_points}");
+	draw_text_outlined($"HP: {actor_registry.player.hit_points}", xx, yy, colour_text_main);
 	
+	// Current turn
 	yy += text_height;
-	draw_text(xx, yy, $"Turn: {time_system.current_turn}"); 
+	draw_text_outlined($"Turn: {time_system.current_turn}", xx, yy, colour_text_main);
 	
+	// Current hour
 	yy += text_height;
-	draw_text(xx, yy, $"Hour: {time_system.game_current_time[TIME.HOUR]}"); 
+	draw_text_outlined($"Hour: {time_system.game_current_time[TIME.HOUR]}", xx, yy, colour_text_main);
 	
+	// Current day
 	yy += text_height;
-	draw_text(xx, yy, $"Day:  {time_system.game_current_time[TIME.DAY]}"); 
+	draw_text_outlined($"Day:  {time_system.game_current_time[TIME.DAY]}", xx, yy, colour_text_main);
+	
+	// Hand-held items
+	yy += text_height;
+	var x_pos = xx;
+	for (var category = 0; category < array_length(actor_registry.player.body_plan); category ++){
+		for (var index = 0; index < array_length(actor_registry.player.body_plan[category]); index ++){
+			if (body_part_is_present(actor_registry.player, category, index)){
+				if (body_part_has_hand(actor_registry.player, category, index)){
+					draw_sprite(equipment_box_spr, 0, x_pos, yy);
+					
+					// Held item
+					var item_in_hand = actor_registry.player.body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT];
+					if (item_in_hand != noone){
+						var spr = item_in_hand.sprite_index;
+						var ind = item_in_hand.image_index;
+					
+						var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
+						var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
+						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + 3, yy + 3);
+					}
+					x_pos += equipment_box_sprite_size
+				}
+			}
+		}
+	}
 }
 
 function draw_minimap(){

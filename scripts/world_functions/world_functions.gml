@@ -76,7 +76,7 @@ function world_data(){
 	mob_lookup[BIOME.DENSE_MANGROVE]	= noone;
 	mob_lookup[BIOME.WATER]				= noone;
 	mob_lookup[BIOME.MANGROVE]			= noone;
-	mob_lookup[BIOME.MARSH]				= [5, [actor_reed_weevil, 100]];
+	mob_lookup[BIOME.MARSH]				= [10, [actor_marsh_turtle, 10], [actor_flamingo, 30], [actor_marsh_frog, 100]];
 }
 
 function world_generate(){

@@ -161,7 +161,16 @@ function action_attack_melee(attacker, defender){
 							
 							// Modify defender state
 							if (defender.state == state_idle or defender.state == state_wander){
-								defender.state_update = defender.state_react;
+								with (defender){
+									
+									// Set state
+									target_actor = attacker;
+									target_x     = attacker.x_pos;
+									target_y     = attacker.y_pos;
+									target_map   = create_distance_map(manager.game_state.game_grid, target_x, target_y);
+		
+									state_update = state_chase;
+								}
 							}
 							
 							first_log += " and hits ";
@@ -233,42 +242,139 @@ function action_remove_actor(actor){
 // ACTOR PASSIVES ---------------------------------------------------------------------------------
 function passive_check_actor_in_los(){
 	
-	// Player position
-	var player_x = manager.actor_registry.player.x_pos;
-	var player_y = manager.actor_registry.player.y_pos;
+	// Get grid and dimentions
+	var grid	= manager.game_state.game_grid;
+	var ww		= array_length(grid);
+	var hh		= array_length(grid[0]);
 	
-	// Distance to player
-	var dist = distance_map_player[x_pos][y_pos];
+	// Set LoS check limits
+	var x_from = max(x_pos - react_range, 0);
+	var x_to   = min(x_pos + react_range, ww);
+	var y_from = max(y_pos - react_range, 0);
+	var y_to   = min(y_pos + react_range, hh);
 	
-	// Visibility of player
-	var in_sight = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, player_x, player_y);
+	// Loop through LoS area
+	var hostile_list = [];
+	var flee_list    = [];
 	
-	if (dist <= range) and (in_sight == true) and (!struct_exists(self, "chase_count")){
-		
-		if (!player_spotted){
-			log_add_entry($"{name} has spotted {manager.actor_registry.player.name}!", manager.colour_text_main);
-			player_spotted = true;
-		}
-		
-		switch(demeanour){
-			case DEMEANOUR.AGGRESSIVE:	state = state_chase; break;
-			case DEMEANOUR.TIMID:		state = state_flee;  break;
-		}
-		
-		if (state == state_chase or state == state_flee){
-			chase_count = range * 2;
+	for (var xx = x_from; xx < x_to; xx ++){
+		for (var yy = y_from; yy < y_to; yy ++){
+			var actor = grid_check_position_contains_actor(xx, yy);
+			if (actor != noone and actor != self){
+				
+				// Get actor reaction
+				var reaction = passive_actor_get_reaction(self, actor);
+				
+				// Push to hostile/flee lists
+				if (reaction == state_chase) array_push(hostile_list, actor);
+				if (reaction == state_flee)  array_push(flee_list, actor);
+			}
 		}
 	}
+	
+	// Check for flee targets
+	var len = array_length(flee_list);
+	if (len > 0){
+		target_map = create_distance_map(grid, x_pos, y_pos);
+		var nearest_dist = 100;
+		var nearest_ind  = noone;
+		for (var i = 0; i < len; i ++){
+			var dist = target_map[flee_list[i].x_pos][flee_list[i].y_pos];
+			if (dist < nearest_dist){
+				nearest_dist = dist;
+				nearest_ind  = i;
+			}
+		}
+		
+		// Set flee target
+		target_actor = flee_list[nearest_ind];
+		target_x     = target_actor.x_pos;
+		target_y     = target_actor.y_pos;
+		target_map   = create_distance_map(grid, target_x, target_y);
+		
+		state = state_flee;
+		return;
+	}
+	
+	var len = array_length(hostile_list);
+	if (len > 0){
+		target_map = create_distance_map(grid, x_pos, y_pos);
+		var nearest_dist = 100;
+		var nearest_ind  = noone;
+		for (var i = 0; i < len; i ++){
+			var dist = target_map[hostile_list[i].x_pos][hostile_list[i].y_pos];
+			if (dist < nearest_dist){
+				nearest_dist = dist;
+				nearest_ind  = i;
+			}
+		}
+		
+		// Set chase target
+		target_actor = hostile_list[nearest_ind];
+		target_x     = target_actor.x_pos;
+		target_y     = target_actor.y_pos;
+		target_map   = create_distance_map(grid, target_x, target_y);
+		
+		state = state_chase;
+		return;
+	}
+}
+
+function passive_actor_get_reaction(actor, target){
+	
+	var standing  = manager.game_state.faction_list[actor.faction][target.faction];
+	var demeanour = actor.demeanour;
+	
+	if (standing <= 1){
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	return(state_chase);
+			case DEMEANOUR.PASSIVE:		return(state_chase);
+			case DEMEANOUR.TIMID:		return(state_chase);
+		}
+	}
+	else if (standing <= 7){
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	return(state_chase);
+			case DEMEANOUR.PASSIVE:		return(state_chase);
+			case DEMEANOUR.TIMID:		return(state_flee);
+		}
+	}
+	else if (standing <= 13){
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	return(state_chase);
+			case DEMEANOUR.PASSIVE:		return(noone);
+			case DEMEANOUR.TIMID:		return(state_flee);
+		}
+	}
+	else if (standing <= 19){
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	return(noone);
+			case DEMEANOUR.PASSIVE:		return(noone);
+			case DEMEANOUR.TIMID:		return(noone);
+		}
+	}
+	else if (standing <= 20){
+		switch(demeanour){
+			case DEMEANOUR.AGGRESSIVE:	return(noone);
+			case DEMEANOUR.PASSIVE:		return(noone);
+			case DEMEANOUR.TIMID:		return(noone);
+		}
+	}
+}
+
+function passive_actor_reset_target(){
+	target_actor	= noone;
+	target_x		= noone;
+	target_y		= noone;
+	target_map		= noone;
 }
 
 function passive_state_update(){
 	if (struct_exists(self, "state_update")){
 		if (state_update != noone){
 			state = state_update;
-			//variable_struct_remove(self, "state_update");
-			if (state == state_chase or state == state_flee){
-				chase_count = range * 2;
-			}
+			variable_struct_remove(self, "state_update");
+			
 			return(true);
 		}
 	}

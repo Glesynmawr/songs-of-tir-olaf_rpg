@@ -36,12 +36,12 @@ function dungeon_enter(actor, x_pos, y_pos){
 	with (manager){
 		game_state.dungeon_entry_x = x_pos;
 		game_state.dungeon_entry_y = y_pos;
-		dungeon_index   = game_state.game_grid[x_pos][y_pos].index;
-		dungeon_depth   = array_length(game_state.game_grid[x_pos][y_pos].dungeon_list);
+		game_state.dungeon_index   = game_state.game_grid[x_pos][y_pos].index;
+		game_state.dungeon_depth   = array_length(game_state.game_grid[x_pos][y_pos].dungeon_list);
 		game_state.current_depth   = 0;
 		
 		// Create log entry
-		var text = $"{actor.name} enters dungeon {dungeon_index} at x {game_state.dungeon_entry_x} and y {game_state.dungeon_entry_y}. It is {dungeon_depth} floors deep";
+		var text = $"{actor.name} enters dungeon {game_state.dungeon_index} at x {game_state.dungeon_entry_x} and y {game_state.dungeon_entry_y}. It is {game_state.dungeon_depth} floors deep";
 		log_add_entry(text, colour_text_main);
 		
 		transition_set(TRANSITION.GAME_DUNGEON_ENTER, C_BLACK);
@@ -68,7 +68,7 @@ function level_ascend(){
 		}
 	
 		// Create log entry
-		var text = $"{actor_registry.player.name} exits dungeon {dungeon_index}";
+		var text = $"{actor_registry.player.name} exits dungeon {game_state.dungeon_index}";
 		log_add_entry(text, colour_text_main);
 	}
 }
@@ -81,7 +81,7 @@ function level_descend(){
 		transition_set(TRANSITION.GAME_DUNGEON_NEXT, C_BLACK);
 	
 		// Create log entry
-		var text = $"{actor_registry.player.name} descends furthur in dungeon {dungeon_index}";
+		var text = $"{actor_registry.player.name} descends furthur in dungeon {game_state.dungeon_index}";
 		log_add_entry(text, colour_text_main);
 	}
 }

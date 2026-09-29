@@ -5,10 +5,10 @@ function actor_player()constructor{
 	name			= "Doodle";
 	sprite			= rogue_spr;
 	range			= 7;
+	react_range		= 0;
 	body_index		= BODY_PRESET.HUMANOID;
 	state			= state_ready_for_inputs;
 	state_base		= state_ready_for_inputs;
-	state_react		= noone;
 	demeanour		= DEMEANOUR.PASSIVE;
 	chase_persist	= [0, 0];
 	strength		= 4;
@@ -25,10 +25,10 @@ function actor_flamingo()constructor{
 	name			= "Flamingo";
 	sprite			= flamingo_spr;
 	range			= 6;
+	react_range		= 5;
 	body_index		= BODY_PRESET.WINGED_BIPED;
 	state			= state_wander;
 	state_base		= state_wander;
-	state_react		= state_flee;
 	demeanour		= DEMEANOUR.TIMID;
 	chase_persist	= [0, 0];
 	hp_flee_percent	= 100;
@@ -43,18 +43,18 @@ function actor_marsh_frog()constructor{
 	faction         = FACTION.AMPHIBIAN_PREY;
 	name			= "Marsh Frog";
 	sprite			= marsh_frog_spr;
-	range			= 4;
+	range			= 2;
+	react_range		= 2;
 	body_index		= BODY_PRESET.QUADRUPED;
 	state			= state_wander;
 	state_base		= state_wander;
-	state_react		= state_flee;
 	demeanour		= DEMEANOUR.PASSIVE;
 	chase_persist	= [0, 0];
 	hp_flee_percent	= 50;
 	strength		= 3;
 	agility			= 3;
 	hit_points		= [6, 6];
-	action_speed	= 75;
+	action_speed	= 50;
 	equipment		= [[item_bite, 1]];
 }
 
@@ -62,11 +62,11 @@ function actor_marsh_turtle()constructor{
 	faction         = FACTION.REPTILE_PREDATOR;
 	name			= "Marsh Turtle";
 	sprite			= marsh_turtle_spr;
-	range			= 3;
+	range			= 4;
+	react_range		= 1;
 	body_index		= BODY_PRESET.QUADRUPED;
 	state			= state_idle;
 	state_base		= state_idle;
-	state_react		= state_chase;
 	demeanour		= DEMEANOUR.AGGRESSIVE;
 	chase_persist	= [3, 6];
 	hp_flee_percent	= 25;
@@ -82,10 +82,10 @@ function actor_reed_weevil()constructor{
 	name			= "Reed weevil";
 	sprite			= reed_weevil_spr;
 	range			= 6;
+	react_range		= 6;
 	body_index		= BODY_PRESET.QUADRUPED;
 	state			= state_wander;
 	state_base		= state_wander;
-	state_react		= state_chase;
 	demeanour		= DEMEANOUR.PASSIVE;
 	chase_persist	= [3, 6];
 	hp_flee_percent	= 50;

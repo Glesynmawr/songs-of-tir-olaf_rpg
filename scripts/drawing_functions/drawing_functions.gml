@@ -105,7 +105,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_x      = melee_offset_x;
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
-					var txt = string(state);
+					var txt = string($"{target_x}:{target_y} - {x_pos}:{y_pos}");
 							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();

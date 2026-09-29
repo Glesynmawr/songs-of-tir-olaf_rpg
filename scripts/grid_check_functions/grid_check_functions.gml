@@ -17,6 +17,17 @@ function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
 	return(false);
 }
 
+function grid_check_position_contains_actor(x_pos, y_pos){
+	for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
+		var actor = manager.actor_registry.actor_list[i];
+		if (actor.x_pos == x_pos and actor.y_pos == y_pos){
+			return(actor);
+			break;
+		}
+	}
+	return(noone);
+}
+
 function initialise_distance_grid(grid_width, grid_height, initial_value){
 	
 	var grid = [];
@@ -112,6 +123,18 @@ function grid_check_neighbour_count(grid, x_pos, y_pos, tile_type, directions = 
 	else return(orth_check + diag_check);
 }
 
+function grid_check_tile_is_walkable(grid, x_pos, y_pos){
+	
+	var is_in_bounds = grid_check_position_in_bounds(grid, x_pos, y_pos);
+	if (is_in_bounds){
+		var is_walkable = grid[x_pos][y_pos].walkable;
+		if (is_walkable){
+			return(true);
+		}
+		else return(false);
+	}
+	else return(true);
+}
 
 // LOS FUNCTIONS
 function set_player_los(grid, actor){

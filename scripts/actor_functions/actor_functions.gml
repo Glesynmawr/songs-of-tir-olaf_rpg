@@ -119,6 +119,8 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	
 	// Targetting
 	new_actor.target_actor	= noone;
+	new_actor.target_x		= noone;
+	new_actor.target_y		= noone;
 	new_actor.target_map	= noone;
 	
 	// Inventory

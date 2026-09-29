@@ -23,18 +23,18 @@ function init_control_menu(){
 function init_faction_list(){
 	var list = [];
 	
-	list[FACTION.AMPHIBIAN_PREY][FACTION.AMPHIBIAN_PREY]		= 10;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.BIRD_PREY]				= 10;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.AMPHIBIAN_PREY]		= 20;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.BIRD_PREY]				= 20;
 	list[FACTION.AMPHIBIAN_PREY][FACTION.PLAYER]				= 10;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.REPTILE_PREDATOR]		= 0;
-	
-	list[FACTION.BIRD_PREY][FACTION.AMPHIBIAN_PREY]				= 0;
-	list[FACTION.BIRD_PREY][FACTION.BIRD_PREY]					= 10;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.REPTILE_PREDATOR]		= 10;
+																 
+	list[FACTION.BIRD_PREY][FACTION.AMPHIBIAN_PREY]				= 20;
+	list[FACTION.BIRD_PREY][FACTION.BIRD_PREY]					= 20;
 	list[FACTION.BIRD_PREY][FACTION.PLAYER]						= 10;
-	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 0;
-	
-	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 0;
-	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 0;
+	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 10;
+																  
+	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 10;
+	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.PLAYER]				= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.REPTILE_PREDATOR]	= 10;
 	
@@ -419,7 +419,7 @@ function goto_dungeon(dungeon_id, is_descending){
 		set_player_los(game_state.game_grid, actor_registry.player);
 	
 		// Update Minimap text
-		ui_settings.minimap_title_text = dungeons[dungeon_index].name;
+		ui_settings.minimap_title_text = dungeons[game_state.dungeon_index].name;
 		ui_settings.minimap_sub_text  = "Level: " + string(game_state.current_depth + 1);
 	
 		// Set time_system.timescale

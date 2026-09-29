@@ -489,15 +489,40 @@ function state_idle(){
 
 function state_chase(){
 	
+	if (x_pos == target_x and y_pos == target_y){
+		log_add_entry($"{name} has lost you!", C_YELLOW); 
+		state = state_base;
+		passive_actor_reset_target();
+		has_acted = true;
+		exit;
+	}
+	
+	// Check if LoS to target
+	var has_los = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, target_actor.x_pos, target_actor.y_pos);
+	
+	// Check target in range
+	var dist_x = abs(x_pos - target_actor.x_pos);
+	var dist_y = abs(y_pos - target_actor.y_pos);
+	
+	if (has_los and dist_x <= range and dist_y <= range){
+		
+		// Set distance map and target position
+		if (target_actor.x_pos != target_x or target_actor.y_pos != target_y){
+			target_x	= target_actor.x_pos;
+			target_y	= target_actor.y_pos;
+			target_map	= create_distance_map(manager.game_state.game_grid, target_x, target_y);
+		}
+	}
+	
 	// Find lowest distance value of neighbours
 	var lowest_dist = 10000;
 	for (var i = 0; i < 8; i ++){
-		var target_x = x_pos + manager.cell_x_neighbours[i];
-		var target_y = y_pos + manager.cell_y_neighbours[i];
+		var target_pos_x = x_pos + manager.cell_x_neighbours[i];
+		var target_pos_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
-			if (distance_map_player[target_x][target_y] < lowest_dist){
-				lowest_dist = distance_map_player[target_x][target_y];
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_pos_x, target_pos_y)){
+			if (target_map[target_pos_x][target_pos_y] < lowest_dist){
+				lowest_dist = target_map[target_pos_x][target_pos_y];
 			}
 		}
 	}
@@ -505,11 +530,11 @@ function state_chase(){
 	// Make list of unoccupied neighbours with lowest value
 	var candidate_list = [];
 	for (i = 0; i < 8; i ++){
-		var target_x = x_pos + manager.cell_x_neighbours[i];
-		var target_y = y_pos + manager.cell_y_neighbours[i];
+		var target_pos_x = x_pos + manager.cell_x_neighbours[i];
+		var target_pos_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
-			if (distance_map_player[target_x][target_y] <= lowest_dist){
+		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_pos_x, target_pos_y)){
+			if (target_map[target_pos_x][target_pos_y] <= lowest_dist){
 				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
 			}
 		}
@@ -528,19 +553,30 @@ function state_chase(){
 }
 
 function state_flee(){
-		
-	// Find lowest distance value of neighbours
+	
+	// Set distance map and target position
+	if (target_actor.x_pos != target_x or target_actor.y_pos != target_y){
+		target_x = target_actor.x_pos;
+		target_y = target_actor.y_pos;
+		target_map = create_distance_map(manager.game_state.game_grid, target_x, target_y);
+	}	
+	
+	// Find highest distance value of neighbours
 	var highest_dist = 0;
 	for (var i = 0; i < 8; i ++){
-		var target_x = x_pos + manager.cell_x_neighbours[i];
-		var target_y = y_pos + manager.cell_y_neighbours[i];
+		var target_pos_x = x_pos + manager.cell_x_neighbours[i];
+		var target_pos_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
-			if (distance_map_player[target_x][target_y] > highest_dist){
-				highest_dist = distance_map_player[target_x][target_y];
+		var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, target_pos_x, target_pos_y);
+		var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, target_pos_x, target_pos_y);
+		var cell_has_actor	= grid_check_position_contains_actor(target_pos_x, target_pos_y)
+		
+		if (is_in_bounds and is_walkable and cell_has_actor == noone){
+			if (target_map[target_pos_x][target_pos_y] > highest_dist){
+				highest_dist = target_map[target_pos_x][target_pos_y];
 			}
 		}
-		else {
+		else if (!is_in_bounds){
 			has_acted = true;
 			action_remove_actor(self);
 			exit;
@@ -550,11 +586,15 @@ function state_flee(){
 	// Make list of unoccupied neighbours with lowest value
 	var candidate_list = [];
 	for (i = 0; i < 8; i ++){
-		var target_x = x_pos + manager.cell_x_neighbours[i];
-		var target_y = y_pos + manager.cell_y_neighbours[i];
+		var target_pos_x = x_pos + manager.cell_x_neighbours[i];
+		var target_pos_y = y_pos + manager.cell_y_neighbours[i];
 		
-		if (grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y)){
-			if (distance_map_player[target_x][target_y] >= highest_dist){
+		var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, target_pos_x, target_pos_y);
+		var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, target_pos_x, target_pos_y);
+		var cell_has_actor	= grid_check_position_contains_actor(target_pos_x, target_pos_y)
+		
+		if (is_in_bounds and is_walkable and cell_has_actor == noone){
+			if (target_map[target_pos_x][target_pos_y] >= highest_dist){
 				array_push(candidate_list, [manager.cell_x_neighbours[i], manager.cell_y_neighbours[i]]);
 			}
 		}
@@ -574,13 +614,13 @@ function state_flee(){
 	var player_y = manager.actor_registry.player.y_pos;
 	
 	// Visibility of player
-	var dist     = distance_map_player[x_pos][y_pos];
+	var dist     = target_map[x_pos][y_pos];
 	var in_sight = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, player_x, player_y);
 	if (!in_sight and dist > range){
 		player_spotted = false;
+		passive_actor_reset_target();
 		state = state_base;
 	}
-	
 	has_acted = true;
 }
 
@@ -588,11 +628,22 @@ function state_wander(){
 	
 	if (!passive_state_update()){
 		var chance_to_move = random(1);
-		if (chance_to_move < 0.5){
+		if (chance_to_move < 0.2){
+			
 			var dir = irandom(7);
 			var move_x = manager.cell_x_neighbours[dir];
 			var move_y = manager.cell_y_neighbours[dir];
-			action_move(manager.game_state.game_grid, move_x, move_y);
+			
+			var target_x = x_pos + move_x;
+			var target_y = y_pos + move_y;
+			
+			var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y, 2);
+			var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, target_x, target_y);
+			var cell_has_actor	= grid_check_position_contains_actor(target_x, target_y)
+		
+			if (is_in_bounds and is_walkable and cell_has_actor == noone){
+				action_move(manager.game_state.game_grid, move_x, move_y);
+			}
 		}
 		
 		passive_check_actor_in_los();

@@ -300,7 +300,7 @@ function transition_update(){
 				
 				case TRANSITION.GAME_DUNGEON_ENTER:	
 					menu_pos_reset();
-					goto_dungeon(dungeon_index, true);	break;
+					goto_dungeon(game_state.dungeon_index, true);	break;
 			
 				case TRANSITION.GAME_DUNGEON_EXIT:	
 					menu_pos_reset();
@@ -310,11 +310,11 @@ function transition_update(){
 				
 				case TRANSITION.GAME_DUNGEON_NEXT:	
 					menu_pos_reset();
-					goto_dungeon(dungeon_index, true);	break;
+					goto_dungeon(game_state.dungeon_index, true);	break;
 																									
 				case TRANSITION.GAME_DUNGEON_PREV:	
 					menu_pos_reset();
-					goto_dungeon(dungeon_index, false);	break;
+					goto_dungeon(game_state.dungeon_index, false);	break;
 																									
 				case TRANSITION.GAME_LOAD:		    menu_pos_reset() game_load_all();	break;
 																									

@@ -66,22 +66,32 @@ function world_data(){
 	terrain_lookup[BIOME.MANGROVE]			= [[tile_zone_rocks, 2], [tile_zone_tree, 10], [tile_zone_dirt,  60], [tile_zone_water, 100]];
 	terrain_lookup[BIOME.MARSH]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_water, 25], [tile_zone_dirt, 50], [tile_zone_marsh, 100]];
 	
-	// Zone mobs
-	mob_lookup[BIOME.MOUNTAIN]			= noone;
-	mob_lookup[BIOME.HILL]				= noone;
-	mob_lookup[BIOME.CANYON]			= noone;
-	mob_lookup[BIOME.DESERT]			= noone;
-	mob_lookup[BIOME.SCRUB]				= noone;
-	mob_lookup[BIOME.SWAMP]				= noone;
-	mob_lookup[BIOME.DENSE_MANGROVE]	= noone;
-	mob_lookup[BIOME.WATER]				= noone;
-	mob_lookup[BIOME.MANGROVE]			= noone;
-	mob_lookup[BIOME.MARSH]				= [10, [actor_marsh_turtle, 10], [actor_flamingo, 30], [actor_marsh_frog, 100]];
+	// MOB LOOKUP TABLES
+	mob_lookup[BIOME.MOUNTAIN][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.MOUNTAIN][MOB_LOOKUP.DUNGEON]			= noone;
+	mob_lookup[BIOME.HILL][MOB_LOOKUP.ZONE]					= noone;
+	mob_lookup[BIOME.HILL][MOB_LOOKUP.DUNGEON]				= noone;
+	mob_lookup[BIOME.CANYON][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.CANYON][MOB_LOOKUP.DUNGEON]			= noone;
+	mob_lookup[BIOME.DESERT][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.DESERT][MOB_LOOKUP.DUNGEON]			= noone;
+	mob_lookup[BIOME.SCRUB][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.SCRUB][MOB_LOOKUP.DUNGEON]				= noone;
+	mob_lookup[BIOME.SWAMP][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.SWAMP][MOB_LOOKUP.DUNGEON]				= noone;
+	mob_lookup[BIOME.DENSE_MANGROVE][MOB_LOOKUP.ZONE]		= noone;
+	mob_lookup[BIOME.DENSE_MANGROVE][MOB_LOOKUP.DUNGEON]	= noone;
+	mob_lookup[BIOME.WATER][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.WATER][MOB_LOOKUP.DUNGEON]				= noone;
+	mob_lookup[BIOME.MANGROVE][MOB_LOOKUP.ZONE]				= noone;
+	mob_lookup[BIOME.MANGROVE][MOB_LOOKUP.DUNGEON]			= noone;
+	mob_lookup[BIOME.MARSH][MOB_LOOKUP.ZONE]				= [10, [actor_marsh_turtle, 10], [actor_flamingo, 30], [actor_marsh_frog, 100]];
+	mob_lookup[BIOME.MARSH][MOB_LOOKUP.DUNGEON]				= [10, [actor_marsh_rat, 10], [actor_marsh_bat, 30], [actor_reed_weevil, 100]];
 }
 
 function world_generate(){
 	// Initialise world grid
-	world_grid = world_grid_initialise(MAP_WIDTH, MAP_HEIGHT);
+	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
 	
 	// Add texture
 	world_grid = noise_generate(world_grid);
@@ -100,8 +110,8 @@ function world_generate(){
 	
 	// Generate zone maps
 	game_state.zone_map  = [];
-	for (var xx = 0; xx < MAP_WIDTH; xx ++){
-		for (var yy = 0; yy < MAP_HEIGHT; yy ++){
+	for (var xx = 0; xx < WORLD_WIDTH; xx ++){
+		for (var yy = 0; yy < WORLD_HEIGHT; yy ++){
 			game_state.zone_map[xx][yy]  = noone;
 		}
 	}
@@ -117,44 +127,44 @@ function world_grid_initialise(width, height){
 	
 	// Initialise grid
 	var grid = [];
-	for (var i = 0; i < MAP_WIDTH; i ++){
-		for (var j = 0; j < MAP_HEIGHT; j ++){
+	for (var i = 0; i < width; i ++){
+		for (var j = 0; j < height; j ++){
 			grid[i][j] = 0;
 		}
 	}
 	
 	// Initial anchors
 	grid[0][0] = 0;
-	grid[0][MAP_HEIGHT - 1] = 30;
-	grid[MAP_WIDTH - 1][0] = 60;
-	grid[MAP_WIDTH - 1][MAP_HEIGHT - 1] = 90;
+	grid[0][height - 1] = 30;
+	grid[width - 1][0] = 60;
+	grid[width - 1][height - 1] = 90;
 	
 	var anchor1 = grid[0][0];
-	var anchor2 = grid[0][MAP_HEIGHT - 1];
-	var anchor3 = grid[MAP_WIDTH - 1][0];
-	var anchor4 = grid[MAP_WIDTH - 1][MAP_HEIGHT - 1];
+	var anchor2 = grid[0][height - 1];
+	var anchor3 = grid[width - 1][0];
+	var anchor4 = grid[width - 1][height - 1];
 		
 	// Vertical lerp
-	for (j = 0; j < MAP_HEIGHT; j ++){
+	for (j = 0; j < height; j ++){
 		
-		var lerp_amount = j / (MAP_HEIGHT - 1);
+		var lerp_amount = j / (height - 1);
 		var lerp_value = lerp(anchor1, anchor2, lerp_amount);
 		grid[0][j] = round(lerp_value);
 		
 		var lerp_value = lerp(anchor3, anchor4, lerp_amount);
-		grid[MAP_WIDTH - 1][j] = round(lerp_value);
+		grid[width - 1][j] = round(lerp_value);
 	}
 	
 	// Horizontal lerp
-	for (i = 0; i < MAP_WIDTH; i ++){
-		for (j = 0; j < MAP_HEIGHT; j ++){
+	for (i = 0; i < width; i ++){
+		for (j = 0; j < height; j ++){
 			if (grid[i][j] != 0){
 				continue;
 			}
 			anchor1 = grid[0][j];
-			anchor2 = grid[MAP_WIDTH - 1][j];
+			anchor2 = grid[width - 1][j];
 			
-			var lerp_amount = i / (MAP_WIDTH - 1);
+			var lerp_amount = i / (width - 1);
 			var lerp_value = lerp(anchor1, anchor2, lerp_amount);
 			grid[i][j] = round(lerp_value);
 		}
@@ -165,6 +175,9 @@ function world_grid_initialise(width, height){
 
 function noise_generate(grid){
 	
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
 	var temp_map	= [];
 	var passes		= world_generate_pass_count;
 	var chunk_size	= world_generate_chunk_size;
@@ -174,14 +187,14 @@ function noise_generate(grid){
 	for (p = 0; p < passes; p ++){
 		
 		// Create anchor points
-		for (i = 0; i <  MAP_WIDTH; i ++){
-			for (j = 0; j < MAP_HEIGHT; j ++){
+		for (i = 0; i <  ww; i ++){
+			for (j = 0; j < hh; j ++){
 				temp_map[p][i][j] = 0;
 				
 				if (i mod chunk_size == 0) and (j mod chunk_size == 0){
 					temp_map[p][i][j] = irandom_range(-amplitude, amplitude);
 				}
-				else if (i == MAP_WIDTH - 1) or (j == MAP_HEIGHT - 1){
+				else if (i == ww - 1) or (j == hh - 1){
 					temp_map[p][i][j] = 10;
 				}
 				else temp_map[p][i][j] = 0;
@@ -189,13 +202,13 @@ function noise_generate(grid){
 		}
 		
 		// Verrtical interpolation
-		for (i = 0; i < MAP_WIDTH; i ++){
-			for (j = 0; j < MAP_HEIGHT; j ++){
+		for (i = 0; i < ww; i ++){
+			for (j = 0; j < hh; j ++){
 				if (i mod chunk_size != 0) continue;
 				
 				var anchor_t = floor(j / chunk_size) * chunk_size;
 				var anchor_b = ceil(j / chunk_size) * chunk_size;
-				if (anchor_b >= MAP_HEIGHT) anchor_b = MAP_HEIGHT - 1;
+				if (anchor_b >= hh) anchor_b = hh - 1;
 				
 				var lerp_amount = (j - anchor_t) / chunk_size;
 				var value1 = temp_map[p][i][anchor_t];
@@ -207,12 +220,12 @@ function noise_generate(grid){
 		}
 		
 		// Horizontal interpolation
-		for (i = 0; i < MAP_WIDTH; i ++){
-			for (j = 0; j < MAP_HEIGHT; j ++){
+		for (i = 0; i < ww; i ++){
+			for (j = 0; j < hh; j ++){
 				
 				var anchor_l = floor(i / chunk_size) * chunk_size;
 				var anchor_r = ceil(i / chunk_size) * chunk_size;
-				if (anchor_r >= MAP_WIDTH) anchor_r = MAP_WIDTH - 1;
+				if (anchor_r >= ww) anchor_r = ww - 1;
 				
 				var lerp_amount = (i - anchor_l) / chunk_size;
 				var value1 = temp_map[p][anchor_l][j];
@@ -228,8 +241,8 @@ function noise_generate(grid){
 	}
 	
 	// Combine maps
-	for (i = 0; i < MAP_WIDTH; i ++){
-		for (j = 0; j < MAP_HEIGHT; j ++){
+	for (i = 0; i < ww; i ++){
+		for (j = 0; j < hh; j ++){
 			for (p = 0; p < passes; p ++){
 				grid[i][j] += temp_map[p][i][j];
 				grid[i][j] = clamp(round(grid[i][j]), 0, 100);

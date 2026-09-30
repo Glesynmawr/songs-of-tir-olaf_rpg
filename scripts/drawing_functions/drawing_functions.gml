@@ -9,8 +9,8 @@ function game_draw_grid(){
 	// Get drawing position variables
 	var player_x			= actor_registry.player.x_pos;
 	var player_y			= actor_registry.player.y_pos;
-	var draw_width_half		= ceil(MAP_WIDTH  / 2);
-	var draw_height_half	= ceil(MAP_HEIGHT / 2);
+	var draw_width_half		= ceil(ui_settings.game_grid_cells_width  / 2);
+	var draw_height_half	= ceil(ui_settings.game_grid_cells_height / 2);
 	var player_spr_x		= actor_registry.player.sprite_x;
 	var player_spr_y		= actor_registry.player.sprite_y;
 	
@@ -20,12 +20,12 @@ function game_draw_grid(){
 		var y_from = player_y - draw_height_half;
 	}
 	else {
-		var x_from = max(min(player_x - draw_width_half, ww - (MAP_WIDTH)), 0);
-		var y_from = max(min(player_y - draw_height_half, hh - (MAP_HEIGHT)), 0);
+		var x_from = max(min(player_x - draw_width_half, ww - (ui_settings.game_grid_cells_width)), 0);
+		var y_from = max(min(player_y - draw_height_half, hh - (ui_settings.game_grid_cells_height)), 0);
 	}
 	
-	var x_to = x_from + MAP_WIDTH;
-	var y_to = y_from + MAP_HEIGHT;
+	var x_to = x_from + ui_settings.game_grid_cells_width;
+	var y_to = y_from + ui_settings.game_grid_cells_height;
 	
 	// Set map offset using player sprite position, checking for edges
 	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
@@ -221,7 +221,7 @@ function draw_game_ui(){
 	var yy = 0;
 	
 	// Game log
-	draw_game_log(0, hh - log_height, ww, log_height);
+	//draw_game_log(0, hh - log_height, ww, log_height);
 
 	// Info box
 	draw_info_box();

@@ -25,16 +25,25 @@ function init_faction_list(){
 	
 	list[FACTION.AMPHIBIAN_PREY][FACTION.AMPHIBIAN_PREY]		= 20;
 	list[FACTION.AMPHIBIAN_PREY][FACTION.BIRD_PREY]				= 20;
+	list[FACTION.AMPHIBIAN_PREY][FACTION.MAMMAL_PREY]			= 10;
 	list[FACTION.AMPHIBIAN_PREY][FACTION.PLAYER]				= 10;
 	list[FACTION.AMPHIBIAN_PREY][FACTION.REPTILE_PREDATOR]		= 10;
 																 
 	list[FACTION.BIRD_PREY][FACTION.AMPHIBIAN_PREY]				= 20;
 	list[FACTION.BIRD_PREY][FACTION.BIRD_PREY]					= 20;
+	list[FACTION.BIRD_PREY][FACTION.MAMMAL_PREY]				= 10;
 	list[FACTION.BIRD_PREY][FACTION.PLAYER]						= 10;
 	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 10;
-																  
+						
+	list[FACTION.MAMMAL_PREY][FACTION.AMPHIBIAN_PREY]			= 10;
+	list[FACTION.MAMMAL_PREY][FACTION.BIRD_PREY]				= 10;
+	list[FACTION.MAMMAL_PREY][FACTION.MAMMAL_PREY]				= 20;
+	list[FACTION.MAMMAL_PREY][FACTION.PLAYER]					= 10;
+	list[FACTION.MAMMAL_PREY][FACTION.REPTILE_PREDATOR]			= 10;						
+						
 	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 10;
+	list[FACTION.REPTILE_PREDATOR][FACTION.MAMMAL_PREY]			= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.PLAYER]				= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.REPTILE_PREDATOR]	= 10;
 	
@@ -397,6 +406,8 @@ function goto_dungeon(dungeon_id, is_descending){
 		game_state.game_grid	= new_dungeon[0];
 		game_state.map_mode	= MAP_MODE.DUNGEON;
 		door_index  = new_dungeon[3];
+		ui_settings.game_grid_cells_width	= MAP_WIDTH;
+		ui_settings.game_grid_cells_height	= MAP_HEIGHT;
 	
 		// Set player position
 		if (is_descending == true){
@@ -436,6 +447,8 @@ function goto_world(){
 		// Set game grid
 		game_state.game_grid = game_state.world_map;
 		game_state.map_mode  = MAP_MODE.WORLD;
+		ui_settings.game_grid_cells_width	= WORLD_WIDTH;
+		ui_settings.game_grid_cells_height	= WORLD_HEIGHT;
 	
 		// Set player position
 		actor_registry.player.x_pos = actor_registry.player.world_x;
@@ -472,8 +485,10 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 			game_state.zone_map[world_x][world_y] = zone_map_generate(game_state.world_map, world_x, world_y);
 			initialise_item_grid(game_state.zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
 		}
-		game_state.game_grid = game_state.zone_map[world_x][world_y];
-		game_state.map_mode  = MAP_MODE.ZONE;
+		game_state.game_grid	= game_state.zone_map[world_x][world_y];
+		game_state.map_mode		= MAP_MODE.ZONE;
+		ui_settings.game_grid_cells_width	= MAP_WIDTH;
+		ui_settings.game_grid_cells_height	= MAP_HEIGHT;
 	
 		// Set player position
 		actor_registry.player.x_pos = entry_x;
@@ -489,16 +504,16 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Spawn mobs
 		var b = game_state.world_map[world_x][world_y].biome;
-		if (mob_lookup[b] != noone){
-			var mob_count = irandom_range(ceil(mob_lookup[b][0] / 2), mob_lookup[b][0]);
+		if (mob_lookup[b][MOB_LOOKUP.ZONE] != noone){
+			var mob_count = irandom_range(ceil(mob_lookup[b][MOB_LOOKUP.ZONE][0] / 2), mob_lookup[b][MOB_LOOKUP.ZONE][0]);
 			repeat(mob_count){
-				var xx = irandom_range(10, ZONE_SIZE - 10);
-				var yy = irandom_range(10, ZONE_SIZE - 10);
+				var xx = irandom_range(3, ZONE_SIZE - 3);
+				var yy = irandom_range(3, ZONE_SIZE - 3);
 				
 				var mob_roll = irandom(100);
-				for (var i = 1; i < array_length(mob_lookup[b]); i ++){
-					if (mob_roll <= mob_lookup[b][i][1]){
-						spawn_new_actor(mob_lookup[b][i][0], xx, yy);
+				for (var i = 1; i < array_length(mob_lookup[b][MOB_LOOKUP.ZONE]); i ++){
+					if (mob_roll <= mob_lookup[b][MOB_LOOKUP.ZONE][i][1]){
+						spawn_new_actor(mob_lookup[b][MOB_LOOKUP.ZONE][i][0], xx, yy);
 						break;
 					}
 				}

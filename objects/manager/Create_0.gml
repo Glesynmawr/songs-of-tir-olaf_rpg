@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [2, 2, 4];
+global.version = [2, 3, 4];
 
 //randomise();
 debugging_mode		= false;
@@ -164,9 +164,11 @@ actor_move_speed = 0.2;
 
 // UI variables -----------------------------------------------------------------------------------
 ui_settings = {
-	ui_x_position		: 0,
-	minimap_title_text	: "",
-	minimap_sub_text	: ""
+	ui_x_position			: 0,
+	minimap_title_text		: "",
+	minimap_sub_text		: "",
+	game_grid_cells_width:	MAP_WIDTH,
+	game_grid_cells_height: MAP_HEIGHT
 }
 
 // UI constants -----------------------------------------------------------------------------------

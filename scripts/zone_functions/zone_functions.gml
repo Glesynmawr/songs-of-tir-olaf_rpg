@@ -228,7 +228,7 @@ function zone_standard(world_index, dungeon, biome_index){
 		}
 	}
 	
-	new_map = zone_add_clump_feature(new_map, tile_zone_raised_ground, 1, 4, 0.3, 20, 20);
+	//new_map = zone_add_clump_feature(new_map, tile_zone_raised_ground, 1, 4, 0.3, 20, 20);
 	
 	// Water Feature Placement
 	new_map = autotile_map(new_map);

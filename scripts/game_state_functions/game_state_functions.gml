@@ -261,7 +261,7 @@ function game_state_dungeon(){
 		
 		if (!game_paused and transition == noone){
 			turn_order_update();
-			update_dust_particles();
+			update_particles();
 		}
 	}
 }
@@ -374,7 +374,7 @@ function game_state_world(){
 		
 		if (!game_paused and transition == noone){
 			turn_order_update();
-			update_dust_particles();
+			update_particles();
 		}
 	}
 }

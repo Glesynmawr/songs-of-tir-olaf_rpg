@@ -1,5 +1,15 @@
 
 // ACTOR ACTIONS ----------------------------------------------------------------------------------
+function action_modify_hit_points(actor, value){
+	with (actor){
+		hit_points[0] = min(hit_points[0] + value, hit_points[1]);
+		
+		if (hit_points[0] <= 0){
+			action_remove_actor(self);
+		}
+	}
+}
+
 function action_move(grid, move_x, move_y){
 	
 	var grid_w = array_length(grid);
@@ -196,6 +206,7 @@ function action_attack_melee(attacker, defender){
 									damage = max(damage - location_armour, 1);
 									set_colour_flash(defender, C_RED, 10);
 									first_log += $"causing {damage} damage";
+									action_modify_hit_points(defender, -damage);
 								}
 								else{
 									set_colour_flash(defender, C_WHITE, 10);
@@ -221,6 +232,8 @@ function action_attack_melee(attacker, defender){
 }
 
 function action_remove_actor(actor){
+	
+	particle_create_actor_death(actor);
 	
 	if (actor == manager.actor_registry.player){
 		with (manager){
@@ -323,6 +336,16 @@ function passive_check_actor_in_los(){
 		state = state_chase;
 		return;
 	}
+}
+	
+function passive_check_for_hostile_mobs(){
+	for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
+		var actor = manager.actor_registry.actor_list[i];
+		if (actor.target_actor == self){
+			return(true);
+		}
+	}
+	return(false);
 }
 
 function passive_actor_get_reaction(actor, target){

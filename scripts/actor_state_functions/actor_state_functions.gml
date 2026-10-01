@@ -2,6 +2,7 @@
 function state_ready_for_inputs(){
 	var player_moved = false;
 	
+	// Open in-game menu
 	if (keyboard_check_pressed(controls.key_cancel)){
 		with (manager){
 			pause_menu_hover = 0;
@@ -11,11 +12,13 @@ function state_ready_for_inputs(){
 		}
 	}
 	
+	// Open inventory
 	if (keyboard_check_pressed(controls.key_inventory) and manager.game_state.state_main != game_state_world){
 		state = state_inventory;
 		exit;
 	}
 	
+	// MOVEMENT -----------------------------------------------------------------------------------
 	// Direction inputs
 	var x_move = keyboard_check(controls.key_right) - keyboard_check(controls.key_left)
 	var y_move = keyboard_check(controls.key_down) - keyboard_check(controls.key_up)
@@ -46,7 +49,7 @@ function state_ready_for_inputs(){
 			}
 		}
 		
-		// Interaction with tile in direction
+		// DIRECTIONAL CELL INTERACTION -----------------------------------------------------------
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
 			if (manager.game_state.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
 				found_a_secret(self);
@@ -61,7 +64,7 @@ function state_ready_for_inputs(){
 			if (game_state.direction_indicator != noone) game_state.direction_indicator = noone;
 		}
 		
-		// Interaction with tile no direction
+		// NON-DIRECTIONAL CELL INTERACTION -------------------------------------------------------
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
 			
 			// Pickup items
@@ -78,31 +81,39 @@ function state_ready_for_inputs(){
 				player_moved = tile_interaction(self, x_pos, y_pos);
 			}
 		}
-		// TOGGLE WORLD MAP
+		
+		// MOVE BETWEEN ZONE AND WORLD MAPS -------------------------------------------------------
 		else if (keyboard_check_pressed(controls.key_map_mode)){
-			if (array_length(manager.actor_registry.actor_list) == 1){
-				if (manager.game_state.game_grid == manager.game_state.world_map){
-					with(manager){
-						transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
-					}
+			
+			// Move from WORLD to ZONE
+			if (manager.game_state.game_grid == manager.game_state.world_map){
+				with(manager){
+					transition_set(TRANSITION.GAME_ZONE, colour_bg_main);
 				}
-				else if (manager.game_state.game_grid == manager.game_state.zone_map[world_x][world_y]){
+			}
+			
+			// Move from ZONE to WORLD
+			else if (manager.game_state.game_grid == manager.game_state.zone_map[world_x][world_y]){
+				
+				// Check for mobs hostile to this actor
+				var hostile_mobs = passive_check_for_hostile_mobs();
+				if (hostile_mobs){
+					var txt = $"{self.name} can't leave with hostiles present!";
+					log_add_entry(txt, manager.colour_text_main);
+				}
+				else{
 					with(manager){
 						transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
 					}
 				}
-			}
-			else{
-				player_moved = true;
-				var txt = $"{self.name} can't leave with hostiles present!";
-				log_add_entry(txt, manager.colour_text_main);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_item_swap)){
 			player_swap_items(self);
 		}
 	}
-
+	
+	// IF PLAYER HAS MOVED ------------------------------------------------------------------------
 	if (player_moved){
 		
 		// Increment player turn counter

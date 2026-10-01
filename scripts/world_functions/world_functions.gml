@@ -8,16 +8,16 @@ function world_data(){
 	world_generate_amplitude  = 8;
 
 	// Biomes
-	biome[0] = 30;	// Mountains
-	biome[1] = 40;	// Hills
-	biome[2] = 90;	// Canyon
-	biome[3] = 80;	// Salt plains
-	biome[4] = 70;	// Scrubland
-	biome[5] = 50;	// Swamp
-	biome[6] = 70;	// Dense Mangrove
-	biome[7] = 80;	// Water
-	biome[8] = 70;	// Mangrove
-	biome[9] = 60;	// Marsh
+	biome[0] = 50;	// Mountains
+	biome[1] = 60;	// Hills
+	biome[2] = 100;	// Canyon
+	biome[3] = 140;	// Salt plains
+	biome[4] = 100;	// Scrubland
+	biome[5] = 90;	// Swamp
+	biome[6] = 90;	// Dense Mangrove
+	biome[7] = 110;	// Water
+	biome[8] = 90;	// Mangrove
+	biome[9] = 90;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;

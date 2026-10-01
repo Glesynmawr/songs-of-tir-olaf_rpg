@@ -67,9 +67,9 @@ function game_draw_grid(){
 			game_draw_actor(xx, yy, screen_x, screen_y);
 		}
 	}
-	screen_x = (x_from * cell_width)  + map_offset_x;
-	screen_y = (y_from * cell_height) + map_offset_y;
-	draw_dust_particles(screen_x, screen_y);
+	screen_x = (x_from * cell_width)  - map_offset_x;
+	screen_y = (y_from * cell_height) - map_offset_y;
+	draw_particles(screen_x, screen_y);
 	
 	// Draw move direction indicator
 	if (game_state.direction_indicator != noone){

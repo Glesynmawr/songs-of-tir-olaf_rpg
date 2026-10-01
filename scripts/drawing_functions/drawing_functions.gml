@@ -105,7 +105,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_x      = melee_offset_x;
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
-					var txt = string($"{target_x}:{target_y} - {x_pos}:{y_pos}");
 							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
@@ -138,7 +137,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-				draw_text(screen_x, screen_y, txt);
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){

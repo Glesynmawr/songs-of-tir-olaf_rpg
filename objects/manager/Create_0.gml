@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [2, 3, 4];
+global.version = [2, 4, 4];
 
 //randomise();
 debugging_mode		= false;

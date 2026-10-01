@@ -281,7 +281,10 @@ function transition_update(){
 		transition.index += transition.anim_speed;
 		if (transition.index >= sprite_get_number(transition_spr) - 1){
 			transition.anim_speed *= -1;
-		
+			
+			// Reset particles
+			dust_particles = [];
+			
 			switch(transition.type){
 			
 				case TRANSITION.CONTROL_EXIT:	

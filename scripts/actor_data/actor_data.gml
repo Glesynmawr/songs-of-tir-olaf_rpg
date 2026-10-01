@@ -23,6 +23,7 @@ function actor_player()constructor{
 }
 
 function actor_flamingo()constructor{
+	spawn_tile		= noone;
 	faction         = FACTION.BIRD_PREY
 	name			= "Flamingo";
 	sprite			= flamingo_spr;
@@ -42,6 +43,7 @@ function actor_flamingo()constructor{
 }
 
 function actor_marsh_frog()constructor{
+	spawn_tile		= "water";
 	faction         = FACTION.AMPHIBIAN_PREY;
 	name			= "Marsh Frog";
 	sprite			= marsh_frog_spr;
@@ -61,6 +63,7 @@ function actor_marsh_frog()constructor{
 }
 
 function actor_marsh_turtle()constructor{
+	spawn_tile		= noone;
 	faction         = FACTION.REPTILE_PREDATOR;
 	name			= "Marsh Turtle";
 	sprite			= marsh_turtle_spr;
@@ -83,6 +86,7 @@ function actor_marsh_turtle()constructor{
 
 #region// MARSH DUNGEON ---------------------------------------------------------------------------
 function actor_reed_weevil()constructor{
+	spawn_tile		= "room";
 	faction         = FACTION.AMPHIBIAN_PREY;
 	name			= "Reed weevil";
 	sprite			= reed_weevil_spr;
@@ -102,6 +106,7 @@ function actor_reed_weevil()constructor{
 }
 
 function actor_marsh_bat()constructor{
+	spawn_tile		= "room";
 	faction         = FACTION.MAMMAL_PREY;
 	name			= "Marsh bat";
 	sprite			= bat_spr;
@@ -121,6 +126,7 @@ function actor_marsh_bat()constructor{
 }
 
 function actor_marsh_rat()constructor{
+	spawn_tile		= "room";
 	faction         = FACTION.MAMMAL_PREY;
 	name			= "Marsh rat";
 	sprite			= rat_spr;

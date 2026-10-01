@@ -9,6 +9,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			mob_lookup[BIOME.MARSH][MOB_LOOKUP.DUNGEON],
 	}
 	dungeons[1] = {
 		name:			"Mangrove dungeon",
@@ -19,6 +20,7 @@ function dungeon_data(){
 		wall_sprite:	wall_01_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		1,
+		mobs:			noone,
 	}
 	dungeons[2] = {
 		name:			"River dungeon",
@@ -29,6 +31,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[3] = {
 		name:			"Dense mangrove dungeon",
@@ -39,6 +42,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[4] = {
 		name:			"Swamp dungeon",
@@ -49,6 +53,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[5] = {
 		max_depth:		2,
@@ -59,6 +64,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[6] = {
 		name:			"Desert dungeon",
@@ -69,6 +75,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[7] = {
 		name:			"Canyon dungeon",
@@ -79,6 +86,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[8] = {
 		name:			"Hill dungeon",
@@ -89,6 +97,7 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 	dungeons[9] = {
 		name:			"Mountain dungeon",
@@ -99,5 +108,6 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		mobs:			noone,
 	}
 }

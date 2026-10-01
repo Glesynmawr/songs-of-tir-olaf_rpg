@@ -35,11 +35,11 @@ function init_faction_list(){
 	list[FACTION.BIRD_PREY][FACTION.PLAYER]						= 10;
 	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 10;
 						
-	list[FACTION.MAMMAL_PREY][FACTION.AMPHIBIAN_PREY]			= 10;
-	list[FACTION.MAMMAL_PREY][FACTION.BIRD_PREY]				= 10;
+	list[FACTION.MAMMAL_PREY][FACTION.AMPHIBIAN_PREY]			= 20;
+	list[FACTION.MAMMAL_PREY][FACTION.BIRD_PREY]				= 20;
 	list[FACTION.MAMMAL_PREY][FACTION.MAMMAL_PREY]				= 20;
 	list[FACTION.MAMMAL_PREY][FACTION.PLAYER]					= 10;
-	list[FACTION.MAMMAL_PREY][FACTION.REPTILE_PREDATOR]			= 10;						
+	list[FACTION.MAMMAL_PREY][FACTION.REPTILE_PREDATOR]			= 20;						
 						
 	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 10;
 	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 10;
@@ -405,7 +405,7 @@ function goto_dungeon(dungeon_id, is_descending){
 	
 		game_state.game_grid	= new_dungeon[0];
 		game_state.map_mode	= MAP_MODE.DUNGEON;
-		door_index  = new_dungeon[3];
+		game_state.door_index  = new_dungeon[3];
 		ui_settings.game_grid_cells_width	= MAP_WIDTH;
 		ui_settings.game_grid_cells_height	= MAP_HEIGHT;
 	
@@ -425,13 +425,18 @@ function goto_dungeon(dungeon_id, is_descending){
 	
 		// Set game state
 		game_state.state_main = game_state_dungeon;
-	
+		
+		// Spawn mobs
+		if (game_state.mobs_to_spawn != noone){
+			map_spawn_mobs(game_state.mobs_to_spawn, 0);
+		}
+		
 		// Update player LOS
 		set_player_los(game_state.game_grid, actor_registry.player);
 	
 		// Update Minimap text
 		ui_settings.minimap_title_text = dungeons[game_state.dungeon_index].name;
-		ui_settings.minimap_sub_text  = "Level: " + string(game_state.current_depth + 1);
+		ui_settings.minimap_sub_text   = "Level: " + string(game_state.current_depth + 1);
 	
 		// Set time_system.timescale
 		time_system.timescale = timescale_zone;
@@ -505,19 +510,7 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		// Spawn mobs
 		var b = game_state.world_map[world_x][world_y].biome;
 		if (mob_lookup[b][MOB_LOOKUP.ZONE] != noone){
-			var mob_count = irandom_range(ceil(mob_lookup[b][MOB_LOOKUP.ZONE][0] / 2), mob_lookup[b][MOB_LOOKUP.ZONE][0]);
-			repeat(mob_count){
-				var xx = irandom_range(3, ZONE_SIZE - 3);
-				var yy = irandom_range(3, ZONE_SIZE - 3);
-				
-				var mob_roll = irandom(100);
-				for (var i = 1; i < array_length(mob_lookup[b][MOB_LOOKUP.ZONE]); i ++){
-					if (mob_roll <= mob_lookup[b][MOB_LOOKUP.ZONE][i][1]){
-						spawn_new_actor(mob_lookup[b][MOB_LOOKUP.ZONE][i][0], xx, yy);
-						break;
-					}
-				}
-			}
+			map_spawn_mobs(mob_lookup[b][MOB_LOOKUP.ZONE], 5);
 		}
 	
 		// Update player LOS
@@ -529,6 +522,62 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		
 		// Set time_system.timescale
 		time_system.timescale = timescale_zone;
+	}
+}
+
+
+// MOB SPAWNING
+function map_spawn_mobs(lookup_table, spawn_border){
+	
+	// Set number of mobs to spawn
+	var mob_count = irandom_range(ceil(lookup_table[0] / 2), lookup_table[0]);
+	
+	// Get width and height of game grid
+	var width  = array_length(manager.game_state.game_grid);
+	var height = array_length(manager.game_state.game_grid[0]);
+	
+	repeat(mob_count){
+		
+		// Choose a mob
+		var mob_roll = irandom(100);
+		for (var i = 1; i < array_length(lookup_table); i ++){
+			if (mob_roll <= lookup_table[i][1]){
+				var actor_to_spawn		= spawn_new_actor(lookup_table[i][0], noone, noone);
+				var actor_spawn_tile	= actor_to_spawn.spawn_tile;
+				break;
+			}
+		}
+		
+		// Find valid candidate positions
+		var candidate_list = [];
+		for (var cell_x = spawn_border; cell_x < width - spawn_border; cell_x ++){
+			for (var cell_y = spawn_border; cell_y < height - spawn_border; cell_y ++){
+				var cell_type = manager.game_state.game_grid[cell_x][cell_y].tile;
+				
+				if (actor_spawn_tile != noone){
+					if (cell_type == actor_spawn_tile){
+						array_push(candidate_list, [cell_x, cell_y]);
+					}
+				}
+				else{
+					array_push(candidate_list, [cell_x, cell_y]);
+				}
+			}
+			
+			var len = array_length(candidate_list);
+			if (len > 0){
+				var choice = irandom(len - 1);
+				var xx = candidate_list[choice][0];
+				var yy = candidate_list[choice][1];
+				actor_to_spawn.x_pos			= xx;
+				actor_to_spawn.y_pos			= yy;
+				actor_to_spawn.sprite_x			= xx * cell_width;
+				actor_to_spawn.sprite_y			= yy * cell_height;
+				actor_to_spawn.sprite_target_x	= xx * cell_width;
+				actor_to_spawn.sprite_target_y	= yy * cell_height;
+				actor_to_spawn.xscale			= choose(1, -1);
+			}
+		}
 	}
 }
 

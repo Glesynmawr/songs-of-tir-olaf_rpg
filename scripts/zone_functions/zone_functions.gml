@@ -200,10 +200,6 @@ function zone_river(world_index, dungeon, terrain){
 function zone_standard(world_index, dungeon, biome_index){
 	var new_map = initialise_temp_list();
 	
-	if (dungeon){
-		new_map = dungeons_add_to_zone(new_map, biome_index);
-	}
-	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
 			if (new_map[xx][yy] == noone){
@@ -229,6 +225,11 @@ function zone_standard(world_index, dungeon, biome_index){
 	}
 	
 	//new_map = zone_add_clump_feature(new_map, tile_zone_raised_ground, 1, 4, 0.3, 20, 20);
+	
+	// Add dungeon entrance
+	if (dungeon){
+		new_map = dungeons_add_to_zone(new_map, biome_index);
+	}
 	
 	// Water Feature Placement
 	new_map = autotile_map(new_map);

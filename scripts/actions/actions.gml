@@ -54,7 +54,7 @@ function action_move(grid, move_x, move_y){
 		}
 			
 		cell_replace_tile(x_pos, y_pos, tile_door_open);
-		grid[x_pos][y_pos].index = manager.door_index;
+		grid[x_pos][y_pos].index = manager.game_state.door_index;
 		
 		// Create log entry
 		var text = $"{self.name} barges through the door.";
@@ -262,12 +262,17 @@ function passive_check_actor_in_los(){
 			var actor = grid_check_position_contains_actor(xx, yy);
 			if (actor != noone and actor != self){
 				
-				// Get actor reaction
-				var reaction = passive_actor_get_reaction(self, actor);
+				// Check LoS
+				var has_los = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, xx, yy);
 				
-				// Push to hostile/flee lists
-				if (reaction == state_chase) array_push(hostile_list, actor);
-				if (reaction == state_flee)  array_push(flee_list, actor);
+				if (has_los){
+					// Get actor reaction
+					var reaction = passive_actor_get_reaction(self, actor);
+				
+					// Push to hostile/flee lists
+					if (reaction == state_chase) array_push(hostile_list, actor);
+					if (reaction == state_flee)  array_push(flee_list, actor);
+				}
 			}
 		}
 	}

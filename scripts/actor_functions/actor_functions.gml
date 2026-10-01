@@ -138,6 +138,8 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	}
 	// Push to actor registry
 	array_push(actor_registry.actor_list, new_actor);
+	
+	return(new_actor);
 }
 
 

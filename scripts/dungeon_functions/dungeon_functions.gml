@@ -6,22 +6,23 @@ function dungeon_generate(index){
 	// Sets level overall size
 	grid_width		  = dungeons[index].max_width;
 	grid_height		  = dungeons[index].max_height;
-	max_depth		  = dungeons[index].max_depth;
-	level_size_change = dungeons[index].size_change;
+	game_state.max_depth		 = dungeons[index].max_depth;
+	game_state.level_size_change = dungeons[index].size_change;
+	game_state.mobs_to_spawn     = dungeons[index].mobs;
 	
 	// Increase level size based on depth
-	grid_width  += floor(game_state.current_depth * level_size_change);
-	grid_height += floor(game_state.current_depth * level_size_change);
+	grid_width  += floor(game_state.current_depth * game_state.level_size_change);
+	grid_height += floor(game_state.current_depth * game_state.level_size_change);
 	
 	// Ensures grid is odd number of cells
 	grid_width	= (floor(grid_width  / 2) * 2) + 1;
 	grid_height	= (floor(grid_height / 2) * 2) + 1;
 	
 	// Dungeon appearance
-	wall_sprite		= dungeons[index].wall_sprite;
-	floor_sprite	= dungeons[index].floor_sprite;
-	door_index		= dungeons[index].door_index;
-	cull_ends		= true;
+	game_state.wall_sprite		= dungeons[index].wall_sprite;
+	game_state.floor_sprite		= dungeons[index].floor_sprite;
+	game_state.door_index		= dungeons[index].door_index;
+	game_state.cull_ends		= true;
 	
 	// Initialise grids
 	dungeon_grid = initialise_game_grid(grid_width, grid_height);
@@ -38,7 +39,7 @@ function dungeon_generate(index){
     create_shortcuts(dungeon_grid, 25, 25);
 	
 	// Dead end culling
-	if (cull_ends){
+	if (game_state.cull_ends){
 		var dead_ends_culled = true;
 		while(dead_ends_culled){
 			dead_ends_culled = cull_dead_ends(dungeon_grid);
@@ -46,18 +47,18 @@ function dungeon_generate(index){
 	}
 	
 	// Doors
-	if (door_index >= 0){
+	if (game_state.door_index >= 0){
 		add_doors(dungeon_grid);
 	}
 	
 	// Add entry
-	entry_position = add_entry(dungeon_grid);
+	game_state.entry_position = add_entry(dungeon_grid);
 	
 	// Add exit
-	if (game_state.current_depth < max_depth - 1){
-		exit_position = add_exit(dungeon_grid, entry_position[0], entry_position[1]);
+	if (game_state.current_depth < game_state.max_depth - 1){
+		game_state.exit_position = add_exit(dungeon_grid, game_state.entry_position[0], game_state.entry_position[1]);
 	}
-	else exit_position = noone;
+	else game_state.exit_position = noone;
 	
 	// Generate tilemap
 	generate_map(dungeon_grid);
@@ -65,7 +66,7 @@ function dungeon_generate(index){
 	// Initialise item grid
 	initialise_item_grid(dungeon_grid, grid_width, grid_height);
 	
-	return([dungeon_grid, entry_position, exit_position, door_index]);
+	return([dungeon_grid, game_state.entry_position, game_state.exit_position, game_state.door_index]);
 }
 
 // INITIALISE
@@ -78,7 +79,7 @@ function initialise_game_grid(grid_width, grid_height){
 			
 			// CREATE WALL TILE -------------------------------------------------------------------
 			grid[x_pos][y_pos] = new tile_wall();
-			grid[x_pos][y_pos].sprite = wall_sprite;
+			grid[x_pos][y_pos].sprite = game_state.wall_sprite;
 			grid[x_pos][y_pos].flag   = -1;
 		}
 	}
@@ -511,7 +512,7 @@ function cull_dead_ends(grid){
 					
 						// CREATE WALL TILE -----------------------------------------------------------
 						grid[xx][yy] = new tile_wall();
-						grid[xx][yy].sprite = wall_sprite;
+						grid[xx][yy].sprite = game_state.wall_sprite;
 					
 						// Move to next tile
 						for (var d = 0; d < 4; d ++){
@@ -548,7 +549,7 @@ function add_doors(grid){
 					var room_cell_count = grid_check_neighbour_count(grid, x_pos, y_pos, "room", NEIGHBOUR_CHECK.ORTH)
 					if (room_cell_count > 0){
 						grid[x_pos][y_pos] = new tile_door_closed();
-						grid[x_pos][y_pos].index = door_index;
+						grid[x_pos][y_pos].index = game_state.door_index;
 					}
 				}
 			}
@@ -731,18 +732,18 @@ function generate_map(grid){
 			var tile = grid[i][j].tile;
 			
 			if (tile == "wall" or tile == "secret door"){
-				grid[i][j].sprite = wall_sprite;
+				grid[i][j].sprite = game_state.wall_sprite;
 				grid[i][j].index  = autotile_47(grid, "wall", i, j);
 			}
 			else if (tile == "room" or tile == "hall"){
-				grid[i][j].sprite = floor_sprite;
+				grid[i][j].sprite = game_state.floor_sprite;
 				grid[i][j].index  = irandom(3);
 			}
 		}
 	}
 }
 
-// ITEM CREATION
+// ITEM MAP INITIALISATION
 function initialise_item_grid(grid, width, height){
 	for (var i = 0; i < width; i ++){
 		for (var j = 0; j < height; j ++){

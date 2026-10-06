@@ -20,7 +20,7 @@ function actors_move_sprite(){
 }
 
 
-// BODY_PRESET LAYOUT
+// BODY_PRESET LAYOUT -----------------------------------------------------------------------------
 function body_part_list_copy(preset){
 	
 	var new_list = [];
@@ -76,6 +76,12 @@ function body_part_empty_hand_slot_count(actor){
 }
 
 
+// STATS ------------------------------------------------------------------------------------------
+function actor_carry_weight(actor){
+	return(actor.strength * 10);
+}
+
+
 // SPAWNING	 --------------------------------------------------------------------------------------
 function spawn_new_actor(actor_type, cell_x, cell_y){
 	
@@ -88,6 +94,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	
 	new_actor.colour_fg		= noone;
 	new_actor.colour_timer  = 0;
+	
+	var hp = new_actor.hit_points;
+	new_actor.hit_points[STAT_TYPE.CURRENT] = hp;
+	new_actor.hit_points[STAT_TYPE.BASE]    = hp;
 	
 	// Sprite and Animation
 	new_actor.sprite_x			= cell_x * cell_width;

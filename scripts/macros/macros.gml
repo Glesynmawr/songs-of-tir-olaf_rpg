@@ -1,18 +1,4 @@
 
-enum BIOME{
-	MOUNTAIN,
-	HILL,
-	CANYON,
-	DESERT,
-	SCRUB,
-	SWAMP,
-	DENSE_MANGROVE,
-	WATER,
-	MANGROVE,
-	MARSH
-}
-
-
 #region// BODY PLAN ENUMS --------------------------------------------------------------------------------
 enum BODY_PRESET{
 	BASE,
@@ -67,6 +53,19 @@ enum BODY_PART_STATS{
 #endregion
 
 
+enum BIOME{
+	MOUNTAIN,
+	HILL,
+	CANYON,
+	DESERT,
+	SCRUB,
+	SWAMP,
+	DENSE_MANGROVE,
+	WATER,
+	MANGROVE,
+	MARSH
+}
+
 enum DEMEANOUR{
 	AGGRESSIVE,
 	PASSIVE,
@@ -91,6 +90,12 @@ enum FACTION{
 	MAMMAL_PREY,
 	PLAYER,
 	REPTILE_PREDATOR
+}
+
+enum INVENTORY_DISPLAY{
+	EQUIPMENT,
+	CONTAINER,
+	SHOP
 }
 
 enum ITEM_SORT{
@@ -137,6 +142,11 @@ enum SPAWN_LOC{
 	INVENTORY,
 	EQUIPPED
 }
+	
+enum STAT_TYPE{
+	CURRENT,
+	BASE
+}
 
 enum TAG{
 	IS_AMMO,
@@ -172,14 +182,14 @@ enum TRANSITION{
 #macro SCREEN_WIDTH		640
 #macro SCREEN_HEIGHT	360
 
-#macro MAP_WIDTH		22
+#macro MAP_WIDTH		30
 #macro MAP_HEIGHT		22
 
 #macro WORLD_WIDTH		40
 #macro WORLD_HEIGHT		22
 
 #macro ENERGY_PER_TURN	100
-#macro LOG_MAX_ENTRIES	8
+#macro LOG_MAX_ENTRIES	10
 
 #macro ZONE_SIZE		40
 #macro ITEM_SPRITE_SIZE sprite_get_width(item_size_spr)
@@ -191,7 +201,7 @@ enum TRANSITION{
 #macro C_PURPLE	 make_colour_rgb(138, 70,  174)
 #macro C_GREEN	 make_colour_rgb(104, 169, 65)
 #macro C_BLUE	 make_colour_rgb(50,  39,  140)
-#macro C_YELLOW  make_colour_rgb(208, 220, 113)
+#macro C_YELLOW  $F4DC71
 #macro C_ORANGE  make_colour_rgb(192, 120, 33)
 #macro C_BROWN	 make_colour_rgb(92,  71,  0)
 #macro C_PINK	 make_colour_rgb(187, 119, 109)
@@ -200,6 +210,7 @@ enum TRANSITION{
 #macro C_LIME	 make_colour_rgb(172, 234, 136)
 #macro C_LTBLUE	 make_colour_rgb(124, 112, 218)
 #macro C_LTGREY  make_colour_rgb(171, 171, 171)
+
 
 
 

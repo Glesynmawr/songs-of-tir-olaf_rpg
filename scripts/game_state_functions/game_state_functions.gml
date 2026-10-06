@@ -537,13 +537,30 @@ function map_spawn_mobs(lookup_table, spawn_border){
 	var height = array_length(manager.game_state.game_grid[0]);
 	
 	repeat(mob_count){
+
+		var table_to_use = lookup_table;
+
+		var random_mob = random(1);
+		if (random_mob <= 0.02){
+			var random_biome = irandom(array_length(mob_lookup) - 1);
+			var random_type  = irandom(array_length(mob_lookup[random_biome]) - 1);
+			
+			table_to_use = mob_lookup[random_biome][random_type];
+		}
+		if (table_to_use == noone){
+			continue;
+		}
 		
 		// Choose a mob
 		var mob_roll = irandom(100);
-		for (var i = 1; i < array_length(lookup_table); i ++){
-			if (mob_roll <= lookup_table[i][1]){
-				var actor_to_spawn		= spawn_new_actor(lookup_table[i][0], noone, noone);
-				var actor_spawn_tile	= actor_to_spawn.spawn_tile;
+		for (var i = 1; i < array_length(table_to_use); i ++){
+			if (mob_roll <= table_to_use[i][1]){
+				var actor_to_spawn		= spawn_new_actor(table_to_use[i][0], noone, noone);
+				
+				var actor_spawn_tile = noone;
+				if (table_to_use == lookup_table){
+					actor_spawn_tile = actor_to_spawn.spawn_tile;
+				}
 				break;
 			}
 		}

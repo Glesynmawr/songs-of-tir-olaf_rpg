@@ -2,6 +2,7 @@
 // DATA -------------------------------------------------------------------------------------------
 
 #region// MARSH  ZONE -----------------------------------------------------------------------------
+
 function actor_player()constructor{
 	faction         = FACTION.PLAYER;
 	name			= "Doodle";
@@ -15,7 +16,7 @@ function actor_player()constructor{
 	chase_persist	= [0, 0];
 	strength		= 4;
 	agility			= 4;
-	hit_points		= [12, 12];
+	hit_points		= 12;
 	action_speed	= 100;
 	equipment		= [];
 	world_x			= 0;
@@ -37,7 +38,7 @@ function actor_flamingo()constructor{
 	hp_flee_percent	= 100;
 	strength		= 2;
 	agility			= 5;
-	hit_points		= [4, 4];
+	hit_points		= 4;
 	action_speed	= 100;
 	equipment		= [[item_beak, 1], [item_wings, 1]];
 }
@@ -57,7 +58,7 @@ function actor_marsh_frog()constructor{
 	hp_flee_percent	= 50;
 	strength		= 3;
 	agility			= 3;
-	hit_points		= [6, 6];
+	hit_points		= 6;
 	action_speed	= 50;
 	equipment		= [[item_bite, 1]];
 }
@@ -77,7 +78,7 @@ function actor_marsh_turtle()constructor{
 	hp_flee_percent	= 25;
 	strength		= 5;
 	agility			= 1;
-	hit_points		= [8, 8];
+	hit_points		= 8;
 	action_speed	= 50;
 	equipment		= [[item_carapace, 1], [item_bite, 1]];
 }
@@ -85,6 +86,7 @@ function actor_marsh_turtle()constructor{
 #endregion
 
 #region// MARSH DUNGEON ---------------------------------------------------------------------------
+
 function actor_reed_weevil()constructor{
 	spawn_tile		= "room";
 	faction         = FACTION.AMPHIBIAN_PREY;
@@ -100,7 +102,7 @@ function actor_reed_weevil()constructor{
 	hp_flee_percent	= 50;
 	strength		= 1;
 	agility			= 2;
-	hit_points		= [4, 4];
+	hit_points		= 4;
 	action_speed	= 50;
 	equipment		= [[item_proboscis, 1]];
 }
@@ -120,7 +122,7 @@ function actor_marsh_bat()constructor{
 	hp_flee_percent	= 50;
 	strength		= 1;
 	agility			= 6;
-	hit_points		= [2, 2];
+	hit_points		= 1;
 	action_speed	= 120;
 	equipment		= [[item_wings, 1], [item_bite, 1]];
 }
@@ -140,7 +142,7 @@ function actor_marsh_rat()constructor{
 	hp_flee_percent	= 50;
 	strength		= 2;
 	agility			= 4;
-	hit_points		= [3, 3];
+	hit_points		= 3;
 	action_speed	= 80;
 	equipment		= [[item_bite, 1]];
 }

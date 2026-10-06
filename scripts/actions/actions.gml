@@ -2,9 +2,9 @@
 // ACTOR ACTIONS ----------------------------------------------------------------------------------
 function action_modify_hit_points(actor, value){
 	with (actor){
-		hit_points[0] = min(hit_points[0] + value, hit_points[1]);
+		hit_points[STAT_TYPE.CURRENT] = min(hit_points[STAT_TYPE.CURRENT] + value, hit_points[STAT_TYPE.BASE]);
 		
-		if (hit_points[0] <= 0){
+		if (hit_points[STAT_TYPE.CURRENT] <= 0){
 			action_remove_actor(self);
 		}
 	}
@@ -231,9 +231,11 @@ function action_attack_melee(attacker, defender){
 	}
 }
 
-function action_remove_actor(actor){
+function action_remove_actor(actor, create_particles = true){
 	
-	particle_create_actor_death(actor);
+	if (create_particles){
+		particle_create_actor_death(actor);
+	}
 	
 	if (actor == manager.actor_registry.player){
 		with (manager){

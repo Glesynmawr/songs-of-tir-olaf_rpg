@@ -1,16 +1,20 @@
 /// @desc Initialise 
 
-global.version = [2, 4, 5];
+global.version = [2, 4, 6];
 
 //randomise();
 debugging_mode		= false;
 game_paused			= false;
 transition			= noone;
 
-// Colours
+#region// COLOURS ---------------------------------------------------------------------------------
 colour_text_main	= C_LTGREY;
 colour_bg_main		= make_colour_rgb(0, 15, 0);
+
 colour_ui_main		= C_ORANGE;
+colour_ui_off		= C_BROWN;
+
+#endregion
 
 #region// GAME STATE ------------------------------------------------------------------------------
 game_state = {
@@ -86,9 +90,21 @@ inv_spr_size		= ITEM_SPRITE_SIZE;
 inv_spacing			= inv_spr_size;
 inv_display_max		= 20;
 
+// Inventory position
+inventory_x		= (screen_width / 2);
+inventory_y		= 0;
+inventory_w		= (screen_width / 2);
+inventory_h		= screen_height;
+
+// Equipment position
+equipment_x		= 0;
+equipment_y		= 0;
+equipment_w		= (screen_width / 2);
+equipment_h		= screen_height;
+
 // Scroll bar
-scroll_x			= (screen_width / 2) - 1;
-scroll_y			= (text_height * 2);
+scroll_x			= inventory_x + 2;
+scroll_y			= (text_height * 4);
 scroll_h			= (inv_display_max * inv_spacing) + (2 * 3);
 scroll_w			= 8;
 scroll_fill_max		= inv_display_max * inv_spacing;
@@ -172,20 +188,26 @@ ui_settings = {
 }
 
 // UI constants -----------------------------------------------------------------------------------
-ui_width	   = 96;
-ui_x_pos[0][0] = screen_width - ui_width;
-ui_x_pos[0][1] = 0;
-ui_x_pos[1][0] = 0;
-ui_x_pos[1][1] = ui_width;
+ui_width		= 160;
+
+// UI flipping values
+ui_x_pos[0][0]	= screen_width - ui_width;
+ui_x_pos[0][1]	= 0;
+ui_x_pos[1][0]	= 0;
+ui_x_pos[1][1]	= ui_width;
 
 // Game log
-log_height = (LOG_MAX_ENTRIES + 2) * text_height;
+log_surface = noone;
+log_height	= (LOG_MAX_ENTRIES + 2) * text_height;
+
+log_surface_width  = ui_width - (text_width * 4);
+log_surface_height = log_height - (text_height * 2);
 
 // Minimap
 minimap_scale	= 2;
 minimap_surface = noone;
-minimap_width	= ui_width;
-minimap_height	= ui_width;
+minimap_width	= 80;
+minimap_height	= 80;
 minimap_y		= 0;
 
 // Info box
@@ -193,10 +215,15 @@ infobox_width   = ui_width;
 infobox_height  = screen_height - minimap_height - log_height + 10;
 infobox_y       = minimap_height - 5;
 
+infobox_hp_height = sprite_get_height(hit_point_bar_spr);
+infobox_hp_width  = infobox_width - (text_width * 4);
+
 // Inventory and equipment
-equipment_box_sprite_size = sprite_get_width(equipment_box_spr);
-equipment_hovered_x_pos = noone;
-equipment_hovered_y_pos = noone;
+tile_container				= noone;
+inventory_display_state		= INVENTORY_DISPLAY.EQUIPMENT;
+equipment_box_sprite_size	= sprite_get_width(equipment_box_spr);
+equipment_hovered_x_pos		= noone;
+equipment_hovered_y_pos		= noone;
 
 // Pop-up message
 notification_reset();
@@ -208,14 +235,7 @@ notification_reset();
 uni_overlay		= shader_get_uniform(colour_overlay_shd, "uColour");
 
 // Outline
-outline_colour = C_BLACK;
-var r = colour_get_red(outline_colour)   / 255;
-var g = colour_get_green(outline_colour) / 255;
-var b = colour_get_blue(outline_colour)  / 255;
-
-outline_colour  = [r, g, b, 1.0];
-uni_texel_size	= shader_get_uniform(outline_shd, "utexel_size");
-uni_outline_col = shader_get_uniform(outline_shd, "uRGBA");
+set_outline_shader_colour();
 
 #endregion
 

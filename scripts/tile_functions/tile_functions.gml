@@ -1,15 +1,22 @@
 
 // TILE SWAPPING
 function cell_replace_tile(x_pos, y_pos, new_tile){
-	var vis   = other.game_state.game_grid[x_pos][y_pos].is_visible;
-	var ex    = other.game_state.game_grid[x_pos][y_pos].explored;
-	var items = other.game_state.game_grid[x_pos][y_pos].items;
+	var vis   = manager.game_state.game_grid[x_pos][y_pos].is_visible;
+	var ex    = manager.game_state.game_grid[x_pos][y_pos].explored;
+	var items = manager.game_state.game_grid[x_pos][y_pos].items;
+	var inv   = noone;
+	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "inventory")){
+		inv = manager.game_state.game_grid[x_pos][y_pos].inventory;
+	}
 	
-	other.game_state.game_grid[x_pos][y_pos] = new new_tile();
+	manager.game_state.game_grid[x_pos][y_pos] = new new_tile();
 	
-	other.game_state.game_grid[x_pos][y_pos].is_visible = vis;
-	other.game_state.game_grid[x_pos][y_pos].explored   = ex;
-	other.game_state.game_grid[x_pos][y_pos].items		 = items;
+	manager.game_state.game_grid[x_pos][y_pos].is_visible = vis;
+	manager.game_state.game_grid[x_pos][y_pos].explored   = ex;
+	manager.game_state.game_grid[x_pos][y_pos].items	  = items;
+	if (inv != noone){
+		manager.game_state.game_grid[x_pos][y_pos].inventory = inv;
+	}
 }
 
 function tile_lookup(list){
@@ -46,39 +53,6 @@ function water_tile_placement(grid){
 
 
 // DUNGEON TILES
-function tile_door_closed()constructor{
-	tile			= "closed door";
-	sprite			= door_closed_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= door_set_open;
-}
-
-function tile_door_open()constructor{
-	tile			= "open door";
-	sprite			= door_open_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= door_set_close;
-}
-
-function tile_door_secret()constructor{
-	tile			= "secret door";
-	sprite			= wall_00_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= door_set_open;
-}
-
 function tile_dungeon_entrance()constructor{
 	tile			= "dungeon entrance";
 	sprite			= zone_tile_dungeon_entrance_spr;
@@ -143,6 +117,55 @@ function tile_wall()constructor{
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;
+}
+
+
+// INTERACTIVE TILES
+function tile_chest_large()constructor{
+	tile			= "Large chest";
+	sprite			= chest_large_closed_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 10;
+	inv_hover		= 0;
+}
+
+function tile_door_closed()constructor{
+	tile			= "closed door";
+	sprite			= door_closed_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= door_set_open;
+}
+
+function tile_door_open()constructor{
+	tile			= "open door";
+	sprite			= door_open_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= door_set_close;
+}
+
+function tile_door_secret()constructor{
+	tile			= "secret door";
+	sprite			= wall_00_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= door_set_open;
 }
 
 

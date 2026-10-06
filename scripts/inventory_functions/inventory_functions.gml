@@ -149,14 +149,30 @@ function context_menu_initialise(){
 	
 	var content, xx, yy, ww, hh, i;
 	
-	content = ["Hold", "Drop"];
+	content = [];
+	
+	if (inventory.selected == 1 or manager.inventory_display_state == INVENTORY_DISPLAY.EQUIPMENT){
 		
-	if (inventory.items[inventory.inv_hover].stack > 1){
-		content[1] += " One";
-		array_push(content, "Drop All");
+		content = ["Drop"];
+		if (inventory.items[inventory.inv_hover].stack > 1){
+			content[0] += " One";
+			array_push(content, "Drop All");
+		}
 	}
-	if (array_length(inventory.items[inventory.inv_hover].slot) > 0){
-		array_insert(content, 1, "Equip");
+	
+	if (manager.inventory_display_state == INVENTORY_DISPLAY.EQUIPMENT){
+		array_insert(content, 0, "Hold");
+		if (array_length(inventory.items[inventory.inv_hover].slot) > 0){
+			array_insert(content, 1, "Equip");
+		}
+	}
+	else if (manager.inventory_display_state == INVENTORY_DISPLAY.CONTAINER){
+		if (inventory.selected == 1){
+			array_insert(content, 0, "Store");
+		}
+		else if (inventory.selected == 0){
+			array_insert(content, 0, "Take");
+		}
 	}
 		
 	yy = 0 + (manager.text_height * 3) + (manager.text_height * inventory.inv_hover);
@@ -183,8 +199,8 @@ function equipment_context_menu_initialise(){
 		array_push(content, "Drop All");
 	}
 	
-	xx = manager.equipment_hovered_x_pos + manager.equipment_box_sprite_size;
-	yy = manager.equipment_hovered_y_pos;
+	xx = manager.screen_width  / 2;
+	yy = manager.screen_height / 2;
 		
 	ww = 0;
 	for (i = 0; i < array_length(content); i ++){
@@ -236,8 +252,8 @@ function equipment_slot_select_initialise(){
 	list_content = equipment_slot_create_list(category, item_slot);
 	
 	// Set menu position and size
-	var xx = inventory.context_menu[1];
-	var yy = inventory.context_menu[2];
+	var xx = manager.screen_width  / 2;
+	var yy = manager.screen_height / 2;
 	var ww = 0;
 	for (var i = 0; i < array_length(list_content); i ++){
 		var w = string_width(list_content[i][0]);
@@ -401,6 +417,19 @@ function inventory_drop_slot(actor, slot, stack){
 	}
 }
 
+function inventory_get_weight(actor){
+	with (actor){
+		var weight = 0;
+		
+		var len = array_length(inventory.items);
+		for (var i = 0; i < len; i ++){
+			weight += inventory.items[i].weight * inventory.items[i].stack;
+		}
+		
+		return(weight);
+	}
+}
+
 
 // EQUIPMENT INTERACTION
 function equipment_add_item(actor, stack, item_struct, dest_cat, dest_ind, dest_slot){
@@ -427,5 +456,26 @@ function equipment_drop_slot(actor, stack, target_cat, target_ind, target_slot){
 }
 
 
+// CONTAINER INTERACTION
+function container_add_item(actor, container){
+	
+	var item;
+	var len_items = array_length(container.inventory);
+	var max_items = container.inventory_max;
+	
+	if (len_items < max_items){
+		item = variable_clone(actor.inventory.items[actor.inventory.inv_hover]);
+		array_push(container.inventory, item);
+		return(true);
+	}
+	return(false);
+}
+
+function container_take_item(actor, container){
+	
+	var item_to_take = variable_clone(container.inventory[container.inv_hover]);
+	inventory_add_item(actor, item_to_take, item_to_take.stack);
+	array_delete(container.inventory, container.inv_hover, 1);
+}
 
 

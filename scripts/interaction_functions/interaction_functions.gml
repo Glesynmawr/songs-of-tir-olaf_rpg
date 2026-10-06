@@ -1,9 +1,9 @@
 
 function tile_interaction(actor, x_pos, y_pos){			
 	if (manager.game_state.game_grid[x_pos][y_pos].tile_script != noone){
-		manager.game_state.game_grid[x_pos][y_pos].tile_script(self, x_pos, y_pos);
+		var costs_a_turn = manager.game_state.game_grid[x_pos][y_pos].tile_script(self, x_pos, y_pos);
 		
-		return(true);
+		return(costs_a_turn);
 	}
 	return(false);
 }
@@ -16,6 +16,8 @@ function door_set_open(actor, x_pos, y_pos){
 	// Create log entry
 	var text = $"{actor.name} opens the door.";
 	log_add_entry(text, manager.colour_text_main);
+	
+	return(true);
 }
 
 function door_set_close(actor, x_pos, y_pos){
@@ -28,6 +30,8 @@ function door_set_close(actor, x_pos, y_pos){
 		// Create log entry
 		var text = $"{actor.name} closes the door.";
 		log_add_entry(text, manager.colour_text_main);
+		
+		return(true);
 	}
 }
 
@@ -46,6 +50,8 @@ function dungeon_enter(actor, x_pos, y_pos){
 		
 		transition_set(TRANSITION.GAME_DUNGEON_ENTER, C_BLACK);
 	}
+	
+	return(false);
 }
 
 function found_a_secret(actor){
@@ -71,6 +77,8 @@ function level_ascend(){
 		var text = $"{actor_registry.player.name} exits dungeon {game_state.dungeon_index}";
 		log_add_entry(text, colour_text_main);
 	}
+	
+	return(false);
 }
 
 function level_descend(){
@@ -84,6 +92,21 @@ function level_descend(){
 		var text = $"{actor_registry.player.name} descends furthur in dungeon {game_state.dungeon_index}";
 		log_add_entry(text, colour_text_main);
 	}
+	
+	return(false);
+}
+
+function tile_access_inventory(actor, x_pos, y_pos){
+	
+	with (manager){
+		inventory_display_state		= INVENTORY_DISPLAY.CONTAINER;
+		tile_container				= game_state.game_grid[x_pos][y_pos];
+		
+		with (actor_registry.player){
+			state = state_inventory;
+		}
+	}
+	return(false);
 }
 
 

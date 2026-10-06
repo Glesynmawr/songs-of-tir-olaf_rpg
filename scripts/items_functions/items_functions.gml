@@ -66,6 +66,7 @@ function item_hat1()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.HEAD;
+	tags			= [TAG.IS_AMMO];
 }
 
 function item_hat2()constructor{
@@ -177,7 +178,7 @@ function item_glove1()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.HANDS;
-	tags			= [TAG.STACKABLE, TAG.IS_AMMO];
+	tags			= [TAG.STACKABLE];
 }
 
 function item_glove2()constructor{

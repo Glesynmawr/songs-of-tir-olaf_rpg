@@ -614,7 +614,7 @@ function add_exit(grid, entry_x, entry_y){
 		x_pos = candidate_list[choice][0];
 		y_pos = candidate_list[choice][1];
 		
-		grid[x_pos][y_pos] = new tile_stairs_down();
+		grid[x_pos][y_pos] = new tile_chest_large();
 		
 		return([x_pos, y_pos]);
 	}
@@ -737,7 +737,6 @@ function generate_map(grid){
 			}
 			else if (tile == "room" or tile == "hall"){
 				grid[i][j].sprite = game_state.floor_sprite;
-				grid[i][j].index  = irandom(3);
 			}
 		}
 	}

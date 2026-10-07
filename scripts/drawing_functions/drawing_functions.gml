@@ -105,6 +105,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_x      = melee_offset_x;
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
+					var z_modifier	 = passive_move_bounce(self) * manager.ui_settings.move_bounce_amplitude;
 							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
@@ -135,8 +136,9 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				}
 							
 				// Draw actor sprite and reset shader
-				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y, x_scale, 1, 0, c_white, 1);
+				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
+				draw_text(screen_x, screen_y, string(z_modifier));
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
@@ -302,6 +304,36 @@ function draw_control_menu(){
 		}
 		txt += control_menu[i];
 		draw_text_outlined(txt, box_center_x - x_mod, yy, colour_text_main, fa_center);
+	}
+}
+	
+function draw_game_over_menu(){
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(game_over_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width / 2);
+	var box_top_y  = box_center_y - floor(box_height / 2);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height,"Songs of Tir Olaf" , control_string);
+	
+	// Draw menu
+	for (var i = 0; i < array_length(game_over_menu); i ++){
+		var yy = box_top_y + ((i + 2) * text_height);
+		var txt = "";
+		var x_mod = 0;
+		if (game_over_menu_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
+		}
+		txt += game_over_menu[i];
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
 	}
 }
 

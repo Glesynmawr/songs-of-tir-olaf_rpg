@@ -9,6 +9,7 @@ function actor_animate(){
 function actors_move_sprite(){
 	for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 		with (actor_registry.actor_list[i]){
+			
 			if (sprite_x != sprite_target_x){
 				sprite_x += (sprite_target_x - sprite_x) * manager.actor_move_speed;
 			}

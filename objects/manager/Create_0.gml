@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [2, 4, 6];
+global.version = [2, 4, 7];
 
 //randomise();
 debugging_mode		= false;
@@ -16,47 +16,20 @@ colour_ui_off		= C_BROWN;
 
 #endregion
 
-#region// GAME STATE ------------------------------------------------------------------------------
-game_state = {
-	game_grid				: noone,
-	game_log				: [],
-	map_mode				: noone,
-	map_borders_are_clamped	: noone,
-	state_main				: noone,
-	state_previous			: noone,
-	world_map				: noone,
-	zone_map				: noone,
-	
-	current_depth			: noone,
-	dungeon_entry_x			: noone,
-	dungeon_entry_y			: noone,
-	
-	direction_indicator		: noone,
-	direction_indicator_x	: 0,
-	direction_indicator_y	: 0,
-	
-	faction_list			: []
-}
-
-#endregion
+#region// GAME STATE AND DATA----------------------------------------------------------------------
+init_game_state()
 
 world_data();
 dungeon_data();
 init_main();
 init_particle_system();
 
+#endregion
+
 #region// ACTORS ----------------------------------------------------------------------------------
 
 // Combat modifiers
 offhand_agility_penalty = -4;
-
-// Actor registry - Active actors only
-actor_registry = {
-	actor_list:		[],
-	player:			noone,
-	action_list:	[],
-	action_index:	0
-}
 
 // Base body plan (all FALSE)
 body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
@@ -183,6 +156,7 @@ ui_settings = {
 	ui_x_position			: 0,
 	minimap_title_text		: "",
 	minimap_sub_text		: "",
+	move_bounce_amplitude	: 3,
 	game_grid_cells_width:	MAP_WIDTH,
 	game_grid_cells_height: MAP_HEIGHT
 }

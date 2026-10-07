@@ -2,12 +2,17 @@
 
 draw_clear(colour_bg_main);
 
-if (game_state.state_main == game_state_dungeon) or (game_state.state_main == game_state_pause_menu and game_state.state_previous == game_state_dungeon){
-	actors_move_sprite();
-	// Game layers
-	game_draw_grid();
+var draw_grid = false;
+
+switch(game_state.state_main){
+	case game_state_dungeon:	draw_grid	= true; break;
+	case game_state_game_over:	draw_grid	= true; break;
+	case game_state_pause_menu: draw_grid	= true; break;
+	case game_state_world:		draw_grid	= true; break;
+	
 }
-else if (game_state.state_main == game_state_world) or (game_state.state_main == game_state_pause_menu and game_state.state_previous == game_state_world){
+
+if (draw_grid){
 	actors_move_sprite();
 	// Game layers
 	game_draw_grid();

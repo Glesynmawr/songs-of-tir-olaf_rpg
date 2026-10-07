@@ -6,6 +6,9 @@ function action_modify_hit_points(actor, value){
 		
 		if (hit_points[STAT_TYPE.CURRENT] <= 0){
 			action_remove_actor(self);
+			if (actor == manager.actor_registry.player){
+				manager.game_state.state_main = game_state_game_over;
+			}
 		}
 	}
 }
@@ -397,6 +400,23 @@ function passive_actor_reset_target(){
 	target_x		= noone;
 	target_y		= noone;
 	target_map		= noone;
+}
+
+function passive_move_bounce(actor){
+	with (actor){
+		var xx = sprite_x;
+		var yy = sprite_y;
+		
+		var x_mod = (xx mod manager.cell_width)  / manager.cell_width;
+		var y_mod = (yy mod manager.cell_height) / manager.cell_height;
+		
+		var x_bounce = sin(pi * x_mod);
+		var y_bounce = sin(pi * y_mod);
+		
+		var z_mod = max(x_bounce, y_bounce);
+		
+		return(z_mod);
+	}
 }
 
 function passive_state_update(){

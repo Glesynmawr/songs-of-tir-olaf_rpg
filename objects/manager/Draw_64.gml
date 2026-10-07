@@ -2,10 +2,10 @@
 
 switch(game_state.state_main){
 	case game_state_control_menu:	draw_control_menu();	break;
+	case game_state_dungeon:		draw_game_ui();			break;
+	case game_state_game_over:		draw_game_over_menu();	break;
 	case game_state_main_menu:		draw_main_menu();		break;
 	case game_state_pause_menu:		draw_pause_menu();		break;
-	case game_state_dungeon:		draw_game_ui();			break;
-	//case game_state_world:			draw_game_ui();			break;
 }
 
 if (notification.text != ""){

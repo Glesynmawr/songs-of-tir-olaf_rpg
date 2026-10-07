@@ -50,6 +50,40 @@ function init_faction_list(){
 	return(list);
 }
 
+function init_game_state(){
+	
+	// Actors
+	actor_registry = {
+		actor_list:		[],
+		player:			noone,
+		action_list:	[],
+		action_index:	0
+	}
+	
+	// Game states
+	game_paused = false;
+	game_state = {
+		game_grid				: noone,
+		game_log				: [],
+		map_mode				: noone,
+		map_borders_are_clamped	: noone,
+		state_main				: noone,
+		state_previous			: noone,
+		world_map				: noone,
+		zone_map				: noone,
+	
+		current_depth			: noone,
+		dungeon_entry_x			: noone,
+		dungeon_entry_y			: noone,
+	
+		direction_indicator		: noone,
+		direction_indicator_x	: 0,
+		direction_indicator_y	: 0,
+	
+		faction_list			: []
+	}
+}
+
 function init_main(){
 	with (manager){
 		// Set resolution and scale
@@ -79,6 +113,15 @@ function init_main(){
 function init_world(){
 	
 	with (manager){
+		
+		// Initialise game state
+		init_game_state()
+		
+		// Initialise game states
+		game_state.state_main		= noone;
+		game_state.state_previous	= noone;
+		control_state_previous		= noone;
+		game_state.map_mode			= noone;
 		
 		// Actor registry - Active actors only
 		actor_registry = {
@@ -261,7 +304,40 @@ function game_state_dungeon(){
 		
 		if (!game_paused and transition == noone){
 			turn_order_update();
-			update_particles();
+		}
+	}
+}
+	
+function game_state_game_over(){
+	with (manager){
+		if (notification.text != ""){
+			notification_control()
+			exit;
+		}
+		
+		if (keyboard_check_pressed(controls.key_up)){
+			game_over_menu_hover --;
+			if (game_over_menu_hover < 0){
+				game_over_menu_hover += array_length(game_over_menu);
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_down)){
+			game_over_menu_hover ++;
+			if (game_over_menu_hover >= array_length(game_over_menu)){
+				game_over_menu_hover -= array_length(game_over_menu);
+			}
+		}
+		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			var txt = game_over_menu[game_over_menu_hover];
+			if (txt == "Try again"){
+				transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
+			}
+			else if (txt == "Quit to title"){
+				transition_set(TRANSITION.GAME_RESET, colour_bg_main);
+			}
+			else if (txt == "Quit to desktop"){
+				transition_set(TRANSITION.GAME_QUIT, C_BLACK);
+			}
 		}
 	}
 }
@@ -374,7 +450,6 @@ function game_state_world(){
 		
 		if (!game_paused and transition == noone){
 			turn_order_update();
-			update_particles();
 		}
 	}
 }

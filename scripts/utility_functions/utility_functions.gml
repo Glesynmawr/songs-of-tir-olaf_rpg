@@ -325,7 +325,8 @@ function transition_update(){
 			
 				case TRANSITION.GAME_RESET:			
 					menu_pos_reset();
-					game_state.state_main = game_state_main_menu;	break;
+					game_state.state_main = game_state_main_menu;	
+					event_perform(ev_create, 0);									break;
 			
 				case TRANSITION.GAME_START_NEW:		menu_pos_reset() init_world();	break;
 			

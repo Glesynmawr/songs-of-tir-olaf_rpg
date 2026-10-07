@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Dungeon tiles",
-    "path":"folders/Art/Dungeon tiles.yy",
+    "name":"Furniture",
+    "path":"folders/Art/Furniture.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

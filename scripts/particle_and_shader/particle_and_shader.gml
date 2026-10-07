@@ -30,7 +30,7 @@ function init_particle_system(){
 	part_title_fire = part_type_create();
 	part_type_direction(part_title_fire, 90, 90, 0, 7);
 	part_type_life(part_title_fire, 45, 180);
-	part_type_sprite(part_title_fire, fire_spr, true, true, false);
+	part_type_sprite(part_title_fire, fire_particle_spr, true, true, false);
 	part_type_speed(part_title_fire, 0.1, 0.3, 0.001, 0.15);
 }
 

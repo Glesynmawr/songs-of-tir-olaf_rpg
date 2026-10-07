@@ -138,7 +138,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-				draw_text(screen_x, screen_y, string(z_modifier));
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
@@ -203,6 +202,29 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 	var tile_y = ind div 8;
 			
 	draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, floor(screen_x), floor(screen_y), 1, 1, C_WHITE, 1);
+	
+	if (struct_exists(game_state.game_grid[xx][yy], "is_animated")){
+		
+	}
+	
+	// If tile is light source
+	if (struct_exists(game_state.game_grid[xx][yy], "light_source")){
+		
+		// If tile is lit and visible
+		if (game_state.game_grid[xx][yy].light_source and game_state.game_grid[xx][yy].is_visible){
+			
+			// Increment lit index
+			game_state.game_grid[xx][yy].light_index += sprite_get_speed(game_state.game_grid[xx][yy].lit_sprite) / game_get_speed(gamespeed_fps);
+		
+			// Loop lit animation
+			if (game_state.game_grid[xx][yy].light_index >= sprite_get_number(game_state.game_grid[xx][yy].lit_sprite)){
+				game_state.game_grid[xx][yy].light_index = 0;
+			}
+		
+			// Draw light sprite
+			draw_sprite(game_state.game_grid[xx][yy].lit_sprite, game_state.game_grid[xx][yy].light_index, screen_x, screen_y);
+		}
+	}
 	
 	if (dng != noone){
 		draw_sprite(tile_world_dungeon_entrance_spr, 0, screen_x, screen_y);

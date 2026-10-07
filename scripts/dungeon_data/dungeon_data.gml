@@ -2,14 +2,17 @@
 function dungeon_data(){
 	dungeons[0] = {
 		name:			"Marsh dungeon",
-		max_depth:		2,
+		max_depth:		5,
 		max_width:		20,
 		max_height:		20,
 		size_change:	0,
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			mob_lookup[BIOME.MARSH][MOB_LOOKUP.DUNGEON],
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[1] = {
 		name:			"Mangrove dungeon",
@@ -20,7 +23,10 @@ function dungeon_data(){
 		wall_sprite:	wall_01_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		1,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[2] = {
 		name:			"River dungeon",
@@ -31,7 +37,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[3] = {
 		name:			"Dense mangrove dungeon",
@@ -42,7 +51,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[4] = {
 		name:			"Swamp dungeon",
@@ -53,7 +65,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[5] = {
 		max_depth:		2,
@@ -64,7 +79,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[6] = {
 		name:			"Desert dungeon",
@@ -75,7 +93,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[7] = {
 		name:			"Canyon dungeon",
@@ -86,7 +107,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[8] = {
 		name:			"Hill dungeon",
@@ -97,7 +121,10 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 	dungeons[9] = {
 		name:			"Mountain dungeon",
@@ -108,6 +135,13 @@ function dungeon_data(){
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
+		rooms:			[9, 3, 5],
 		mobs:			noone,
+		room_decor:		[room_decorate_torches, room_decorate_carpet],
+		decor_index:	0,
 	}
 }
+
+
+
+

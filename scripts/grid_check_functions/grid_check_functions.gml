@@ -1,4 +1,54 @@
 
+// LIGHTING FUNCTION
+function grid_calculate_lighting(grid){
+	
+	grid_reset_lighting(grid);
+	
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	for (var i = 0; i < ww; i ++){
+		for (var j = 0; j < hh; j ++){
+			
+			if (struct_exists(grid[i][j], "light_source")){
+				if (grid[i][j].light_source == true){
+					
+					var r = grid[i][j].light_radius;
+					
+					var x_from = max(i - r, 0);
+					var x_to   = min(i + r, ww);
+					var y_from = max(j - r, 0);
+					var y_to   = min(j + r, hh);
+					
+					for (var xx = x_from; xx < x_to; xx ++){
+						for (var yy = y_from; yy < y_to; yy ++){
+							
+							var has_los = draw_los_line(grid, xx, yy, i, j);
+							if (has_los){
+								grid[xx][yy].is_lit = true;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return(grid);
+}
+
+function grid_reset_lighting(grid){
+	
+	var ww = array_length(grid);
+	var hh = array_length(grid[0]);
+	
+	for (var i = 0; i < ww; i ++){
+		for (var j = 0; j < hh; j ++){
+			grid[i][j].is_lit = false;
+		}
+	}
+}
+
+
 // MAP CHECK FUNCTIONS
 function grid_check_position_in_bounds(grid, x_pos, y_pos, border = 0){
 	var x_min, x_max, y_min, y_max;
@@ -136,27 +186,22 @@ function grid_check_tile_is_walkable(grid, x_pos, y_pos){
 	else return(true);
 }
 
+
 // LOS FUNCTIONS
 function set_player_los(grid, actor){
 	with (actor){
 		
 		var width = array_length(grid);
 		var height = array_length(grid[0]);
-		var range = actor.range + 2;
 		
-		var x_min = max(actor.x_pos - range, 0);
-		var x_max = min(actor.x_pos + range + 1, width);
-		
-		var y_min = max(actor.y_pos - range, 0);
-		var y_max = min(actor.y_pos + range + 1, height);
-		
-		for (var x_pos = x_min; x_pos < x_max; x_pos ++){
-			for (var y_pos = y_min; y_pos < y_max; y_pos ++){
+		for (var x_pos = 0; x_pos < width; x_pos ++){
+			for (var y_pos = 0; y_pos < height; y_pos ++){
 				
 				var tile_is_visible = draw_los_line(grid, x_pos, y_pos, actor.x_pos, actor.y_pos);
-				var tile_distance   = round(point_distance(x_pos, y_pos, actor.x_pos, actor.y_pos))
+				var tile_distance   = round(point_distance(x_pos, y_pos, actor.x_pos, actor.y_pos));			
+				var tile_is_lit		= grid[x_pos][y_pos].is_lit;
 				
-				if (tile_is_visible and tile_distance <= actor.range){
+				if (tile_is_visible and (tile_distance <= actor.range or tile_is_lit)){
 					grid[x_pos][y_pos].is_visible = true;
 					grid[x_pos][y_pos].explored = true;
 				}

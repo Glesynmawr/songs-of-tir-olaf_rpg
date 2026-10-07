@@ -7,7 +7,7 @@ function actor_player()constructor{
 	faction         = FACTION.PLAYER;
 	name			= "Doodle";
 	sprite			= rogue_spr;
-	range			= 7;
+	range			= 4;
 	react_range		= 0;
 	body_index		= BODY_PRESET.HUMANOID;
 	state			= state_ready_for_inputs;

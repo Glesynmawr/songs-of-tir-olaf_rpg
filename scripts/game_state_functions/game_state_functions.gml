@@ -143,6 +143,7 @@ function init_world(){
 																
 		// Player
 		spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
+		grid_calculate_lighting(manager.game_state.game_grid)
 		set_player_los(game_state.game_grid, actor_registry.player);
 		actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
 	
@@ -507,6 +508,7 @@ function goto_dungeon(dungeon_id, is_descending){
 		}
 		
 		// Update player LOS
+		grid_calculate_lighting(manager.game_state.game_grid);
 		set_player_los(game_state.game_grid, actor_registry.player);
 	
 		// Update Minimap text
@@ -543,6 +545,7 @@ function goto_world(){
 		game_state.state_main = game_state_world;
 	
 		// Update player LOS
+		grid_calculate_lighting(manager.game_state.game_grid);
 		set_player_los(game_state.game_grid, actor_registry.player);
 	
 		// Update Minimap text
@@ -589,6 +592,7 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		}
 	
 		// Update player LOS
+		grid_calculate_lighting(manager.game_state.game_grid);
 		set_player_los(game_state.game_grid, actor_registry.player);
 		
 		// Update Minimap text

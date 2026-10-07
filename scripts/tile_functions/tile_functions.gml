@@ -8,6 +8,7 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "inventory")){
 		inv = manager.game_state.game_grid[x_pos][y_pos].inventory;
 	}
+	var lit   = manager.game_state.game_grid[x_pos][y_pos].is_lit;
 	
 	manager.game_state.game_grid[x_pos][y_pos] = new new_tile();
 	
@@ -17,6 +18,7 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	if (inv != noone){
 		manager.game_state.game_grid[x_pos][y_pos].inventory = inv;
 	}
+	manager.game_state.game_grid[x_pos][y_pos].is_lit = lit;
 }
 
 function tile_lookup(list){
@@ -66,7 +68,7 @@ function tile_dungeon_entrance()constructor{
 
 function tile_hall()constructor{
 	tile			= "hall";
-	sprite			= wall_00_spr;
+	sprite			= floor_00_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
@@ -77,7 +79,7 @@ function tile_hall()constructor{
 
 function tile_room()constructor{
 	tile			= "room";
-	sprite			= wall_00_spr;
+	sprite			= floor_00_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
@@ -120,7 +122,8 @@ function tile_wall()constructor{
 }
 
 
-// INTERACTIVE TILES
+// FURNITURE TILES
+// Containers
 function tile_chest_large()constructor{
 	tile			= "Large chest";
 	sprite			= chest_large_closed_spr;
@@ -135,6 +138,36 @@ function tile_chest_large()constructor{
 	inv_hover		= 0;
 }
 
+// Lighting
+function tile_torch()constructor{
+	tile			= "torch";
+	sprite			= torch_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= light_toggle;
+	light_source	= true;
+	lit_sprite		= fire_spr;
+	light_index		= 0;
+	light_radius	= 4;
+}
+
+// Decorative
+function tile_carpet()constructor{
+	tile			= "carpet";
+	sprite			= carpet_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+
+// INTERACTIVE TILES
 function tile_door_closed()constructor{
 	tile			= "closed door";
 	sprite			= door_closed_spr;

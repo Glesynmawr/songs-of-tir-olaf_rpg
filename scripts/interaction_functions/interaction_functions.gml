@@ -96,6 +96,14 @@ function level_descend(){
 	return(false);
 }
 
+function light_toggle(actor, x_pos, y_pos){
+	manager.game_state.game_grid[x_pos][y_pos].light_source = !manager.game_state.game_grid[x_pos][y_pos].light_source;
+	
+	grid_calculate_lighting(manager.game_state.game_grid);
+	
+	return(true);
+}
+
 function tile_access_inventory(actor, x_pos, y_pos){
 	
 	with (manager){

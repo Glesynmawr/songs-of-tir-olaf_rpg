@@ -26,7 +26,7 @@ function dungeon_generate(index){
 	
 	// Initialise grids
 	dungeon_grid = initialise_game_grid(grid_width, grid_height);
-	generate_rooms(dungeon_grid, 9, 3, 5);
+	var room_list = generate_rooms(dungeon_grid, dungeons[index].rooms[0], dungeons[index].rooms[1], dungeons[index].rooms[2]);
 	generate_hallways(dungeon_grid, 25);
     
     // Initial connections
@@ -60,14 +60,21 @@ function dungeon_generate(index){
 	}
 	else game_state.exit_position = noone;
 	
+	// Add decorations
+	dungeon_decorate(index, room_list);
+	
 	// Generate tilemap
 	generate_map(dungeon_grid);
+	
+	// Generate light map
+	dungeon_grid = grid_calculate_lighting(dungeon_grid);
 	
 	// Initialise item grid
 	initialise_item_grid(dungeon_grid, grid_width, grid_height);
 	
 	return([dungeon_grid, game_state.entry_position, game_state.exit_position, game_state.door_index]);
 }
+
 
 // INITIALISE
 function initialise_game_grid(grid_width, grid_height){
@@ -86,6 +93,7 @@ function initialise_game_grid(grid_width, grid_height){
 	return(grid);
 }
 
+
 // ROOMS
 function generate_rooms(grid, number_of_rooms, min_size, max_size){
 	
@@ -103,7 +111,7 @@ function generate_rooms(grid, number_of_rooms, min_size, max_size){
 		var height = irandom_range(min_size, max_size);
 		height = floor(height / 2) * 2 + 1;
 		
-		// Finds position for room on game_state.game_grid
+		// Finds position for room on provided grid
 		var position_list = [];
 		
 		for (var x_pos = 2; x_pos < array_length(grid) - (2 + width); x_pos += 2){
@@ -157,6 +165,7 @@ function generate_rooms(grid, number_of_rooms, min_size, max_size){
 	}
 	return(room_list);
 }
+
 
 // HALLWAYS
 function generate_hallways(grid, hall_max_length){
@@ -272,6 +281,7 @@ function find_direction_target(grid, x_pos, y_pos, target_type, step_size){
 	else return(noone);
 }
 
+
 // CONNECTIONS
 function connect_areas(grid){
 	var i, j, current_flag;
@@ -381,6 +391,7 @@ function find_connection(grid){
 	else return(noone);
 }
 
+
 // SHORTCUTS
 function create_shortcuts(grid, shortcut_length, secret_door_chance){
 	
@@ -489,6 +500,7 @@ function find_shortcut_candidates(grid, shortcut_length){
 	return(candidate_list);
 }
 
+
 // END CULLING
 function cull_dead_ends(grid){
 	var i, j, count;
@@ -535,6 +547,7 @@ function cull_dead_ends(grid){
 	return(false);
 }
 
+
 // DOORS
 function add_doors(grid){
 	var can_place = true;
@@ -558,6 +571,7 @@ function add_doors(grid){
 		can_place = false;
 	}
 }
+
 
 // ENTRY AND EXIT
 function add_entry(grid){
@@ -614,11 +628,12 @@ function add_exit(grid, entry_x, entry_y){
 		x_pos = candidate_list[choice][0];
 		y_pos = candidate_list[choice][1];
 		
-		grid[x_pos][y_pos] = new tile_chest_large();
+		grid[x_pos][y_pos] = new tile_stairs_down();
 		
 		return([x_pos, y_pos]);
 	}
 }
+
 
 // AUTOTILING
 function autotile_16(grid, type, xpos, ypos){
@@ -738,15 +753,133 @@ function generate_map(grid){
 			else if (tile == "room" or tile == "hall"){
 				grid[i][j].sprite = game_state.floor_sprite;
 			}
+			
+			grid[i][j].is_lit = false;
 		}
 	}
 }
+
 
 // ITEM MAP INITIALISATION
 function initialise_item_grid(grid, width, height){
 	for (var i = 0; i < width; i ++){
 		for (var j = 0; j < height; j ++){
 			grid[i][j].items = [];
+		}
+	}
+}
+
+
+// DECORATION
+function dungeon_decorate(index, room_list){
+	
+	// Spawn treasure chest?
+	var spawn_chest = false;
+	var chest_chance = 1;
+	if (random(1) <= chest_chance){
+		spawn_chest = true;
+	}
+	
+	// Set initial variables
+	var decor_list	= dungeons[index].room_decor;
+	var decor_index = dungeons[index].decor_index;
+	var len			= array_length(room_list);
+	
+	// Loop through rooms
+	for (var i = 0; i < len; i ++){
+		
+		// Get room position
+		var x_from	= room_list[i][0];
+		var y_from	= room_list[i][1];
+		var x_to	= x_from + room_list[i][2];
+		var y_to	= y_from + room_list[i][3];
+		
+		if (spawn_chest){
+			room_decorate_large_chest(x_from, y_from, x_to, y_to, decor_index);
+			spawn_chest = false;
+			continue;
+		}
+		
+		if (random(1) <= 0.25){
+			
+			// Choose a random decor type
+			var choice = irandom(array_length(decor_list) - 1);
+			var chosen_decor = decor_list[choice];
+		
+			if (chosen_decor != noone){
+				chosen_decor(x_from, y_from, x_to, y_to, decor_index)
+			}
+		}
+	}
+}
+
+function room_decorate_carpet(x_from, y_from, x_to, y_to, carpet_index){
+	
+	// Loop through room tiles
+	for (var xx = x_from; xx < x_to; xx ++){
+		for (var yy = y_from; yy < y_to; yy ++){
+			
+			if (grid_check_neighbour_count(dungeon_grid, xx, yy, "wall") == 0 and dungeon_grid[xx][yy].tile == "room"){
+				dungeon_grid[xx][yy] = new tile_carpet();
+				dungeon_grid[xx][yy].index = carpet_index;
+			}
+		}
+	}
+}
+
+function room_decorate_large_chest(x_from, y_from, x_to, y_to, decor_index){
+	room_decorate_rich(x_from, y_from, x_to, y_to, decor_index);
+	
+	var chest_x = x_from + floor((x_to - x_from) / 2);
+	var chest_y = y_from + floor((y_to - y_from) / 2);
+	
+	if (dungeon_grid[chest_x][chest_y].tile == "carpet"){
+		dungeon_grid[chest_x][chest_y] = new tile_chest_large();
+		
+		var sprite_count = (sprite_get_width(chest_large_closed_spr) / cell_width) - 1;
+		
+		dungeon_grid[chest_x][chest_y].index = irandom(sprite_count);
+	}
+}
+
+function room_decorate_rich(x_from, y_from, x_to, y_to, decor_index){
+	room_decorate_carpet(x_from, y_from, x_to, y_to, decor_index);
+	room_decorate_torches(x_from, y_from, x_to, y_to, decor_index);
+}
+
+function room_decorate_torches(x_from, y_from, x_to, y_to, torch_index){
+	
+	// Loop through room tiles
+	
+	for (var yy = y_from; yy < y_to; yy ++){
+				
+		if (yy mod 2 == 1){
+			
+			var xx = x_from;
+			
+			var door_check		= grid_check_neighbour_count(dungeon_grid, xx, yy, "closed_door", NEIGHBOUR_CHECK.ORTH);
+			var secret_check	= grid_check_neighbour_count(dungeon_grid, xx, yy, "secret_door", NEIGHBOUR_CHECK.ORTH);
+			var tile_check		= dungeon_grid[xx][yy].tile;
+			
+			if (door_check == 0 and secret_check == 0 and tile_check == "room"){
+				dungeon_grid[xx][yy] = new tile_torch();
+				dungeon_grid[xx][yy].index = torch_index;
+				
+				dungeon_grid[xx][yy].light_index = random(sprite_get_number(fire_spr));
+			}
+			
+			var xx = x_to - 1;
+			
+			var door_check		= grid_check_neighbour_count(dungeon_grid, xx, yy, "closed_door", NEIGHBOUR_CHECK.ORTH);
+			var secret_check	= grid_check_neighbour_count(dungeon_grid, xx, yy, "secret_door", NEIGHBOUR_CHECK.ORTH);
+			var tile_check		= dungeon_grid[xx][yy].tile;
+			
+			if (door_check == 0 and secret_check == 0 and tile_check == "room"){
+				dungeon_grid[xx][yy] = new tile_torch();
+				dungeon_grid[xx][yy].index = torch_index;
+				
+				dungeon_grid[xx][yy].light_index = random(sprite_get_number(fire_spr));
+			}
 		}
 	}
 }

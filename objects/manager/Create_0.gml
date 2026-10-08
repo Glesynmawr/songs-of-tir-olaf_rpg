@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [2, 4, 8];
+global.version = [3, 4, 8];
 
 //randomise();
 debugging_mode		= false;
@@ -127,6 +127,7 @@ controls_default = {
 	key_down:				vk_down,
 	key_move_confirm:		vk_space,
 	key_interact_confirm:	vk_enter,
+	key_look_state:			vk_backspace,
 	key_inventory:			ord("I"),
 	key_map_mode:			ord("M"),
 	key_item_swap:			ord("E"),

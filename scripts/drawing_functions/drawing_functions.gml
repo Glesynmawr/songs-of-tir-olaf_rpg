@@ -53,6 +53,7 @@ function game_draw_grid(){
 				
 					// Draw items
 					game_draw_items(xx, yy, screen_x, screen_y);
+					
 				}
 			}
 		}
@@ -65,11 +66,15 @@ function game_draw_grid(){
 			var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
 				
 			game_draw_actor(xx, yy, screen_x, screen_y);
+			
 		}
 	}
+	
 	screen_x = (x_from * cell_width)  - map_offset_x;
 	screen_y = (y_from * cell_height) - map_offset_y;
 	draw_particles(screen_x, screen_y);
+	
+	draw_look_cursor(screen_x, screen_y);
 	
 	// Draw move direction indicator
 	if (game_state.direction_indicator != noone){
@@ -267,9 +272,10 @@ function draw_control_menu(){
 	control_text[3] = "Right";
 	control_text[4] = "Move";
 	control_text[5] = "Select/Interact";
-	control_text[6] = "Inventory";
-	control_text[7] = "Map";
-	control_text[8] = "Swap items";
+	control_text[6] = "Look/Target";
+	control_text[7] = "Inventory";
+	control_text[8] = "View Map";
+	control_text[9] = "Swap items";
 	
 	var box_height		= text_height * (array_length(control_menu) + array_length(control_text) + 6);
 	var box_width		= text_width * 60;
@@ -1034,6 +1040,20 @@ function draw_info_box(){
 					}
 					x_pos += equipment_box_sprite_size
 				}
+			}
+		}
+	}
+}
+
+function draw_look_cursor(x_offset, y_offset){
+	
+	if (struct_exists(actor_registry.player, "look_mode")){
+		if (actor_registry.player.look_mode != noone){
+			
+			with (actor_registry.player.look_mode){
+				
+				draw_sprite(sprite_index, image_index, sprite_x - x_offset, sprite_y - y_offset);
+				
 			}
 		}
 	}

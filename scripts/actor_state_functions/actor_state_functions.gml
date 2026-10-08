@@ -1,4 +1,5 @@
 
+// ACTOR STATES -----------------------------------------------------------------------------------
 function state_ready_for_inputs(){
 	var player_moved = false;
 	
@@ -31,7 +32,7 @@ function state_ready_for_inputs(){
 		
 		// Movement
 		if (keyboard_check(controls.key_move_confirm)){
-				if (manager.move_timer <= 0){
+			if (manager.move_timer <= 0){
 				var xx = manager.cell_x_neighbours[move_dir];
 				var yy = manager.cell_y_neighbours[move_dir];
 				player_moved = action_move(manager.game_state.game_grid, xx, yy);
@@ -108,8 +109,15 @@ function state_ready_for_inputs(){
 				}
 			}
 		}
+		
+		// SWAP HELD ITEMS
 		else if (keyboard_check_pressed(controls.key_item_swap)){
 			player_swap_items(self);
+		}
+		
+		// ENTER LOOK/TARGET STATE
+		else if (keyboard_check_pressed(controls.key_look_state)){
+			state_init_look();
 		}
 	}
 	
@@ -216,6 +224,48 @@ function state_inventory(){
 		}
 		else if (manager.inventory_display_state	== INVENTORY_DISPLAY.CONTAINER){
 			container_control();
+		}
+	}
+}
+
+function state_look(){
+	
+	// Exit look state
+	if (keyboard_check_pressed(controls.key_cancel)){
+		look_mode	= noone;
+		state		= state_ready_for_inputs;
+	}
+	
+	with (look_mode){
+		image_index += anim_speed;
+		if (image_index >= sprite_get_number(sprite_index)){
+			image_index -= sprite_get_number(sprite_index);
+		}
+		
+		var target_x = cell_x * manager.cell_width;
+		var target_y = cell_y * manager.cell_height;
+		
+		if (sprite_x != target_x) sprite_x += (target_x - sprite_x) * 0.2;
+		if (sprite_y != target_y) sprite_y += (target_y - sprite_y) * 0.2;
+		
+		var move_x = keyboard_check(controls.key_right) - keyboard_check(controls.key_left);
+		var move_y = keyboard_check(controls.key_down)  - keyboard_check(controls.key_up);
+			
+		var move_dir = input_direction(move_x, move_y);
+		if (move_dir != noone){
+			
+			manager.move_timer --;
+			if (manager.move_timer <= 0){
+				cell_x += manager.cell_x_neighbours[move_dir];
+				cell_y += manager.cell_y_neighbours[move_dir];
+				manager.move_timer = manager.move_timer_max;
+			}
+			
+			cell_x = clamp(cell_x, x_from, x_to);
+			cell_y = clamp(cell_y, y_from, y_to);
+		}
+		else{
+			manager.move_timer = 0;
 		}
 	}
 }
@@ -733,6 +783,37 @@ function state_wander(){
 	}
 	
 	has_acted = true;
+}
+
+
+// ACTOR STATE INIT -------------------------------------------------------------------------------
+function state_init_look(){
+	
+	var ww = array_length(manager.game_state.game_grid);
+	var hh = array_length(manager.game_state.game_grid[0]);
+			
+	var x_clamp_from	= max(x_pos - range, 0);
+	var y_clamp_from	= max(y_pos - range, 0);
+	var x_clamp_to		= min(x_pos + range, ww);
+	var y_clamp_to		= min(y_pos + range, hh);
+	
+	look_mode = {
+		cell_x:			x_pos,
+		cell_y:			y_pos,
+		
+		x_from:			x_clamp_from,
+		y_from:			y_clamp_from,
+		x_to:			x_clamp_to,
+		y_to:			y_clamp_to,
+		
+		sprite_x:		x_pos * manager.cell_width,
+		sprite_y:		y_pos * manager.cell_height,
+		sprite_index:	target_spr,
+		image_index:	0,
+		anim_speed:		sprite_get_speed(target_spr) / game_get_speed(gamespeed_fps),
+	}
+	
+	state = state_look;
 }
 
 

@@ -211,6 +211,7 @@
     {"id":{"name":"slime_spr","path":"sprites/slime_spr/slime_spr.yy",},},
     {"id":{"name":"smoke_spiral_spr","path":"sprites/smoke_spiral_spr/smoke_spiral_spr.yy",},},
     {"id":{"name":"stairs_00_spr","path":"sprites/stairs_00_spr/stairs_00_spr.yy",},},
+    {"id":{"name":"target_spr","path":"sprites/target_spr/target_spr.yy",},},
     {"id":{"name":"tile_world_dungeon_entrance_spr","path":"sprites/tile_world_dungeon_entrance_spr/tile_world_dungeon_entrance_spr.yy",},},
     {"id":{"name":"title_background_spr","path":"sprites/title_background_spr/title_background_spr.yy",},},
     {"id":{"name":"title_spr","path":"sprites/title_spr/title_spr.yy",},},

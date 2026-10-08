@@ -12,9 +12,10 @@ function init_control_menu(){
 		new_controls[3] = controls.key_right;
 		new_controls[4] = controls.key_move_confirm;
 		new_controls[5] = controls.key_interact_confirm;
-		new_controls[6] = controls.key_inventory;
-		new_controls[7] = controls.key_map_mode;
-		new_controls[8] = controls.key_item_swap;
+		new_controls[6] = controls.key_look_state;
+		new_controls[7] = controls.key_inventory;
+		new_controls[8] = controls.key_map_mode;
+		new_controls[9] = controls.key_item_swap;
 				
 		game_state.state_main = game_state_control_menu;
 	}
@@ -237,9 +238,10 @@ function game_state_control_menu(){
 					new_controls[3] = controls.key_right;
 					new_controls[4] = controls.key_move_confirm;
 					new_controls[5] = controls.key_interact_confirm;
-					new_controls[6] = controls.key_inventory;
-					new_controls[7] = controls.key_map_mode;
-					new_controls[8] = controls.key_item_swap;
+					new_controls[6] = controls.key_look_state;
+					new_controls[7] = controls.key_inventory;
+					new_controls[8] = controls.key_map_mode;
+					new_controls[9] = controls.key_item_swap;
 				}
 				else if (txt == "Save and exit"){
 					controls_save_settings();
@@ -256,9 +258,10 @@ function game_state_control_menu(){
 				new_controls[3] = controls.key_right;
 				new_controls[4] = controls.key_move_confirm;
 				new_controls[5] = controls.key_interact_confirm;
-				new_controls[6] = controls.key_inventory;
-				new_controls[7] = controls.key_map_mode;
-				new_controls[8] = controls.key_item_swap;
+				new_controls[6] = controls.key_look_state;
+				new_controls[7] = controls.key_inventory;
+				new_controls[8] = controls.key_map_mode;
+				new_controls[9] = controls.key_item_swap;
 			}
 		
 			if (keyboard_check_pressed(vk_anykey)){
@@ -285,9 +288,10 @@ function game_state_control_menu(){
 						controls.key_right				= new_controls[3];
 						controls.key_move_confirm		= new_controls[4];
 						controls.key_interact_confirm	= new_controls[5];
-						controls.key_inventory			= new_controls[6];
-						controls.key_map_mode			= new_controls[7];
-						controls.key_item_swap		   	= new_controls[8];
+						controls.key_look_state			= new_controls[6];
+						controls.key_inventory			= new_controls[7];
+						controls.key_map_mode			= new_controls[8];
+						controls.key_item_swap		   	= new_controls[9];
 					}
 				}
 			}

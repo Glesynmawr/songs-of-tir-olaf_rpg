@@ -201,7 +201,9 @@ function set_player_los(grid, actor){
 				var tile_distance   = round(point_distance(x_pos, y_pos, actor.x_pos, actor.y_pos));			
 				var tile_is_lit		= grid[x_pos][y_pos].is_lit;
 				
-				if (tile_is_visible and (tile_distance <= actor.range or tile_is_lit)){
+				var max_range       = max(range, manager.world_lighting);
+				
+				if (tile_is_visible and (tile_distance <= max_range or tile_is_lit)){
 					grid[x_pos][y_pos].is_visible = true;
 					grid[x_pos][y_pos].explored = true;
 				}

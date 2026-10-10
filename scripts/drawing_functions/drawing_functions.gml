@@ -973,13 +973,12 @@ function draw_day_night(){
 	
 	draw_sprite(day_night_background_spr, 0, 0, 0);
 	
-	var hour = time_system.game_current_time[1];
-	var time_percent = hour / hours_per_day;
-	var angle_increment = 360 / hours_per_day;
-	var time_angle = 270 - (angle_increment * hour);
+	var current_day_turn	= time_system.game_current_time[TIME.TURN] mod turns_per_day;
+	var angle_increment		= 360 / turns_per_day;
+	var time_angle_start	= 270 - (angle_increment * current_day_turn);
 	
-	var spr_x = floor(lengthdir_x(sun_moon_distance, time_angle) + (day_night_width / 2));
-	var spr_y = floor(lengthdir_y(sun_moon_distance, time_angle) + day_night_height);
+	var spr_x = floor(lengthdir_x(sun_moon_distance, time_angle_start) + (day_night_width / 2));
+	var spr_y = floor(lengthdir_y(sun_moon_distance, time_angle_start) + day_night_height);
 	
 	draw_sprite(day_night_sun_moon_spr, 0, spr_x, spr_y);
 	
@@ -1045,7 +1044,7 @@ function draw_info_box(){
 	
 	// Current turn
 	yy += 32;
-	draw_text_outlined($"Turn: {time_system.current_turn}", xx, yy, colour_text_main);
+	draw_text_outlined($"Turn: {time_system.game_current_time[TIME.TURN]}", xx, yy, colour_text_main);
 	
 	// Current hour
 	yy += text_height;

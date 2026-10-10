@@ -25,7 +25,7 @@
   ],
   "name":"day_night_sun_moon_spr",
   "nineSlice":null,
-  "origin":4,
+  "origin":1,
   "parent":{
     "name":"UI sprites",
     "path":"folders/Art/UI sprites.yy",
@@ -84,7 +84,7 @@
     "visibleRange":null,
     "volume":1.0,
     "xorigin":6,
-    "yorigin":6,
+    "yorigin":0,
   },
   "swatchColours":null,
   "swfPrecision":0.5,

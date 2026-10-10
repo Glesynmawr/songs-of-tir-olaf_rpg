@@ -41,7 +41,7 @@ function resolution_scale(){
 	
 	// SET SCREEN SIZE VARIABLES
 	screen_width	= floor(width  / scale);
-	screen_height	= floor(height / scale) - 2;
+	screen_height	= floor(height / scale);
 	
 }
 
@@ -635,25 +635,30 @@ function turn_order_update(){
 
 function increment_time_and_date(){
 	with (manager){
-		// Increase current TURN
+		
+		// Increment turn counter
 		time_system.game_current_time[TIME.TURN] += time_system.timescale;
-	
-		if (time_system.game_current_time[TIME.TURN] >= turns_per_hour){
+		var current_day_turn = time_system.game_current_time[TIME.TURN] mod turns_per_day;
 		
-			time_system.game_current_time[TIME.TURN] = 0;
+		// Set hour using turn count
+		time_system.game_current_time[TIME.HOUR] = (current_day_turn div turns_per_hour);
 		
-			// Increase current HOUR
-			time_system.game_current_time[TIME.HOUR] ++;
-			if (time_system.game_current_time[TIME.HOUR] >= hours_per_day){
-				time_system.game_current_time[TIME.HOUR] -= hours_per_day
-			
-				// Increase current DAY
-				time_system.game_current_time[TIME.DAY] ++;
-			}
-		}
+		// Set day using turn count
+		time_system.game_current_time[TIME.DAY] = time_system.game_current_time[TIME.TURN] div turns_per_day;
+		 
+		world_update_lighting();
 	}
 }
 
-
+function world_update_lighting(){
+	// Calculate lighting
+	var current_day_turn = time_system.game_current_time[TIME.TURN] mod turns_per_day;
+	if (!time_system.map_is_underground){
+		var base_value = sin(((current_day_turn + (light_time_offset * turns_per_hour)) / turns_per_day) * (pi * 2));
+		world_lighting = round(base_value * MAP_WIDTH) + light_height_offset;
+		world_lighting = clamp(world_lighting, world_light_min, world_light_max);
+	}
+	else world_lighting = 0;
+}
 
 

@@ -529,7 +529,9 @@ function goto_dungeon(dungeon_id, is_descending){
 		ui_settings.minimap_sub_text   = "Level: " + string(game_state.current_depth + 1);
 	
 		// Set time_system.timescale
-		time_system.timescale = timescale_zone;
+		time_system.timescale	= timescale_zone;
+		time_system.map_is_underground		= true;
+		world_update_lighting();
 	}
 }
 
@@ -567,6 +569,8 @@ function goto_world(){
 	
 		// Set time_system.timescale
 		time_system.timescale = timescale_world;
+		time_system.map_is_underground  = false;
+		world_update_lighting();
 	}
 }
 
@@ -614,6 +618,8 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		
 		// Set time_system.timescale
 		time_system.timescale = timescale_zone;
+		time_system.map_is_underground  = false;
+		world_update_lighting();
 	}
 }
 

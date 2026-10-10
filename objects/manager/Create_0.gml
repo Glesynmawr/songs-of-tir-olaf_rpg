@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [3, 4, 9];
+global.version = [4, 4, 9];
 
 //randomise();
 debugging_mode		= false;
@@ -81,10 +81,6 @@ scroll_y			= (text_height * 4);
 scroll_h			= (inv_display_max * inv_spacing) + (2 * 3);
 scroll_w			= 8;
 scroll_fill_max		= inv_display_max * inv_spacing;
-
-#endregion
-
-#region// LIGHTING --------------------------------------------------------------------------------
 
 #endregion
 
@@ -231,14 +227,15 @@ dust_particles = [];
 // Timescale constants ----------------------------------------------------------------------------
 turns_per_hour	= 30;
 hours_per_day	= 24;
+turns_per_day	= turns_per_hour * hours_per_day;
 timescale_zone  = 1;
 timescale_world	= 60;
 
 // Timescale record -------------------------------------------------------------------------------
 time_system = {
-	current_turn		: 0,
-	game_current_time   : [0, 6, 0],
-	timescale			: 0
+	game_current_time   : [0, 0, 0],
+	timescale			: 0,
+	map_is_underground  : false,
 }
 
 // Day/night cycle
@@ -247,6 +244,13 @@ sun_moon_distance	= 25;
 day_night_width		= sprite_get_width(day_night_background_spr);
 day_night_height	= sprite_get_height(day_night_background_spr);
 
+// Lighting
+light_time_offset	= -6;
+light_height_offset = 8;
+world_lighting		= 0;
+
+world_light_min = 2;
+world_light_max = ceil(MAP_WIDTH / 2);
 
 #endregion
 

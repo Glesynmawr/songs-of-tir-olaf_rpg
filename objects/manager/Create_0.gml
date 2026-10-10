@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [3, 4, 8];
+global.version = [3, 4, 9];
 
 //randomise();
 debugging_mode		= false;
@@ -153,13 +153,20 @@ actor_move_speed = 0.2;
 #region// UI --------------------------------------------------------------------------------------
 
 // UI variables -----------------------------------------------------------------------------------
+
+globalvar game_settings;
+game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MASTER_GAIN]	= 1;
+game_settings[SETTING.AUDIO][AUDIO_SETTINGS.SFX_GAIN]		= 1;
+game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MUSIC_GAIN]		= 1;
+
 ui_settings = {
 	ui_x_position			: 0,
+	move_bounce_amplitude	: 3,
+	
 	minimap_title_text		: "",
 	minimap_sub_text		: "",
-	move_bounce_amplitude	: 3,
-	game_grid_cells_width:	MAP_WIDTH,
-	game_grid_cells_height: MAP_HEIGHT
+	game_grid_cells_width	: MAP_WIDTH,
+	game_grid_cells_height	: MAP_HEIGHT
 }
 
 // UI constants -----------------------------------------------------------------------------------
@@ -227,12 +234,19 @@ hours_per_day	= 24;
 timescale_zone  = 1;
 timescale_world	= 60;
 
-// Timescale variables ----------------------------------------------------------------------------
+// Timescale record -------------------------------------------------------------------------------
 time_system = {
 	current_turn		: 0,
-	game_current_time   : [0, 0, 0],
+	game_current_time   : [0, 6, 0],
 	timescale			: 0
 }
+
+// Day/night cycle
+day_night_surface	= noone;
+sun_moon_distance	= 25;
+day_night_width		= sprite_get_width(day_night_background_spr);
+day_night_height	= sprite_get_height(day_night_background_spr);
+
 
 #endregion
 

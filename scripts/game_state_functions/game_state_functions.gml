@@ -207,15 +207,18 @@ function game_state_control_menu(){
 		
 		if (!is_rebinding_keys){
 			if (keyboard_check_pressed(controls.key_cancel)){
+				
 				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 			}
 			else if (keyboard_check_pressed(controls.key_up)){
+				play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				control_menu_hover --;
 				if (control_menu_hover < 0){
 					control_menu_hover += array_length(control_menu);
 				}
 			}
 			else if (keyboard_check_pressed(controls.key_down)){
+				play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				control_menu_hover ++;
 				if (control_menu_hover >= array_length(control_menu)){
 					control_menu_hover -= array_length(control_menu);
@@ -321,12 +324,14 @@ function game_state_game_over(){
 		}
 		
 		if (keyboard_check_pressed(controls.key_up)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			game_over_menu_hover --;
 			if (game_over_menu_hover < 0){
 				game_over_menu_hover += array_length(game_over_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			game_over_menu_hover ++;
 			if (game_over_menu_hover >= array_length(game_over_menu)){
 				game_over_menu_hover -= array_length(game_over_menu);
@@ -355,12 +360,14 @@ function game_state_main_menu(){
 		}
 		
 		if (keyboard_check_pressed(controls.key_up)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			main_menu_hover --;
 			if (main_menu_hover < 0){
 				main_menu_hover += array_length(main_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			main_menu_hover ++;
 			if (main_menu_hover >= array_length(main_menu)){
 				main_menu_hover -= array_length(main_menu);
@@ -409,12 +416,14 @@ function game_state_pause_menu(){
 			game_state.state_main = game_state.state_previous;
 		}
 		else if (keyboard_check_pressed(controls.key_up)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			pause_menu_hover --;
 			if (pause_menu_hover < 0){
 				pause_menu_hover += array_length(pause_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
+			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			pause_menu_hover ++;
 			if (pause_menu_hover >= array_length(pause_menu)){
 				pause_menu_hover -= array_length(pause_menu);

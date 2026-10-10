@@ -74,7 +74,7 @@ function game_draw_grid(){
 	screen_y = (y_from * cell_height) - map_offset_y;
 	draw_particles(screen_x, screen_y);
 	
-	draw_look_cursor(screen_x, screen_y);
+	draw_look_cursor(screen_x + 3, screen_y + 3);
 	
 	// Draw move direction indicator
 	if (game_state.direction_indicator != noone){
@@ -166,10 +166,13 @@ function game_draw_items(xx, yy, screen_x, screen_y){
 			var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
 			var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 			
-			var draw_x = screen_x + ((cell_width  - ITEM_SPRITE_SIZE) / 2);
-			var draw_y = screen_y + ((cell_height - ITEM_SPRITE_SIZE) / 2);
+			var x_offset = floor((cell_width  - ITEM_SPRITE_SIZE) / 2);
+			var y_offset = floor((cell_height - ITEM_SPRITE_SIZE) / 2);
 			
-			draw_sprite_part(item_sprite, item_index, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, draw_x, draw_y);
+			var draw_x = screen_x + ((cell_width  - ITEM_SPRITE_SIZE) / 2) + x_offset;
+			var draw_y = screen_y + ((cell_height - ITEM_SPRITE_SIZE) / 2) + y_offset;
+			
+			draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, draw_x, draw_y);
 		}
 	}
 }
@@ -240,216 +243,6 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 }
 
 
-// UI DRAWING -------------------------------------------------------------------------------------
-function draw_game_ui(){
-	
-	 ui_draw_box(ui_x_pos[ui_settings.ui_x_position][0], 0, ui_width, screen_height);
-	
-	// Game log
-	draw_game_log(ui_x_pos[ui_settings.ui_x_position][0], screen_height - log_height, ui_width, log_height);
-
-	// Info box
-	draw_info_box();
-
-	// Minimap
-	draw_minimap();
-	
-	// Inventory and pick-up menus
-	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
-		draw_inventory(actor_registry.player, inventory_x, inventory_y, inventory_w, inventory_h);
-	}
-	if (actor_registry.player.state == state_pickup){
-		draw_pickup(actor_registry.player);
-	}
-}
-
-function draw_control_menu(){
-	
-	var control_text;
-	control_text[0] = "Up";
-	control_text[1] = "Down";
-	control_text[2] = "Left";
-	control_text[3] = "Right";
-	control_text[4] = "Move";
-	control_text[5] = "Select/Interact";
-	control_text[6] = "Look/Target";
-	control_text[7] = "Inventory";
-	control_text[8] = "View Map";
-	control_text[9] = "Swap items";
-	
-	var box_height		= text_height * (array_length(control_menu) + array_length(control_text) + 6);
-	var box_width		= text_width * 60;
-	var box_center_x	= floor(screen_width * 0.5);
-	var box_center_y	= floor(screen_height * 0.5);
-	
-	// Draw background
-	draw_sprite(title_background_spr, 0, box_center_x, box_center_y);
-	
-	// UI border
-	var box_left_x = box_center_x - floor(box_width * 0.5);
-	var box_top_y  = box_center_y - floor(box_height * 0.5);
-	var control_string = ui_menu_control_string();
-	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Controls", control_string);
-	
-	var binding_y = box_top_y + (text_height * 2);
-	var menu_y    = box_top_y + (text_height * 11);
-	
-	// Draw keybindings
-	for (var i = 0; i < array_length(new_controls); i ++){
-		
-		var control_y = binding_y + (i * text_height);
-		
-		// Key use text
-		draw_text_outlined(control_text[i], box_center_x - text_width, control_y, colour_text_main, fa_right);
-		
-		// Keybinding
-		var control_key = "";
-		if (!is_rebinding_keys){
-			control_key += keybinding_get_text(new_controls[i]);
-		}
-		else{
-			if (current_key_rebind == i){
-				control_key += "<";
-			}
-			if (new_controls[i] != noone){
-				control_key += keybinding_get_text(new_controls[i]);
-			}
-		}
-		draw_text_outlined(control_key, box_center_x + text_width, control_y, colour_text_main, fa_left);
-	}
-	
-	// Draw menu
-	for (i = 0; i < array_length(control_menu); i ++){
-		var yy = menu_y + ((i + 2) * text_height);
-		var txt = "";
-		var x_mod = 0;
-		if (control_menu_hover == i){
-			txt += "> ";
-			if (ui_flip){
-				txt += " ";
-				x_mod = (text_width / 2);
-			}
-		}
-		txt += control_menu[i];
-		draw_text_outlined(txt, box_center_x - x_mod, yy, colour_text_main, fa_center);
-	}
-}
-	
-function draw_game_over_menu(){
-	var xx				= floor(screen_width * 0.5);
-	var box_height		= text_height * (array_length(game_over_menu) + 4);
-	var box_width		= text_width * 60;
-	var box_center_x	= floor(screen_width * 0.5);
-	var box_center_y	= floor(screen_height * 0.5);
-	
-	// UI border
-	var box_left_x = box_center_x - floor(box_width / 2);
-	var box_top_y  = box_center_y - floor(box_height / 2);
-	var control_string = ui_menu_control_string();
-	ui_draw_box(box_left_x, box_top_y, box_width, box_height,"Songs of Tir Olaf" , control_string);
-	
-	// Draw menu
-	for (var i = 0; i < array_length(game_over_menu); i ++){
-		var yy = box_top_y + ((i + 2) * text_height);
-		var txt = "";
-		var x_mod = 0;
-		if (game_over_menu_hover == i){
-			txt += "> ";
-			if (ui_flip){
-				txt += " ";
-				x_mod = (text_width / 2);
-			}
-		}
-		txt += game_over_menu[i];
-		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
-	}
-}
-
-function draw_main_menu(){
-	var xx				= floor(screen_width * 0.5);
-	var box_height		= text_height * (array_length(main_menu) + 4);
-	var box_width		= text_width * 60;
-	var box_center_x	= floor(screen_width * 0.5);
-	var box_center_y	= floor(screen_height * 0.66);
-	var title_y			= floor(screen_height * 0.5);
-	
-	// Background
-	draw_sprite(title_background_spr, 0, box_center_x, title_y);
-	
-	// Title
-	title_y = floor(screen_height / 3);
-	draw_sprite(title_spr, 0, box_center_x, title_y);
-	
-	// Fire particle effects
-	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y)
-	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y)
-	
-	// Mini logos and version number
-	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
-	draw_text_outlined($"Version: {global.version[0]}.{global.version[1]}.{global.version[2]}", 24, screen_height - 12, colour_text_main);
-	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
-	
-	part_system_drawit(particle_system);
-	
-	// Braziers
-	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) - 120, title_y);
-	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) + 120, title_y);
-	
-	// UI border
-	var box_left_x = box_center_x - floor(box_width / 2);
-	var box_top_y  = box_center_y - floor(box_height / 2);
-	var control_string = ui_menu_control_string();
-	ui_draw_box(box_left_x, box_top_y, box_width, box_height,"Songs of Tir Olaf" , control_string);
-	
-	// Draw menu
-	for (var i = 0; i < array_length(main_menu); i ++){
-		var yy = box_top_y + ((i + 2) * text_height);
-		var txt = "";
-		var x_mod = 0;
-		if (main_menu_hover == i){
-			txt += "> ";
-			if (ui_flip){
-				txt += " ";
-				x_mod = (text_width / 2);
-			}
-		}
-		txt += main_menu[i];
-		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
-	}
-}
-
-function draw_pause_menu(){
-	var xx				= floor(screen_width * 0.5);
-	var box_height		= text_height * (array_length(pause_menu) + 4);
-	var box_width		= text_width * 60;
-	var box_center_x	= floor(screen_width * 0.5);
-	var box_center_y	= floor(screen_height * 0.5);
-	
-	// UI border
-	var box_left_x = box_center_x - floor(box_width * 0.5);
-	var box_top_y  = box_center_y - floor(box_height * 0.5);
-	var control_string = ui_menu_control_string();
-	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Options", control_string);
-	
-	
-	// Draw menu
-	for (var i = 0; i < array_length(pause_menu); i ++){
-		var yy = box_top_y + ((i + 2) * text_height);
-		var txt = "";
-		var x_mod = 0;
-		if (pause_menu_hover == i){
-			txt += "> ";
-			if (ui_flip){
-				txt += " ";
-				x_mod = (text_width / 2);
-			}
-		}
-		txt += pause_menu[i];
-		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
-	}
-}
-	
-	
 // INVENTORY --------------------------------------------------------------------------------------
 function draw_inventory(actor, x_pos, y_pos, width, height){
 	
@@ -458,6 +251,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	// Position variables
 	var xx, yy;
+	var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
@@ -490,9 +284,6 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	// Items
 	if (len > 0){
 		for(var i = draw_from; i < draw_to; i ++){
-			
-			// Y position
-			var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
 			
 			var txt = display_inv[0][i][0];
 			
@@ -881,6 +672,222 @@ function inventory_get_category_text(item){
 }
 
 
+// UI DRAWING -------------------------------------------------------------------------------------
+function draw_game_ui(){
+	
+	 ui_draw_box(ui_x_pos[ui_settings.ui_x_position][0], 0, ui_width, screen_height);
+	
+	// Game log
+	draw_game_log(ui_x_pos[ui_settings.ui_x_position][0], screen_height - log_height, ui_width, log_height);
+
+	// Info box
+	draw_info_box();
+
+	// Minimap
+	draw_minimap();
+	
+	// Day/night cycle
+	draw_day_night();
+	
+	// Inventory and pick-up menus
+	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
+		draw_inventory(actor_registry.player, inventory_x, inventory_y, inventory_w, inventory_h);
+	}
+	if (actor_registry.player.state == state_pickup){
+		draw_pickup(actor_registry.player);
+	}
+	if (actor_registry.player.state == state_look){
+		draw_look_data();
+	}
+}
+
+function draw_control_menu(){
+	
+	var control_text;
+	control_text[0] = "Up";
+	control_text[1] = "Down";
+	control_text[2] = "Left";
+	control_text[3] = "Right";
+	control_text[4] = "Move";
+	control_text[5] = "Select/Interact";
+	control_text[6] = "Look/Target";
+	control_text[7] = "Inventory";
+	control_text[8] = "View Map";
+	control_text[9] = "Swap items";
+	
+	var box_height		= text_height * (array_length(control_menu) + array_length(control_text) + 6);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
+	
+	// Draw background
+	draw_sprite(title_background_spr, 0, box_center_x, box_center_y);
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width * 0.5);
+	var box_top_y  = box_center_y - floor(box_height * 0.5);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Controls", control_string);
+	
+	var binding_y = box_top_y + (text_height * 2);
+	var menu_y    = box_top_y + (text_height * 11);
+	
+	// Draw keybindings
+	for (var i = 0; i < array_length(new_controls); i ++){
+		
+		var control_y = binding_y + (i * text_height);
+		
+		// Key use text
+		draw_text_outlined(control_text[i], box_center_x - text_width, control_y, colour_text_main, fa_right);
+		
+		// Keybinding
+		var control_key = "";
+		if (!is_rebinding_keys){
+			control_key += keybinding_get_text(new_controls[i]);
+		}
+		else{
+			if (current_key_rebind == i){
+				control_key += "<";
+			}
+			if (new_controls[i] != noone){
+				control_key += keybinding_get_text(new_controls[i]);
+			}
+		}
+		draw_text_outlined(control_key, box_center_x + text_width, control_y, colour_text_main, fa_left);
+	}
+	
+	// Draw menu
+	for (i = 0; i < array_length(control_menu); i ++){
+		var yy = menu_y + ((i + 2) * text_height);
+		var txt = "";
+		var x_mod = 0;
+		if (control_menu_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
+		}
+		txt += control_menu[i];
+		draw_text_outlined(txt, box_center_x - x_mod, yy, colour_text_main, fa_center);
+	}
+}
+	
+function draw_game_over_menu(){
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(game_over_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width / 2);
+	var box_top_y  = box_center_y - floor(box_height / 2);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height,"Songs of Tir Olaf" , control_string);
+	
+	// Draw menu
+	for (var i = 0; i < array_length(game_over_menu); i ++){
+		var yy = box_top_y + ((i + 2) * text_height);
+		var txt = "";
+		var x_mod = 0;
+		if (game_over_menu_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
+		}
+		txt += game_over_menu[i];
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
+	}
+}
+
+function draw_main_menu(){
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(main_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.66);
+	var title_y			= floor(screen_height * 0.5);
+	
+	// Background
+	draw_sprite(title_background_spr, 0, box_center_x, title_y);
+	
+	// Title
+	title_y = floor(screen_height / 3);
+	draw_sprite(title_spr, 0, box_center_x, title_y);
+	
+	// Fire particle effects
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) - 120, title_y)
+	particle_create_title_fire(part_title_fire, floor(screen_width * 0.5) + 120, title_y)
+	
+	// Mini logos and version number
+	draw_sprite(gamemaker_logo_small_spr, 0, 4, screen_height - 4);
+	draw_text_outlined($"Version: {global.version[0]}.{global.version[1]}.{global.version[2]}", 24, screen_height - 12, colour_text_main);
+	draw_sprite(glesynmawr_logo_small_spr, 0, screen_width - 4, screen_height - 4);
+	
+	part_system_drawit(particle_system);
+	
+	// Braziers
+	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) - 120, title_y);
+	draw_sprite(brazier_spr, 1, floor(screen_width * 0.5) + 120, title_y);
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width / 2);
+	var box_top_y  = box_center_y - floor(box_height / 2);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height,"Songs of Tir Olaf" , control_string);
+	
+	// Draw menu
+	for (var i = 0; i < array_length(main_menu); i ++){
+		var yy = box_top_y + ((i + 2) * text_height);
+		var txt = "";
+		var x_mod = 0;
+		if (main_menu_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
+		}
+		txt += main_menu[i];
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
+	}
+}
+
+function draw_pause_menu(){
+	var xx				= floor(screen_width * 0.5);
+	var box_height		= text_height * (array_length(pause_menu) + 4);
+	var box_width		= text_width * 60;
+	var box_center_x	= floor(screen_width * 0.5);
+	var box_center_y	= floor(screen_height * 0.5);
+	
+	// UI border
+	var box_left_x = box_center_x - floor(box_width * 0.5);
+	var box_top_y  = box_center_y - floor(box_height * 0.5);
+	var control_string = ui_menu_control_string();
+	ui_draw_box(box_left_x, box_top_y, box_width, box_height, "Options", control_string);
+	
+	
+	// Draw menu
+	for (var i = 0; i < array_length(pause_menu); i ++){
+		var yy = box_top_y + ((i + 2) * text_height);
+		var txt = "";
+		var x_mod = 0;
+		if (pause_menu_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width / 2);
+			}
+		}
+		txt += pause_menu[i];
+		draw_text_outlined(txt, xx - x_mod, yy, colour_text_main, fa_center);
+	}
+}
+
+
 // UI GENERIC -------------------------------------------------------------------------------------
 function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
 	
@@ -952,6 +959,35 @@ function ui_anim_flip(){
 		ui_flip_timer = ui_flip_timer_max;
 		ui_flip = !ui_flip;
 	}
+}
+	
+function draw_day_night(){
+	
+	if (!surface_exists(day_night_surface)){
+		day_night_surface = surface_create(day_night_width, day_night_height);
+	}
+	
+	surface_set_target(day_night_surface);
+	
+	draw_clear(colour_bg_main);
+	
+	draw_sprite(day_night_background_spr, 0, 0, 0);
+	
+	var hour = time_system.game_current_time[1];
+	var time_percent = hour / hours_per_day;
+	var angle_increment = 360 / hours_per_day;
+	var time_angle = 270 - (angle_increment * hour);
+	
+	var spr_x = floor(lengthdir_x(sun_moon_distance, time_angle) + (day_night_width / 2));
+	var spr_y = floor(lengthdir_y(sun_moon_distance, time_angle) + day_night_height);
+	
+	draw_sprite(day_night_sun_moon_spr, 0, spr_x, spr_y);
+	
+	surface_reset_target();
+	
+	var xx = floor(ui_x_pos[ui_settings.ui_x_position][0] + minimap_width + 3);
+	var yy = floor(text_width + 3);
+	draw_surface(day_night_surface, xx, yy);
 }
 
 function draw_game_log(x_pos, y_pos, width, height){
@@ -1040,20 +1076,6 @@ function draw_info_box(){
 					}
 					x_pos += equipment_box_sprite_size
 				}
-			}
-		}
-	}
-}
-
-function draw_look_cursor(x_offset, y_offset){
-	
-	if (struct_exists(actor_registry.player, "look_mode")){
-		if (actor_registry.player.look_mode != noone){
-			
-			with (actor_registry.player.look_mode){
-				
-				draw_sprite(sprite_index, image_index, sprite_x - x_offset, sprite_y - y_offset);
-				
 			}
 		}
 	}
@@ -1211,17 +1233,22 @@ function draw_pickup(actor){
 	
 	// Draw menu options
 	for (var i = 0; i < len; i ++){
-		xx = x_pos + (text_width * 2);
+		xx = x_pos + (text_width * 3);
 		yy = y_pos + (text_height * 2) + (i * text_height);
 		
 		// Text
-		var text = "";
+		var txt = "";
+		var x_mod = 0;
 		if (actor.pickup_hover == i){
-			text += "> ";
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width);
+			}
 		}
-		text += actor.pickup_menu[i].name;
+		txt += actor.pickup_menu[i].name;
 		
-		draw_text_colour(xx, yy, text, tc, tc, tc, tc, 1);
+		draw_text_colour(xx - x_mod, yy, txt, tc, tc, tc, tc, 1);
 	}
 	
 	// Draw box controls
@@ -1230,6 +1257,134 @@ function draw_pickup(actor){
 		yy = y_pos + height - text_height;
 		ui_draw_box_controls(xx, yy, control_list);
 	}
+}
+
+
+// UI LOOK STATE ----------------------------------------------------------------------------------
+function draw_look_cursor(x_offset, y_offset){
+	
+	if (struct_exists(actor_registry.player, "look_mode")){
+		if (actor_registry.player.look_mode != noone){
+			
+			with (actor_registry.player.look_mode){
+				
+				var col = C_BLACK;
+				var r = colour_get_red(col)   / 255;
+				var g = colour_get_green(col) / 255;
+				var b = colour_get_blue(col)  / 255;
+								
+				col = [r, g, b, 1.0];
+								
+				var tex		= sprite_get_texture(sprite_index, image_index);
+				var texel_w = texture_get_texel_width(tex);
+				var texel_h = texture_get_texel_height(tex);
+								
+				shader_set(outline_shd);
+				shader_set_uniform_f(manager.uni_texel_size, texel_w, texel_h);
+				shader_set_uniform_f(manager.uni_outline_col, col[0], col[1], col[2], col[3]);
+					
+				draw_sprite_ext(sprite_index, image_index, sprite_x - x_offset, sprite_y - y_offset, 1, 1, 0, manager.colour_ui_main, 1);
+				
+				shader_reset();
+			}
+		}
+	}
+}
+
+function draw_look_data(){
+	
+	if (struct_exists(actor_registry.player, "look_mode")){
+		if (actor_registry.player.look_mode != noone){
+			
+			if (actor_registry.player.look_mode.look_pages == noone){
+				return;
+			}
+			
+			// Background and border
+			var xx = ui_x_pos[ui_settings.ui_x_position][0];
+			var yy = infobox_y;
+	
+			var key_exit	= keybinding_get_text(controls.key_cancel);
+	
+			var control_text = $"{key_exit} to exit";
+	
+			ui_draw_box(xx, yy, infobox_width, infobox_height, "Looking at -", control_text);
+				
+			xx += text_width * 2;
+			yy += text_width * 2;
+			
+			var look_hover = actor_registry.player.look_mode.look_hover;
+			var look_list  = actor_registry.player.look_mode.look_pages;
+			
+			if (look_list[look_hover][0] == "actor"){
+				draw_look_actor_data(look_list[look_hover][1])
+			}
+			if (look_list[look_hover][0] == "items"){
+				draw_look_items_data(look_list[look_hover][1])
+			}
+			if (look_list[look_hover][0] == "tile"){
+				draw_look_tile_data(look_list[look_hover][1])
+			}
+		}
+	}
+}
+
+function draw_look_actor_data(actor){
+	var xx = ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2);
+	var yy = infobox_y + (text_width * 2);
+	
+	draw_text_outlined(actor.name, xx, yy, colour_text_main);
+}
+
+function draw_look_items_data(items){
+	var xx = ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2);
+	var yy = infobox_y + (text_width * 2);
+	var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+	
+	draw_text_outlined("Items", xx, yy, colour_text_main);
+	
+	yy += text_width * 2;
+	
+	var list_len  = array_length(items);
+	var max_lines = floor((infobox_height - (text_width * 6)) / inv_spacing);
+	var lines_to_draw = min(list_len, max_lines);
+	var excess_lines = list_len - (lines_to_draw);
+	
+	for (var i = 0; i < lines_to_draw; i ++){
+		
+		if (i == lines_to_draw - 1){
+			if (excess_lines - 1 > 0){
+				var item_append = "";
+				if (excess_lines > 1) item_append = "s"
+				draw_text_outlined($"  Plus {excess_lines} more item{item_append} ... ", xx, yy + text_y_offset, colour_text_main); 
+				break;
+			}
+		}
+		
+		var spr = items[i].sprite_index;
+		var ind = items[i].image_index;
+		var txt = items[i].name;
+		
+		var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
+		var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
+		
+		draw_sprite_part(spr, ind, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx, yy);
+		
+		xx += inv_spacing * 2;
+		draw_text_outlined(txt, xx, yy + text_y_offset, colour_text_main);
+		
+		xx -= inv_spacing * 2;
+		yy += inv_spacing;
+	}
+	
+	
+}
+
+function draw_look_tile_data(tile){
+	var xx = ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2);
+	var yy = infobox_y + (text_width * 2);
+	
+	draw_text_outlined(tile.tile, xx, yy, colour_text_main);
 }
 
 

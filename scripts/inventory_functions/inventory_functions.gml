@@ -67,7 +67,7 @@ function inventory_initialise(){
 }
 
 
-// INVENTORY CYCLING
+// EQUIPMENT CYCLING
 function body_part_find_min_slot(actor, category, index){
 	var min_slot = BODY_PART_STATS.PART_SLOT_1;
 	if (body_part_has_hand(self, category, index)){
@@ -477,5 +477,7 @@ function container_take_item(actor, container){
 	inventory_add_item(actor, item_to_take, item_to_take.stack);
 	array_delete(container.inventory, container.inv_hover, 1);
 }
+
+
 
 

@@ -110,14 +110,17 @@ function state_ready_for_inputs(){
 			}
 		}
 		
-		// SWAP HELD ITEMS
-		else if (keyboard_check_pressed(controls.key_item_swap)){
-			player_swap_items(self);
-		}
+		if (manager.game_state.game_grid != manager.game_state.world_map){
 		
-		// ENTER LOOK/TARGET STATE
-		else if (keyboard_check_pressed(controls.key_look_state)){
-			state_init_look();
+			// SWAP HELD ITEMS
+			if (keyboard_check_pressed(controls.key_item_swap)){
+				player_swap_items(self);
+			}
+		
+			// ENTER LOOK/TARGET STATE
+			else if (keyboard_check_pressed(controls.key_look_state)){
+				state_init_look();
+			}
 		}
 	}
 	
@@ -200,34 +203,6 @@ function state_ready_for_inputs(){
 	}
 }
 
-function state_inventory(){
-	
-	// Toggle between inventory/equipment
-	if (keyboard_check_pressed(controls.key_inventory)) inventory.selected = !inventory.selected;
-	
-	// Exit inventory state
-	if (keyboard_check_pressed(controls.key_cancel)){
-		state = state_ready_for_inputs;
-		manager.inventory_display_state	= INVENTORY_DISPLAY.EQUIPMENT
-	}
-	
-	
-	// INVENTORY CONTROL --------------------------------------------------------------------------
-	if (inventory.selected == 1){
-		inventory_control();
-	}
-	
-	// EQUIPMENT CONTROL --------------------------------------------------------------------------
-	else {
-		if (manager.inventory_display_state	== INVENTORY_DISPLAY.EQUIPMENT){
-			equipment_control();
-		}
-		else if (manager.inventory_display_state	== INVENTORY_DISPLAY.CONTAINER){
-			container_control();
-		}
-	}
-}
-
 function state_look(){
 	
 	// Exit look state
@@ -263,352 +238,22 @@ function state_look(){
 			
 			cell_x = clamp(cell_x, x_from, x_to);
 			cell_y = clamp(cell_y, y_from, y_to);
+			
+			// Get data
+			look_pages = cell_get_data(cell_x, cell_y);
+			if (look_hover >= array_length(look_pages)){
+				look_hover = array_length(look_pages) - 1;
+			}
 		}
 		else{
 			manager.move_timer = 0;
 		}
-	}
-}
-
-function inventory_control(){
-	var len = array_length(inventory.items);
-		
-	if (keyboard_check(controls.key_up)){
-		manager.move_timer --;
-		if (manager.move_timer <= 0){
-			// Move up inventory
-			inventory.inv_hover --;
-			if (inventory.inv_hover < 0){
-				inventory.inv_hover += len;
-			}
-			manager.move_timer = manager.move_timer_max;
-		}
-	}    
-	else if (keyboard_check(controls.key_down)){
-		manager.move_timer --;
-		if (manager.move_timer <= 0){
-			// Move down inventory
-			inventory.inv_hover ++;
-			if (inventory.inv_hover >= len){
-				inventory.inv_hover -= len;
-			}
-			manager.move_timer = manager.move_timer_max;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		if (len > 0 and inventory.context_menu == noone){
-			context_menu_initialise();
-		}
-	}
-	else{
-		if (manager.move_timer != 0){
-			manager.move_timer = 0;
-		}
-	}
-}
-
-function equipment_control(){
-	
-	if (keyboard_check_pressed(controls.key_up)){
-			
-		// Move up inventory
-		var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
-		var prev_slot = body_part_find_prev_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
-		if (prev_slot != noone){
-			inventory.equ_hover[0] = prev_slot[0];
-			inventory.equ_hover[1] = prev_slot[1];
-				
-			var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
-			if (new_slot_relative_position != slot_relative_position){
-				inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
-			}
-				
-			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-			if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
-				
-			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
-			if (inventory.equ_hover[2] > max_slot){
-				inventory.equ_hover[2] = max_slot
+		if (keyboard_check_pressed(controls.key_item_swap)){
+			look_hover ++;
+			if (look_hover >= array_length(look_pages)){
+				look_hover = 0;
 			}
 		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-			
-		// Move down inventory
-		var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
-		var next_slot = body_part_find_next_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
-		if (next_slot != noone){
-			inventory.equ_hover[0] = next_slot[0];
-			inventory.equ_hover[1] = next_slot[1];
-
-			var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
-			if (new_slot_relative_position != slot_relative_position){
-				inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
-			}
-				
-			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-			if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
-				
-			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
-			if (inventory.equ_hover[2] > max_slot){
-				inventory.equ_hover[2] = max_slot
-			}
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_right)){
-		var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
-		var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-			
-		inventory.equ_hover[2] --;
-		if (inventory.equ_hover[2] < min_slot){
-			inventory.equ_hover[2] = max_slot - 1;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_left)){
-		var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
-		var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
-			
-		inventory.equ_hover[2] ++;
-		if (inventory.equ_hover[2] >= max_slot){
-			inventory.equ_hover[2] = min_slot;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		if (inventory.context_menu == noone){
-			equipment_context_menu_initialise();
-		}
-	}
-}
-
-function container_control(){
-	var len = array_length(manager.tile_container.inventory);
-		
-	if (keyboard_check(controls.key_up)){
-		manager.move_timer --;
-		if (manager.move_timer <= 0){
-			// Move up inventory
-			manager.tile_container.inv_hover --;
-			if (manager.tile_container.inv_hover < 0){
-				manager.tile_container.inv_hover += len;
-			}
-			manager.move_timer = manager.move_timer_max;
-		}
-	}    
-	else if (keyboard_check(controls.key_down)){
-		manager.move_timer --;
-		if (manager.move_timer <= 0){
-			// Move down inventory
-			manager.tile_container.inv_hover ++;
-			if (manager.tile_container.inv_hover >= len){
-				manager.tile_container.inv_hover -= len;
-			}
-			manager.move_timer = manager.move_timer_max;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		if (len > 0 and inventory.context_menu == noone){
-			context_menu_initialise();
-		}
-	}
-	else{
-		if (manager.move_timer != 0){
-			manager.move_timer = 0;
-		}
-	}
-}
-
-function state_context_menu(){
-	var len = array_length(inventory.context_menu[0]);
-	
-	if (keyboard_check_pressed(controls.key_cancel)){
-		
-		// Exit context menu
-		inventory.context_menu = noone;
-		state = state_inventory;
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		inventory.context_menu[5] --;
-		if (inventory.context_menu[5] < 0){
-			inventory.context_menu[5] += len;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		inventory.context_menu[5] ++;
-		if (inventory.context_menu[5] >= len){
-			inventory.context_menu[5] -= len;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		
-		// Inventory or equipment
-		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop"){
-			
-			var number_to_drop = 1;
-			if (inventory.selected == 1){
-				
-				// Spawn item on ground
-				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
-		
-				// DROP item
-				inventory_drop_slot(self, inventory.inv_hover, 1);
-			}
-			else{
-				var target_cat     = inventory.equ_hover[0];
-				var target_ind     = inventory.equ_hover[1];
-				var target_slot    = inventory.equ_hover[2];
-				
-				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
-				
-				spawn_existing_item(item_to_move, , x_pos, y_pos);
-				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
-			}
-			// Exit context menu
-			inventory.context_menu = noone;
-			state = state_inventory;
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop All"){
-			
-			var number_to_drop = inventory.items[inventory.inv_hover].stack;
-			if (inventory.selected == 1){
-				
-				// Spawn item on ground
-				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
-		
-				// DROP item
-				inventory_drop_slot(self, inventory.inv_hover, number_to_drop);
-			}
-			else{
-				var target_cat     = inventory.equ_hover[0];
-				var target_ind     = inventory.equ_hover[1];
-				var target_slot    = inventory.equ_hover[2];
-				
-				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
-				
-				spawn_existing_item(item_to_move, number_to_drop, x_pos, y_pos);
-				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
-			}
-			// Exit context menu
-			inventory.context_menu = noone;
-			state = state_inventory;
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
-			
-			// Initialise slot select menu
-			equipment_slot_select_initialise();
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
-			// Equipment only
-			var target_cat     = inventory.equ_hover[0];
-			var target_ind     = inventory.equ_hover[1];
-			var target_slot    = inventory.equ_hover[2];
-				
-			var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
-			
-			inventory_add_item(self, item_to_move, item_to_move.stack);
-			body_plan[target_cat][target_ind][target_slot] = noone;
-			
-			// Exit context menu
-			inventory.context_menu = noone;
-			state = state_inventory;
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Hold"){
-			// Initialise slot select menu
-			hold_slot_select_initialise();
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Store"){
-			// Store item in container
-			if (container_add_item(self, manager.tile_container)){
-				inventory_drop_slot(self, inventory.inv_hover, inventory.items[inventory.inv_hover].stack);
-				
-				// Exit context menu
-				inventory.context_menu = noone;
-				state = state_inventory;
-			}
-		}
-		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Take"){
-			container_take_item(self, manager.tile_container);
-			
-			// Exit context menu
-			inventory.context_menu = noone;
-			state = state_inventory;
-		}
-	}
-}
-
-function state_slot_selection(){
-	var len = array_length(inventory.slot_select_menu[0]);
-	
-	if (keyboard_check_pressed(controls.key_cancel)){
-		
-		// Exit context menu
-		inventory.slot_select_menu = noone;
-		state = state_context_menu;
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		inventory.slot_select_menu[5] --;
-		if (inventory.slot_select_menu[5] < 0){
-			inventory.slot_select_menu[5] += len;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		inventory.slot_select_menu[5] ++;
-		if (inventory.slot_select_menu[5] >= len){
-			inventory.slot_select_menu[5] -= len;
-		}
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		var menu_hover   = inventory.slot_select_menu[5];
-		var number_to_move = 1;
-		if (struct_exists(inventory.items[inventory.inv_hover], "tags")){
-			if (item_check_tag(inventory.items[inventory.inv_hover], TAG.IS_AMMO)){
-				number_to_move = inventory.items[inventory.inv_hover].stack;
-			}
-		}
-		
-		var item_to_move = variable_clone(inventory.items[inventory.inv_hover]);
-		var dest_cat     = inventory.slot_select_menu[0][menu_hover][1];
-		var dest_ind     = inventory.slot_select_menu[0][menu_hover][2];
-		var dest_slot    = inventory.slot_select_menu[0][menu_hover][3];
-		
-		inventory_drop_slot(self, inventory.inv_hover, number_to_move);
-		equipment_add_item(self, number_to_move, item_to_move, dest_cat, dest_ind, dest_slot)
-		
-		inventory.context_menu		= noone;
-		inventory.slot_select_menu	= noone;
-		state = state_inventory;
-	}
-}
-
-function state_pickup(){
-	var len = array_length(pickup_menu);
-	if (keyboard_check_pressed(controls.key_cancel)){
-		state = state_ready_for_inputs;
-	}
-	else if (keyboard_check_pressed(controls.key_up)){
-		pickup_hover --;
-		if (pickup_hover < 0) pickup_hover += len;
-	}
-	else if (keyboard_check_pressed(controls.key_down)){
-		pickup_hover ++;
-		if (pickup_hover >= len) pickup_hover -= len;
-	}
-	else if (keyboard_check_pressed(controls.key_interact_confirm)){
-		// Add item to inventory and remove from menu
-		inventory_add_item(self, pickup_menu[pickup_hover], pickup_menu[pickup_hover].stack);
-		
-		// Find item on ground and delete it
-		var ind = array_get_index(manager.game_state.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
-		array_delete(manager.game_state.game_grid[x_pos][y_pos].items, ind, 1);
-		
-		// Delete item from pickup menu
-		array_delete(pickup_menu, pickup_hover, 1);
-		
-		// Reset menu length
-		len = array_length(pickup_menu);
-		if (len <= 0){
-			state = state_ready_for_inputs;
-		}
-		if (pickup_hover >= len) pickup_hover --;
 	}
 }
 
@@ -794,8 +439,8 @@ function state_init_look(){
 			
 	var x_clamp_from	= max(x_pos - range, 0);
 	var y_clamp_from	= max(y_pos - range, 0);
-	var x_clamp_to		= min(x_pos + range, ww);
-	var y_clamp_to		= min(y_pos + range, hh);
+	var x_clamp_to		= min(x_pos + range, ww - 1);
+	var y_clamp_to		= min(y_pos + range, hh - 1);
 	
 	look_mode = {
 		cell_x:			x_pos,
@@ -808,12 +453,447 @@ function state_init_look(){
 		
 		sprite_x:		x_pos * manager.cell_width,
 		sprite_y:		y_pos * manager.cell_height,
-		sprite_index:	target_spr,
+		sprite_index:	equipment_box_spr,
 		image_index:	0,
-		anim_speed:		sprite_get_speed(target_spr) / game_get_speed(gamespeed_fps),
+		anim_speed:		sprite_get_speed(equipment_box_spr) / game_get_speed(gamespeed_fps),
+		
+		look_pages:		cell_get_data(x_pos, y_pos),
+		look_hover:		0,
 	}
 	
 	state = state_look;
+}
+
+function cell_get_data(cell_x, cell_y){
+
+	if (!grid_check_position_in_bounds(manager.game_state.game_grid, cell_x, cell_y)){
+		return(noone);
+	}
+
+	with (manager){
+		
+		var look_data = [];
+		
+		// Background and border
+		var xx = ui_x_pos[ui_settings.ui_x_position][0];
+		var yy = infobox_y;
+	
+		var key_exit	= keybinding_get_text(controls.key_cancel);
+	
+		var control_text = $"{key_exit} to exit";
+	
+		ui_draw_box(xx, yy, infobox_width, infobox_height, "Looking at -", control_text);
+				
+		// Get cell position
+		var actor	= noone;
+		var tile	= noone;
+		var items	= noone;
+		
+		// Get actor data
+		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
+					
+			var actor_x = actor_registry.actor_list[i].x_pos;
+			var actor_y = actor_registry.actor_list[i].y_pos;
+					
+			if (actor_x == cell_x and actor_y == cell_y){
+				actor = actor_registry.actor_list[i];
+			}
+		}
+				
+		// Get tile data
+		tile = game_state.game_grid[cell_x][cell_y];
+				
+		// Get item data
+		if (array_length(tile.items) > 0){
+			items = tile.items;
+		}
+		
+		if (actor != noone){
+			array_push(look_data, ["actor", actor]);
+		}
+		if (items != noone){
+			array_push(look_data, ["items", items]);
+		}
+		if (tile != noone){
+			array_push(look_data, ["tile", tile]);
+		}
+		
+		return(look_data);
+	}
+}
+
+
+// ACTOR STATE INVENTORY
+function state_inventory(){
+	
+	// Toggle between inventory/equipment
+	if (keyboard_check_pressed(controls.key_inventory)) inventory.selected = !inventory.selected;
+	
+	// Exit inventory state
+	if (keyboard_check_pressed(controls.key_cancel)){
+		state = state_ready_for_inputs;
+		manager.inventory_display_state	= INVENTORY_DISPLAY.EQUIPMENT
+	}
+	
+	
+	// INVENTORY CONTROL --------------------------------------------------------------------------
+	if (inventory.selected == 1){
+		inventory_control();
+	}
+	
+	// EQUIPMENT CONTROL --------------------------------------------------------------------------
+	else {
+		if (manager.inventory_display_state	== INVENTORY_DISPLAY.EQUIPMENT){
+			equipment_control();
+		}
+		else if (manager.inventory_display_state	== INVENTORY_DISPLAY.CONTAINER){
+			container_control();
+		}
+	}
+}
+
+// Inventory menu control
+function inventory_control(){
+	var len = array_length(inventory.items);
+		
+	if (keyboard_check(controls.key_up)){
+		manager.move_timer --;
+		if (manager.move_timer <= 0){
+			// Move up inventory
+			inventory.inv_hover --;
+			if (inventory.inv_hover < 0){
+				inventory.inv_hover += len;
+			}
+			manager.move_timer = manager.move_timer_max;
+		}
+	}    
+	else if (keyboard_check(controls.key_down)){
+		manager.move_timer --;
+		if (manager.move_timer <= 0){
+			// Move down inventory
+			inventory.inv_hover ++;
+			if (inventory.inv_hover >= len){
+				inventory.inv_hover -= len;
+			}
+			manager.move_timer = manager.move_timer_max;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		if (len > 0 and inventory.context_menu == noone){
+			context_menu_initialise();
+		}
+	}
+	else{
+		if (manager.move_timer != 0){
+			manager.move_timer = 0;
+		}
+	}
+}
+
+function equipment_control(){
+	
+	if (keyboard_check_pressed(controls.key_up)){
+			
+		// Move up inventory
+		var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+		var prev_slot = body_part_find_prev_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
+		if (prev_slot != noone){
+			inventory.equ_hover[0] = prev_slot[0];
+			inventory.equ_hover[1] = prev_slot[1];
+				
+			var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+			if (new_slot_relative_position != slot_relative_position){
+				inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
+			}
+				
+			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
+				
+			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
+			if (inventory.equ_hover[2] > max_slot){
+				inventory.equ_hover[2] = max_slot
+			}
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+			
+		// Move down inventory
+		var slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+		var next_slot = body_part_find_next_exists(self, inventory.equ_hover[0], inventory.equ_hover[1])
+		if (next_slot != noone){
+			inventory.equ_hover[0] = next_slot[0];
+			inventory.equ_hover[1] = next_slot[1];
+
+			var new_slot_relative_position = BODY_PART_STATS.PART_AUX_SLOT + (array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - inventory.equ_hover[2]);
+			if (new_slot_relative_position != slot_relative_position){
+				inventory.equ_hover[2] += new_slot_relative_position - slot_relative_position;
+			}
+				
+			var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			if (inventory.equ_hover[2] < min_slot) inventory.equ_hover[2] = min_slot;
+				
+			var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]) - 1;
+			if (inventory.equ_hover[2] > max_slot){
+				inventory.equ_hover[2] = max_slot
+			}
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_right)){
+		var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
+		var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			
+		inventory.equ_hover[2] --;
+		if (inventory.equ_hover[2] < min_slot){
+			inventory.equ_hover[2] = max_slot - 1;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_left)){
+		var max_slot = array_length(body_plan[inventory.equ_hover[0]][inventory.equ_hover[1]]);
+		var min_slot = body_part_find_min_slot(self, inventory.equ_hover[0], inventory.equ_hover[1])
+			
+		inventory.equ_hover[2] ++;
+		if (inventory.equ_hover[2] >= max_slot){
+			inventory.equ_hover[2] = min_slot;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		if (inventory.context_menu == noone){
+			equipment_context_menu_initialise();
+		}
+	}
+}
+
+function container_control(){
+	var len = array_length(manager.tile_container.inventory);
+		
+	if (keyboard_check(controls.key_up)){
+		manager.move_timer --;
+		if (manager.move_timer <= 0){
+			// Move up inventory
+			manager.tile_container.inv_hover --;
+			if (manager.tile_container.inv_hover < 0){
+				manager.tile_container.inv_hover += len;
+			}
+			manager.move_timer = manager.move_timer_max;
+		}
+	}    
+	else if (keyboard_check(controls.key_down)){
+		manager.move_timer --;
+		if (manager.move_timer <= 0){
+			// Move down inventory
+			manager.tile_container.inv_hover ++;
+			if (manager.tile_container.inv_hover >= len){
+				manager.tile_container.inv_hover -= len;
+			}
+			manager.move_timer = manager.move_timer_max;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		if (len > 0 and inventory.context_menu == noone){
+			context_menu_initialise();
+		}
+	}
+	else{
+		if (manager.move_timer != 0){
+			manager.move_timer = 0;
+		}
+	}
+}
+
+// Inventory sub-menu control states
+function state_context_menu(){
+	var len = array_length(inventory.context_menu[0]);
+	
+	if (keyboard_check_pressed(controls.key_cancel)){
+		
+		// Exit context menu
+		inventory.context_menu = noone;
+		state = state_inventory;
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
+		inventory.context_menu[5] --;
+		if (inventory.context_menu[5] < 0){
+			inventory.context_menu[5] += len;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		inventory.context_menu[5] ++;
+		if (inventory.context_menu[5] >= len){
+			inventory.context_menu[5] -= len;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		
+		// Inventory or equipment
+		if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop" or inventory.context_menu[0][inventory.context_menu[5]] == "Drop One"){
+			
+			var number_to_drop = 1;
+			if (inventory.selected == 1){
+				
+				// Spawn item on ground
+				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
+		
+				// DROP item
+				inventory_drop_slot(self, inventory.inv_hover, 1);
+			}
+			else{
+				var target_cat     = inventory.equ_hover[0];
+				var target_ind     = inventory.equ_hover[1];
+				var target_slot    = inventory.equ_hover[2];
+				
+				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
+				
+				spawn_existing_item(item_to_move, , x_pos, y_pos);
+				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
+			}
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Drop All"){
+			
+			var number_to_drop = inventory.items[inventory.inv_hover].stack;
+			if (inventory.selected == 1){
+				
+				// Spawn item on ground
+				spawn_existing_item(inventory.items[inventory.inv_hover], number_to_drop, x_pos, y_pos);
+		
+				// DROP item
+				inventory_drop_slot(self, inventory.inv_hover, number_to_drop);
+			}
+			else{
+				var target_cat     = inventory.equ_hover[0];
+				var target_ind     = inventory.equ_hover[1];
+				var target_slot    = inventory.equ_hover[2];
+				
+				var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
+				
+				spawn_existing_item(item_to_move, number_to_drop, x_pos, y_pos);
+				equipment_drop_slot(self, number_to_drop, target_cat, target_ind, target_slot)
+			}
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Equip"){
+			
+			// Initialise slot select menu
+			equipment_slot_select_initialise();
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Remove"){
+			// Equipment only
+			var target_cat     = inventory.equ_hover[0];
+			var target_ind     = inventory.equ_hover[1];
+			var target_slot    = inventory.equ_hover[2];
+				
+			var item_to_move = variable_clone(body_plan[target_cat][target_ind][target_slot]);
+			
+			inventory_add_item(self, item_to_move, item_to_move.stack);
+			body_plan[target_cat][target_ind][target_slot] = noone;
+			
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Hold"){
+			// Initialise slot select menu
+			hold_slot_select_initialise();
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Store"){
+			// Store item in container
+			if (container_add_item(self, manager.tile_container)){
+				inventory_drop_slot(self, inventory.inv_hover, inventory.items[inventory.inv_hover].stack);
+				
+				// Exit context menu
+				inventory.context_menu = noone;
+				state = state_inventory;
+			}
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Take"){
+			container_take_item(self, manager.tile_container);
+			
+			// Exit context menu
+			inventory.context_menu = noone;
+			state = state_inventory;
+		}
+	}
+}
+
+function state_slot_selection(){
+	var len = array_length(inventory.slot_select_menu[0]);
+	
+	if (keyboard_check_pressed(controls.key_cancel)){
+		
+		// Exit context menu
+		inventory.slot_select_menu = noone;
+		state = state_context_menu;
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
+		inventory.slot_select_menu[5] --;
+		if (inventory.slot_select_menu[5] < 0){
+			inventory.slot_select_menu[5] += len;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		inventory.slot_select_menu[5] ++;
+		if (inventory.slot_select_menu[5] >= len){
+			inventory.slot_select_menu[5] -= len;
+		}
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		var menu_hover   = inventory.slot_select_menu[5];
+		var number_to_move = 1;
+		if (struct_exists(inventory.items[inventory.inv_hover], "tags")){
+			if (item_check_tag(inventory.items[inventory.inv_hover], TAG.IS_AMMO)){
+				number_to_move = inventory.items[inventory.inv_hover].stack;
+			}
+		}
+		
+		var item_to_move = variable_clone(inventory.items[inventory.inv_hover]);
+		var dest_cat     = inventory.slot_select_menu[0][menu_hover][1];
+		var dest_ind     = inventory.slot_select_menu[0][menu_hover][2];
+		var dest_slot    = inventory.slot_select_menu[0][menu_hover][3];
+		
+		inventory_drop_slot(self, inventory.inv_hover, number_to_move);
+		equipment_add_item(self, number_to_move, item_to_move, dest_cat, dest_ind, dest_slot)
+		
+		inventory.context_menu		= noone;
+		inventory.slot_select_menu	= noone;
+		state = state_inventory;
+	}
+}
+
+function state_pickup(){
+	var len = array_length(pickup_menu);
+	if (keyboard_check_pressed(controls.key_cancel)){
+		state = state_ready_for_inputs;
+	}
+	else if (keyboard_check_pressed(controls.key_up)){
+		pickup_hover --;
+		if (pickup_hover < 0) pickup_hover += len;
+	}
+	else if (keyboard_check_pressed(controls.key_down)){
+		pickup_hover ++;
+		if (pickup_hover >= len) pickup_hover -= len;
+	}
+	else if (keyboard_check_pressed(controls.key_interact_confirm)){
+		// Add item to inventory and remove from menu
+		inventory_add_item(self, pickup_menu[pickup_hover], pickup_menu[pickup_hover].stack);
+		
+		// Find item on ground and delete it
+		var ind = array_get_index(manager.game_state.game_grid[x_pos][y_pos].items, pickup_menu[pickup_hover]);
+		array_delete(manager.game_state.game_grid[x_pos][y_pos].items, ind, 1);
+		
+		// Delete item from pickup menu
+		array_delete(pickup_menu, pickup_hover, 1);
+		
+		// Reset menu length
+		len = array_length(pickup_menu);
+		if (len <= 0){
+			state = state_ready_for_inputs;
+		}
+		if (pickup_hover >= len) pickup_hover --;
+	}
 }
 
 

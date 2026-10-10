@@ -1,4 +1,16 @@
 
+// AUDIO
+function play_sound(sound_id, category, variable_pitch = false){
+	
+	var gain = game_settings[SETTING.AUDIO][AUDIO_SETTINGS.SFX_GAIN] * game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MASTER_GAIN];
+	var pitch = 1;
+	if (variable_pitch){
+		pitch = random_range(0.8, 1.1);
+	}
+	audio_play_sound(sound_id, 10, false, gain, , pitch);
+} 
+
+
 // CAMERA
 function resolution_scale(){
 	
@@ -628,7 +640,7 @@ function increment_time_and_date(){
 	
 		if (time_system.game_current_time[TIME.TURN] >= turns_per_hour){
 		
-			time_system.game_current_time[TIME.TURN] -= turns_per_hour
+			time_system.game_current_time[TIME.TURN] = 0;
 		
 			// Increase current HOUR
 			time_system.game_current_time[TIME.HOUR] ++;

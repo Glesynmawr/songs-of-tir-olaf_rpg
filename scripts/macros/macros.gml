@@ -1,5 +1,20 @@
 
-#region// BODY PLAN ENUMS --------------------------------------------------------------------------------
+#region// GAME SETTINGS ENUMS ---------------------------------------------------------------------
+enum SETTING{
+	AUDIO,
+	GRAPHICS,
+	GAMEPLAY
+}
+
+enum AUDIO_SETTINGS{
+	MASTER_GAIN,
+	SFX_GAIN,
+	MUSIC_GAIN
+}
+
+#endregion
+
+#region// BODY PLAN ENUMS -------------------------------------------------------------------------
 enum BODY_PRESET{
 	BASE,
 	HUMANOID,

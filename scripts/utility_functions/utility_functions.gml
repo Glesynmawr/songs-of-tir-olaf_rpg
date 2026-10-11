@@ -406,7 +406,7 @@ function controls_read_settings(){
 	}
 	
 	controls = variable_clone(control_data);
-	if (file != -1) file_text_close(file);
+	file_text_close(file);
 }
 
 function controls_save_settings(){

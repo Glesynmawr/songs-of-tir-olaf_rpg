@@ -7,8 +7,6 @@ debugging_mode		= false;
 game_paused			= false;
 transition			= noone;
 
-audio_group_load(audiogroup_sfx);
-
 #region// COLOURS ---------------------------------------------------------------------------------
 colour_text_main	= C_LTGREY;
 colour_bg_main		= make_colour_rgb(0, 15, 0);

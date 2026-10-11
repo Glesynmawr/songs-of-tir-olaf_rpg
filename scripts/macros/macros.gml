@@ -197,8 +197,8 @@ enum TRANSITION{
 #macro SCREEN_WIDTH		640
 #macro SCREEN_HEIGHT	360
 
-#macro MAP_WIDTH		30
-#macro MAP_HEIGHT		22
+#macro MAP_WIDTH		32
+#macro MAP_HEIGHT		24
 
 #macro WORLD_WIDTH		40
 #macro WORLD_HEIGHT		22

@@ -111,6 +111,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
 					var z_modifier	 = passive_move_bounce(self) * manager.ui_settings.move_bounce_amplitude;
+					var txt			 = string(target_actor);
 							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
@@ -143,6 +144,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
+				draw_text(screen_x, screen_y, txt);
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
@@ -404,7 +406,7 @@ function draw_equipment(actor){
 					// Draw equipment box
 					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
 					
-					// Draw equipment sprite
+					// Draw equipment
 					if (is_struct(actor.body_plan[cat][ind][slot])){
 						
 						var slot_item = actor.body_plan[cat][ind][slot];
@@ -414,7 +416,15 @@ function draw_equipment(actor){
 						var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
 						var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 						
-						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + 3, yy + 3);
+						// Sprite
+						var offset = floor((box_size - ITEM_SPRITE_SIZE) / 2);
+						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + offset, yy + offset);
+						
+						// Stack
+						var stack = slot_item.stack;
+						if (stack > 1){
+							draw_text_outlined(string(stack), xx, yy, tc);
+						}
 					}
 					
 					// Increment box X position
@@ -971,16 +981,52 @@ function draw_day_night(){
 	
 	draw_clear(colour_bg_main);
 	
-	draw_sprite(day_night_background_spr, 0, 0, 0);
-	
 	var current_day_turn	= time_system.game_current_time[TIME.TURN] mod turns_per_day;
 	var angle_increment		= 360 / turns_per_day;
 	var time_angle_start	= 270 - (angle_increment * current_day_turn);
 	
-	var spr_x = floor(lengthdir_x(sun_moon_distance, time_angle_start) + (day_night_width / 2));
-	var spr_y = floor(lengthdir_y(sun_moon_distance, time_angle_start) + day_night_height);
+	var bg_index;
+	if (current_day_turn < (5 * turns_per_hour)){
+		bg_index = 4;
+	}
+	else if (current_day_turn < (6 * turns_per_hour)){
+		bg_index = 3;
+	}
+	else if (current_day_turn < (7 * turns_per_hour)){
+		bg_index = 2;
+	}
+	else if (current_day_turn < (8 * turns_per_hour)){
+		bg_index = 1;
+	}
+	else if (current_day_turn < (16 * turns_per_hour)){
+		bg_index = 0;
+	}
+	else if (current_day_turn < (17 * turns_per_hour)){
+		bg_index = 1;
+	}
+	else if (current_day_turn < (18 * turns_per_hour)){
+		bg_index = 2;
+	}
+	else if (current_day_turn < (19 * turns_per_hour)){
+		bg_index = 3;
+	}
+	else {
+		bg_index = 4;
+	}
+	
+	draw_sprite(day_night_background_spr, bg_index, 0, 0);
+	
+	var spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start) + (day_night_width / 2));
+	var spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start) + day_night_height);
 	
 	draw_sprite(day_night_sun_moon_spr, 0, spr_x, spr_y);
+	
+	spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start - 180) + (day_night_width / 2));
+	spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start - 180) + day_night_height);
+	
+	draw_sprite(day_night_sun_moon_spr, 1, spr_x, spr_y);
+	
+	draw_sprite(day_night_foreground_spr, bg_index, 0, 0);
 	
 	surface_reset_target();
 	

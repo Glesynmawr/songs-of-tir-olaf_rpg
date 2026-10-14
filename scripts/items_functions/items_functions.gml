@@ -249,6 +249,7 @@ function item_sword1()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.WEAPON_MELEE;
+	tags			= [TAG.MELEE];
 	damage			= [1, 3, 0];
 }
 
@@ -260,8 +261,44 @@ function item_sword2()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.WEAPON_MELEE;
-	tags			= [TAG.TWO_HANDED];
+	tags			= [TAG.TWO_HANDED, TAG.MELEE];
 	damage			= [1, 6, 0];
+}
+
+// Weapons - ranged
+function item_short_bow()constructor{
+	name			= "Short Bow";
+	sprite_index	= weapon_ranged_spr;
+	image_index		= 0;
+	slot			= [];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.WEAPON_RANGED;
+	tags			= [TAG.TWO_HANDED, TAG.ARROW, TAG.RANGED];
+	damage			= [1, 3, 0];
+}
+
+// Weapons - ammo
+function item_wooden_arrow()constructor{
+	name			= "Wooden Arrow";
+	sprite_index	= weapon_ammo_spr;
+	image_index		= 0;
+	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.AMMO];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.AMMO;
+	tags			= [TAG.IS_AMMO, TAG.ARROW, TAG.STACKABLE];
+}
+
+function item_stone_arrow()constructor{
+	name			= "Stone Arrow";
+	sprite_index	= weapon_ammo_spr;
+	image_index		= 1;
+	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.AMMO];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.AMMO;
+	tags			= [TAG.IS_AMMO, TAG.ARROW, TAG.STACKABLE];
 }
 
 // Natural items
@@ -273,20 +310,20 @@ function item_beak()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.UNREMOVABLE];
+	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
 	damage			= [1, 2, 0];
 }
 
-function item_bite()constructor{
-	name			= "Bite";
+function item_weak_bite()constructor{
+	name			= "Weak Bite";
 	sprite_index	= natural_item_spr;
 	image_index		= 4;
 	slot			= [BODY_PART_CATEGORY.HEAD, HEAD_INDEX.FACE];
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.UNREMOVABLE];
-	damage			= [1, 3, 0];
+	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
+	damage			= [1, 2, 0];
 }
 
 function item_carapace()constructor{
@@ -309,7 +346,7 @@ function item_proboscis()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.UNREMOVABLE];
+	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
 	damage			= [1, 3, 0];
 }
 

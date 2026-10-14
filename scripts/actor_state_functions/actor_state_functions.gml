@@ -269,10 +269,16 @@ function state_chase(){
 		state = state_base;
 		passive_actor_reset_target();
 		has_acted = true;
-		exit;
+		return;
 	}
 	
 	// Check if LoS to target
+	if (target_actor == noone){
+		state = state_base;
+		has_acted = true;
+		return;
+	}
+	
 	var has_los = draw_los_line(manager.game_state.game_grid, x_pos, y_pos, target_actor.x_pos, target_actor.y_pos);
 	
 	// Check target in range
@@ -409,12 +415,12 @@ function state_wander(){
 			var move_x = manager.cell_x_neighbours[dir];
 			var move_y = manager.cell_y_neighbours[dir];
 			
-			var target_x = x_pos + move_x;
-			var target_y = y_pos + move_y;
+			var move_target_x = x_pos + move_x;
+			var move_target_y = y_pos + move_y;
 			
-			var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, target_x, target_y, 2);
-			var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, target_x, target_y);
-			var cell_has_actor	= grid_check_position_contains_actor(target_x, target_y)
+			var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, move_target_x, move_target_y, 2);
+			var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, move_target_x, move_target_y);
+			var cell_has_actor	= grid_check_position_contains_actor(move_target_x, move_target_y)
 		
 			if (is_in_bounds and is_walkable and cell_has_actor == noone){
 				action_move(manager.game_state.game_grid, move_x, move_y);
@@ -840,9 +846,27 @@ function state_slot_selection(){
 	else if (keyboard_check_pressed(controls.key_interact_confirm)){
 		var menu_hover   = inventory.slot_select_menu[5];
 		var number_to_move = 1;
+		
+		// Check ammo
 		if (struct_exists(inventory.items[inventory.inv_hover], "tags")){
 			if (item_check_tag(inventory.items[inventory.inv_hover], TAG.IS_AMMO)){
-				number_to_move = inventory.items[inventory.inv_hover].stack;
+				
+				number_to_move = inventory.ammo_cap;
+				
+				if (body_plan[BODY_PART_CATEGORY.BODY][0][BODY_PART_STATS.PART_SLOT_1] != noone){
+					
+					// Check currently equipped ammo
+					var current_ammo = body_plan[BODY_PART_CATEGORY.BODY][0][BODY_PART_STATS.PART_SLOT_1];
+					if (inventory.items[inventory.inv_hover].name == current_ammo.name){
+						
+						number_to_move = inventory.ammo_cap - current_ammo.stack
+						if (number_to_move == 0){
+							return;
+						}
+					}
+				}
+				
+				number_to_move = min(number_to_move, inventory.items[inventory.inv_hover].stack);
 			}
 		}
 		

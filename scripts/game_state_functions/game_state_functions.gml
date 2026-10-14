@@ -148,24 +148,29 @@ function init_world(){
 		set_player_los(game_state.game_grid, actor_registry.player);
 		actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
 	
-		spawn_new_item(item_hat1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_hat2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_mask1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_mask2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_armour1,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_armour2,	1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_cloak1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_cloak2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_vambrace1,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_vambrace2,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove1,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_glove2,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_greave1,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_greave2,	2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_boot1,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_boot2,		2, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_sword1,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
-		spawn_new_item(item_sword2,		1, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_hat1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_hat2,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_mask1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_mask2,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_armour1,		1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_armour2,		1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_cloak1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_cloak2,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace1,		2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_vambrace2,		2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove1,			2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_glove2,			2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave1,		2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_greave2,		2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot1,			2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_boot2,			2,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		
+		spawn_new_item(item_sword1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_sword2,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		
+		spawn_new_item(item_short_bow,		1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_wooden_arrow,	30, SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		spawn_new_item(item_stone_arrow,	30, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		
 		// Distance maps
 		globalvar distance_map_player;

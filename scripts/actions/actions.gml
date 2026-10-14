@@ -78,9 +78,6 @@ function action_move(grid, move_x, move_y){
 
 function action_attack_melee(attacker, defender){
 	
-	var first_log = "";
-	var log_col	  = manager.colour_text_main;
-	
 	attacker.melee_offset_x = (defender.sprite_x - attacker.sprite_x);
 	attacker.melee_offset_y = (defender.sprite_y - attacker.sprite_y);
 	
@@ -88,150 +85,75 @@ function action_attack_melee(attacker, defender){
 	for (var category = 0; category < array_length(attacker.body_plan); category ++){
 		for (var index = 0; index < array_length(attacker.body_plan[category]); index ++){
 			
-			// Check body part for hand
 			if (body_part_is_present(attacker, category, index)){
 				
 				for (var slot = BODY_PART_STATS.PART_HAND_SLOT; slot < array_length(attacker.body_plan[category][index]); slot ++){
 					
-					// Initialise combat variables
-					var perform_attack			= false;
+					var held_item				= variable_clone(attacker.body_plan[category][index][slot]);
+					var item_is_weapon			= false;
+					
 					var attacker_agility		= attacker.agility;
 					var defender_agility		= defender.agility;
-					var attacker_empty_hands	= body_part_empty_hand_slot_count(attacker);
 					
-					// Get attack item
-					var melee_item				= variable_clone(attacker.body_plan[category][index][slot]);
+					var attack_damage			= [1, 2, -1];
+					var damage_multiplier		= 1;
+					var empty_hands_needed		= 0;
+					var hands_available			= body_part_empty_hand_slot_count(attacker);
+					var slot_matches_handedness = actor_get_correct_hand(attacker, attacker.handedness, category, index);
+					var attack_chance			= 1;
 					
-					// Get attack handedness
-					var item_is_in_correct_hand = false;
-					if (handedness[0] == category and handedness[1] == index){
-						item_is_in_correct_hand = true;
-					}
-					
-					// Re-initialise log entry
-					first_log = "";
-					
-					if (melee_item != noone){
-						// Item is held
-						
-						if (struct_exists(melee_item, "damage")){
-							// Item has a damage stat
-							
-							var item_requires_two_hands = item_check_tag(melee_item, TAG.TWO_HANDED);
-							
-							// Check if hand does not match handedness
-							if (item_is_in_correct_hand){
-								if (item_requires_two_hands){
-									if (attacker_empty_hands < 1){
-										melee_item.damage[1] = round(melee_item.damage[1] * 0.5);
-										attacker_agility	 += manager.offhand_agility_penalty;
-										first_log += "needs 2 hands! ";
-									}
-								}
-								first_log      += $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
-								perform_attack = true;
-							}
-							else{
-							
-								var attack_chance = attacker.offhand_attack_chance;
-								var roll = random(1);
-							
-								if (roll <= attack_chance){
-									first_log += "off-hand! ";
-									first_log += $"{attacker.name} attacks {defender.name} with {attacker.body_plan[category][index][BODY_PART_STATS.PART_NAME]}";
-									attacker_agility += manager.offhand_agility_penalty;
-									perform_attack   = true;
-								}
-							}
+					if (is_struct(held_item)){
+						if (struct_exists(held_item, "damage")){
+							attack_damage	= held_item.damage;
+							item_is_weapon	= true;
 						}
-						else{
-							// Item has no damage stat
-							if (item_is_in_correct_hand and slot == BODY_PART_STATS.PART_HAND_SLOT){
-								if (body_part_has_hand(attacker, category, index)){
-									first_log      = $"{attacker.name} attacks {defender.name} with their bare hand";
-									perform_attack = true;
-								}
+						if (item_check_tag(held_item, TAG.TWO_HANDED)){
+							empty_hands_needed = 1;
+						}
+					}
+					if (slot_matches_handedness){
+						if (!item_is_weapon){
+							if (slot != BODY_PART_STATS.PART_HAND_SLOT){
+								attack_chance = 0;
 							}
 						}
 					}
 					else{
-						// No item held
-						if (item_is_in_correct_hand and slot == BODY_PART_STATS.PART_HAND_SLOT){
-							if (body_part_has_hand(attacker, category, index)){
-								first_log      = $"{attacker.name} attacks {defender.name} with their bare hand";
-								perform_attack = true;
-							}
+						if (item_is_weapon){
+							attack_chance		= offhand_attack_chance;
+							damage_multiplier	= 0.5;
+						}
+						else {
+							attack_chance		= 0;
+							damage_multiplier	= 0;
 						}
 					}
 					
-					if (perform_attack){
-						
-						// Execute to-hit roll
-						var attack_hits = combat_get_hit(attacker_agility, defender_agility);
-						
-						// Attack hits
-						if (attack_hits){
-							
-							// Modify defender state
-							if (defender.state == state_idle or defender.state == state_wander){
-								with (defender){
-									
-									// Set state
-									target_actor = attacker;
-									target_x     = attacker.x_pos;
-									target_y     = attacker.y_pos;
-									target_map   = create_distance_map(manager.game_state.game_grid, target_x, target_y);
-		
-									state_update = state_chase;
-								}
-							}
-							
-							first_log += " and hits ";
-							particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5);
-							
-							// Get hit location
-							var hit_loc = combat_get_hit_location(defender);
-							if (hit_loc[0] != noone and hit_loc[1] != noone){
-								
-								// Get attack damage
-								if (is_struct(melee_item)){
-									if (!struct_exists(melee_item, "damage")){
-										melee_item = noone;
-									}
-								}
-								var damage = combat_get_melee_damage(attacker, melee_item);
-								
-								// Get location armour
-								var location_armour = combat_get_location_armour(defender, hit_loc);
-								
-								// Apply damage
-								if (damage > 0){
-									damage = max(damage - location_armour, 1);
-									set_colour_flash(defender, C_RED, 10);
-									first_log += $"causing {damage} damage";
-									action_modify_hit_points(defender, -damage);
-								}
-								else{
-									set_colour_flash(defender, C_WHITE, 10);
-									first_log += "but causes no damage";
-								}
-								
-							}
-						}
-						else{
-							// Attack misses
-							first_log += " and misses";
-						}
+					if (!slot_matches_handedness and hands_available < empty_hands_needed){
+						attacker_agility	= max(attacker_agility - offhand_agility_penalty, 1);
+						attack_chance		= 0;
 					}
 					
-					// Create log entries
-					if (first_log != ""){
-						log_add_entry(first_log, log_col);
+					if (attack_chance > 0){
+						var attack_results = combat_attack(attacker_agility, defender_agility, attacker, defender, attack_chance, attack_damage, damage_multiplier);
+						
+						if (attack_results == false){
+							var txt = $"{attacker.name} attacks {defender.name} but misses";
+						}
+						else if (is_array(attack_results)){
+							
+							var txt = $"{attacker.name} attacks {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
+						}
+						log_add_entry(txt, manager.colour_text_main);
 					}
 				}
 			}
 		}
 	}
+}
+
+function action_attack_ranged(attacker, defender){
+	
 }
 
 function action_remove_actor(actor, create_particles = true){
@@ -342,11 +264,11 @@ function passive_check_actor_in_los(){
 		return;
 	}
 }
-	
+
 function passive_check_for_hostile_mobs(){
 	for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
 		var actor = manager.actor_registry.actor_list[i];
-		if (actor.target_actor == self){
+		if (actor.target_actor == self and actor.state == state_chase){
 			return(true);
 		}
 	}
@@ -447,7 +369,50 @@ function dice_roll(dice_count, dice_sides, modifier){
 
 
 // COMBAT ACTIONS ---------------------------------------------------------------------------------
-function combat_get_hit(attacker_agility, defender_agility){
+function combat_attack(att_agi, def_agi, attacker, defender, attack_chance, damage, damage_multiplier){
+	
+	var attack_made = combat_get_attack_chance(attack_chance);
+	if (!attack_made) return(noone);
+	
+	var attack_hits = combat_get_hit(att_agi, def_agi, 0);
+	if (!attack_hits) return(false);
+	
+	var hit_location = combat_get_hit_location(defender);
+	var location_armour = combat_get_location_armour(defender, hit_location);
+	var raw_damage = combat_get_damage(damage, damage_multiplier);
+	
+	with (defender){
+		target_actor = attacker;
+		target_x     = attacker.x_pos;
+		target_y	 = attacker.y_pos;
+		target_map   = create_distance_map(manager.game_state.game_grid, target_x, target_y);
+		state_update = state_chase;
+	}
+	
+	action_modify_hit_points(defender, -(raw_damage - location_armour));
+	return([raw_damage, location_armour]);
+}
+
+function actor_get_correct_hand(actor, main_hand, category, index){
+	
+	with (actor){
+		if (main_hand[0] == category and main_hand[1] == index){
+			return(true);
+		}
+		else return(false);
+	}
+}
+
+function combat_get_attack_chance(attack_chance){
+	
+	var roll = random(1);
+	if (roll < attack_chance){
+		return(true);
+	}
+	return(false);
+}
+
+function combat_get_hit(attacker_agility, defender_agility, modifier){
 	
 	// Get attack and defence stats
 	var att_stat = attacker_agility;
@@ -457,7 +422,7 @@ function combat_get_hit(attacker_agility, defender_agility){
 	var success_chance = 21 - (round(att_stat / (att_stat + def_stat) * 19) + 1);
 	
 	// Roll dice
-	var attack_roll = dice_roll(1, 20, 0);
+	var attack_roll = dice_roll(1, 20, 0) + modifier;
 	
 	// Success comparison
 	if (attack_roll >= success_chance){
@@ -516,15 +481,10 @@ function combat_get_location_armour(defender, hit_loc){
 	return(location_armour);
 }
 
-function combat_get_melee_damage(attacker, item = noone){
+function combat_get_damage(base_damage, multiplier = 1){
 	
-	var damage = 0;
-	if (item == noone){
-		damage = dice_roll(1, 2, -1);
-	}
-	else{
-		damage = dice_roll(item.damage[0], item.damage[1], item.damage[2]);
-	}
+	var damage = dice_roll(base_damage[0], base_damage[1], base_damage[2]);
+	damage = floor(damage * multiplier)
 	return(damage);
 }
 

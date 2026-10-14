@@ -271,7 +271,8 @@ function create_distance_map(grid, target_x, target_y){
 // GAME LOG	
 function log_add_entry(text, colour = colour_text_main){
 	with (manager){
-		array_insert(game_state.game_log, 0, [text, colour]);
+		var new_text = ":: " + text;
+		array_insert(game_state.game_log, 0, [new_text, colour]);
 	}
 }
 

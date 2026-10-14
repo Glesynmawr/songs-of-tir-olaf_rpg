@@ -164,7 +164,10 @@ enum STAT_TYPE{
 }
 
 enum TAG{
+	ARROW,
 	IS_AMMO,
+	MELEE,
+	RANGED,
 	STACKABLE,
 	TWO_HANDED,
 	UNREMOVABLE,
@@ -206,7 +209,7 @@ enum TRANSITION{
 #macro ENERGY_PER_TURN	100
 #macro LOG_MAX_ENTRIES	10
 
-#macro ZONE_SIZE		40
+#macro ZONE_SIZE		48
 #macro ITEM_SPRITE_SIZE sprite_get_width(item_size_spr)
 
 #macro C_BLACK	 make_colour_rgb(0,   0,   0)

@@ -135,11 +135,12 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.target_map	= noone;
 	
 	// Inventory
-	new_actor.body_plan				= body_part_list_copy(new_actor.body_index);
-	new_actor.inventory				= inventory_initialise();
-	new_actor.hit_weights			= hit_weights_calculate(new_actor, new_actor.body_plan);
-	new_actor.handedness			= [0,0];
-	new_actor.offhand_attack_chance = 0.2;
+	new_actor.body_plan					= body_part_list_copy(new_actor.body_index);
+	new_actor.inventory					= inventory_initialise();
+	new_actor.hit_weights				= hit_weights_calculate(new_actor, new_actor.body_plan);
+	new_actor.handedness				= [0,0];
+	new_actor.offhand_attack_chance		= 0.2;
+	new_actor.offhand_agility_penalty	= -4;
 	
 	// Starting items
 	if (struct_exists(new_actor, "equipment")){

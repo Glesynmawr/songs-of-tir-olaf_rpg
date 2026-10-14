@@ -60,7 +60,8 @@ function inventory_initialise(){
 		inv_hover:			0,
 		context_menu:		noone,
 		equ_hover:			[0, 0, BODY_PART_STATS.PART_SLOT_1],
-		slot_select_menu:	noone
+		slot_select_menu:	noone,
+		ammo_cap:			20,
 	}
 	
 	return(inv);
@@ -274,14 +275,15 @@ function equipment_slot_stringify(cat, ind){
 	if (cat == BODY_PART_CATEGORY.BODY){
 		if (ind == BODY_INDEX.BODY) return("Body");
 		if (ind == BODY_INDEX.BACK) return("Back");
+		if (ind == BODY_INDEX.AMMO) return("Ammo");
 	}
 	if (cat == BODY_PART_CATEGORY.ARMS){
 		if (ind == ARMS_INDEX.BRACER) return("Arm");
-		if (ind == ARMS_INDEX.GLOVE) return("Hand");
+		if (ind == ARMS_INDEX.GLOVE)  return("Hand");
 	}
 	if (cat == BODY_PART_CATEGORY.LEGS){
 		if (ind == LEGS_INDEX.GREAVE) return("Leg");
-		if (ind == LEGS_INDEX.BOOT) return("Foot");
+		if (ind == LEGS_INDEX.BOOT)   return("Foot");
 	}
 }
 

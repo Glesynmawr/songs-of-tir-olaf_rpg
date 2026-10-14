@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [4, 4, 9];
+global.version = [5, 4, 9];
 
 //randomise();
 debugging_mode		= false;
@@ -31,7 +31,9 @@ init_particle_system();
 #region// ACTORS ----------------------------------------------------------------------------------
 
 // Combat modifiers
-offhand_agility_penalty = -4;
+melee_base_hit_modifier = 0;
+range_base_hit_modifier = 0;
+wander_chance			= 1;
 
 // Base body plan (all FALSE)
 body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
@@ -242,7 +244,8 @@ time_system = {
 
 // Day/night cycle
 day_night_surface	= noone;
-sun_moon_distance	= 25;
+sun_moon_distance_x	= 19;
+sun_moon_distance_y = 15;
 day_night_width		= sprite_get_width(day_night_background_spr);
 day_night_height	= sprite_get_height(day_night_background_spr);
 

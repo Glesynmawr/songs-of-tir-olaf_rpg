@@ -60,7 +60,7 @@ function actor_marsh_frog()constructor{
 	agility			= 3;
 	hit_points		= 6;
 	action_speed	= 50;
-	equipment		= [[item_bite, 1]];
+	equipment		= [[item_weak_bite, 1]];
 }
 
 function actor_marsh_turtle()constructor{
@@ -80,7 +80,7 @@ function actor_marsh_turtle()constructor{
 	agility			= 1;
 	hit_points		= 8;
 	action_speed	= 50;
-	equipment		= [[item_carapace, 1], [item_bite, 1]];
+	equipment		= [[item_carapace, 1], [item_weak_bite, 1]];
 }
 
 #endregion
@@ -124,7 +124,7 @@ function actor_marsh_bat()constructor{
 	agility			= 6;
 	hit_points		= 1;
 	action_speed	= 120;
-	equipment		= [[item_wings, 1], [item_bite, 1]];
+	equipment		= [[item_wings, 1], [item_weak_bite, 1]];
 }
 
 function actor_marsh_rat()constructor{
@@ -144,7 +144,7 @@ function actor_marsh_rat()constructor{
 	agility			= 4;
 	hit_points		= 3;
 	action_speed	= 80;
-	equipment		= [[item_bite, 1]];
+	equipment		= [[item_weak_bite, 1]];
 }
 
 #endregion

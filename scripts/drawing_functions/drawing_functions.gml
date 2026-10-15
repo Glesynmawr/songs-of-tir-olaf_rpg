@@ -144,7 +144,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-				draw_text(screen_x, screen_y, txt);
+				//draw_text(screen_x, screen_y, txt);
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){

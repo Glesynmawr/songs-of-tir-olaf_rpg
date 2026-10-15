@@ -200,60 +200,6 @@ function state_ready_for_inputs(){
 	}
 }
 
-function state_look(){
-	
-	// Exit look state
-	if (keyboard_check_pressed(controls.key_cancel)){
-		look_mode	= noone;
-		state		= state_ready_for_inputs;
-	}
-	
-	with (look_mode){
-		image_index += anim_speed;
-		if (image_index >= sprite_get_number(sprite_index)){
-			image_index -= sprite_get_number(sprite_index);
-		}
-		
-		var target_x = cell_x * manager.cell_width;
-		var target_y = cell_y * manager.cell_height;
-		
-		if (sprite_x != target_x) sprite_x += (target_x - sprite_x) * 0.2;
-		if (sprite_y != target_y) sprite_y += (target_y - sprite_y) * 0.2;
-		
-		var move_x = keyboard_check(controls.key_right) - keyboard_check(controls.key_left);
-		var move_y = keyboard_check(controls.key_down)  - keyboard_check(controls.key_up);
-			
-		var move_dir = input_direction(move_x, move_y);
-		if (move_dir != noone){
-			
-			manager.move_timer --;
-			if (manager.move_timer <= 0){
-				cell_x += manager.cell_x_neighbours[move_dir];
-				cell_y += manager.cell_y_neighbours[move_dir];
-				manager.move_timer = manager.move_timer_max;
-			}
-			
-			cell_x = clamp(cell_x, x_from, x_to);
-			cell_y = clamp(cell_y, y_from, y_to);
-			
-			// Get data
-			look_pages = cell_get_data(cell_x, cell_y);
-			if (look_hover >= array_length(look_pages)){
-				look_hover = array_length(look_pages) - 1;
-			}
-		}
-		else{
-			manager.move_timer = 0;
-		}
-		if (keyboard_check_pressed(controls.key_item_swap)){
-			look_hover ++;
-			if (look_hover >= array_length(look_pages)){
-				look_hover = 0;
-			}
-		}
-	}
-}
-
 function state_idle(){
 	if (!passive_state_update()){
 		passive_check_actor_in_los();
@@ -434,7 +380,69 @@ function state_wander(){
 }
 
 
-// ACTOR STATE INIT -------------------------------------------------------------------------------
+// ACTOR STATE LOOK -------------------------------------------------------------------------------
+function state_look(){
+	
+	// Exit look state
+	if (keyboard_check_pressed(controls.key_cancel)){
+		look_mode	= noone;
+		state		= state_ready_for_inputs;
+	}
+	
+	with (look_mode){
+		image_index += anim_speed;
+		if (image_index >= sprite_get_number(sprite_index)){
+			image_index -= sprite_get_number(sprite_index);
+		}
+		
+		var target_x = cell_x * manager.cell_width;
+		var target_y = cell_y * manager.cell_height;
+		
+		if (sprite_x != target_x) sprite_x += (target_x - sprite_x) * 0.2;
+		if (sprite_y != target_y) sprite_y += (target_y - sprite_y) * 0.2;
+		
+		var move_x = keyboard_check(controls.key_right) - keyboard_check(controls.key_left);
+		var move_y = keyboard_check(controls.key_down)  - keyboard_check(controls.key_up);
+			
+		var move_dir = input_direction(move_x, move_y);
+		if (move_dir != noone){
+			
+			manager.move_timer --;
+			if (manager.move_timer <= 0){
+				cell_x += manager.cell_x_neighbours[move_dir];
+				cell_y += manager.cell_y_neighbours[move_dir];
+				manager.move_timer = manager.move_timer_max;
+			}
+			
+			cell_x = clamp(cell_x, x_from, x_to);
+			cell_y = clamp(cell_y, y_from, y_to);
+			
+			// Get data
+			look_pages = cell_get_data(cell_x, cell_y);
+			if (look_hover >= array_length(look_pages)){
+				look_hover = array_length(look_pages) - 1;
+			}
+		}
+		else{
+			manager.move_timer = 0;
+		}
+		if (keyboard_check_pressed(controls.key_item_swap)){
+			look_hover ++;
+			if (look_hover >= array_length(look_pages)){
+				look_hover = 0;
+			}
+		}
+		if (keyboard_check_pressed(controls.key_interact_confirm)){
+			
+			if (is_array(look_pages)){
+				if (look_pages[0][0] == "actor"){
+					action_attack_ranged(other, look_pages[0][1]);
+				}
+			}
+		}
+	}
+}
+
 function state_init_look(){
 	
 	var ww = array_length(manager.game_state.game_grid);
@@ -860,9 +868,19 @@ function state_slot_selection(){
 					if (inventory.items[inventory.inv_hover].name == current_ammo.name){
 						
 						number_to_move = inventory.ammo_cap - current_ammo.stack
+						number_to_move = min(number_to_move, inventory.items[inventory.inv_hover].stack);
 						if (number_to_move == 0){
+							inventory.context_menu		= noone;
+							inventory.slot_select_menu	= noone;
+							state = state_inventory;
 							return;
 						}
+						current_ammo.stack += number_to_move;
+						inventory_drop_slot(self, inventory.inv_hover, number_to_move);
+						inventory.context_menu		= noone;
+						inventory.slot_select_menu	= noone;
+						state = state_inventory;
+						return;
 					}
 				}
 				
@@ -876,7 +894,7 @@ function state_slot_selection(){
 		var dest_slot    = inventory.slot_select_menu[0][menu_hover][3];
 		
 		inventory_drop_slot(self, inventory.inv_hover, number_to_move);
-		equipment_add_item(self, number_to_move, item_to_move, dest_cat, dest_ind, dest_slot)
+		equipment_add_item(self, number_to_move, item_to_move, dest_cat, dest_ind, dest_slot);
 		
 		inventory.context_menu		= noone;
 		inventory.slot_select_menu	= noone;

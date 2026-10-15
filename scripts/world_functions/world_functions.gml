@@ -285,8 +285,8 @@ function biomes_add(grid){
 				var cell_y = highest_cell[1];
 			
 				grid[cell_x][cell_y] = new tile[current_biome]();
-				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width);
-				grid[cell_x][cell_y].index += irandom(tiles_in_biome - 1);
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width) - 1;
+				grid[cell_x][cell_y].index += irandom(tiles_in_biome);
 			}
 		}
 		current_biome ++;
@@ -297,8 +297,8 @@ function biomes_add(grid){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
 				grid[i][j] = new tile_world_marsh();
-				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width);
-				grid[i][j].index += irandom(tiles_in_biome - 1);
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width) - 1;
+				grid[i][j].index += irandom(tiles_in_biome);
 			}
 		}
 	}

@@ -274,8 +274,9 @@ function item_short_bow()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.WEAPON_RANGED;
-	tags			= [TAG.TWO_HANDED, TAG.ARROW, TAG.RANGED];
+	tags			= [TAG.TWO_HANDED, TAG.RANGED];
 	damage			= [1, 3, 0];
+	ammo_type		= TAG.ARROW;
 }
 
 // Weapons - ammo
@@ -287,7 +288,8 @@ function item_wooden_arrow()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.AMMO;
-	tags			= [TAG.IS_AMMO, TAG.ARROW, TAG.STACKABLE];
+	tags			= [TAG.IS_AMMO, TAG.STACKABLE];
+	ammo_type		= TAG.ARROW;
 }
 
 function item_stone_arrow()constructor{
@@ -298,7 +300,8 @@ function item_stone_arrow()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.AMMO;
-	tags			= [TAG.IS_AMMO, TAG.ARROW, TAG.STACKABLE];
+	tags			= [TAG.IS_AMMO,TAG.STACKABLE];
+	ammo_type		= TAG.ARROW;
 }
 
 // Natural items

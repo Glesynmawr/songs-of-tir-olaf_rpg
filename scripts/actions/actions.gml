@@ -238,14 +238,15 @@ function action_attack_ranged(attacker, defender){
 					if (attack_chance > 0 and ammo_stack > 0 and ammo_matches){
 						// Perform attack
 						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.range_base_hit_modifier);
-						
+						// Decrement ammo stack if attack is made
+						if (attack_results != noone){
+							equipment_drop_slot(attacker, 1, BODY_PART_CATEGORY.BODY, 0, BODY_PART_STATS.PART_SLOT_1);
+						}
 						// Create log entry - attack missed
 						if (attack_results == false){
 							var txt = $"{attacker.name} shoots {defender.name} but misses";
 						}
 						else if (is_array(attack_results)){
-							// Decrement ammo stack
-							equipment_drop_slot(attacker, 1, BODY_PART_CATEGORY.BODY, 0, BODY_PART_STATS.PART_SLOT_1);
 							// Create log entry - attack hits
 							var txt = $"{attacker.name} shoots {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
 						}

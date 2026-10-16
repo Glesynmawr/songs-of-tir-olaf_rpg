@@ -214,7 +214,7 @@ notification_reset();
 
 // Warnings
 current_warning = {
-	text:			"Warning! Your butt is hanging out",
+	text:			"Warning! Your butt is hanging out!",
 	colour:			C_RED,
 	is_animated:	true,
 	width:			screen_width,

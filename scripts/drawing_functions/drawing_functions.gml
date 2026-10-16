@@ -972,7 +972,7 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 	draw_text_colour(x_pos + text_width, y_pos, text, tc, tc, tc, tc, 1);
 }
 
-function ui_draw_equipment_box(x_pos, y_pos, colour, animated, width = equipment_box_size, height = equipment_box_size){
+function ui_draw_equipment_box(x_pos, y_pos, colour, animated, width = manager.equipment_box_size, height = manager.equipment_box_size){
 	
 	with (manager){
 		var xx = x_pos;
@@ -1472,7 +1472,17 @@ function draw_warning(warning_text, colour, animated, width, height){
 	var ww = width;
 	var hh = height;
 	
+	var tex		= sprite_get_texture(equipment_box_spr, 0);
+	var texel_w = texture_get_texel_width(tex);
+	var texel_h = texture_get_texel_height(tex);
+								
+	shader_set(outline_shd);
+	shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
+	shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
+					
 	ui_draw_equipment_box(xx, yy, colour, animated, ww, hh);
+	
+	shader_reset();
 	
 	var text_w = string_width(warning_text) + (text_width * 2);
 	var text_h = text_height;

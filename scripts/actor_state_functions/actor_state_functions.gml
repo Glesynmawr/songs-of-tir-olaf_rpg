@@ -355,7 +355,7 @@ function state_wander(){
 	
 	if (!passive_state_update()){
 		var chance_to_move = random(1);
-		if (chance_to_move < 0.2){
+		if (chance_to_move < manager.wander_chance){
 			
 			var dir = irandom(7);
 			var move_x = manager.cell_x_neighbours[dir];
@@ -538,10 +538,11 @@ function cell_get_data(cell_x, cell_y){
 function state_inventory(){
 	
 	// Toggle between inventory/equipment
-	if (keyboard_check_pressed(controls.key_inventory)) inventory.selected = !inventory.selected;
+	if (keyboard_check_pressed(controls.key_item_swap)) inventory.selected ++;
+	if (inventory.selected > 1) inventory.selected = 0;
 	
 	// Exit inventory state
-	if (keyboard_check_pressed(controls.key_cancel)){
+	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_inventory)){
 		state = state_ready_for_inputs;
 		manager.inventory_display_state	= INVENTORY_DISPLAY.EQUIPMENT
 	}
@@ -715,7 +716,7 @@ function container_control(){
 function state_context_menu(){
 	var len = array_length(inventory.context_menu[0]);
 	
-	if (keyboard_check_pressed(controls.key_cancel)){
+	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_inventory)){
 		
 		// Exit context menu
 		inventory.context_menu = noone;
@@ -833,7 +834,7 @@ function state_context_menu(){
 function state_slot_selection(){
 	var len = array_length(inventory.slot_select_menu[0]);
 	
-	if (keyboard_check_pressed(controls.key_cancel)){
+	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_inventory)){
 		
 		// Exit context menu
 		inventory.slot_select_menu = noone;
@@ -904,7 +905,7 @@ function state_slot_selection(){
 
 function state_pickup(){
 	var len = array_length(pickup_menu);
-	if (keyboard_check_pressed(controls.key_cancel)){
+	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_inventory)){
 		state = state_ready_for_inputs;
 	}
 	else if (keyboard_check_pressed(controls.key_up)){

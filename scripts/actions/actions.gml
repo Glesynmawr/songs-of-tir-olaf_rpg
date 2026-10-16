@@ -142,7 +142,7 @@ function action_attack_melee(attacker, defender){
 					// If attack chance is not zero
 					if (attack_chance > 0){
 						// Perform attack
-						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier);
+						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.melee_base_hit_modifier);
 						
 						// Create log entry - attack missed
 						if (attack_results == false){
@@ -237,7 +237,7 @@ function action_attack_ranged(attacker, defender){
 					// If attack chance is not zero
 					if (attack_chance > 0 and ammo_stack > 0 and ammo_matches){
 						// Perform attack
-						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier);
+						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.range_base_hit_modifier);
 						
 						// Create log entry - attack missed
 						if (attack_results == false){
@@ -471,12 +471,12 @@ function dice_roll(dice_count, dice_sides, modifier){
 
 
 // COMBAT ACTIONS ---------------------------------------------------------------------------------
-function combat_attack(attacker, defender, attack_chance, damage, agility_modifier, damage_multiplier){
+function combat_attack(attacker, defender, attack_chance, damage, agility_modifier, damage_multiplier, hit_modifier){
 	
 	var attack_made = combat_get_attack_chance(attack_chance);
 	if (!attack_made) return(noone);
 	
-	var attack_hits = combat_get_hit(attacker.agility + agility_modifier, defender.agility, 0);
+	var attack_hits = combat_get_hit(attacker.agility + agility_modifier, defender.agility, hit_modifier);
 	if (!attack_hits) return(false);
 	
 	var hit_location = combat_get_hit_location(defender);

@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 5, 9];
+global.version = [5, 5, 10];
 
 //randomise();
 debugging_mode		= false;
@@ -63,6 +63,9 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 #endregion
 
 #region// INVENTORY SETUP -------------------------------------------------------------------------
+
+inventory_display_state		= INVENTORY_DISPLAY.EQUIPMENT;
+
 inv_spr_size		= ITEM_SPRITE_SIZE;
 inv_spacing			= inv_spr_size;
 inv_display_max		= 20;
@@ -74,10 +77,13 @@ inventory_w		= (screen_width / 2);
 inventory_h		= screen_height;
 
 // Equipment position
-equipment_x		= 0;
-equipment_y		= 0;
-equipment_w		= (screen_width / 2);
-equipment_h		= screen_height;
+equipment_x					= 0;
+equipment_y					= 0;
+equipment_w					= (screen_width / 2);
+equipment_h					= screen_height;
+equipment_box_size			= 20;
+equipment_hovered_x_pos		= noone;
+equipment_hovered_y_pos		= noone;
 
 // Scroll bar
 scroll_x			= inventory_x + 2;
@@ -202,13 +208,18 @@ infobox_hp_width  = infobox_width - (text_width * 4);
 
 // Inventory and equipment
 tile_container				= noone;
-inventory_display_state		= INVENTORY_DISPLAY.EQUIPMENT;
-equipment_box_sprite_size	= sprite_get_width(equipment_box_spr);
-equipment_hovered_x_pos		= noone;
-equipment_hovered_y_pos		= noone;
 
 // Pop-up message
 notification_reset();
+
+// Warnings
+current_warning = {
+	text:			"Warning! Your butt is hanging out",
+	colour:			C_RED,
+	is_animated:	true,
+	width:			screen_width,
+	height:			screen_height
+}
 
 #endregion
 
@@ -249,7 +260,9 @@ sun_moon_distance_y = 15;
 day_night_width		= sprite_get_width(day_night_background_spr);
 day_night_height	= sprite_get_height(day_night_background_spr);
 
-// Lighting
+#endregion
+
+#region// LIGHTING --------------------------------------------------------------------------------
 light_time_offset	= -6;
 light_height_offset = 8;
 world_lighting		= 0;

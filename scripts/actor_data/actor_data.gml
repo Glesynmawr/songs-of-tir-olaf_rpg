@@ -1,7 +1,5 @@
 
-// DATA -------------------------------------------------------------------------------------------
-
-#region// MARSH  ZONE -----------------------------------------------------------------------------
+// PLAYER ACTORS ----------------------------------------------------------------------------------
 
 function actor_player()constructor{
 	faction         = FACTION.PLAYER;
@@ -14,14 +12,16 @@ function actor_player()constructor{
 	state_base		= state_ready_for_inputs;
 	demeanour		= DEMEANOUR.PASSIVE;
 	chase_persist	= [0, 0];
-	strength		= 4;
-	agility			= 4;
+	strength		= 5;
+	agility			= 5;
 	hit_points		= 12;
 	action_speed	= 100;
 	equipment		= [];
 	world_x			= 0;
 	world_y			= 0;
 }
+
+#region// MARSH  ZONE -----------------------------------------------------------------------------
 
 function actor_flamingo()constructor{
 	spawn_tile		= noone;

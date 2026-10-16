@@ -111,7 +111,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
 					var z_modifier	 = passive_move_bounce(self) * manager.ui_settings.move_bounce_amplitude;
-					var txt			 = string(target_actor);
 							
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
@@ -144,7 +143,6 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				// Draw actor sprite and reset shader
 				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
-				//draw_text(screen_x, screen_y, txt);
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
@@ -257,9 +255,10 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_inventory);
-	var key_3 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
+	var key_2 = keybinding_get_text(controls.key_cancel);
+	var key_3 = keybinding_get_text(controls.key_item_swap);
+	var key_4 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} or {key_2} to exit / {key_3} to toggle / {key_4} to select";
 	
 	// Background
 	ui_draw_box(x_pos, y_pos, width, height, "Inventory", control_list);
@@ -365,14 +364,12 @@ function draw_equipment(actor){
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_inventory);
+	var key_2 = keybinding_get_text(controls.key_item_swap);
 	var key_3 = keybinding_get_text(controls.key_interact_confirm);
 	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
 	
 	// Background
 	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, "Equipment", control_list);
-	
-	var box_size = equipment_box_sprite_size;
 	
 	// Worn Equipment
 	xx = equipment_x + (text_width * 2);
@@ -392,19 +389,20 @@ function draw_equipment(actor){
 						}
 					}
 					
-					var col = C_LTGREY;
+					var col			= C_LTGREY;
+					var is_animated = false;
 					if (slot == BODY_PART_STATS.PART_HAND_SLOT) col = C_RED;
 					if (slot == BODY_PART_STATS.PART_AUX_SLOT)  col = C_PURPLE;
 					
 					if (actor.inventory.equ_hover[0] == cat and actor.inventory.equ_hover[1] == ind and actor.inventory.equ_hover[2] == slot and actor.inventory.selected == 0){
 						col = C_WHITE;
-						
+						is_animated = true;
 						equipment_hovered_x_pos = xx;
 						equipment_hovered_y_pos = yy;
 					}
 					
 					// Draw equipment box
-					draw_sprite_ext(equipment_box_spr, 0, xx, yy, 1, 1, 0, col, 1);
+					ui_draw_equipment_box(xx, yy, col, is_animated);
 					
 					// Draw equipment
 					if (is_struct(actor.body_plan[cat][ind][slot])){
@@ -417,7 +415,7 @@ function draw_equipment(actor){
 						var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 						
 						// Sprite
-						var offset = floor((box_size - ITEM_SPRITE_SIZE) / 2);
+						var offset = floor((equipment_box_size - ITEM_SPRITE_SIZE) / 2);
 						draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx + offset, yy + offset);
 						
 						// Stack
@@ -428,14 +426,14 @@ function draw_equipment(actor){
 					}
 					
 					// Increment box X position
-					xx += box_size;
+					xx += equipment_box_size;
 				}
 				
 				var col = colour_text_main;
 				draw_text_colour(xx, yy, actor.body_plan[cat][ind][BODY_PART_STATS.PART_NAME], col, col, col, col, 1);
 				
 				xx = equipment_x + (text_width * 2);
-				yy += box_size;
+				yy += equipment_box_size;
 			}
 		}
 	}
@@ -511,10 +509,11 @@ function draw_context_menu(actor, x_pos, y_pos, width, height){
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_inventory);
 	var key_3 = keybinding_get_text(controls.key_interact_confirm);
 	
 	var box_title    = "What do you want to do with this?";
-	var control_list = $"{key_1} to exit / {key_3} to select item";
+	var control_list = $"{key_1} or {key_2} to exit / {key_3} to select item";
 	
 	var box_width = max(width, string_width(control_list), string_width(box_title));
 	box_width += (text_width * 6);
@@ -548,8 +547,9 @@ function draw_context_slot_select_menu(actor, x_pos, y_pos, width, height){
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_inventory);
 	var key_3 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} to exit / {key_3} to select item";
+	var control_list = $"{key_1} or {key_2} to exit / {key_3} to select item";
 	
 	var box_title = "Choose a slot";
 	
@@ -708,6 +708,17 @@ function draw_game_ui(){
 	}
 	if (actor_registry.player.state == state_look){
 		draw_look_data();
+	}
+	
+	if (is_struct(current_warning)){
+		
+		var txt			= current_warning.text;
+		var colour		= current_warning.colour;
+		var animated	= current_warning.is_animated;
+		var width		= current_warning.width;
+		var height		= current_warning.height;
+		
+		draw_warning(txt, colour, animated, width, height);
 	}
 }
 
@@ -961,6 +972,25 @@ function ui_draw_box_controls(x_pos, y_pos, text){
 	draw_text_colour(x_pos + text_width, y_pos, text, tc, tc, tc, tc, 1);
 }
 
+function ui_draw_equipment_box(x_pos, y_pos, colour, animated, width = equipment_box_size, height = equipment_box_size){
+	
+	with (manager){
+		var xx = x_pos;
+		var yy = y_pos;
+		var ww = width;
+		var hh = height;
+	
+		if (animated){
+			xx -= ui_flip;
+			yy -= ui_flip;
+			ww += 2 * ui_flip;
+			hh += 2 * ui_flip;
+		}
+	
+		draw_sprite_stretched_ext(equipment_box_spr, 0, xx, yy, ww, hh, colour, 1);
+	}
+}
+
 
 // UI SPECIFIC ------------------------------------------------------------------------------------
 function ui_anim_flip(){
@@ -1107,7 +1137,8 @@ function draw_info_box(){
 		for (var index = 0; index < array_length(actor_registry.player.body_plan[category]); index ++){
 			if (body_part_is_present(actor_registry.player, category, index)){
 				if (body_part_has_hand(actor_registry.player, category, index)){
-					draw_sprite(equipment_box_spr, 0, x_pos, yy);
+					
+					ui_draw_equipment_box(x_pos, yy, colour_ui_main, false);
 					
 					// Held item
 					var item_in_hand = actor_registry.player.body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT];
@@ -1119,7 +1150,7 @@ function draw_info_box(){
 						var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
 						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + 3, yy + 3);
 					}
-					x_pos += equipment_box_sprite_size
+					x_pos += equipment_box_size
 				}
 			}
 		}
@@ -1327,8 +1358,8 @@ function draw_look_cursor(x_offset, y_offset){
 				shader_set(outline_shd);
 				shader_set_uniform_f(manager.uni_texel_size, texel_w, texel_h);
 				shader_set_uniform_f(manager.uni_outline_col, col[0], col[1], col[2], col[3]);
-					
-				draw_sprite_ext(sprite_index, image_index, sprite_x - x_offset, sprite_y - y_offset, 1, 1, 0, manager.colour_ui_main, 1);
+				
+				ui_draw_equipment_box(sprite_x - x_offset, sprite_y - y_offset, manager.colour_ui_main, true)
 				
 				shader_reset();
 			}
@@ -1430,6 +1461,27 @@ function draw_look_tile_data(tile){
 	var yy = infobox_y + (text_width * 2);
 	
 	draw_text_outlined(tile.tile, xx, yy, colour_text_main);
+}
+
+
+// WARNINGS ---------------------------------------------------------------------------------------
+function draw_warning(warning_text, colour, animated, width, height){
+	
+	var xx = ui_x_pos[ui_settings.ui_x_position][1];
+	var yy = 0;
+	var ww = width;
+	var hh = height;
+	
+	ui_draw_equipment_box(xx, yy, colour, animated, ww, hh);
+	
+	var text_w = string_width(warning_text) + (text_width * 2);
+	var text_h = text_height;
+	
+	var text_x = floor((ww / 2) - (text_w / 2));
+	var text_y = screen_height - text_h;
+	
+	draw_rectangle_colour(text_x, text_y, text_x+text_w, text_y+text_h, colour_bg_main, colour_bg_main, colour_bg_main, colour_bg_main, false);
+	draw_text_outlined(warning_text, text_x + text_width, text_y + 1, colour);
 }
 
 

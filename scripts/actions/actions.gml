@@ -478,13 +478,23 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 	if (!attack_made) return(noone);
 	
 	var attack_hits = combat_get_hit(attacker.agility + agility_modifier, defender.agility, hit_modifier);
-	if (!attack_hits) return(false);
+	if (!attack_hits) {
+		play_sound(attack_miss_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+		return(false);
+	}
 	
 	var hit_location = combat_get_hit_location(defender);
 	var location_armour = combat_get_location_armour(defender, hit_location);
 	var raw_damage = combat_get_damage(damage, damage_multiplier);
 	
-	particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5);
+	if (raw_damage - location_armour <= 0){
+		play_sound(attack_blocked_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+		particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 3);
+		return(false);
+	}
+	
+	play_sound(attack_damage_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+	particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5, C_RED);
 	with (defender){
 		target_actor = attacker;
 		target_x     = attacker.x_pos;

@@ -2,7 +2,7 @@
 // AUDIO
 function play_sound(sound_id, category, variable_pitch = false){
 	
-	var gain = game_settings[SETTING.AUDIO][AUDIO_SETTINGS.SFX_GAIN] * game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MASTER_GAIN];
+	var gain = game_settings[SETTING.AUDIO][category] * game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MASTER_GAIN];
 	var pitch = 1;
 	if (variable_pitch){
 		pitch = random_range(0.8, 1.1);

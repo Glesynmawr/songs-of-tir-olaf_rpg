@@ -54,6 +54,7 @@ function particle_create_actor_death(actor){
 			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2) + lengthdir_y(4, dir),
 			direction:		90,
 			speed:			0.5,
+			image_blend:	C_WHITE,
 			life_max:		part_life,			
 			life_timer:		part_life 
 		}
@@ -61,7 +62,7 @@ function particle_create_actor_death(actor){
 	}
 }
 
-function particle_create_hit_dust(actor, dir, count){
+function particle_create_hit_dust(actor, dir, count, colour = c_white){
 	repeat(count){
 		var part_life = irandom_range(20, 30);
 		var new_part = {
@@ -71,6 +72,7 @@ function particle_create_hit_dust(actor, dir, count){
 			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2),
 			direction:		dir + irandom_range(-60, 60),
 			speed:			1,
+			image_blend:	colour,
 			life_max:		part_life,			
 			life_timer:		part_life 
 		}
@@ -96,8 +98,11 @@ function update_particles(){
 function draw_particles(offset_x, offset_y){
 	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
 		with (dust_particles[i]){
-			draw_sprite(sprite_index, image_index, (x - offset_x) + manager.ui_x_pos[manager.ui_settings.ui_x_position][1], (y - offset_y));
+			draw_sprite_ext(sprite_index, image_index, (x - offset_x) + manager.ui_x_pos[manager.ui_settings.ui_x_position][1], (y - offset_y), 1, 1, 0, image_blend, 1);
 		}
 	}
 }
+
+
+
 

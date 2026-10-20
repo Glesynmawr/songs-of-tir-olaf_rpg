@@ -193,9 +193,11 @@ function notification_control(){
 	if (keyboard_check_pressed(controls.key_interact_confirm) and notification.confirm == true){
 		if (notification.action != noone){
 			notification.action();
+			play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 		}
 	}
 	else if (keyboard_check_pressed(controls.key_cancel) and notification.cancel == true){
+		play_sound(ui_cancel_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 		notification_reset();
 	}
 }
@@ -212,24 +214,25 @@ function game_state_control_menu(){
 		
 		if (!is_rebinding_keys){
 			if (keyboard_check_pressed(controls.key_cancel)){
-				
+				play_sound(ui_cancel_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 			}
 			else if (keyboard_check_pressed(controls.key_up)){
-				play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+				play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				control_menu_hover --;
 				if (control_menu_hover < 0){
 					control_menu_hover += array_length(control_menu);
 				}
 			}
 			else if (keyboard_check_pressed(controls.key_down)){
-				play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+				play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				control_menu_hover ++;
 				if (control_menu_hover >= array_length(control_menu)){
 					control_menu_hover -= array_length(control_menu);
 				}
 			}
 			else if (keyboard_check_pressed(controls.key_interact_confirm)){
+				play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 				var txt = control_menu[control_menu_hover];
 				if (txt == "Rebind keys"){
 					for (var i = 0; i < array_length(new_controls); i ++){
@@ -252,6 +255,7 @@ function game_state_control_menu(){
 					new_controls[9] = controls.key_item_swap;
 				}
 				else if (txt == "Save and exit"){
+					play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 					controls_save_settings();
 					transition_set(TRANSITION.CONTROL_EXIT, colour_bg_main);
 				}
@@ -278,16 +282,18 @@ function game_state_control_menu(){
 				if (keyboard_lastkey == vk_escape) can_assign = false;
 				for (var i = 0; i < array_length(new_controls); i ++){
 					if (new_controls[i] == keyboard_lastkey){
+						play_sound(ui_cancel_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 						can_assign = false;
 					}
 				}
 			
 				if (can_assign){
-
+					play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 					new_controls[current_key_rebind] = keyboard_lastkey;
 					current_key_rebind ++;
 			
 					if (current_key_rebind == array_length(new_controls)){
+						play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 						is_rebinding_keys = false;
 					
 						controls.key_up					= new_controls[0];
@@ -329,20 +335,21 @@ function game_state_game_over(){
 		}
 		
 		if (keyboard_check_pressed(controls.key_up)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			game_over_menu_hover --;
 			if (game_over_menu_hover < 0){
 				game_over_menu_hover += array_length(game_over_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			game_over_menu_hover ++;
 			if (game_over_menu_hover >= array_length(game_over_menu)){
 				game_over_menu_hover -= array_length(game_over_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			var txt = game_over_menu[game_over_menu_hover];
 			if (txt == "Try again"){
 				transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
@@ -365,20 +372,21 @@ function game_state_main_menu(){
 		}
 		
 		if (keyboard_check_pressed(controls.key_up)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			main_menu_hover --;
 			if (main_menu_hover < 0){
 				main_menu_hover += array_length(main_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			main_menu_hover ++;
 			if (main_menu_hover >= array_length(main_menu)){
 				main_menu_hover -= array_length(main_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			var txt = main_menu[main_menu_hover];
 			if (txt == "New game"){
 				transition_set(TRANSITION.GAME_START_NEW, colour_bg_main);
@@ -418,23 +426,25 @@ function game_state_pause_menu(){
 		}
 		
 		if (keyboard_check_pressed(controls.key_cancel)){
+			play_sound(ui_cancel_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			game_state.state_main = game_state.state_previous;
 		}
 		else if (keyboard_check_pressed(controls.key_up)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			pause_menu_hover --;
 			if (pause_menu_hover < 0){
 				pause_menu_hover += array_length(pause_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_down)){
-			play_sound(ui_blip_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+			play_sound(ui_select_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			pause_menu_hover ++;
 			if (pause_menu_hover >= array_length(pause_menu)){
 				pause_menu_hover -= array_length(pause_menu);
 			}
 		}
 		else if (keyboard_check_pressed(controls.key_interact_confirm)){
+			play_sound(ui_confirm_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 			var txt = pause_menu[pause_menu_hover];
 			if (txt == "Continue"){
 				game_state.state_main = game_state.state_previous;

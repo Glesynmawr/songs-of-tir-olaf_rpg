@@ -82,6 +82,15 @@ function action_attack_melee(attacker, defender){
 	attacker.melee_offset_y = (defender.sprite_y - attacker.sprite_y);
 	var hands_available = body_part_empty_hand_slot_count(attacker);
 	
+	// CHECK FOR WEAPONS
+	var weapon_count = body_part_weapon_count(attacker, TAG.MELEE)
+	if (weapon_count == 0){
+		// Perform attack
+		var attack_results = combat_attack(attacker, defender, 1, [1, 2, -1], 0, 1, manager.melee_base_hit_modifier);
+		passive_attack_add_log(attacker, defender, attack_results);
+		return;
+	}
+	
 	// COMBAT CALCULATION -------------------------------------------------------------------------
 	for (var category = 0; category < array_length(attacker.body_plan); category ++){
 		for (var index = 0; index < array_length(attacker.body_plan[category]); index ++){
@@ -121,39 +130,21 @@ function action_attack_melee(attacker, defender){
 						}
 					}
 					// Correct handedness - no weapon
-					if (slot_matches_handedness){
-						if (slot != BODY_PART_STATS.PART_HAND_SLOT and !item_is_weapon){
-							attack_chance = 0;
-						}
+					if (!slot_matches_handedness){
+						attack_chance		= attacker.offhand_attack_chance;
+						agility_modifier	= attacker.offhand_agility_penalty;
 					}
-					else {
-						// Incorrect handedness - weapon
-						if (item_is_weapon and hands_available >= empty_hands_needed){
-							agility_modifier	= -4;
-							attack_chance		= attacker.offhand_attack_chance;
-							damage_multiplier	= 0.5;
-						}
-						else {
-							// Incorrect handedness - no weapon
-							attack_chance		= 0;
-						}
+					// No melee weapon equipped to slot
+					if (!item_is_weapon){
+						attack_chance = 0;
+						continue;
 					}
 					
 					// If attack chance is not zero
 					if (attack_chance > 0){
 						// Perform attack
 						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.melee_base_hit_modifier);
-						
-						// Create log entry - attack missed
-						if (attack_results == false){
-							var txt = $"{attacker.name} attacks {defender.name} but misses";
-						}
-						else if (is_array(attack_results)){
-							
-							// Create log entry - attack hits
-							var txt = $"{attacker.name} attacks {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
-						}
-						log_add_entry(txt, manager.colour_text_main);
+						passive_attack_add_log(attacker, defender, attack_results);
 					}
 				}
 			}
@@ -174,6 +165,14 @@ function action_attack_ranged(attacker, defender){
 		}
 	}
 	
+	// CHECK FOR WEAPONS
+	var weapon_count = body_part_weapon_count(attacker, TAG.RANGED);
+	if (weapon_count == 0){
+		// Perform attack
+		log_add_entry("No ranged weapon equipped!", manager.colour_text_main);
+		return;
+	}
+	
 	// COMBAT CALCULATION -------------------------------------------------------------------------
 	for (var category = 0; category < array_length(attacker.body_plan); category ++){
 		for (var index = 0; index < array_length(attacker.body_plan[category]); index ++){
@@ -185,7 +184,7 @@ function action_attack_ranged(attacker, defender){
 					var held_item				= variable_clone(attacker.body_plan[category][index][slot]);
 					var item_is_weapon			= false;
 					var ammo_matches			= false;
-					var attack_damage			= [1, 2, -1];
+					var attack_damage			= [0, 0, 0];
 					var agility_modifier		= 0;
 					var damage_multiplier		= 1;
 					var empty_hands_needed		= 0;
@@ -200,7 +199,7 @@ function action_attack_ranged(attacker, defender){
 								item_is_weapon	= true;
 							}
 							if (struct_exists(held_item, "ammo_type")){
-								if (held_item.ammo_type == ammo_type_equipped){
+								if (ammo_type_equipped == held_item.ammo_type){
 									ammo_matches = true;
 								}
 							}
@@ -210,48 +209,34 @@ function action_attack_ranged(attacker, defender){
 							empty_hands_needed = 1;
 						}
 					}
-					// Correct handedness - no weapon
-					if (slot_matches_handedness){
-						if (slot != BODY_PART_STATS.PART_HAND_SLOT and !item_is_weapon){
-							attack_chance = 0;
-						}
+					// No weapon in slot
+					if (!item_is_weapon){
+						attack_chance = 0;
+						continue;
 					}
-					else {
-						// Incorrect handedness - weapon
-						if (item_is_weapon and hands_available >= empty_hands_needed){
-							agility_modifier	= -4;
-							attack_chance		= attacker.offhand_attack_chance;
-							damage_multiplier	= 0.5;
-						}
-						else {
-							// Incorrect handedness - no weapon
-							attack_chance		= 0;
-						}
+					if (!ammo_matches){
+						log_add_entry($"No ammo for {held_item.name}!", manager.colour_text_main);
+						attack_chance = 0;
+						continue;
 					}
 					// Insufficient hands penalty
 					if (hands_available < empty_hands_needed){
-						if (item_is_weapon){
-							attack_chance = 0;
-						}
+						log_add_entry("Not enough free hands!", manager.colour_text_main);
+						attack_chance = 0;
+						continue;
 					}
+					// Correct handedness - no weapon
+					if (!slot_matches_handedness){
+						log_add_entry("Weapon in off-hand!", manager.colour_text_main);
+						attack_chance		= attacker.offhand_attack_chance;
+						agility_modifier	= attacker.offhand_agility_penalty;
+					}
+					
 					// If attack chance is not zero
-					if (attack_chance > 0 and ammo_stack > 0 and ammo_matches){
+					if (attack_chance > 0){
 						// Perform attack
-						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.range_base_hit_modifier);
-						// Decrement ammo stack if attack is made
-						if (attack_results != noone){
-							equipment_drop_slot(attacker, 1, BODY_PART_CATEGORY.BODY, 0, BODY_PART_STATS.PART_SLOT_1);
-						}
-						// Create log entry - attack missed
-						if (attack_results == false){
-							var txt = $"{attacker.name} shoots {defender.name} but misses";
-						}
-						else if (is_array(attack_results)){
-							// Create log entry - attack hits
-							var txt = $"{attacker.name} shoots {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
-						}
-						log_add_entry(txt, manager.colour_text_main);
-						attacker.has_acted = true;
+						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.melee_base_hit_modifier);
+						passive_attack_add_log(attacker, defender, attack_results);
 					}
 				}
 			}
@@ -420,6 +405,16 @@ function passive_actor_get_reaction(actor, target){
 	}
 }
 
+function passive_actor_set_target(actor, target){
+	with (actor){
+		target_actor	= target;
+		target_x		= target.x_pos;
+		target_y		= target.y_pos;
+		target_map		= create_distance_map(manager.game_state.game_grid, target.x_pos, target.y_pos);
+		state_update	= state_chase;
+	}
+}
+
 function passive_actor_reset_target(){
 	target_actor	= noone;
 	target_x		= noone;
@@ -483,9 +478,9 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 		return(false);
 	}
 	
-	var hit_location = combat_get_hit_location(defender);
+	var hit_location	= combat_get_hit_location(defender);
 	var location_armour = combat_get_location_armour(defender, hit_location);
-	var raw_damage = combat_get_damage(damage, damage_multiplier);
+	var raw_damage		= combat_get_damage(damage, damage_multiplier);
 	
 	if (raw_damage - location_armour <= 0){
 		play_sound(attack_blocked_00_snd, AUDIO_SETTINGS.SFX_GAIN);
@@ -495,13 +490,7 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 	
 	play_sound(attack_damage_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 	particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5, C_RED);
-	with (defender){
-		target_actor = attacker;
-		target_x     = attacker.x_pos;
-		target_y	 = attacker.y_pos;
-		target_map   = create_distance_map(manager.game_state.game_grid, target_x, target_y);
-		state_update = state_chase;
-	}
+	passive_actor_set_target(defender, attacker);
 	
 	action_modify_hit_points(defender, -(raw_damage - location_armour));
 	return([raw_damage, location_armour]);

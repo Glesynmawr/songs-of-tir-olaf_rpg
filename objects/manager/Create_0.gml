@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 5, 11];
+global.version = [5, 6, 11];
 
 //randomise();
 debugging_mode		= false;
@@ -33,7 +33,7 @@ init_particle_system();
 // Combat modifiers
 melee_base_hit_modifier = 0;
 range_base_hit_modifier = 0;
-wander_chance			= 1;
+wander_chance			= 0.3;
 
 // Base body plan (all FALSE)
 body_plan_presets[BODY_PRESET.BASE][BODY_PART_CATEGORY.HEAD] = [[false, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];

@@ -143,10 +143,17 @@ function init_world(){
 		entry_pos = [player_start_x, player_start_y];
 																
 		// Player
-		spawn_new_actor(actor_player, entry_pos[0],   entry_pos[1]);
+		spawn_new_actor(actor_rogue, entry_pos[0],   entry_pos[1], true);
+		with (actor_registry.player){
+			world_x			= other.entry_pos[0];
+			world_y			= other.entry_pos[1];
+			state			= state_ready_for_inputs;
+			state_base		= state_ready_for_inputs;
+			faction			= FACTION.PLAYER;
+		}
+		
 		grid_calculate_lighting(manager.game_state.game_grid)
 		set_player_los(game_state.game_grid, actor_registry.player);
-		actor_registry.player.handedness = [BODY_PART_CATEGORY.ARMS, 0];
 	
 		spawn_new_item(item_hat1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_hat2,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);

@@ -76,6 +76,25 @@ function body_part_empty_hand_slot_count(actor){
 	return(free_hand_count);
 }
 
+function body_part_weapon_count(actor, weapon_tag){
+	var weapon_count = 0;
+	for (var category = 0; category < array_length(actor.body_plan); category ++){
+		for (var index = 0; index < array_length(actor.body_plan[category]); index ++){
+			
+			// Is body part present?
+			if (body_part_is_present(actor, category, index)){
+				for (var slot = BODY_PART_STATS.PART_HAND_SLOT; slot < array_length(actor.body_plan[category][index]); slot ++){
+					if (is_struct(actor.body_plan[category][index][slot])){
+						if (item_check_tag(actor.body_plan[category][index][slot], weapon_tag)){
+							weapon_count ++;
+						}
+					}
+				}
+			}
+		}
+	}
+	return(weapon_count);
+}
 
 // STATS ------------------------------------------------------------------------------------------
 function actor_carry_weight(actor){
@@ -84,7 +103,7 @@ function actor_carry_weight(actor){
 
 
 // SPAWNING	 --------------------------------------------------------------------------------------
-function spawn_new_actor(actor_type, cell_x, cell_y){
+function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	
 	var new_actor = new actor_type();
 	
@@ -96,9 +115,8 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.colour_fg		= noone;
 	new_actor.colour_timer  = 0;
 	
-	var hp = new_actor.hit_points;
-	new_actor.hit_points[STAT_TYPE.CURRENT] = hp;
-	new_actor.hit_points[STAT_TYPE.BASE]    = hp;
+	new_actor.hit_points[STAT_TYPE.CURRENT] = new_actor.toughness;
+	new_actor.hit_points[STAT_TYPE.BASE]    = new_actor.toughness;
 	
 	// Sprite and Animation
 	new_actor.sprite_x			= cell_x * cell_width;
@@ -115,10 +133,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	// Turn structure variables
 	new_actor.energy			= 0;
 	new_actor.has_acted			= false;
-	new_actor.is_player			= false;
+	new_actor.is_player			= actor_is_player;
 	new_actor.player_spotted	= false;
 	
-	if (actor_type == actor_player){
+	if (actor_is_player){
 		actor_registry.player	= new_actor;
 		new_actor.is_player		= true;
 		new_actor.is_visible	= false;
@@ -138,14 +156,13 @@ function spawn_new_actor(actor_type, cell_x, cell_y){
 	new_actor.body_plan					= body_part_list_copy(new_actor.body_index);
 	new_actor.inventory					= inventory_initialise();
 	new_actor.hit_weights				= hit_weights_calculate(new_actor, new_actor.body_plan);
-	new_actor.handedness				= [0,0];
 	new_actor.offhand_attack_chance		= 0.2;
 	new_actor.offhand_agility_penalty	= -4;
 	
 	// Starting items
 	if (struct_exists(new_actor, "equipment")){
 		for (var i = 0; i < array_length(new_actor.equipment); i ++){
-			spawn_new_item(item_proboscis, 1, SPAWN_LOC.EQUIPPED, , , new_actor)
+			spawn_new_item(new_actor.equipment[i][0], new_actor.equipment[i][1], SPAWN_LOC.EQUIPPED, , , new_actor)
 		}
 	}
 	// Push to actor registry

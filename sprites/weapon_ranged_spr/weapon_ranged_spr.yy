@@ -2,24 +2,24 @@
   "$GMSprite":"v2",
   "%Name":"weapon_ranged_spr",
   "bboxMode":0,
-  "bbox_bottom":10,
+  "bbox_bottom":11,
   "bbox_left":1,
-  "bbox_right":10,
-  "bbox_top":1,
+  "bbox_right":23,
+  "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"37331c0b-95e4-40d7-978f-3cf1c0b42d8c","name":"37331c0b-95e4-40d7-978f-3cf1c0b42d8c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"50f09e9d-2053-46d9-9fc5-879fe17e3978","name":"50f09e9d-2053-46d9-9fc5-879fe17e3978","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":12,
   "gridY":12,
   "height":12,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"d85dab2c-e9f8-4574-99e9-35c25af85713","blendMode":0,"displayName":"default","isLocked":false,"name":"d85dab2c-e9f8-4574-99e9-35c25af85713","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"fd7d7bb0-bdbf-47f6-a3d4-409254febd7e","blendMode":0,"displayName":"default","isLocked":false,"name":"fd7d7bb0-bdbf-47f6-a3d4-409254febd7e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"weapon_ranged_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"37331c0b-95e4-40d7-978f-3cf1c0b42d8c","path":"sprites/weapon_ranged_spr/weapon_ranged_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"7e6a0b48-7fcb-45d2-aeea-30069d56844a","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"50f09e9d-2053-46d9-9fc5-879fe17e3978","path":"sprites/weapon_ranged_spr/weapon_ranged_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"22973200-eee0-438d-a189-42d4a20bf299","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":12,
+  "width":24,
 }

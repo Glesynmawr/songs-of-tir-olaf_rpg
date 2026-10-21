@@ -235,7 +235,7 @@ function action_attack_ranged(attacker, defender){
 					// If attack chance is not zero
 					if (attack_chance > 0){
 						// Perform attack
-						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.melee_base_hit_modifier);
+						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.range_base_hit_modifier);
 						passive_attack_add_log(attacker, defender, attack_results);
 					}
 				}
@@ -602,6 +602,7 @@ function player_swap_items(actor){
 				body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT] = aux_item;
 			}
 		}
+		particle_create_ui_dust(8);
 	}
 }
 

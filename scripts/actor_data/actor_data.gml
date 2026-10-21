@@ -1,6 +1,5 @@
 
 // PLAYER ACTORS ----------------------------------------------------------------------------------
-
 function actor_rogue()constructor{
 	spawn_tile		= noone;
 	faction         = FACTION.PLAYER;
@@ -99,8 +98,8 @@ function actor_marsh_turtle()constructor{
 	range			= 2;
 	react_range		= 2;
 	
-	state			= state_wander;
-	state_base		= state_wander;
+	state			= state_idle;
+	state_base		= state_idle;
 	demeanour		= DEMEANOUR.AGGRESSIVE;
 	
 	equipment		= [[item_carapace, 1], [item_weak_bite, 1]];

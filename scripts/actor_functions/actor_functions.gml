@@ -98,7 +98,7 @@ function body_part_weapon_count(actor, weapon_tag){
 
 // STATS ------------------------------------------------------------------------------------------
 function actor_carry_weight(actor){
-	return(actor.strength * 10);
+	return(actor.strength * 8);
 }
 
 
@@ -158,6 +158,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	new_actor.hit_weights				= hit_weights_calculate(new_actor, new_actor.body_plan);
 	new_actor.offhand_attack_chance		= 0.2;
 	new_actor.offhand_agility_penalty	= -4;
+	
+	new_actor.carry_weight				= actor_carry_weight(new_actor);
+	new_actor.inv_weight				= 0;
+	new_actor.equ_weight				= 0;
 	
 	// Starting items
 	if (struct_exists(new_actor, "equipment")){

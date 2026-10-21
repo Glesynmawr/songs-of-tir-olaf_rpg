@@ -127,6 +127,10 @@ function state_ready_for_inputs(){
 	// IF PLAYER HAS MOVED ------------------------------------------------------------------------
 	if (player_moved){
 		
+		with (manager){
+			warning_decrement_duration();
+		}
+		
 		// Set has-acted flag
 		has_acted = true;
 		

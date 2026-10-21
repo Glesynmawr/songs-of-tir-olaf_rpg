@@ -12,6 +12,8 @@ if (notification.text != ""){
 	draw_notification();
 }
 
+draw_ui_particles();
+
 if (transition != noone){
 	draw_sprite_tiled_ext(transition_spr, transition.index, 0, 0, 1, 1, transition.colour, 1);
 }

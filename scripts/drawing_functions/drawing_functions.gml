@@ -276,15 +276,36 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	yy = y_pos + (text_height * 2);
 	
 	// Inventory information
-	var inv_weight = inventory_get_weight(actor);
-	var max_weight = actor_carry_weight(actor);
-	draw_text_outlined($"{inv_weight} lb / {max_weight} lb", xx, yy, colour_text_main);
+	var inv_weight = actor.inv_weight;
+	var equ_weight = actor.equ_weight;
+	var max_weight = actor.carry_weight;
+	
+	var total_weight = $"{inv_weight + equ_weight} lb / {max_weight} lb total"
+	
+	var weight_colour = colour_text_main;
+	if (inv_weight > max_weight * 2){
+		weight_colour = C_RED;
+		total_weight += " (overburdened)";
+	}
+	else if (inv_weight >= max_weight){
+		weight_colour = C_ORANGE;
+		total_weight += " (encumbered)";
+	}
+	
+	draw_text_outlined($"{inv_weight} lb lb carried", xx, yy, colour_text_main);
+	yy += text_height
+	draw_text_outlined($"{equ_weight} lb equipped", xx, yy, colour_text_main);
+	yy += text_height
+	draw_text_outlined(total_weight, xx, yy, weight_colour);
 	
 	yy += text_height * 2;
 	
 	// Items
 	if (len > 0){
 		for(var i = draw_from; i < draw_to; i ++){
+			
+			// Reset X position
+			xx = x_pos + (text_width * 4);
 			
 			var txt = display_inv[0][i][0];
 			
@@ -315,11 +336,8 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 				draw_text_outlined(txt, xx + text_width - x_mod, yy + text_y_offset, tc);
 			}
 			else{
-				draw_text_outlined(txt, xx + text_width, yy + text_y_offset, tc);
+				draw_text_outlined(txt, xx, yy + text_y_offset, tc);
 			}
-			
-			// Reset X position
-			xx = x_pos + (text_width * 2);
 			
 			// Increment y position
 			yy += inv_spacing;
@@ -710,16 +728,7 @@ function draw_game_ui(){
 		draw_look_data();
 	}
 	
-	if (is_struct(current_warning)){
-		
-		var txt			= current_warning.text;
-		var colour		= current_warning.colour;
-		var animated	= current_warning.is_animated;
-		var width		= current_warning.width;
-		var height		= current_warning.height;
-		
-		draw_warning(txt, colour, animated, width, height);
-	}
+	draw_warning();
 }
 
 function draw_control_menu(){
@@ -1148,7 +1157,8 @@ function draw_info_box(){
 					
 						var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
 						var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
-						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + 3, yy + 3);
+						var offset  = floor((equipment_box_size - ITEM_SPRITE_SIZE) / 2);
+						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + offset, yy + offset);
 					}
 					x_pos += equipment_box_size
 				}
@@ -1465,33 +1475,39 @@ function draw_look_tile_data(tile){
 
 
 // WARNINGS ---------------------------------------------------------------------------------------
-function draw_warning(warning_text, colour, animated, width, height){
+function draw_warning(){
 	
-	var xx = ui_x_pos[ui_settings.ui_x_position][1];
-	var yy = 0;
-	var ww = width;
-	var hh = height;
+	if (is_struct(current_warning)){
+		var xx = 0;
+		var yy = 0;
+		var ww = screen_width;
+		var hh = screen_height;
 	
-	var tex		= sprite_get_texture(equipment_box_spr, 0);
-	var texel_w = texture_get_texel_width(tex);
-	var texel_h = texture_get_texel_height(tex);
+		var warning_text	= current_warning.text;
+		var colour			= current_warning.colour;
+		var animated		= current_warning.is_animated;
+	
+		var tex		= sprite_get_texture(equipment_box_spr, 0);
+		var texel_w = texture_get_texel_width(tex);
+		var texel_h = texture_get_texel_height(tex);
 								
-	shader_set(outline_shd);
-	shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
-	shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
+		shader_set(outline_shd);
+		shader_set_uniform_f(uni_texel_size, texel_w, texel_h);
+		shader_set_uniform_f(uni_outline_col, outline_colour[0], outline_colour[1], outline_colour[2], outline_colour[3]);
 					
-	ui_draw_equipment_box(xx, yy, colour, animated, ww, hh);
+		ui_draw_equipment_box(xx, yy, colour, animated, ww, hh);
 	
-	shader_reset();
+		shader_reset();
 	
-	var text_w = string_width(warning_text) + (text_width * 2);
-	var text_h = text_height;
+		var text_w = string_width(warning_text) + (text_width * 2);
+		var text_h = text_height;
 	
-	var text_x = floor((ww / 2) - (text_w / 2));
-	var text_y = screen_height - text_h;
+		var text_x = floor((ww / 2) - (text_w / 2));
+		var text_y = screen_height - text_h;
 	
-	draw_rectangle_colour(text_x, text_y, text_x+text_w, text_y+text_h, colour_bg_main, colour_bg_main, colour_bg_main, colour_bg_main, false);
-	draw_text_outlined(warning_text, text_x + text_width, text_y + 1, colour);
+		draw_rectangle_colour(text_x, text_y, text_x+text_w, text_y+text_h, colour_bg_main, colour_bg_main, colour_bg_main, colour_bg_main, false);
+		draw_text_outlined(warning_text, text_x + text_width, text_y + 1, colour);
+	}
 }
 
 

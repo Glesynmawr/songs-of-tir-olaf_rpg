@@ -396,6 +396,7 @@ function inventory_add_item(actor, item, stack){
 		
 		// Push unsorted item onto inventory array
 		array_push(inventory.items, new_item);
+		inv_weight = inventory_get_weight(actor);
 		return(true);
 	}
 }
@@ -414,7 +415,7 @@ function inventory_drop_slot(actor, slot, stack){
 			}
 		}
 		else inventory.inv_hover = 0;
-		
+		inv_weight = inventory_get_weight(actor);
 		return(true);
 	}
 }
@@ -432,28 +433,56 @@ function inventory_get_weight(actor){
 	}
 }
 
+function equipment_get_weight(actor){
+	var equ_weight = 0;
+	
+	with (actor){
+		for (var category = 0; category < array_length(body_plan); category ++){
+			for (var index = 0; index < array_length(body_plan[category]); index ++){
+				for (var slot = 0; slot < array_length(body_plan[category][index]); slot ++){
+					if (is_struct(body_plan[category][index][slot])){
+						if (struct_exists(body_plan[category][index][slot], "weight")){
+							if (!item_check_tag(body_plan[category][index][slot], TAG.NATURAL)){
+								equ_weight += body_plan[category][index][slot].weight * body_plan[category][index][slot].stack;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return(equ_weight);
+}
+
 
 // EQUIPMENT INTERACTION
 function equipment_add_item(actor, stack, item_struct, dest_cat, dest_ind, dest_slot){
 	
-	var new_item = variable_clone(item_struct);
-	new_item.stack = stack;
+	with (actor){
+		var new_item = variable_clone(item_struct);
+		new_item.stack = stack;
 	
-	if (actor.body_plan[dest_cat][dest_ind][dest_slot] == noone){
-		actor.body_plan[dest_cat][dest_ind][dest_slot] = new_item;
-	}
-	else{
-		var equipped_item_to_remove = variable_clone(actor.body_plan[dest_cat][dest_ind][dest_slot]);
-		actor.body_plan[dest_cat][dest_ind][dest_slot] = new_item;
-		inventory_add_item(actor, equipped_item_to_remove, equipped_item_to_remove.stack);
+		if (body_plan[dest_cat][dest_ind][dest_slot] == noone){
+			body_plan[dest_cat][dest_ind][dest_slot] = new_item;
+		}
+		else{
+			var equipped_item_to_remove = variable_clone(body_plan[dest_cat][dest_ind][dest_slot]);
+			body_plan[dest_cat][dest_ind][dest_slot] = new_item;
+			inventory_add_item(actor, equipped_item_to_remove, equipped_item_to_remove.stack);
+		}
+		equ_weight = equipment_get_weight(actor);
 	}
 }
 
 function equipment_drop_slot(actor, stack, target_cat, target_ind, target_slot){
 	
-	actor.body_plan[target_cat][target_ind][target_slot].stack -= stack;
-	if (actor.body_plan[target_cat][target_ind][target_slot].stack <= 0){
-		actor.body_plan[target_cat][target_ind][target_slot] = noone;
+	with (actor){
+		body_plan[target_cat][target_ind][target_slot].stack -= stack;
+		if (body_plan[target_cat][target_ind][target_slot].stack <= 0){
+			body_plan[target_cat][target_ind][target_slot] = noone;
+		}
+		equ_weight = equipment_get_weight(actor);
 	}
 }
 

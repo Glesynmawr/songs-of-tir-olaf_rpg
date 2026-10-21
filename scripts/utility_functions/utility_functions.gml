@@ -307,7 +307,7 @@ function transition_update(){
 			transition.anim_speed *= -1;
 			
 			// Reset particles
-			dust_particles = [];
+			map_particles = [];
 			
 			switch(transition.type){
 			
@@ -672,5 +672,39 @@ function world_update_lighting(){
 	}
 	else world_lighting = 0;
 }
+
+
+// WARNINGS
+function warning_decrement_duration(){
+	with (manager){
+		if (is_struct(current_warning)){
+			if (current_warning.duration != noone){
+				current_warning.duration --;
+				if (current_warning.duration <= 0){
+					warning_reset();
+				}
+			}
+		}
+	}
+}
+
+function warning_set(warning_text, warning_colour, warning_animated, warning_duration){
+	with (manager){
+		current_warning = {
+			text:			warning_text,
+			colour:			warning_colour,
+			is_animated:	warning_animated,
+			duration:		warning_duration,
+		}
+	}
+}
+
+function warning_reset(){
+	with (manager){
+		current_warning = noone;
+	}
+}
+
+
 
 

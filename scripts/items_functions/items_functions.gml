@@ -285,7 +285,7 @@ function item_wooden_arrow()constructor{
 	sprite_index	= weapon_ammo_spr;
 	image_index		= 0;
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.AMMO];
-	weight			= 1;
+	weight			= 0.1;
 	value			= 1;
 	sort_index		= ITEM_SORT.AMMO;
 	tags			= [TAG.IS_AMMO, TAG.STACKABLE];
@@ -297,7 +297,7 @@ function item_stone_arrow()constructor{
 	sprite_index	= weapon_ammo_spr;
 	image_index		= 1;
 	slot			= [BODY_PART_CATEGORY.BODY, BODY_INDEX.AMMO];
-	weight			= 1;
+	weight			= 0.1;
 	value			= 1;
 	sort_index		= ITEM_SORT.AMMO;
 	tags			= [TAG.IS_AMMO,TAG.STACKABLE];
@@ -313,7 +313,7 @@ function item_beak()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
+	tags			= [TAG.MELEE, TAG.NATURAL, TAG.UNREMOVABLE];
 	damage			= [1, 2, 0];
 }
 
@@ -325,7 +325,7 @@ function item_weak_bite()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
+	tags			= [TAG.MELEE, TAG.NATURAL, TAG.UNREMOVABLE];
 	damage			= [1, 2, 0];
 }
 
@@ -337,7 +337,7 @@ function item_carapace()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.BODY;
-	tags			= [TAG.UNREMOVABLE];
+	tags			= [TAG.UNREMOVABLE, TAG.NATURAL];
 	armour			= 4;
 }
 
@@ -349,7 +349,7 @@ function item_proboscis()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.FACE;
-	tags			= [TAG.MELEE, TAG.UNREMOVABLE];
+	tags			= [TAG.MELEE, TAG.NATURAL, TAG.UNREMOVABLE];
 	damage			= [1, 3, 0];
 }
 
@@ -361,7 +361,7 @@ function item_wings()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.BACK;
-	tags			= [TAG.UNREMOVABLE];
+	tags			= [TAG.UNREMOVABLE, TAG.NATURAL];
 }
 
 

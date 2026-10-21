@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 6, 11];
+global.version = [5, 6, 12];
 
 //randomise();
 debugging_mode		= false;
@@ -213,13 +213,8 @@ tile_container				= noone;
 notification_reset();
 
 // Warnings
-current_warning = {
-	text:			"Warning! Your butt is hanging out!",
-	colour:			C_RED,
-	is_animated:	true,
-	width:			screen_width,
-	height:			screen_height
-}
+current_warning = noone;
+warning_set("Warning! Your butt is hanging out!", C_RED, true, 3)
 
 #endregion
 
@@ -233,7 +228,8 @@ set_outline_shader_colour();
 #endregion
 
 #region// EFFECTS ---------------------------------------------------------------------------------
-dust_particles = [];
+map_particles	= [];
+ui_particles	= [];
 
 #endregion
 

@@ -58,7 +58,7 @@ function particle_create_actor_death(actor){
 			life_max:		part_life,			
 			life_timer:		part_life 
 		}
-		array_push(manager.dust_particles, new_part);
+		array_push(manager.map_particles, new_part);
 	}
 }
 
@@ -76,18 +76,54 @@ function particle_create_hit_dust(actor, dir, count, colour = c_white){
 			life_max:		part_life,			
 			life_timer:		part_life 
 		}
-		array_push(manager.dust_particles, new_part);
+		array_push(manager.map_particles, new_part);
+	}
+}
+
+function particle_create_ui_dust(count, colour = c_white){
+	
+	var dir = irandom(360);
+	var dir_inc = 360 / count;
+		
+	repeat(count){
+		
+		var part_life = irandom_range(20, 30);
+		var new_part = {
+			sprite_index:	dust_spr,
+			image_index:	0,
+			x:				manager.ui_x_pos[manager.ui_settings.ui_x_position][0],
+			y:				16,
+			direction:		dir,
+			speed:			1,
+			image_blend:	colour,
+			life_max:		part_life,			
+			life_timer:		part_life 
+		}
+		dir += dir_inc;
+		array_push(manager.ui_particles, new_part);
 	}
 }
 
 function update_particles(){
-	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
-		with (dust_particles[i]){
+	for (var i = array_length(map_particles) - 1; i >= 0; i --){
+		with (map_particles[i]){
 			x += lengthdir_x(speed, direction);
 			y += lengthdir_y(speed, direction);
 			life_timer --;
 			if (life_timer <= 0){
-				array_delete(manager.dust_particles, i, 1);
+				array_delete(manager.map_particles, i, 1);
+			}
+			image_index = ((life_max - life_timer) / life_max) * sprite_get_number(sprite_index);
+			speed *= random_range(0.93, 0.99);
+		}
+	}
+	for (var i = array_length(ui_particles) - 1; i >= 0; i --){
+		with (ui_particles[i]){
+			x += lengthdir_x(speed, direction);
+			y += lengthdir_y(speed, direction);
+			life_timer --;
+			if (life_timer <= 0){
+				array_delete(manager.ui_particles, i, 1);
 			}
 			image_index = ((life_max - life_timer) / life_max) * sprite_get_number(sprite_index);
 			speed *= random_range(0.93, 0.99);
@@ -96,9 +132,17 @@ function update_particles(){
 }
 
 function draw_particles(offset_x, offset_y){
-	for (var i = array_length(dust_particles) - 1; i >= 0; i --){
-		with (dust_particles[i]){
+	for (var i = array_length(map_particles) - 1; i >= 0; i --){
+		with (map_particles[i]){
 			draw_sprite_ext(sprite_index, image_index, (x - offset_x) + manager.ui_x_pos[manager.ui_settings.ui_x_position][1], (y - offset_y), 1, 1, 0, image_blend, 1);
+		}
+	}
+}
+
+function draw_ui_particles(){
+	for (var i = array_length(ui_particles) - 1; i >= 0; i --){
+		with (ui_particles[i]){
+			draw_sprite_ext(sprite_index, image_index, x, y, 1, 1, 0, image_blend, 1);
 		}
 	}
 }

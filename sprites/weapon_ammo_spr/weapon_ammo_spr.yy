@@ -2,24 +2,24 @@
   "$GMSprite":"v2",
   "%Name":"weapon_ammo_spr",
   "bboxMode":0,
-  "bbox_bottom":10,
-  "bbox_left":1,
-  "bbox_right":22,
-  "bbox_top":1,
+  "bbox_bottom":11,
+  "bbox_left":0,
+  "bbox_right":47,
+  "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"18eb7b68-9583-41b9-905a-54bec30da6a8","name":"18eb7b68-9583-41b9-905a-54bec30da6a8","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"c211562b-e084-4555-bf11-5becd17b87d7","name":"c211562b-e084-4555-bf11-5becd17b87d7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":12,
   "gridY":12,
   "height":12,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"cc2cc6aa-6e5b-4f85-a089-dd18314d0f5a","blendMode":0,"displayName":"default","isLocked":false,"name":"cc2cc6aa-6e5b-4f85-a089-dd18314d0f5a","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"efd786af-b64b-4351-9091-02d83c252a0d","blendMode":0,"displayName":"default","isLocked":false,"name":"efd786af-b64b-4351-9091-02d83c252a0d","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"weapon_ammo_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"18eb7b68-9583-41b9-905a-54bec30da6a8","path":"sprites/weapon_ammo_spr/weapon_ammo_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"74ac5a4d-4050-4d7f-ac56-98ca1601a59b","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"c211562b-e084-4555-bf11-5becd17b87d7","path":"sprites/weapon_ammo_spr/weapon_ammo_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"9668038d-026d-409d-afc3-e47d77b91028","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":24,
+  "width":48,
 }

@@ -363,6 +363,8 @@ function inventory_add_item(actor, item, stack){
 					for (var i = 0; i < array_length(inventory.items); i ++){
 						if (new_item.name == inventory.items[i].name){
 							inventory.items[i].stack += stack;
+							inv_weight = inventory_get_weight(self);
+							actor_set_action_speed(self);
 							return(true);
 						}
 					}
@@ -381,6 +383,8 @@ function inventory_add_item(actor, item, stack){
 				
 				// Insert item into sorted position
 				array_insert(inventory.items, i, new_item);
+				inv_weight = inventory_get_weight(self);
+				actor_set_action_speed(self);
 				return(true);
 			}
 				
@@ -389,6 +393,8 @@ function inventory_add_item(actor, item, stack){
 					
 					// Insert item into sorted position
 					array_insert(inventory.items, i, new_item);
+					inv_weight = inventory_get_weight(self);
+					actor_set_action_speed(self);
 					return(true);
 				}
 			}
@@ -396,7 +402,8 @@ function inventory_add_item(actor, item, stack){
 		
 		// Push unsorted item onto inventory array
 		array_push(inventory.items, new_item);
-		inv_weight = inventory_get_weight(actor);
+		inv_weight = inventory_get_weight(self);
+		actor_set_action_speed(self);
 		return(true);
 	}
 }
@@ -415,8 +422,24 @@ function inventory_drop_slot(actor, slot, stack){
 			}
 		}
 		else inventory.inv_hover = 0;
-		inv_weight = inventory_get_weight(actor);
+		inv_weight = inventory_get_weight(self);
+		actor_set_action_speed(self);
 		return(true);
+	}
+}
+
+
+// INVENTORY WEIGHTS
+function actor_set_action_speed(actor){
+	
+	with (actor){
+		var modifier = 0;
+		var total_weight = actor.inv_weight + actor.equ_weight;
+	
+		if (total_weight > actor.carry_weight){
+			modifier = ((total_weight - actor.carry_weight) / actor.carry_weight) * 100;
+		}
+		action_speed = clamp(action_speed_base - modifier, 10, action_speed_base);
 	}
 }
 
@@ -471,7 +494,8 @@ function equipment_add_item(actor, stack, item_struct, dest_cat, dest_ind, dest_
 			body_plan[dest_cat][dest_ind][dest_slot] = new_item;
 			inventory_add_item(actor, equipped_item_to_remove, equipped_item_to_remove.stack);
 		}
-		equ_weight = equipment_get_weight(actor);
+		equ_weight = equipment_get_weight(self);
+		actor_set_action_speed(self);
 	}
 }
 
@@ -482,7 +506,8 @@ function equipment_drop_slot(actor, stack, target_cat, target_ind, target_slot){
 		if (body_plan[target_cat][target_ind][target_slot].stack <= 0){
 			body_plan[target_cat][target_ind][target_slot] = noone;
 		}
-		equ_weight = equipment_get_weight(actor);
+		equ_weight = equipment_get_weight(self);
+		actor_set_action_speed(self);
 	}
 }
 

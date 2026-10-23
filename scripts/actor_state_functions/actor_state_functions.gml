@@ -127,6 +127,8 @@ function state_ready_for_inputs(){
 	// IF PLAYER HAS MOVED ------------------------------------------------------------------------
 	if (player_moved){
 		
+		manager.actor_registry.player.player_steps ++;
+		
 		with (manager){
 			warning_decrement_duration();
 		}
@@ -215,7 +217,7 @@ function state_idle(){
 function state_chase(){
 	
 	if (x_pos == target_x and y_pos == target_y){
-		log_add_entry($"{name} has lost you!", C_YELLOW); 
+		log_add_entry($"{name} has lost track of {target_actor.name}.", C_YELLOW); 
 		state = state_base;
 		passive_actor_reset_target();
 		has_acted = true;

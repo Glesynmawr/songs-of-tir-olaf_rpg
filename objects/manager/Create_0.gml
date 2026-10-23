@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 6, 12];
+global.version = [5, 6, 13];
 
 //randomise();
 debugging_mode		= false;
@@ -159,6 +159,7 @@ actor_move_speed = 0.2;
 #region// UI --------------------------------------------------------------------------------------
 
 // UI variables -----------------------------------------------------------------------------------
+ui_border = 5;
 
 globalvar game_settings;
 game_settings[SETTING.AUDIO][AUDIO_SETTINGS.MASTER_GAIN]	= 1;
@@ -184,27 +185,47 @@ ui_x_pos[0][1]	= 0;
 ui_x_pos[1][0]	= 0;
 ui_x_pos[1][1]	= ui_width;
 
+// Info box
+infobox_width   = ui_width;
+infobox_height  = screen_height;
+infobox_y       = 0;
+
+// Minimap
+minimap_scale	= 2;
+minimap_surface = noone;
+minimap_width	= 107;
+minimap_height	= 107;
+minimap_y		= 0;
+
+// Day/night indicator
+day_night_surface	= noone;
+sun_moon_distance_x	= 19;
+sun_moon_distance_y = 15;
+day_night_x_pos		= minimap_width - ui_border;
+day_night_width		= sprite_get_width(day_night_background_spr);
+day_night_height	= sprite_get_height(day_night_background_spr);
+
+// Player hit points
+hp_y_pos	= minimap_height + ui_border;
+hp_height	= sprite_get_height(hit_point_bar_spr);
+hp_width	= infobox_width - (ui_border * 4);
+
+// Player carry weight and move speed
+speed_y_pos		= hp_y_pos + hp_height + ui_border;
+weight_y_pos	= speed_y_pos + text_height;
+
+// Hand-held items
+held_items_y_pos	= weight_y_pos + (ui_border * 2);
+held_items_w_max	= floor((infobox_width - (ui_border * 2)) / equipment_box_size);
+var width_px		= held_items_w_max * equipment_box_size;
+held_items_x_pos	= floor((infobox_width - width_px) / 2);
+
 // Game log
 log_surface = noone;
 log_height	= (LOG_MAX_ENTRIES + 2) * text_height;
 
 log_surface_width  = ui_width - (text_width * 4);
 log_surface_height = log_height - (text_height * 2);
-
-// Minimap
-minimap_scale	= 2;
-minimap_surface = noone;
-minimap_width	= 80;
-minimap_height	= 80;
-minimap_y		= 0;
-
-// Info box
-infobox_width   = ui_width;
-infobox_height  = screen_height - minimap_height - log_height + 10;
-infobox_y       = minimap_height - 5;
-
-infobox_hp_height = sprite_get_height(hit_point_bar_spr);
-infobox_hp_width  = infobox_width - (text_width * 4);
 
 // Inventory and equipment
 tile_container				= noone;
@@ -248,13 +269,6 @@ time_system = {
 	timescale			: 0,
 	map_is_underground  : false,
 }
-
-// Day/night cycle
-day_night_surface	= noone;
-sun_moon_distance_x	= 19;
-sun_moon_distance_y = 15;
-day_night_width		= sprite_get_width(day_night_background_spr);
-day_night_height	= sprite_get_height(day_night_background_spr);
 
 #endregion
 

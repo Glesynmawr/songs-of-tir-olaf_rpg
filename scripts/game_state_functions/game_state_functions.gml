@@ -150,6 +150,7 @@ function init_world(){
 			state			= state_ready_for_inputs;
 			state_base		= state_ready_for_inputs;
 			faction			= FACTION.PLAYER;
+			player_steps	= 0;
 		}
 		
 		grid_calculate_lighting(manager.game_state.game_grid)

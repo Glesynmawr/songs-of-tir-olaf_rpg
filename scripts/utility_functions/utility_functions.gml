@@ -277,16 +277,30 @@ function log_add_entry(text, colour = colour_text_main){
 }
 
 function passive_attack_add_log(attacker, defender, attack_results){
+	if (attack_results == noone){
+		return;
+	}
 	if (attack_results == false){
 		var txt = $"{attacker.name} attacks {defender.name} but misses";
 	}
 	else if (is_array(attack_results)){
 							
 		// Create log entry - attack hits
-		var txt = $"{attacker.name} attacks {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
+		if (attack_results[0] <= attack_results[1]){
+			if (attack_results[1] > 0){
+				var txt = $"{attacker.name} attacks {defender.name} and hits but is blocked by armour.";
+			}
+			else{
+				var txt = $"{attacker.name} attacks {defender.name} and hits but does no damage.";
+			}
+		}
+		else{
+			var txt = $"{attacker.name} attacks {defender.name} and hits! {attack_results[0]} damage, {attack_results[1]} blocked by armour.";
+		}
 	}
 	log_add_entry(txt, manager.colour_text_main);
 }
+
 
 // GAME STATE TRANSITIONS
 function transition_set(transition_type, transition_colour){

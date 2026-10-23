@@ -484,8 +484,8 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 	
 	if (raw_damage - location_armour <= 0){
 		play_sound(attack_blocked_00_snd, AUDIO_SETTINGS.SFX_GAIN);
-		particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 3);
-		return(false);
+		particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 3, C_WHITE);
+		return([raw_damage, location_armour]);
 	}
 	
 	play_sound(attack_damage_00_snd, AUDIO_SETTINGS.SFX_GAIN);

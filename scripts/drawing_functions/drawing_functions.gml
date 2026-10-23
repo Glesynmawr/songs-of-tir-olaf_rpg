@@ -281,15 +281,15 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var max_weight = actor.carry_weight;
 	
 	var total_weight = $"{inv_weight + equ_weight} lb / {max_weight} lb total"
-	
+	var subtext		 = $"Speed: {actor.action_speed}/{actor.action_speed_base}";
 	var weight_colour = colour_text_main;
 	if (inv_weight > max_weight * 2){
 		weight_colour = C_RED;
-		total_weight += " (overburdened)";
+		subtext += " (overburdened)";
 	}
 	else if (inv_weight >= max_weight){
 		weight_colour = C_ORANGE;
-		total_weight += " (encumbered)";
+		subtext += " (encumbered)";
 	}
 	
 	draw_text_outlined($"{inv_weight} lb lb carried", xx, yy, colour_text_main);
@@ -297,8 +297,11 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	draw_text_outlined($"{equ_weight} lb equipped", xx, yy, colour_text_main);
 	yy += text_height
 	draw_text_outlined(total_weight, xx, yy, weight_colour);
+	yy += text_height
+	draw_text_outlined(subtext, xx, yy, weight_colour);
 	
 	yy += text_height * 2;
+	scroll_y = yy;
 	
 	// Items
 	if (len > 0){
@@ -705,17 +708,11 @@ function draw_game_ui(){
 	
 	 ui_draw_box(ui_x_pos[ui_settings.ui_x_position][0], 0, ui_width, screen_height);
 	
-	// Game log
-	draw_game_log(ui_x_pos[ui_settings.ui_x_position][0], screen_height - log_height, ui_width, log_height);
-
 	// Info box
 	draw_info_box();
-
-	// Minimap
-	draw_minimap();
 	
-	// Day/night cycle
-	draw_day_night();
+	// Game log
+	draw_game_log(ui_x_pos[ui_settings.ui_x_position][0], screen_height - log_height, ui_width, log_height);
 	
 	// Inventory and pick-up menus
 	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
@@ -1010,102 +1007,6 @@ function ui_anim_flip(){
 	}
 }
 	
-function draw_day_night(){
-	
-	if (!surface_exists(day_night_surface)){
-		day_night_surface = surface_create(day_night_width, day_night_height);
-	}
-	
-	surface_set_target(day_night_surface);
-	
-	draw_clear(colour_bg_main);
-	
-	var current_day_turn	= time_system.game_current_time[TIME.TURN] mod turns_per_day;
-	var angle_increment		= 360 / turns_per_day;
-	var time_angle_start	= 270 - (angle_increment * current_day_turn);
-	
-	var bg_index;
-	if (current_day_turn < (5 * turns_per_hour)){
-		bg_index = 4;
-	}
-	else if (current_day_turn < (6 * turns_per_hour)){
-		bg_index = 3;
-	}
-	else if (current_day_turn < (7 * turns_per_hour)){
-		bg_index = 2;
-	}
-	else if (current_day_turn < (8 * turns_per_hour)){
-		bg_index = 1;
-	}
-	else if (current_day_turn < (16 * turns_per_hour)){
-		bg_index = 0;
-	}
-	else if (current_day_turn < (17 * turns_per_hour)){
-		bg_index = 1;
-	}
-	else if (current_day_turn < (18 * turns_per_hour)){
-		bg_index = 2;
-	}
-	else if (current_day_turn < (19 * turns_per_hour)){
-		bg_index = 3;
-	}
-	else {
-		bg_index = 4;
-	}
-	
-	draw_sprite(day_night_background_spr, bg_index, 0, 0);
-	
-	var spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start) + (day_night_width / 2));
-	var spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start) + day_night_height);
-	
-	draw_sprite(day_night_sun_moon_spr, 0, spr_x, spr_y);
-	
-	spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start - 180) + (day_night_width / 2));
-	spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start - 180) + day_night_height);
-	
-	draw_sprite(day_night_sun_moon_spr, 1, spr_x, spr_y);
-	
-	draw_sprite(day_night_foreground_spr, bg_index, 0, 0);
-	
-	surface_reset_target();
-	
-	var xx = floor(ui_x_pos[ui_settings.ui_x_position][0] + minimap_width + 3);
-	var yy = floor(text_width + 3);
-	draw_surface(day_night_surface, xx, yy);
-}
-
-function draw_game_log(x_pos, y_pos, width, height){
-	
-	ui_draw_box(x_pos, y_pos, width, height);
-	
-	var xx = x_pos + (text_width * 2);
-	var yy = y_pos + text_height;
-	
-	if (!surface_exists(log_surface)){
-		log_surface = surface_create(log_surface_width, log_surface_height);
-	}
-	
-	surface_set_target(log_surface);
-	
-	draw_clear(colour_bg_main);
-	
-	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_state.game_log));
-	var line_y_pos = 0;
-	for (var line = 0; line < draw_to; line ++){
-		
-		var text =		game_state.game_log[line][0];
-		var colour =	game_state.game_log[line][1];
-		
-		draw_text_ext_colour(0, line_y_pos, text, text_height, log_surface_width, colour ,colour ,colour ,colour, 1);
-		
-		line_y_pos += string_height_ext(text, text_height, log_surface_width) + 3;
-	}
-	
-	surface_reset_target();
-	
-	draw_surface(log_surface, xx, yy);
-}
-
 function draw_info_box(){
 	
 	// Background and border
@@ -1113,61 +1014,32 @@ function draw_info_box(){
 	var yy = infobox_y;
 	ui_draw_box(xx, yy, infobox_width, infobox_height);
 	
+	var player = actor_registry.player;
+	
+	// Minimap
+	draw_minimap(player);
+	
+	// Day/night cycle
+	draw_day_night();
+	
 	// Player hit points
-	xx += text_width * 2;
-	yy += text_width * 2;
+	draw_hp(player);
 	
-	var hp_max = actor_registry.player.hit_points[STAT_TYPE.BASE];
-	var hp_cur = actor_registry.player.hit_points[STAT_TYPE.CURRENT];
-	var fill_percent = hp_cur / hp_max;
-	var fill_pixels  = infobox_hp_width * fill_percent;
+	// Move speed
+	draw_move_speed(player, ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), speed_y_pos);
 	
-	draw_sprite_stretched(hit_point_bar_spr, 0, xx, yy, infobox_hp_width, infobox_hp_height); 
-	draw_sprite_stretched(hit_point_bar_spr, 1, xx, yy, fill_pixels, infobox_hp_height);
-	
-	draw_text_outlined($"HP: {actor_registry.player.hit_points[STAT_TYPE.CURRENT]} / {actor_registry.player.hit_points[STAT_TYPE.BASE]}", xx + 3, yy + 3, colour_text_main);
-	
-	// Current turn
-	yy += 32;
-	draw_text_outlined($"Turn: {time_system.game_current_time[TIME.TURN]}", xx, yy, colour_text_main);
-	
-	// Current hour
-	yy += text_height;
-	draw_text_outlined($"Hour: {time_system.game_current_time[TIME.HOUR]}", xx, yy, colour_text_main);
-	
-	// Current day
-	yy += text_height;
-	draw_text_outlined($"Day:  {time_system.game_current_time[TIME.DAY]}", xx, yy, colour_text_main);
+	// Carry weight
+	draw_carry_weight(player, ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), weight_y_pos);
 	
 	// Hand-held items
+	draw_held_items(player);
+	
+	// Current turn
 	yy += text_height;
-	var x_pos = xx;
-	for (var category = 0; category < array_length(actor_registry.player.body_plan); category ++){
-		for (var index = 0; index < array_length(actor_registry.player.body_plan[category]); index ++){
-			if (body_part_is_present(actor_registry.player, category, index)){
-				if (body_part_has_hand(actor_registry.player, category, index)){
-					
-					ui_draw_equipment_box(x_pos, yy, colour_ui_main, false);
-					
-					// Held item
-					var item_in_hand = actor_registry.player.body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT];
-					if (item_in_hand != noone){
-						var spr = item_in_hand.sprite_index;
-						var ind = item_in_hand.image_index;
-					
-						var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
-						var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
-						var offset  = floor((equipment_box_size - ITEM_SPRITE_SIZE) / 2);
-						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + offset, yy + offset);
-					}
-					x_pos += equipment_box_size
-				}
-			}
-		}
-	}
+	//draw_text_outlined($"Turn: {actor_registry.player.player_steps}", xx, yy, colour_text_main);
 }
 
-function draw_minimap(){
+function draw_minimap(actor){
 	var px, py, mx, my, s, col;
 	
 	var bg = colour_bg_main;
@@ -1186,8 +1058,8 @@ function draw_minimap(){
 	// Mini Map Background
 	draw_sprite_stretched_ext(ui_border_spr, 2, 0, 0, minimap_width, minimap_height, bg, 1);
 
-	px = actor_registry.player.x_pos;
-	py = actor_registry.player.y_pos;
+	px = actor.x_pos;
+	py = actor.y_pos;
 	
 	for (var i = 0; i < grid_w; i ++){
 		for (var j = 0; j < grid_h; j ++){
@@ -1253,6 +1125,215 @@ function draw_minimap(){
 	if (ui_settings.minimap_sub_text != ""){
 		ui_draw_box_controls(ui_x_pos[ui_settings.ui_x_position][0] + (text_width * 2), minimap_height - 5, ui_settings.minimap_sub_text);
 	}
+}
+	
+function draw_day_night(){
+	
+	if (!surface_exists(day_night_surface)){
+		day_night_surface = surface_create(day_night_width, day_night_height);
+	}
+	
+	surface_set_target(day_night_surface);
+	
+	draw_clear(colour_bg_main);
+	
+	var current_day_turn	= time_system.game_current_time[TIME.TURN] mod turns_per_day;
+	var angle_increment		= 360 / turns_per_day;
+	var time_angle_start	= 270 - (angle_increment * current_day_turn);
+	var time_txt			= "night";
+	
+	var bg_index;
+	if (current_day_turn < (5 * turns_per_hour)){
+		bg_index = 4;
+	}
+	else if (current_day_turn < (6 * turns_per_hour)){
+		bg_index = 3;
+		time_txt = "Dawn";
+	}
+	else if (current_day_turn < (7 * turns_per_hour)){
+		bg_index = 2;
+		time_txt = "Sunrise";
+	}
+	else if (current_day_turn < (8 * turns_per_hour)){
+		bg_index = 1;
+		time_txt = "Morning";
+	}
+	else if (current_day_turn < (16 * turns_per_hour)){
+		bg_index = 0;
+		time_txt = "Day";
+	}
+	else if (current_day_turn < (17 * turns_per_hour)){
+		bg_index = 1;
+		time_txt = "Evening";
+	}
+	else if (current_day_turn < (18 * turns_per_hour)){
+		bg_index = 2;
+		time_txt = "Sunset";
+	}
+	else if (current_day_turn < (19 * turns_per_hour)){
+		bg_index = 3;
+		time_txt = "Dusk";
+	}
+	else {
+		bg_index = 4;
+	}
+	
+	draw_sprite(day_night_background_spr, bg_index, 0, 0);
+	
+	var spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start) + (day_night_width / 2));
+	var spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start) + day_night_height);
+	
+	draw_sprite(day_night_sun_moon_spr, 0, spr_x, spr_y);
+	
+	spr_x = floor(lengthdir_x(sun_moon_distance_x, time_angle_start - 180) + (day_night_width / 2));
+	spr_y = floor(lengthdir_y(sun_moon_distance_y, time_angle_start - 180) + day_night_height);
+	
+	draw_sprite(day_night_sun_moon_spr, 1, spr_x, spr_y);
+	
+	draw_sprite(day_night_foreground_spr, bg_index, 0, 0);
+	
+	surface_reset_target();
+	
+	// Background
+	ui_draw_box(ui_x_pos[ui_settings.ui_x_position][0] + day_night_x_pos, 0, day_night_width + (ui_border * 2), day_night_height + (ui_border * 2) + 1, time_txt)
+	
+	// Surface
+	var xx = floor(ui_x_pos[ui_settings.ui_x_position][0] + day_night_x_pos + ui_border);
+	var yy = floor(ui_border) + 1;
+	draw_surface(day_night_surface, xx, yy);
+}
+
+function draw_hp(actor){
+	
+	// Position
+	var xx = ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2);
+	var yy = hp_y_pos;
+	
+	// Fill amount
+	var hp_max = actor.hit_points[STAT_TYPE.BASE];
+	var hp_cur = actor.hit_points[STAT_TYPE.CURRENT];
+	var fill_percent = hp_cur / hp_max;
+	var fill_pixels  = hp_width * fill_percent;
+	
+	// Background
+	draw_sprite_stretched(hit_point_bar_spr, 0, xx, yy, hp_width, hp_height); 
+	
+	// Fill bar
+	draw_sprite_stretched(hit_point_bar_spr, 1, xx, yy, fill_pixels, hp_height);
+	
+	// Text
+	draw_text_outlined($"HP: {hp_cur} / {hp_max}", xx + 3, yy + 3, colour_text_main);
+}
+
+function draw_move_speed(actor, xx, yy){
+	
+	var speed_cur  = actor_registry.player.action_speed;
+	var speed_base = actor_registry.player.action_speed_base;
+	
+	var txt = $"Speed:  {speed_cur}/{speed_base}"
+	
+	var col = colour_text_main;
+	if (speed_cur <= 10){
+		col = C_RED;
+		txt = "Immobilised - too much weight!";
+		
+	}
+	else if (speed_cur < speed_base){
+		col = C_ORANGE;
+		txt += " - Burdened!";
+	}
+	else if (speed_cur > speed_base){
+		col = C_LIME;
+	}
+	draw_text_outlined(txt, xx, yy, col);
+}
+
+function draw_carry_weight(actor, xx, yy){
+	
+	var weight_max = actor.carry_weight;
+	var weight_cur = actor.inv_weight + actor.equ_weight;
+	var txt = $"weight: {weight_cur}/{weight_max}";
+	
+	var col = colour_text_main;
+	if (weight_cur >= weight_max * 2){
+		col = C_RED;
+		txt += " (overburdened)";
+	}
+	else if (weight_cur > weight_max){
+		col = C_ORANGE;
+		txt += " (encumbered)";
+	}
+	
+	draw_text_outlined(txt, xx, yy, col);
+}
+
+function draw_held_items(actor){
+	var xx				= ui_x_pos[ui_settings.ui_x_position][0] + held_items_x_pos;
+	var yy				= held_items_y_pos;
+	var offset			= floor((equipment_box_size - ITEM_SPRITE_SIZE) / 2);
+	var current_slot	= 0;
+	
+	draw_text_outlined("Equipped items", ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), yy, colour_text_main);
+	yy += text_height;
+	
+	for (var category = 0; category < array_length(actor_registry.player.body_plan); category ++){
+		for (var index = 0; index < array_length(actor_registry.player.body_plan[category]); index ++){
+			if (body_part_is_present(actor_registry.player, category, index)){
+				if (body_part_has_hand(actor_registry.player, category, index)){
+					
+					var x_pos = xx + ((current_slot mod held_items_w_max) * equipment_box_size);
+					var y_pos = yy + ((current_slot mod held_items_w_max) * equipment_box_size);
+					
+					ui_draw_equipment_box(x_pos, yy, colour_ui_main, false);
+					
+					// Held item
+					var item_in_hand = actor_registry.player.body_plan[category][index][BODY_PART_STATS.PART_HAND_SLOT];
+					if (item_in_hand != noone){
+						var spr = item_in_hand.sprite_index;
+						var ind = item_in_hand.image_index;
+					
+						var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
+						var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
+						
+						draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, x_pos + offset, y_pos + offset);
+					}
+					current_slot ++;
+				}
+			}
+		}
+	}
+}
+
+function draw_game_log(x_pos, y_pos, width, height){
+	
+	ui_draw_box(x_pos, y_pos, width, height, "log");
+	
+	var xx = x_pos + (text_width * 2);
+	var yy = y_pos + text_height;
+	
+	if (!surface_exists(log_surface)){
+		log_surface = surface_create(log_surface_width, log_surface_height);
+	}
+	
+	surface_set_target(log_surface);
+	
+	draw_clear(colour_bg_main);
+	
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_state.game_log));
+	var line_y_pos = 0;
+	for (var line = 0; line < draw_to; line ++){
+		
+		var text =		game_state.game_log[line][0];
+		var colour =	game_state.game_log[line][1];
+		
+		draw_text_ext_colour(0, line_y_pos, text, text_height, log_surface_width, colour ,colour ,colour ,colour, 1);
+		
+		line_y_pos += string_height_ext(text, text_height, log_surface_width) + 3;
+	}
+	
+	surface_reset_target();
+	
+	draw_surface(log_surface, xx, yy);
 }
 
 function draw_notification(){
@@ -1386,21 +1467,24 @@ function draw_look_data(){
 				return;
 			}
 			
+			var look_hover = actor_registry.player.look_mode.look_hover;
+			var look_list  = actor_registry.player.look_mode.look_pages;
+			
 			// Background and border
 			var xx = ui_x_pos[ui_settings.ui_x_position][0];
 			var yy = infobox_y;
 	
-			var key_exit	= keybinding_get_text(controls.key_cancel);
+			var key_exit = keybinding_get_text(controls.key_cancel);
+			var key_togg = keybinding_get_text(controls.key_item_swap);
+			var control_text = $"{key_exit} exit";
+			if (array_length(look_list) > 1){
+				control_text += $" / {key_togg} next page";
+			}
 	
-			var control_text = $"{key_exit} to exit";
-	
-			ui_draw_box(xx, yy, infobox_width, infobox_height, "Looking at -", control_text);
+			ui_draw_box(xx, yy, infobox_width, infobox_height - log_height, "Looking at -", control_text);
 				
 			xx += text_width * 2;
 			yy += text_width * 2;
-			
-			var look_hover = actor_registry.player.look_mode.look_hover;
-			var look_list  = actor_registry.player.look_mode.look_pages;
 			
 			if (look_list[look_hover][0] == "actor"){
 				draw_look_actor_data(look_list[look_hover][1])

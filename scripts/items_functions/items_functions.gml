@@ -57,6 +57,22 @@ function item_check_tag(item, tag){
 
 // ITEMS ------------------------------------------------------------------------------------------
 
+// Food
+function item_food_00()constructor{
+	name			= "Biscuit";
+	sprite_index	= food_spr;
+	image_index		= 0;
+	slot			= [];
+	weight			= 1;
+	value			= 1;
+	sort_index		= ITEM_SORT.FOOD;
+	consume			= {
+		nutrition: 0,
+		hydration: 0,
+	}
+	tags			= [TAG.STACKABLE];
+}
+
 // Head
 function item_hat1()constructor{
 	name			= "Hat 1";
@@ -66,7 +82,6 @@ function item_hat1()constructor{
 	weight			= 1;
 	value			= 1;
 	sort_index		= ITEM_SORT.HEAD;
-	tags			= [TAG.IS_AMMO];
 }
 
 function item_hat2()constructor{

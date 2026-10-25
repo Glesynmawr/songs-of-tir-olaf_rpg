@@ -8,6 +8,10 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "inventory")){
 		inv = manager.game_state.game_grid[x_pos][y_pos].inventory;
 	}
+	var prev_open = noone;
+	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "has_been_opened")){
+		prev_open = manager.game_state.game_grid[x_pos][y_pos].has_been_opened;
+	}
 	var lit   = manager.game_state.game_grid[x_pos][y_pos].is_lit;
 	
 	manager.game_state.game_grid[x_pos][y_pos] = new new_tile();
@@ -17,6 +21,9 @@ function cell_replace_tile(x_pos, y_pos, new_tile){
 	manager.game_state.game_grid[x_pos][y_pos].items	  = items;
 	if (inv != noone){
 		manager.game_state.game_grid[x_pos][y_pos].inventory = inv;
+	}
+	if (prev_open != noone){
+		manager.game_state.game_grid[x_pos][y_pos].has_been_opened = prev_open;
 	}
 	manager.game_state.game_grid[x_pos][y_pos].is_lit = lit;
 }
@@ -136,6 +143,7 @@ function tile_chest_large()constructor{
 	inventory		= [];
 	inventory_max	= 10;
 	inv_hover		= 0;
+	has_been_opened = false;
 }
 
 // Lighting
@@ -177,6 +185,7 @@ function tile_door_closed()constructor{
 	is_visible		= false;
 	explored		= false;
 	tile_script		= door_set_open;
+	has_been_opened = false;
 }
 
 function tile_door_open()constructor{
@@ -199,6 +208,7 @@ function tile_door_secret()constructor{
 	is_visible		= false;
 	explored		= false;
 	tile_script		= door_set_open;
+	has_been_opened = false;
 }
 
 

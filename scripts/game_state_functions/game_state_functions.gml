@@ -180,6 +180,8 @@ function init_world(){
 		spawn_new_item(item_wooden_arrow,	30, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		spawn_new_item(item_stone_arrow,	30, SPAWN_LOC.INVENTORY, , , actor_registry.player);
 		
+		spawn_new_item(item_food_00,		5,  SPAWN_LOC.INVENTORY, , , actor_registry.player);
+		
 		actor_registry.player.inv_weight = inventory_get_weight(actor_registry.player);
 		
 		// Distance maps

@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 6, 13];
+global.version = [5, 7, 13];
 
 //randomise();
 debugging_mode		= false;
@@ -11,7 +11,7 @@ audio_group_load(audiogroup_sfx);
 
 #region// COLOURS ---------------------------------------------------------------------------------
 colour_text_main	= C_LTGREY;
-colour_bg_main		= make_colour_rgb(0, 15, 0);
+colour_bg_main		= make_colour_rgb(0, 30, 0);
 
 colour_ui_main		= C_ORANGE;
 colour_ui_off		= C_BROWN;
@@ -65,32 +65,36 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 #region// INVENTORY SETUP -------------------------------------------------------------------------
 
 inventory_display_state		= INVENTORY_DISPLAY.EQUIPMENT;
-
-inv_spr_size		= ITEM_SPRITE_SIZE;
-inv_spacing			= inv_spr_size;
+tile_container				= noone;
 inv_display_max		= 20;
 
 // Inventory position
-inventory_x		= (screen_width / 2);
+inventory_x		= floor(screen_width / 3);
 inventory_y		= 0;
-inventory_w		= (screen_width / 2);
+inventory_w		= ceil(screen_width / 3);
 inventory_h		= screen_height;
+
+// Scroll bar
+scroll_x			= inventory_x + 2;
+scroll_y			= (text_height * 4);
+scroll_h			= (inv_display_max * ITEM_SPRITE_SIZE) + (2 * 3);
+scroll_w			= 8;
+scroll_fill_max		= inv_display_max * ITEM_SPRITE_SIZE;
 
 // Equipment position
 equipment_x					= 0;
 equipment_y					= 0;
-equipment_w					= (screen_width / 2);
+equipment_w					= floor(screen_width / 3);
 equipment_h					= screen_height;
 equipment_box_size			= 20;
 equipment_hovered_x_pos		= noone;
 equipment_hovered_y_pos		= noone;
 
-// Scroll bar
-scroll_x			= inventory_x + 2;
-scroll_y			= (text_height * 4);
-scroll_h			= (inv_display_max * inv_spacing) + (2 * 3);
-scroll_w			= 8;
-scroll_fill_max		= inv_display_max * inv_spacing;
+// Character position
+character_x	= equipment_w + inventory_w;
+character_y	= 0;
+character_w = floor(screen_width / 3);
+character_h = screen_height;
 
 #endregion
 
@@ -205,6 +209,12 @@ day_night_x_pos		= minimap_width - ui_border;
 day_night_width		= sprite_get_width(day_night_background_spr);
 day_night_height	= sprite_get_height(day_night_background_spr);
 
+// Player stats
+stats_x = minimap_width - ui_border;
+stats_y = day_night_height + ui_border + 1;
+stats_w = infobox_width - minimap_width + (ui_border);
+stats_h = minimap_height - stats_y;
+
 // Player hit points
 hp_y_pos	= minimap_height + ui_border;
 hp_height	= sprite_get_height(hit_point_bar_spr);
@@ -226,9 +236,6 @@ log_height	= (LOG_MAX_ENTRIES + 2) * text_height;
 
 log_surface_width  = ui_width - (text_width * 4);
 log_surface_height = log_height - (text_height * 2);
-
-// Inventory and equipment
-tile_container				= noone;
 
 // Pop-up message
 notification_reset();

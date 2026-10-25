@@ -97,15 +97,48 @@ function body_part_weapon_count(actor, weapon_tag){
 }
 
 // STATS ------------------------------------------------------------------------------------------
-function actor_carry_weight(actor){
-	return(actor.strength * 8);
+function actor_set_action_speed(actor){
+	
+	with (actor){
+		var modifier = 0;
+		var total_weight = actor.inv_weight + actor.equ_weight;
+	
+		if (total_weight > actor.carry_weight){
+			modifier = ((total_weight - actor.carry_weight) / actor.carry_weight) * 100;
+		}
+		stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT] = clamp(stat[STAT_NAME.SPEED][STAT_TYPE.BASE] - modifier, 10, stat[STAT_NAME.SPEED][STAT_TYPE.BASE]);
+	}
 }
 
+function actor_set_carry_weight(actor){
+	return(actor.stat[STAT_NAME.STRENGTH][STAT_TYPE.CURRENT] * 8);
+}
+
+function actor_set_hit_points(actor){
+	return(actor.stat[STAT_NAME.TOUGHNESS][STAT_TYPE.CURRENT] * 2);
+}
 
 // SPAWNING	 --------------------------------------------------------------------------------------
 function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	
 	var new_actor = new actor_type();
+	
+	// Stats
+	var str_base = new_actor.strength;
+	var agi_base = new_actor.agility;
+	var tou_base = new_actor.toughness;
+	var int_base = new_actor.intelligence;
+	var spe_base = new_actor.action_speed;
+	
+	new_actor.stat[STAT_NAME.STRENGTH]		= [str_base, str_base];
+	new_actor.stat[STAT_NAME.AGILITY]		= [agi_base, agi_base];
+	new_actor.stat[STAT_NAME.TOUGHNESS]		= [tou_base, tou_base];
+	new_actor.stat[STAT_NAME.INTELLIGENCE]	= [int_base, int_base];
+	new_actor.stat[STAT_NAME.SPEED]			= [spe_base, spe_base];
+	
+	// Hit points
+	var hp = actor_set_hit_points(new_actor);
+	new_actor.hit_points	= [hp, hp];
 	
 	// Replacement variables
 	new_actor.is_visible	= false;
@@ -115,9 +148,6 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	new_actor.colour_fg		= noone;
 	new_actor.colour_timer  = 0;
 	
-	new_actor.hit_points[STAT_TYPE.CURRENT] = new_actor.toughness;
-	new_actor.hit_points[STAT_TYPE.BASE]    = new_actor.toughness;
-	
 	// Sprite and Animation
 	new_actor.sprite_x			= cell_x * cell_width;
 	new_actor.sprite_y			= cell_y * cell_height;
@@ -125,7 +155,6 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	new_actor.sprite_target_y	= cell_y * cell_height;
 	new_actor.melee_offset_x	= 0;
 	new_actor.melee_offset_y	= 0;
-	new_actor.action_speed_base = new_actor.action_speed;
 	
 	new_actor.image_index		= irandom(new_actor.sprite);
 	new_actor.image_speed		= sprite_get_speed(new_actor.sprite) / game_get_speed(gamespeed_fps);
@@ -160,7 +189,7 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	new_actor.offhand_attack_chance		= 0.2;
 	new_actor.offhand_agility_penalty	= -4;
 	
-	new_actor.carry_weight				= actor_carry_weight(new_actor);
+	new_actor.carry_weight				= actor_set_carry_weight(new_actor);
 	new_actor.inv_weight				= 0;
 	new_actor.equ_weight				= 0;
 	

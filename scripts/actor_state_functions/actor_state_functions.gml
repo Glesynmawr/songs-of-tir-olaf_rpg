@@ -15,6 +15,12 @@ function state_ready_for_inputs(){
 	
 	// Open inventory
 	if (keyboard_check_pressed(controls.key_inventory) and manager.game_state.state_main != game_state_world){
+		inventory.selected			= 1;
+		inventory.inv_hover			= 0;
+		inventory.context_menu		= noone;
+		inventory.equ_hover			= [1, 0, BODY_PART_STATS.PART_SLOT_1];
+		inventory.slot_select_menu	= noone;
+		
 		state = state_inventory;
 		exit;
 	}
@@ -390,7 +396,7 @@ function state_wander(){
 function state_look(){
 	
 	// Exit look state
-	if (keyboard_check_pressed(controls.key_cancel)){
+	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_look_state)){
 		look_mode	= noone;
 		state		= state_ready_for_inputs;
 	}
@@ -454,10 +460,10 @@ function state_init_look(){
 	var ww = array_length(manager.game_state.game_grid);
 	var hh = array_length(manager.game_state.game_grid[0]);
 			
-	var x_clamp_from	= max(x_pos - range, 0);
-	var y_clamp_from	= max(y_pos - range, 0);
-	var x_clamp_to		= min(x_pos + range, ww - 1);
-	var y_clamp_to		= min(y_pos + range, hh - 1);
+	var x_clamp_from	= max(x_pos - floor(MAP_WIDTH / 2), 0);
+	var y_clamp_from	= max(y_pos - floor(MAP_WIDTH / 2), 0);
+	var x_clamp_to		= min(x_pos + floor(MAP_WIDTH / 2), ww - 1);
+	var y_clamp_to		= min(y_pos + floor(MAP_WIDTH / 2), hh - 1);
 	
 	look_mode = {
 		cell_x:			x_pos,
@@ -545,7 +551,7 @@ function state_inventory(){
 	
 	// Toggle between inventory/equipment
 	if (keyboard_check_pressed(controls.key_item_swap)) inventory.selected ++;
-	if (inventory.selected > 1) inventory.selected = 0;
+	if (inventory.selected > 2) inventory.selected = 0;
 	
 	// Exit inventory state
 	if (keyboard_check_pressed(controls.key_cancel) or keyboard_check_pressed(controls.key_inventory)){
@@ -558,7 +564,10 @@ function state_inventory(){
 	if (inventory.selected == 1){
 		inventory_control();
 	}
-	
+	// CHARACTER SCONTROL -------------------------------------------------------------------------
+	else if (inventory.selected == 2){
+		
+	}
 	// EQUIPMENT CONTROL --------------------------------------------------------------------------
 	else {
 		if (manager.inventory_display_state	== INVENTORY_DISPLAY.EQUIPMENT){
@@ -819,7 +828,7 @@ function state_context_menu(){
 		}
 		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Store"){
 			// Store item in container
-			if (container_add_item(self, manager.tile_container)){
+			if (container_add_item(inventory.items[inventory.inv_hover], manager.tile_container)){
 				inventory_drop_slot(self, inventory.inv_hover, inventory.items[inventory.inv_hover].stack);
 				
 				// Exit context menu
@@ -833,6 +842,22 @@ function state_context_menu(){
 			// Exit context menu
 			inventory.context_menu = noone;
 			state = state_inventory;
+		}
+		else if (inventory.context_menu[0][inventory.context_menu[5]] == "Eat"){
+			// Consume item
+			var consume_data = inventory.items[inventory.inv_hover].consume;
+			log_add_entry($"{consume_data.nutrition}/{consume_data.hydration}");
+			
+			// Drop item
+			inventory.items[inventory.inv_hover].stack --;
+			
+			if (inventory.items[inventory.inv_hover].stack <= 0){
+				inventory_drop_slot(self, inventory.inv_hover, 1);
+				
+				// Exit context menu
+				inventory.context_menu = noone;
+				state = state_inventory;
+			}
 		}
 	}
 }

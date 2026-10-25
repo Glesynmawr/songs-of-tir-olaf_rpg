@@ -13,6 +13,11 @@ function door_set_open(actor, x_pos, y_pos){
 	cell_replace_tile(x_pos, y_pos, tile_door_open);
 	manager.game_state.game_grid[x_pos][y_pos].index = manager.game_state.door_index;
 	
+	// Set opened 
+	if (manager.game_state.game_grid[x_pos][y_pos].has_been_opened == false){
+		manager.game_state.game_grid[x_pos][y_pos].has_been_opened = true;
+	}
+	
 	// Create log entry
 	var text = $"{actor.name} opens the door.";
 	log_add_entry(text, manager.colour_text_main);
@@ -110,6 +115,16 @@ function tile_access_inventory(actor, x_pos, y_pos){
 		inventory_display_state		= INVENTORY_DISPLAY.CONTAINER;
 		tile_container				= game_state.game_grid[x_pos][y_pos];
 		
+		// Set opened 
+		if (game_state.game_grid[x_pos][y_pos].has_been_opened == false){
+			game_state.game_grid[x_pos][y_pos].has_been_opened = true;
+			
+			// Create contents
+			var new_item = new item_food_00();
+			new_item.stack = 5;
+			container_add_item(new_item, tile_container);
+		}
+	
 		with (actor_registry.player){
 			state = state_inventory;
 		}

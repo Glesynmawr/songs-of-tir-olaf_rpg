@@ -59,7 +59,7 @@ function inventory_initialise(){
 		selected:			1,
 		inv_hover:			0,
 		context_menu:		noone,
-		equ_hover:			[0, 0, BODY_PART_STATS.PART_SLOT_1],
+		equ_hover:			[1, 0, BODY_PART_STATS.PART_SLOT_1],
 		slot_select_menu:	noone,
 		ammo_cap:			20,
 	}
@@ -158,6 +158,12 @@ function context_menu_initialise(){
 		if (inventory.items[inventory.inv_hover].stack > 1){
 			content[0] += " One";
 			array_push(content, "Drop All");
+		}
+	}
+	
+	if (inventory.selected == 1){
+		if (struct_exists(inventory.items[inventory.inv_hover], "consume")){
+			array_insert(content, 0, "Eat");
 		}
 	}
 	
@@ -430,19 +436,6 @@ function inventory_drop_slot(actor, slot, stack){
 
 
 // INVENTORY WEIGHTS
-function actor_set_action_speed(actor){
-	
-	with (actor){
-		var modifier = 0;
-		var total_weight = actor.inv_weight + actor.equ_weight;
-	
-		if (total_weight > actor.carry_weight){
-			modifier = ((total_weight - actor.carry_weight) / actor.carry_weight) * 100;
-		}
-		action_speed = clamp(action_speed_base - modifier, 10, action_speed_base);
-	}
-}
-
 function inventory_get_weight(actor){
 	with (actor){
 		var weight = 0;
@@ -513,15 +506,32 @@ function equipment_drop_slot(actor, stack, target_cat, target_ind, target_slot){
 
 
 // CONTAINER INTERACTION
-function container_add_item(actor, container){
+function container_add_item(item, container){
 	
-	var item;
+	var item_to_store = variable_clone(item);
 	var len_items = array_length(container.inventory);
 	var max_items = container.inventory_max;
 	
+	// Check item has tags
+	if (struct_exists(item_to_store, "tags")){
+			
+		// Check for STACKABLE tag
+		if (item_check_tag(item_to_store, TAG.STACKABLE)){
+			
+			// Check for existing item of same type
+			if (array_length(container.inventory) > 0){
+				for (var i = 0; i < array_length(container.inventory); i ++){
+					if (item_to_store.name == container.inventory[i].name){
+						container.inventory[i].stack += item_to_store.stack;
+						return(true);
+					}
+				}
+			}
+		}
+	}
+	
 	if (len_items < max_items){
-		item = variable_clone(actor.inventory.items[actor.inventory.inv_hover]);
-		array_push(container.inventory, item);
+		array_push(container.inventory, item_to_store);
 		return(true);
 	}
 	return(false);

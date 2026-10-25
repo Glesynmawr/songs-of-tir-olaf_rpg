@@ -244,7 +244,9 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 
 
 // INVENTORY --------------------------------------------------------------------------------------
-function draw_inventory(actor, x_pos, y_pos, width, height){
+function draw_inventory(actor){
+	
+	draw_clear(colour_bg_main);
 	
 	// Text colour
 	var tc = colour_text_main;
@@ -253,53 +255,30 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	var xx, yy;
 	var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
 	
-	// Create controls string
-	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_cancel);
-	var key_3 = keybinding_get_text(controls.key_item_swap);
-	var key_4 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} or {key_2} to exit / {key_3} to toggle / {key_4} to select";
-	
 	// Background
-	ui_draw_box(x_pos, y_pos, width, height, "Inventory", control_list);
+	var col = colour_ui_off;
+	if (actor.inventory.selected == 1) col = colour_ui_main;
+	ui_draw_box(inventory_x, inventory_y, inventory_w, inventory_h, "Inventory", , col);
 	
 	// INVENTORY ----------------------------------------------------------------------------------
 	var display_inv = inventory_create_display_list(actor);
 	
 	// Scrolling
 	var len = array_length(display_inv[0]);
-	var scroll_data = inventory_draw_scrollbar(display_inv[0], display_inv[1]);
+	var scroll_data = inventory_draw_scrollbar(display_inv[0], display_inv[1], col);
 	var draw_from = scroll_data[0];
 	var draw_to = scroll_data[1];
 	
-	xx = x_pos + (text_width * 4);
-	yy = y_pos + (text_height * 2);
+	xx = inventory_x + (text_width * 4);
+	yy = inventory_y + (text_height * 2);
 	
 	// Inventory information
-	var inv_weight = actor.inv_weight;
-	var equ_weight = actor.equ_weight;
-	var max_weight = actor.carry_weight;
+	draw_carry_weight(actor, xx, yy);
 	
-	var total_weight = $"{inv_weight + equ_weight} lb / {max_weight} lb total"
-	var subtext		 = $"Speed: {actor.action_speed}/{actor.action_speed_base}";
-	var weight_colour = colour_text_main;
-	if (inv_weight > max_weight * 2){
-		weight_colour = C_RED;
-		subtext += " (overburdened)";
-	}
-	else if (inv_weight >= max_weight){
-		weight_colour = C_ORANGE;
-		subtext += " (encumbered)";
-	}
+	yy += text_height;
+	draw_move_speed(actor, xx, yy);
 	
-	draw_text_outlined($"{inv_weight} lb lb carried", xx, yy, colour_text_main);
-	yy += text_height
-	draw_text_outlined($"{equ_weight} lb equipped", xx, yy, colour_text_main);
-	yy += text_height
-	draw_text_outlined(total_weight, xx, yy, weight_colour);
-	yy += text_height
-	draw_text_outlined(subtext, xx, yy, weight_colour);
-	
+	// MAIN INVENTORY LIST ------------------------------------------------------------------------
 	yy += text_height * 2;
 	scroll_y = yy;
 	
@@ -308,7 +287,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		for(var i = draw_from; i < draw_to; i ++){
 			
 			// Reset X position
-			xx = x_pos + (text_width * 4);
+			xx = inventory_x + (text_width * 4);
 			
 			var txt = display_inv[0][i][0];
 			
@@ -320,7 +299,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 				var wei = display_inv[0][i][3];
 				var val = display_inv[0][i][4];
 				
-				xx += inv_spacing;
+				xx += ITEM_SPRITE_SIZE;
 				
 				var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
 				var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
@@ -330,12 +309,12 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 				if (ui_flip and display_inv[1] == i and actor.inventory.selected == 1){
 					x_mod = text_width;
 				}
-				xx += inv_spacing * 1.5;
-				
-				// Item name and stack
-				draw_text_outlined($"{wei} lb / $ {val}", x_pos + width, yy + text_y_offset, tc, fa_right);
+				xx += ITEM_SPRITE_SIZE * 1.5;
 				
 				// Weight (and value?)
+				draw_text_outlined($"{wei} lb / $ {val}", inventory_x + inventory_w, yy + text_y_offset, tc, fa_right);
+				
+				// Item name and stack
 				draw_text_outlined(txt, xx + text_width - x_mod, yy + text_y_offset, tc);
 			}
 			else{
@@ -343,7 +322,7 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 			}
 			
 			// Increment y position
-			yy += inv_spacing;
+			yy += ITEM_SPRITE_SIZE;
 		}
 	}
 	else{
@@ -351,6 +330,9 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		// Inventory is empty
 		draw_text_outlined(" - No items held _ ", xx, yy, tc);
 	}
+	
+	// CHARACTER ----------------------------------------------------------------------------------
+	draw_character(actor);
 	
 	// EQUIPMENT ----------------------------------------------------------------------------------
 	if (inventory_display_state == INVENTORY_DISPLAY.EQUIPMENT){
@@ -361,7 +343,9 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 		draw_container(tile_container);
 	}
 	// TRADE --------------------------------------------------------------------------------------
-	
+	else if (inventory_display_state == INVENTORY_DISPLAY.TRADE){
+		draw_trade(actor, noone);
+	}
 	
 	// Interaction context menu
 	var menu_cont = actor.inventory.context_menu;
@@ -374,6 +358,22 @@ function draw_inventory(actor, x_pos, y_pos, width, height){
 	if (menu_equi != noone){
 		draw_context_slot_select_menu(actor, screen_width / 2, screen_height / 2, menu_equi[3], menu_equi[4]);
 	}
+	
+	// Create controls string
+	var key_u = keybinding_get_text(controls.key_up);
+	var key_d = keybinding_get_text(controls.key_down);
+	var key_l = keybinding_get_text(controls.key_left);
+	var key_r = keybinding_get_text(controls.key_right);
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_inventory);
+	var key_3 = keybinding_get_text(controls.key_item_swap);
+	var key_4 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_u},{key_d},{key_l},{key_r} to navigate / {key_1} or {key_2} to exit / {key_3} to toggle / {key_4} to select";
+	
+	var ww = string_width(control_list) + (text_width * 2);
+	xx = floor((screen_width / 2) - (ww / 2));
+	
+	ui_draw_box_controls(xx, inventory_h - 5, control_list);
 }
 
 function draw_equipment(actor){
@@ -383,14 +383,10 @@ function draw_equipment(actor){
 	// Position variables
 	var xx, yy;
 	
-	// Create controls string
-	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_item_swap);
-	var key_3 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} to exit / {key_2} to toggle / {key_3} to select";
-	
 	// Background
-	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, "Equipment", control_list);
+	var col = colour_ui_off;
+	if (actor.inventory.selected == 0) col = colour_ui_main;
+	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, "Equipment", , col);
 	
 	// Worn Equipment
 	xx = equipment_x + (text_width * 2);
@@ -464,11 +460,10 @@ function draw_container(container){
 	
 	// Text colour
 	var tc = colour_text_main;
-	
-	// Position variables
 	var xx, yy;
 
 	var text_y_offset = ceil((ITEM_SPRITE_SIZE - text_height) / 2);
+	var actor = actor_registry.player;
 	
 	// Create controls string
 	var key_1 = keybinding_get_text(controls.key_cancel);
@@ -478,8 +473,11 @@ function draw_container(container){
 	var title = container.tile;
 	
 	// Background
-	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, title, control_list);
+	var col = colour_ui_off;
+	if (actor.inventory.selected == 0) col = colour_ui_main;
+	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, title, control_list, col);
 	
+	// Position
 	xx = equipment_x + (text_width  * 5);
 	yy = equipment_y + (text_height * 2);
 	
@@ -498,9 +496,10 @@ function draw_container(container){
 		var sheet_x = (ind mod 8) * ITEM_SPRITE_SIZE;
 		var sheet_y = (ind div 8) * ITEM_SPRITE_SIZE;
 		
-		var txt = "";
+		var txt = ""
+				
 		var x_mod = 0;
-		if (manager.actor_registry.player.inventory.selected == 0){
+		if (actor.inventory.selected == 0){
 			if (container.inv_hover == i){
 				txt += "> ";
 			}
@@ -509,17 +508,38 @@ function draw_container(container){
 				x_mod = text_width;
 			}
 		}
+		if (container.inventory[i].stack > 1){
+			txt += $"{container.inventory[i].stack} x ";
+		}
 		txt += container.inventory[i].name;
 		
 		draw_sprite_part(spr, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx, yy);
 		
-		draw_text_outlined(txt, xx + (inv_spacing * 2) - x_mod, yy + text_y_offset, tc);
+		draw_text_outlined(txt, xx + (ITEM_SPRITE_SIZE * 2) - x_mod, yy + text_y_offset, tc);
 		
-		yy += inv_spacing;
+		yy += ITEM_SPRITE_SIZE;
 	}
 }
 
-function draw_trade(trader){
+function draw_trade(actor, trader){
+	// Check trader exists
+	if (trader == noone) return;
+	
+	// Background
+	var col = colour_ui_off;
+	if (actor.inventory.selected == 0) col = colour_ui_main;
+	
+	ui_draw_box(equipment_x, equipment_y, equipment_w, equipment_h, $"{trader.name} Trade", , col);
+	
+}
+
+function draw_character(actor){
+	
+	// Background
+	var col = colour_ui_off;
+	if (actor.inventory.selected == 2) col = colour_ui_main;
+	
+	ui_draw_box(character_x, character_y, character_w, character_h, "Character", , col);
 	
 }
 
@@ -649,7 +669,7 @@ function inventory_create_display_list(actor){
 	}
 }
 
-function inventory_draw_scrollbar(array, hover){
+function inventory_draw_scrollbar(array, hover, col = colour_ui_main){
 	var inv_length			= array_length(array);
 	var scroll_start_index	= 0;
 	var scroll_end_index	= inv_length;
@@ -673,10 +693,10 @@ function inventory_draw_scrollbar(array, hover){
 		draw_sprite_stretched_ext(scrollbar_spr, 1, scroll_x, scroll_y, scroll_w, scroll_h, colour_bg_main, 1);
 		
 		// Fill bar
-		draw_sprite_stretched_ext(pixel_spr, 0, scroll_x + 3, scroll_y + 3 + fill_pos_y, 2, fill_amount, C_ORANGE, 1);
+		draw_sprite_stretched_ext(pixel_spr, 0, scroll_x + 3, scroll_y + 3 + fill_pos_y, 2, fill_amount, col, 1);
 		
 		// Border
-		draw_sprite_stretched_ext(scrollbar_spr, 0, scroll_x, scroll_y, scroll_w, scroll_h, colour_ui_main, 1);
+		draw_sprite_stretched_ext(scrollbar_spr, 0, scroll_x, scroll_y, scroll_w, scroll_h, col, 1);
 		
 		return([scroll_start_index, scroll_end_index]);
 	}
@@ -688,6 +708,7 @@ function inventory_draw_scrollbar(array, hover){
 function inventory_get_category_text(item){
 	var sort_index = item.sort_index;
 	switch(sort_index){
+		case ITEM_SORT.FOOD:			return("Food");				break;
 		case ITEM_SORT.WEAPON_MELEE:	return("Melee Weapons");	break;
 		case ITEM_SORT.WEAPON_RANGED:	return("Ranged Weapons");	break;
 		case ITEM_SORT.AMMO:			return("Ammo");				break;
@@ -716,7 +737,7 @@ function draw_game_ui(){
 	
 	// Inventory and pick-up menus
 	if (actor_registry.player.state == state_inventory or actor_registry.player.state == state_context_menu or actor_registry.player.state == state_slot_selection){
-		draw_inventory(actor_registry.player, inventory_x, inventory_y, inventory_w, inventory_h);
+		draw_inventory(actor_registry.player);
 	}
 	if (actor_registry.player.state == state_pickup){
 		draw_pickup(actor_registry.player);
@@ -916,7 +937,7 @@ function draw_pause_menu(){
 
 
 // UI GENERIC -------------------------------------------------------------------------------------
-function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
+function draw_text_outlined(text, x_pos, y_pos, text_col = colour_text_main, h_align = fa_left){
 	
 	// Set colours
 	var bg = colour_bg_main;
@@ -938,21 +959,23 @@ function draw_text_outlined(text, x_pos, y_pos, text_col, h_align = fa_left){
 	draw_set_halign(fa_left);
 }
 
-function ui_draw_box(x_pos, y_pos, width, height, title = "", control_keys = ""){
+function ui_draw_box(x_pos, y_pos, width, height, title = "", control_keys = "", col = colour_ui_main){
 	
 	// Set colours
 	var bg = colour_bg_main;
-	var uc = colour_ui_main;
 	
-	draw_sprite_stretched_ext(ui_border_spr, 2, x_pos, y_pos, width, height, bg, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 1, x_pos, y_pos, width, height, bg, 1);
-	draw_sprite_stretched_ext(ui_border_spr, 0, x_pos, y_pos, width, height, uc, 1);
+	var xx = floor(x_pos);
+	var yy = floor(y_pos);
+	
+	draw_sprite_stretched_ext(ui_border_spr, 2, xx, yy, width, height, bg,  1);
+	draw_sprite_stretched_ext(ui_border_spr, 1, xx, yy, width, height, bg,  1);
+	draw_sprite_stretched_ext(ui_border_spr, 0, xx, yy, width, height, col, 1);
 	
 	if (title != ""){
-		ui_draw_box_title(x_pos + (text_width * 2), y_pos, title);
+		ui_draw_box_title(xx + (text_width * 2), yy, title);
 	}
 	if (control_keys != ""){
-		ui_draw_box_controls(x_pos + (text_width * 2), y_pos + height - text_height + 2, control_keys);
+		ui_draw_box_controls(xx + (text_width * 2), yy + height - text_height + 2, control_keys);
 	}
 }
 	
@@ -1022,6 +1045,9 @@ function draw_info_box(){
 	// Day/night cycle
 	draw_day_night();
 	
+	// Player stats
+	draw_stats(player, ui_x_pos[ui_settings.ui_x_position][0] + stats_x, stats_y);
+	
 	// Player hit points
 	draw_hp(player);
 	
@@ -1036,7 +1062,7 @@ function draw_info_box(){
 	
 	// Current turn
 	yy += text_height;
-	//draw_text_outlined($"Turn: {actor_registry.player.player_steps}", xx, yy, colour_text_main);
+	//draw_text_outlined($"Turn: {actor_registry.player.player_steps}", xx, yy);
 }
 
 function draw_minimap(actor){
@@ -1203,6 +1229,32 @@ function draw_day_night(){
 	draw_surface(day_night_surface, xx, yy);
 }
 
+function draw_stats(actor, x_pos, y_pos){
+	
+	// Background
+	ui_draw_box(x_pos, y_pos, stats_w, stats_h)
+	
+	// Player name
+	var xx = x_pos + (ui_border * 2);
+	var yy = y_pos + (ui_border * 2);
+	var ww = sprite_get_width(stat_icon_spr);
+	draw_text_outlined(actor.name, xx, yy);
+	
+	for (var i = 0; i < 4; i ++){
+		yy += text_height + 3;
+		draw_sprite(stat_icon_spr, i, xx, yy);
+		var col = colour_text_main;
+		var stat_curr = actor.stat[STAT_NAME.STRENGTH][STAT_TYPE.CURRENT];
+		var stat_base = actor.stat[STAT_NAME.STRENGTH][STAT_TYPE.BASE];
+		
+		if (stat_curr < stat_base) col = C_RED;
+		if (stat_curr > stat_base) col = C_LIME;
+		
+		var txt = $"{stat_curr}/{stat_base}";
+		draw_text_outlined(txt, xx + ww, yy, col);
+	}
+}
+
 function draw_hp(actor){
 	
 	// Position
@@ -1222,13 +1274,13 @@ function draw_hp(actor){
 	draw_sprite_stretched(hit_point_bar_spr, 1, xx, yy, fill_pixels, hp_height);
 	
 	// Text
-	draw_text_outlined($"HP: {hp_cur} / {hp_max}", xx + 3, yy + 3, colour_text_main);
+	draw_text_outlined($"HP: {hp_cur} / {hp_max}", xx + 3, yy + 3);
 }
 
 function draw_move_speed(actor, xx, yy){
 	
-	var speed_cur  = actor_registry.player.action_speed;
-	var speed_base = actor_registry.player.action_speed_base;
+	var speed_cur  = actor_registry.player.stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT];
+	var speed_base = actor_registry.player.stat[STAT_NAME.SPEED][STAT_TYPE.BASE];
 	
 	var txt = $"Speed:  {speed_cur}/{speed_base}"
 	
@@ -1273,7 +1325,7 @@ function draw_held_items(actor){
 	var offset			= floor((equipment_box_size - ITEM_SPRITE_SIZE) / 2);
 	var current_slot	= 0;
 	
-	draw_text_outlined("Equipped items", ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), yy, colour_text_main);
+	draw_text_outlined("Equipped items", ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), yy);
 	yy += text_height;
 	
 	for (var category = 0; category < array_length(actor_registry.player.body_plan); category ++){
@@ -1359,7 +1411,7 @@ function draw_notification(){
 		ui_draw_box(xx, yy, ww, hh, , control_list);
 		
 		// Notification text
-		draw_text_outlined(txt, xx + (text_width * 2), yy + (text_height * 2), colour_text_main);
+		draw_text_outlined(txt, xx + (text_width * 2), yy + (text_height * 2));
 	}
 }
 
@@ -1474,9 +1526,10 @@ function draw_look_data(){
 			var xx = ui_x_pos[ui_settings.ui_x_position][0];
 			var yy = infobox_y;
 	
-			var key_exit = keybinding_get_text(controls.key_cancel);
+			var key_1 = keybinding_get_text(controls.key_cancel);
+			var key_2 = keybinding_get_text(controls.key_look_state);
 			var key_togg = keybinding_get_text(controls.key_item_swap);
-			var control_text = $"{key_exit} exit";
+			var control_text = $"{key_1}/{key_2} exit";
 			if (array_length(look_list) > 1){
 				control_text += $" / {key_togg} next page";
 			}
@@ -1516,7 +1569,7 @@ function draw_look_items_data(items){
 	yy += text_width * 2;
 	
 	var list_len  = array_length(items);
-	var max_lines = floor((infobox_height - (text_width * 6)) / inv_spacing);
+	var max_lines = floor((infobox_height - (text_width * 6)) / ITEM_SPRITE_SIZE);
 	var lines_to_draw = min(list_len, max_lines);
 	var excess_lines = list_len - (lines_to_draw);
 	
@@ -1540,11 +1593,11 @@ function draw_look_items_data(items){
 		
 		draw_sprite_part(spr, ind, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, xx, yy);
 		
-		xx += inv_spacing * 2;
+		xx += ITEM_SPRITE_SIZE * 2;
 		draw_text_outlined(txt, xx, yy + text_y_offset, colour_text_main);
 		
-		xx -= inv_spacing * 2;
-		yy += inv_spacing;
+		xx -= ITEM_SPRITE_SIZE * 2;
+		yy += ITEM_SPRITE_SIZE;
 	}
 	
 	

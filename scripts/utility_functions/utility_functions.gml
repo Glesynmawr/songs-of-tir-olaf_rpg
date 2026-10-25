@@ -269,7 +269,7 @@ function create_distance_map(grid, target_x, target_y){
 
 
 // GAME LOG	
-function log_add_entry(text, colour = colour_text_main){
+function log_add_entry(text, colour = manager.colour_text_main){
 	with (manager){
 		var new_text = ":: " + text;
 		array_insert(game_state.game_log, 0, [new_text, colour]);
@@ -586,8 +586,8 @@ function turn_order_initialise(){
 		
 					// GET ACTION ENERGY COST
 					var action_cost = 100;
-					if (action_speed > 0){
-						action_cost = 10000 / action_speed;
+					if (stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT] > 0){
+						action_cost = 10000 / stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT];
 					}
 		
 					// GET ACTOR DISTANCE FROM PLAYER

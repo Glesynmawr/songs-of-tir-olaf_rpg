@@ -4,12 +4,16 @@ function action_modify_hit_points(actor, value){
 	with (actor){
 		hit_points[STAT_TYPE.CURRENT] = min(hit_points[STAT_TYPE.CURRENT] + value, hit_points[STAT_TYPE.BASE]);
 		
+		var return_value = noone;
+		
 		if (hit_points[STAT_TYPE.CURRENT] <= 0){
+			return_value = [actor.x_pos, actor.y_pos];
 			action_remove_actor(self);
 			if (actor == manager.actor_registry.player){
 				manager.game_state.state_main = game_state_game_over;
 			}
 		}
+		return(return_value);
 	}
 }
 
@@ -144,7 +148,11 @@ function action_attack_melee(attacker, defender){
 					if (attack_chance > 0){
 						// Perform attack
 						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.melee_base_hit_modifier);
-						passive_attack_add_log(attacker, defender, attack_results);
+						
+						var player = manager.actor_registry.player;
+						if (attacker == player or defender == player){
+							passive_attack_add_log(attacker, defender, attack_results);
+						}
 					}
 				}
 			}
@@ -236,7 +244,13 @@ function action_attack_ranged(attacker, defender){
 					if (attack_chance > 0){
 						// Perform attack
 						var attack_results = combat_attack(attacker, defender, attack_chance, attack_damage, agility_modifier, damage_multiplier, manager.range_base_hit_modifier);
-						passive_attack_add_log(attacker, defender, attack_results);
+						
+						var player = manager.actor_registry.player;
+						if (attacker == player or defender == player){
+							passive_attack_add_log(attacker, defender, attack_results);
+						}
+						
+						attacker.has_acted = true;
 					}
 				}
 			}
@@ -472,7 +486,7 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 	var attack_made = combat_get_attack_chance(attack_chance);
 	if (!attack_made) return(noone);
 	
-	var attack_hits = combat_get_hit(attacker.agility + agility_modifier, defender.agility, hit_modifier);
+	var attack_hits = combat_get_hit(attacker.stat[STAT_NAME.AGILITY][STAT_TYPE.CURRENT] + agility_modifier, defender.stat[STAT_NAME.AGILITY][STAT_TYPE.CURRENT], hit_modifier);
 	if (!attack_hits) {
 		play_sound(attack_miss_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 		return(false);
@@ -488,11 +502,19 @@ function combat_attack(attacker, defender, attack_chance, damage, agility_modifi
 		return([raw_damage, location_armour]);
 	}
 	
-	play_sound(attack_damage_00_snd, AUDIO_SETTINGS.SFX_GAIN);
 	particle_create_hit_dust(defender, point_direction(attacker.x_pos, attacker.y_pos, defender.x_pos, defender.y_pos), 5, C_RED);
 	passive_actor_set_target(defender, attacker);
 	
-	action_modify_hit_points(defender, -(raw_damage - location_armour));
+	var actor_is_killed = action_modify_hit_points(defender, -(raw_damage - location_armour));
+	if (is_array(actor_is_killed)){
+		if (attacker.state == state_look){
+			attacker.look_mode.look_pages = cell_get_data(actor_is_killed[0], actor_is_killed[1]);
+		}
+		play_sound(actor_death_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+	}
+	else{
+		play_sound(attack_damage_00_snd, AUDIO_SETTINGS.SFX_GAIN);
+	}
 	return([raw_damage, location_armour]);
 }
 

@@ -12,16 +12,16 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"6b39c011-9f7f-41a8-bbce-8afc4792d8bc","name":"6b39c011-9f7f-41a8-bbce-8afc4792d8bc","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"da847531-21a2-4703-b2c5-f79abf2bd61e","name":"da847531-21a2-4703-b2c5-f79abf2bd61e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"26a1732c-54a6-4376-9919-9bf2aaaadf02","name":"26a1732c-54a6-4376-9919-9bf2aaaadf02","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"c7f04fb9-ca45-4e7e-8259-34c0f8395555","name":"c7f04fb9-ca45-4e7e-8259-34c0f8395555","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"84b92618-6d90-46c5-b3de-d015e122db16","name":"84b92618-6d90-46c5-b3de-d015e122db16","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"43453ccb-9098-4286-9a45-ceb0840560fb","name":"43453ccb-9098-4286-9a45-ceb0840560fb","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":10,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"c2e72cda-b520-4495-ab0e-3d9f6549ef36","blendMode":0,"displayName":"default","isLocked":false,"name":"c2e72cda-b520-4495-ab0e-3d9f6549ef36","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"ae607e46-2203-4d61-96c5-8928a1852620","blendMode":0,"displayName":"default","isLocked":false,"name":"ae607e46-2203-4d61-96c5-8928a1852620","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"day_night_sun_moon_spr",
   "nineSlice":null,
@@ -71,14 +71,14 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6b39c011-9f7f-41a8-bbce-8afc4792d8bc","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"cb4458de-e769-41a7-869d-66e83cc08405","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"c7f04fb9-ca45-4e7e-8259-34c0f8395555","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"36be4e76-e016-4d2b-a73f-aa00e28c107c","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"da847531-21a2-4703-b2c5-f79abf2bd61e","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"c03c082d-eebd-4314-8f90-f7025c779caf","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"84b92618-6d90-46c5-b3de-d015e122db16","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"219c8c7b-1ce9-4430-af7d-5368a5af979b","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"26a1732c-54a6-4376-9919-9bf2aaaadf02","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ca693927-f3c5-4de5-857b-80d2853a4698","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"43453ccb-9098-4286-9a45-ceb0840560fb","path":"sprites/day_night_sun_moon_spr/day_night_sun_moon_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"fb06d36a-0100-4223-9141-75b4d9ae71e1","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

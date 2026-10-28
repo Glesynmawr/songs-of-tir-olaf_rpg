@@ -1539,6 +1539,10 @@ function draw_look_data(){
 			xx += text_width * 2;
 			yy += text_width * 2;
 			
+			if (look_list == "Not visible"){
+				draw_text_outlined(look_list, xx, yy);
+				return;
+			}
 			if (look_list[look_hover][0] == "actor"){
 				draw_look_actor_data(look_list[look_hover][1])
 			}

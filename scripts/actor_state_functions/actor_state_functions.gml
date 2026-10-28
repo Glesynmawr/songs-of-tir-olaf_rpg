@@ -432,7 +432,7 @@ function state_look(){
 			// Get data
 			look_pages = cell_get_data(cell_x, cell_y);
 			if (look_hover >= array_length(look_pages)){
-				look_hover = array_length(look_pages) - 1;
+				look_hover = max(array_length(look_pages) - 1, 0);
 			}
 		}
 		else{
@@ -447,7 +447,7 @@ function state_look(){
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
 			
 			if (is_array(look_pages)){
-				if (look_pages[0][0] == "actor"){
+				if (look_pages[0][0] == "actor" and manager.game_state.game_grid[cell_x][cell_y].is_visible){
 					action_attack_ranged(other, look_pages[0][1]);
 				}
 			}
@@ -488,9 +488,15 @@ function state_init_look(){
 }
 
 function cell_get_data(cell_x, cell_y){
-
+	
+	// Grid position is out of bounds
 	if (!grid_check_position_in_bounds(manager.game_state.game_grid, cell_x, cell_y)){
 		return(noone);
+	}
+	
+	// Grid position is not visible to player
+	if (!manager.game_state.game_grid[cell_x][cell_y].is_visible){
+		return("Not visible");
 	}
 
 	with (manager){

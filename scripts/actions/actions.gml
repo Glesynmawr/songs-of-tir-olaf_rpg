@@ -62,12 +62,27 @@ function action_move(grid, move_x, move_y){
 	sprite_target_x = x_pos * manager.cell_width;
 	sprite_target_y = y_pos * manager.cell_height;
 	
+	// Set NPC actor visibility
+	if (self != manager.actor_registry.player){
+		if (grid[x_pos][y_pos].is_visible){
+			is_visible = true;
+		}
+		else is_visible = false;
+	}
+	
+	// Check for closed doors
 	if (grid[x_pos][y_pos].tile == "closed door") or (grid[x_pos][y_pos].tile == "secret door"){
 		
 		if (self == manager.actor_registry.player){
 			if (grid[x_pos][y_pos].tile == "secret door"){
 				found_a_secret(self);
 			}
+		}
+		else{
+			if (grid[x_pos][y_pos].is_visible){
+				is_visible = true;
+			}
+			else is_visible = false;
 		}
 			
 		cell_replace_tile(x_pos, y_pos, tile_door_open);

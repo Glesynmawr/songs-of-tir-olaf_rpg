@@ -103,7 +103,7 @@ function world_generate(){
 	world_grid = map_smoothing(world_grid);
 	
 	// Autotile river and canyon
-	world_grid = autotile_map(world_grid);
+	world_grid = autotile_map(world_grid, world_tile_water_at_spr);
 	
 	// Add dungeons
 	world_grid = dungeons_add_to_world(world_grid);
@@ -285,7 +285,7 @@ function biomes_add(grid){
 				var cell_y = highest_cell[1];
 			
 				grid[cell_x][cell_y] = new tile[current_biome]();
-				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width) - 1;
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / game_state.cell_width) - 1;
 				grid[cell_x][cell_y].index += irandom(tiles_in_biome);
 			}
 		}
@@ -297,7 +297,7 @@ function biomes_add(grid){
 		for (j = 0; j < height; j ++){
 			if (!is_struct(grid[i][j])){
 				grid[i][j] = new tile_world_marsh();
-				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / cell_width) - 1;
+				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / game_state.cell_width) - 1;
 				grid[i][j].index += irandom(tiles_in_biome);
 			}
 		}
@@ -362,7 +362,7 @@ function map_smoothing(grid){
 	return(grid);
 }
 
-function autotile_map(grid){
+function autotile_map(grid, water_spr = water_00_spr){
 	var grid_w = array_length(grid);
 	var grid_h = array_length(grid[0]);
 	
@@ -370,7 +370,7 @@ function autotile_map(grid){
 		for (var j = 0; j < grid_h; j ++){
 			
 			if (grid[i][j].tile == "water"){
-				grid[i][j].sprite = water_00_spr;
+				grid[i][j].sprite = water_spr;
 				grid[i][j].index = autotile_47(grid, "water", i, j);
 			}
 			else if (grid[i][j].tile == "canyon"){
@@ -384,14 +384,6 @@ function autotile_map(grid){
 		}
 	}
 	return(grid);
-}
-
-function zone_map_generate(grid, cell_x, cell_y){
-	var biome_index		= grid[cell_x][cell_y].biome;
-	var autotile_index	= grid[cell_x][cell_y].index;
-	var has_dungeon		= grid[cell_x][cell_y].dungeon;
-	
-	return(zone_function[biome_index](autotile_index, has_dungeon, biome_index));
 }
 
 function dungeons_add_to_world(grid){

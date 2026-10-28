@@ -59,8 +59,8 @@ function action_move(grid, move_x, move_y){
 	x_pos += move_x;
 	y_pos += move_y;
 
-	sprite_target_x = x_pos * manager.cell_width;
-	sprite_target_y = y_pos * manager.cell_height;
+	sprite_target_x = x_pos * manager.game_state.cell_width;
+	sprite_target_y = y_pos * manager.game_state.cell_height;
 	
 	// Set NPC actor visibility
 	if (self != manager.actor_registry.player){
@@ -456,8 +456,8 @@ function passive_move_bounce(actor){
 		var xx = sprite_x;
 		var yy = sprite_y;
 		
-		var x_mod = (xx mod manager.cell_width)  / manager.cell_width;
-		var y_mod = (yy mod manager.cell_height) / manager.cell_height;
+		var x_mod = (xx mod manager.game_state.cell_width)  / manager.game_state.cell_width;
+		var y_mod = (yy mod manager.game_state.cell_height) / manager.game_state.cell_height;
 		
 		var x_bounce = sin(pi * x_mod);
 		var y_bounce = sin(pi * y_mod);

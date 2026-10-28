@@ -1,3 +1,19 @@
+// ZONE CREATION FUNCTIONS ------------------------------------------------------------------------
+function zone_map_generate(grid, cell_x, cell_y){
+	var biome_index		= grid[cell_x][cell_y].biome;
+	var autotile_index	= grid[cell_x][cell_y].index;
+	var has_dungeon		= grid[cell_x][cell_y].dungeon;
+	
+	var zone_map = zone_function[biome_index](autotile_index, has_dungeon, biome_index);
+	
+	return(zone_map);
+}
+
+function generate_zone_tile(tile_type){
+	var new_tile = new tile_type();
+	new_tile.index += irandom(floor(sprite_get_width(new_tile.sprite) / ZONE_TILE_SIZE) - 1);
+	return(new_tile);
+}
 
 function zone_canyon(world_index, dungeon, terrain){
 	var temp_list = initialise_temp_list();
@@ -289,6 +305,129 @@ function zone_add_clump_feature(grid, tile_type, number_of_features, max_radius,
 		}
 	}
 	return(grid);
+}
+
+
+// ZONE TILES -------------------------------------------------------------------------------------
+function tile_zone_bush()constructor{
+	tile			= "bush";
+	sprite			= zone_tile_bush_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_dirt()constructor{
+	tile			= "dirt";
+	sprite			= zone_tile_dirt_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_grass()constructor{
+	tile			= "grass";
+	sprite			= zone_tile_grass_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_lilypad()constructor{
+	tile			= "lilypad";
+	sprite			= zone_tile_lilypad_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_marsh()constructor{
+	tile			= "swamp";
+	sprite			= zone_tile_marsh_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_raised_ground()constructor{
+	tile			= "raised ground";
+	sprite			= zone_tile_raised_ground_00_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_reeds()constructor{
+	tile			= "reeds";
+	sprite			= zone_tile_reeds_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_rocks()constructor{
+	tile			= "rocks";
+	sprite			= zone_tile_rocks_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_salt()constructor{
+	tile			= "salt";
+	sprite			= zone_tile_salt_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_tree()constructor{
+	tile			= "tree";
+	sprite			= zone_tile_tree_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_water()constructor{
+	tile			= "water";
+	sprite			= zone_tile_water_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 

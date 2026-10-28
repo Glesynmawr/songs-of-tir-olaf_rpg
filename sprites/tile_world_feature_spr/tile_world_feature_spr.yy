@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
-  "%Name":"tile_world_dungeon_entrance_spr",
+  "%Name":"tile_world_feature_spr",
   "bboxMode":0,
   "bbox_bottom":5,
-  "bbox_left":10,
-  "bbox_right":14,
+  "bbox_left":2,
+  "bbox_right":6,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -13,15 +13,17 @@
   "For3D":false,
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"3fb33fbd-649f-4739-bbb8-ac9b648f8fcf","name":"3fb33fbd-649f-4739-bbb8-ac9b648f8fcf","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"61c4c080-313f-47b9-adeb-b3bc8659d9c1","name":"61c4c080-313f-47b9-adeb-b3bc8659d9c1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"8b6660d1-f2bc-46ee-b643-b9cb9f40c001","name":"8b6660d1-f2bc-46ee-b643-b9cb9f40c001","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":8,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"da08152a-bf39-4957-9172-c2d9121b302f","blendMode":0,"displayName":"default","isLocked":false,"name":"da08152a-bf39-4957-9172-c2d9121b302f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"tile_world_dungeon_entrance_spr",
+  "name":"tile_world_feature_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
@@ -33,7 +35,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"tile_world_dungeon_entrance_spr",
+    "%Name":"tile_world_feature_spr",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -49,7 +51,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":1.0,
+    "length":3.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -57,7 +59,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"tile_world_dungeon_entrance_spr",
+    "name":"tile_world_feature_spr",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -69,8 +71,14 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3fb33fbd-649f-4739-bbb8-ac9b648f8fcf","path":"sprites/tile_world_dungeon_entrance_spr/tile_world_dungeon_entrance_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3fb33fbd-649f-4739-bbb8-ac9b648f8fcf","path":"sprites/tile_world_feature_spr/tile_world_feature_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"e3613e2c-3923-4bbd-8b6d-7729ca90f01a","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"61c4c080-313f-47b9-adeb-b3bc8659d9c1","path":"sprites/tile_world_feature_spr/tile_world_feature_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"1ffa58a5-fb33-4d7f-a26d-94e360be1f82","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8b6660d1-f2bc-46ee-b643-b9cb9f40c001","path":"sprites/tile_world_feature_spr/tile_world_feature_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"8d3c6feb-6791-47ac-9c7f-1298571fc9d1","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +94,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":16,
+  "width":8,
 }

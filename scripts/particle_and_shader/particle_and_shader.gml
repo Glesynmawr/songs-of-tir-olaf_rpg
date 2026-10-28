@@ -50,8 +50,8 @@ function particle_create_actor_death(actor){
 		var new_part = {
 			sprite_index:	smoke_spiral_spr,
 			image_index:	0,
-			x:				(actor.x_pos * manager.cell_width)  + (manager.cell_width / 2) + lengthdir_x(4, dir),
-			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2) + lengthdir_y(4, dir),
+			x:				(actor.x_pos * manager.game_state.cell_width)  + (manager.game_state.cell_width / 2) + lengthdir_x(4, dir),
+			y:				(actor.y_pos * manager.game_state.cell_height) + (manager.game_state.cell_height / 2) + lengthdir_y(4, dir),
 			direction:		90,
 			speed:			0.5,
 			image_blend:	C_WHITE,
@@ -68,8 +68,8 @@ function particle_create_hit_dust(actor, dir, count, colour = c_white){
 		var new_part = {
 			sprite_index:	dust_spr,
 			image_index:	0,
-			x:				(actor.x_pos * manager.cell_width)  + (manager.cell_width / 2),
-			y:				(actor.y_pos * manager.cell_height) + (manager.cell_height / 2),
+			x:				(actor.x_pos * manager.game_state.cell_width)  + (manager.game_state.cell_width / 2),
+			y:				(actor.y_pos * manager.game_state.cell_height) + (manager.game_state.cell_height / 2),
 			direction:		dir + irandom_range(-60, 60),
 			speed:			1,
 			image_blend:	colour,

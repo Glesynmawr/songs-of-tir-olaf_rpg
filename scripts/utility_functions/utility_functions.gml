@@ -47,10 +47,10 @@ function resolution_scale(){
 
 function actor_set_sprite_pos(actor){
 	with (actor){
-		sprite_x = x_pos * manager.cell_width;
-		sprite_y = y_pos * manager.cell_height;
-		sprite_target_x = x_pos * manager.cell_width;
-		sprite_target_y = y_pos * manager.cell_height;
+		sprite_x = x_pos * manager.game_state.cell_width;
+		sprite_y = y_pos * manager.game_state.cell_height;
+		sprite_target_x = x_pos * manager.game_state.cell_width;
+		sprite_target_y = y_pos * manager.game_state.cell_height;
 	}
 }
 

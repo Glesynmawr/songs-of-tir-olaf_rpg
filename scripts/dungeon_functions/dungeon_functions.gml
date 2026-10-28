@@ -836,7 +836,7 @@ function room_decorate_large_chest(x_from, y_from, x_to, y_to, decor_index){
 	if (dungeon_grid[chest_x][chest_y].tile == "carpet"){
 		dungeon_grid[chest_x][chest_y] = new tile_chest_large();
 		
-		var sprite_count = (sprite_get_width(chest_large_closed_spr) / cell_width) - 1;
+		var sprite_count = (sprite_get_width(chest_large_closed_spr) / game_state.cell_width) - 1;
 		
 		dungeon_grid[chest_x][chest_y].index = irandom(sprite_count);
 	}

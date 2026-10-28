@@ -407,8 +407,8 @@ function state_look(){
 			image_index -= sprite_get_number(sprite_index);
 		}
 		
-		var target_x = cell_x * manager.cell_width;
-		var target_y = cell_y * manager.cell_height;
+		var target_x = cell_x * manager.game_state.cell_width;
+		var target_y = cell_y * manager.game_state.cell_height;
 		
 		if (sprite_x != target_x) sprite_x += (target_x - sprite_x) * 0.2;
 		if (sprite_y != target_y) sprite_y += (target_y - sprite_y) * 0.2;
@@ -474,8 +474,8 @@ function state_init_look(){
 		x_to:			x_clamp_to,
 		y_to:			y_clamp_to,
 		
-		sprite_x:		x_pos * manager.cell_width,
-		sprite_y:		y_pos * manager.cell_height,
+		sprite_x:		x_pos * manager.game_state.cell_width,
+		sprite_y:		y_pos * manager.game_state.cell_height,
 		sprite_index:	equipment_box_spr,
 		image_index:	0,
 		anim_speed:		sprite_get_speed(equipment_box_spr) / game_get_speed(gamespeed_fps),

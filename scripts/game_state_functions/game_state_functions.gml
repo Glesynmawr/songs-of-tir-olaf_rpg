@@ -72,6 +72,9 @@ function init_game_state(){
 		state_previous			: noone,
 		world_map				: noone,
 		zone_map				: noone,
+		
+		cell_width				: 16,
+		cell_height				: 16,
 	
 		current_depth			: noone,
 		dungeon_entry_x			: noone,
@@ -106,8 +109,6 @@ function init_main(){
 		draw_set_font(mono_fnt);
 		text_height = string_height("M") + 2;
 		text_width  = string_width("M");
-		cell_width  = 16;
-		cell_height = 16;
 	}
 }
 	
@@ -518,6 +519,8 @@ function goto_dungeon(dungeon_id, is_descending){
 			var new_dungeon = dungeon_generate(dungeon_id);
 			game_state.zone_map[world_x][world_y][game_state.dungeon_entry_x][game_state.dungeon_entry_y].dungeon_list[game_state.current_depth] = new_dungeon;
 		}
+		game_state.cell_width  = ZONE_TILE_SIZE;
+		game_state.cell_height = ZONE_TILE_SIZE;
 	
 		game_state.game_grid	= new_dungeon[0];
 		game_state.map_mode	= MAP_MODE.DUNGEON;
@@ -569,6 +572,9 @@ function goto_world(){
 		action_list_clear_all(false);
 	
 		// Set game grid
+		game_state.cell_width  = WORLD_TILE_SIZE;
+		game_state.cell_height = WORLD_TILE_SIZE;
+		
 		game_state.game_grid = game_state.world_map;
 		game_state.map_mode  = MAP_MODE.WORLD;
 		ui_settings.game_grid_cells_width	= WORLD_WIDTH;
@@ -612,6 +618,9 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 			game_state.zone_map[world_x][world_y] = zone_map_generate(game_state.world_map, world_x, world_y);
 			initialise_item_grid(game_state.zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
 		}
+		game_state.cell_width  = ZONE_TILE_SIZE;
+		game_state.cell_height = ZONE_TILE_SIZE;
+		
 		game_state.game_grid	= game_state.zone_map[world_x][world_y];
 		game_state.map_mode		= MAP_MODE.ZONE;
 		ui_settings.game_grid_cells_width	= MAP_WIDTH;
@@ -713,10 +722,10 @@ function map_spawn_mobs(lookup_table, spawn_border){
 				var yy = candidate_list[choice][1];
 				actor_to_spawn.x_pos			= xx;
 				actor_to_spawn.y_pos			= yy;
-				actor_to_spawn.sprite_x			= xx * cell_width;
-				actor_to_spawn.sprite_y			= yy * cell_height;
-				actor_to_spawn.sprite_target_x	= xx * cell_width;
-				actor_to_spawn.sprite_target_y	= yy * cell_height;
+				actor_to_spawn.sprite_x			= xx * game_state.cell_width;
+				actor_to_spawn.sprite_y			= yy * game_state.cell_height;
+				actor_to_spawn.sprite_target_x	= xx * game_state.cell_width;
+				actor_to_spawn.sprite_target_y	= yy * game_state.cell_height;
 				actor_to_spawn.xscale			= choose(1, -1);
 			}
 		}

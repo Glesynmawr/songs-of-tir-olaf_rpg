@@ -31,10 +31,10 @@ function game_draw_grid(){
 	var map_offset_x = actor_registry.player.sprite_target_x - actor_registry.player.sprite_x;
 	var map_offset_y = actor_registry.player.sprite_target_y - actor_registry.player.sprite_y;
 	
-	if ((player_spr_x <= draw_width_half * cell_width)   or (player_spr_x >= (ww - draw_width_half) * cell_width)) and (game_state.map_borders_are_clamped){
+	if ((player_spr_x <= draw_width_half * game_state.cell_width)   or (player_spr_x >= (ww - draw_width_half) * game_state.cell_width)) and (game_state.map_borders_are_clamped){
 		map_offset_x = 0;
 	}
-	if ((player_spr_y <= draw_height_half * cell_height) or (player_spr_y >= (hh - draw_height_half) * cell_height)) and (game_state.map_borders_are_clamped){
+	if ((player_spr_y <= draw_height_half * game_state.cell_height) or (player_spr_y >= (hh - draw_height_half) * game_state.cell_height)) and (game_state.map_borders_are_clamped){
 		map_offset_y = 0;
 	}
 	
@@ -45,8 +45,8 @@ function game_draw_grid(){
 				if (game_state.game_grid[xx][yy].explored or debugging_mode){
 				
 					// Set screen pixel position
-					var screen_x = floor((((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]));
-					var screen_y = floor((((yy - y_from) * cell_height) + map_offset_y));
+					var screen_x = floor((((xx - x_from) * game_state.cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]));
+					var screen_y = floor((((yy - y_from) * game_state.cell_height) + map_offset_y));
 					
 					// Draw tile
 					game_draw_tile(xx, yy, screen_x, screen_y);
@@ -62,16 +62,16 @@ function game_draw_grid(){
 		for (yy = y_from; yy < y_to; yy ++){
 
 			// Set screen pixel position
-			var screen_x = (((xx - x_from) * cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
-			var screen_y = (((yy - y_from) * cell_height) + map_offset_y);
+			var screen_x = (((xx - x_from) * game_state.cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
+			var screen_y = (((yy - y_from) * game_state.cell_height) + map_offset_y);
 				
 			game_draw_actor(xx, yy, screen_x, screen_y);
 			
 		}
 	}
 	
-	screen_x = (x_from * cell_width)  - map_offset_x;
-	screen_y = (y_from * cell_height) - map_offset_y;
+	screen_x = (x_from * game_state.cell_width)  - map_offset_x;
+	screen_y = (y_from * game_state.cell_height) - map_offset_y;
 	draw_particles(screen_x, screen_y);
 	
 	draw_look_cursor(screen_x + 3, screen_y + 3);
@@ -90,14 +90,18 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 		// Actor cell position
 		var actor_x = actor_registry.actor_list[i].x_pos;
 		var actor_y = actor_registry.actor_list[i].y_pos;
-					
+		
 		// If actor is in current cell
 		if (actor_x == xx and actor_y == yy){
+			
 			if (actor_registry.actor_list[i].is_visible or debugging_mode){
 							
 				// Get actor variables
 				with (actor_registry.actor_list[i]){
 					var spr = sprite;
+					if (manager.game_state.game_grid == manager.game_state.world_map){
+						spr = world_player_position_spr;
+					}
 								
 					flash_timer_reduce();
 								
@@ -141,16 +145,16 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 				}
 							
 				// Draw actor sprite and reset shader
-				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
+				draw_sprite_ext(spr, ind, screen_x + spr_offset_x + melee_x + (game_state.cell_width / 2), screen_y + spr_offset_y + melee_y - z_modifier, x_scale, 1, 0, c_white, 1);
 				shader_reset();
 				
 				// If actor is player, set direction indicator position and direction
 				if (actor_registry.actor_list[i] == actor_registry.player and game_state.direction_indicator != noone){
-					var dir_ind_x = screen_x + cell_width  / 2;
-					var dir_ind_y = screen_y + cell_height / 2;
+					var dir_ind_x = screen_x + game_state.cell_width  / 2;
+					var dir_ind_y = screen_y + game_state.cell_height / 2;
 								
-					game_state.direction_indicator_x = dir_ind_x + lengthdir_x(cell_width / 2,  game_state.direction_indicator * 45);
-					game_state.direction_indicator_y = dir_ind_y + lengthdir_y(cell_height / 2, game_state.direction_indicator * 45);
+					game_state.direction_indicator_x = dir_ind_x + lengthdir_x(game_state.cell_width / 2,  game_state.direction_indicator * 45);
+					game_state.direction_indicator_y = dir_ind_y + lengthdir_y(game_state.cell_height / 2, game_state.direction_indicator * 45);
 				}
 			}
 		}
@@ -166,11 +170,11 @@ function game_draw_items(xx, yy, screen_x, screen_y){
 			var sheet_x = (item_index mod 8) * ITEM_SPRITE_SIZE;
 			var sheet_y = (item_index div 8) * ITEM_SPRITE_SIZE;
 			
-			var x_offset = floor((cell_width  - ITEM_SPRITE_SIZE) / 2);
-			var y_offset = floor((cell_height - ITEM_SPRITE_SIZE) / 2);
+			var x_offset = floor((game_state.cell_width  - ITEM_SPRITE_SIZE) / 2);
+			var y_offset = floor((game_state.cell_height - ITEM_SPRITE_SIZE) / 2);
 			
-			var draw_x = screen_x + ((cell_width  - ITEM_SPRITE_SIZE) / 2) + x_offset;
-			var draw_y = screen_y + ((cell_height - ITEM_SPRITE_SIZE) / 2) + y_offset;
+			var draw_x = screen_x + ((game_state.cell_width  - ITEM_SPRITE_SIZE) / 2) + x_offset;
+			var draw_y = screen_y + ((game_state.cell_height - ITEM_SPRITE_SIZE) / 2) + y_offset;
 			
 			draw_sprite_part(item_sprite, 0, sheet_x, sheet_y, ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE, draw_x, draw_y);
 		}
@@ -209,7 +213,7 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 	var tile_x = ind mod 8;
 	var tile_y = ind div 8;
 			
-	draw_sprite_part_ext(spr, ind, tile_x*cell_width, tile_y*cell_height, cell_width, cell_height, floor(screen_x), floor(screen_y), 1, 1, C_WHITE, 1);
+	draw_sprite_part_ext(spr, ind, tile_x*game_state.cell_width, tile_y*game_state.cell_height, game_state.cell_width, game_state.cell_height, floor(screen_x), floor(screen_y), 1, 1, C_WHITE, 1);
 	
 	if (struct_exists(game_state.game_grid[xx][yy], "is_animated")){
 		
@@ -235,7 +239,7 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 	}
 	
 	if (dng != noone){
-		draw_sprite(tile_world_dungeon_entrance_spr, 0, screen_x, screen_y);
+		draw_sprite(tile_world_feature_spr, 0, screen_x, screen_y);
 	}
 	if (shader_current() != -1){
 		shader_reset();

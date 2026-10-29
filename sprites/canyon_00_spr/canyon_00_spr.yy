@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"canyon_00_spr",
   "bboxMode":0,
-  "bbox_bottom":95,
+  "bbox_bottom":47,
   "bbox_left":0,
-  "bbox_right":127,
+  "bbox_right":63,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"eca0d80d-aab2-4894-8258-c6a7017aec8c","name":"eca0d80d-aab2-4894-8258-c6a7017aec8c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"41b522a8-353c-402f-a33f-049c921f55b8","name":"41b522a8-353c-402f-a33f-049c921f55b8","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":96,
+  "height":48,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"a21f2dd0-fae6-4d03-b008-40322a65a84f","blendMode":0,"displayName":"default","isLocked":false,"name":"a21f2dd0-fae6-4d03-b008-40322a65a84f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"40b40fa2-279e-46c4-b6a3-5e72ae29cc14","blendMode":0,"displayName":"default","isLocked":false,"name":"40b40fa2-279e-46c4-b6a3-5e72ae29cc14","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"canyon_00_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"World tiles",
-    "path":"folders/Art/World tiles.yy",
+    "name":"tiles world",
+    "path":"folders/Art/tiles world.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"eca0d80d-aab2-4894-8258-c6a7017aec8c","path":"sprites/canyon_00_spr/canyon_00_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"e89247ed-91d0-4faa-ad41-a356a50c0024","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"41b522a8-353c-402f-a33f-049c921f55b8","path":"sprites/canyon_00_spr/canyon_00_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"57006d1c-b58f-49d3-9d79-90c2fd85755e","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

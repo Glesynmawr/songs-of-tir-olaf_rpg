@@ -122,6 +122,28 @@ function tile_wall()constructor{
 	tile_script		= noone;
 }
 
+function tile_wall_redwood()constructor{
+	tile			= "wall";
+	sprite			= wall_02_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_floor_planks()constructor{
+	tile			= "floor";
+	sprite			= floor_02_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
 
 // FURNITURE TILES
 // Containers

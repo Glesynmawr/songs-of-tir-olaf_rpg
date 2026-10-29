@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"village_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"village_functions",
+  "parent":{
+    "name":"Code",
+    "path":"folders/Code.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

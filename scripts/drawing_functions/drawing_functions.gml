@@ -1063,10 +1063,6 @@ function draw_info_box(){
 	
 	// Hand-held items
 	draw_held_items(player);
-	
-	// Current turn
-	yy += text_height;
-	//draw_text_outlined($"Turn: {actor_registry.player.player_steps}", xx, yy);
 }
 
 function draw_minimap(actor){

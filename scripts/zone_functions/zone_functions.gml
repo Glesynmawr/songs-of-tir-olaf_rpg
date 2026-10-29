@@ -6,6 +6,10 @@ function zone_map_generate(grid, cell_x, cell_y){
 	
 	var zone_map = zone_function[biome_index](autotile_index, has_dungeon, biome_index);
 	
+	if (struct_exists(grid[cell_x][cell_y], "village_index")){
+		zone_map = generate_village(zone_map, cell_x, cell_y);
+	}
+	
 	return(zone_map);
 }
 

@@ -1,23 +1,24 @@
 
 function world_data(){
 	zone_third				= floor(ZONE_SIZE / 3);
-	dungeon_count_divisor	= 50;
+	dungeon_count_divisor	= 100;
 	
-	world_generate_pass_count = 2;
-	world_generate_chunk_size = 4;
-	world_generate_amplitude  = 8;
+	world_generate_pass_count	= 3;
+	world_generate_chunk_size	= 8;
+	world_generate_amplitude	= 12;
+	biome_village_count			= 2;
 
 	// Biomes
-	biome[0] = 50;	// Mountains
-	biome[1] = 60;	// Hills
-	biome[2] = 100;	// Canyon
-	biome[3] = 140;	// Salt plains
-	biome[4] = 100;	// Scrubland
-	biome[5] = 90;	// Swamp
-	biome[6] = 90;	// Dense Mangrove
-	biome[7] = 110;	// Water
-	biome[8] = 90;	// Mangrove
-	biome[9] = 90;	// Marsh
+	biome[0] = 200;	// Mountains
+	biome[1] = 240;	// Hills
+	biome[2] = 400;	// Canyon
+	biome[3] = 560;	// Salt plains
+	biome[4] = 400;	// Scrubland
+	biome[5] = 360;	// Swamp
+	biome[6] = 360;	// Dense Mangrove
+	biome[7] = 440;	// Water
+	biome[8] = 360;	// Mangrove
+	biome[9] = 360;	// Marsh
 	
 	tile[0] = tile_world_mountain;
 	tile[1] = tile_world_hill;
@@ -107,6 +108,9 @@ function world_generate(){
 	
 	// Add dungeons
 	world_grid = dungeons_add_to_world(world_grid);
+	
+	// Add villages
+	world_grid = world_add_villages(world_grid);
 	
 	// Generate zone maps
 	game_state.zone_map  = [];
@@ -424,6 +428,11 @@ function dungeons_add_to_world(grid){
 	return(grid);
 }
 
-
+function world_add_villages(grid){
+	
+	grid[0][0].village_index = 0;
+	
+	return(grid);
+}
 
 

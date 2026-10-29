@@ -864,6 +864,9 @@ function state_context_menu(){
 				inventory.context_menu = noone;
 				state = state_inventory;
 			}
+			
+			inv_weight = inventory_get_weight(self);
+			actor_set_action_speed(self);
 		}
 	}
 }

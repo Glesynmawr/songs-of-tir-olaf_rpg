@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"ba45d5a3-71fb-4f45-bdff-e4f6f785344d","name":"ba45d5a3-71fb-4f45-bdff-e4f6f785344d","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"583653a2-56e2-4d23-9906-1c061f2f0a91","name":"583653a2-56e2-4d23-9906-1c061f2f0a91","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":48,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"d8602ac5-58b7-407c-b732-1bf6f96b2b67","blendMode":0,"displayName":"default","isLocked":false,"name":"d8602ac5-58b7-407c-b732-1bf6f96b2b67","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"52dc9ba8-33db-4baf-a46d-cd99e3f6f8e1","blendMode":0,"displayName":"default","isLocked":false,"name":"52dc9ba8-33db-4baf-a46d-cd99e3f6f8e1","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_water_at_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"World tiles",
-    "path":"folders/Art/World tiles.yy",
+    "name":"tiles world",
+    "path":"folders/Art/tiles world.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ba45d5a3-71fb-4f45-bdff-e4f6f785344d","path":"sprites/world_tile_water_at_spr/world_tile_water_at_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3be2d115-69b4-4d58-84f6-6a77aa3f9eb3","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"583653a2-56e2-4d23-9906-1c061f2f0a91","path":"sprites/world_tile_water_at_spr/world_tile_water_at_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"046f9f9c-2aa5-477f-854e-683cb8127686","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

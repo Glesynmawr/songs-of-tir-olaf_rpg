@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"World tiles",
-    "path":"folders/Art/World tiles.yy",
+    "name":"tiles world",
+    "path":"folders/Art/tiles world.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 8, 15];
+global.version = [5, 8, 16];
 
 //randomise();
 debugging_mode		= false;
@@ -264,11 +264,11 @@ ui_particles	= [];
 #region// TIME SYSTEM -----------------------------------------------------------------------------
 
 // Timescale constants ----------------------------------------------------------------------------
-turns_per_hour	= 30;
+turns_per_hour	= (ZONE_SIZE / 2);
 hours_per_day	= 24;
 turns_per_day	= turns_per_hour * hours_per_day;
 timescale_zone  = 1;
-timescale_world	= 60;
+timescale_world	= ZONE_SIZE;
 
 // Timescale record -------------------------------------------------------------------------------
 time_system = {

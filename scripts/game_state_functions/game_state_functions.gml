@@ -154,7 +154,7 @@ function init_world(){
 			player_steps	= 0;
 		}
 		
-		grid_calculate_lighting(manager.game_state.game_grid)
+		grid_calculate_lighting(game_state.game_grid)
 		set_player_los(game_state.game_grid, actor_registry.player);
 	
 		spawn_new_item(item_hat1,			1,  SPAWN_LOC.INVENTORY, , , actor_registry.player);

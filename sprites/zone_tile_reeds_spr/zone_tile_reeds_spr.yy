@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Zone tiles",
-    "path":"folders/Art/Zone tiles.yy",
+    "name":"tiles zone",
+    "path":"folders/Art/tiles zone.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

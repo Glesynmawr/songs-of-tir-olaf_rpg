@@ -179,11 +179,48 @@ function tile_torch()constructor{
 }
 
 // Decorative
+function tile_bed() constructor{
+	tile			= "bed";
+	sprite			= bed_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_cabinet() constructor{
+	tile			= "cabinet";
+	sprite			= cabinet_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 10;
+	inv_hover		= 0;
+	has_been_opened = false;
+}
+
 function tile_carpet()constructor{
 	tile			= "carpet";
 	sprite			= carpet_spr;
 	index			= 0;
 	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_cook_pot() constructor{
+	tile			= "cook pot";
+	sprite			= cook_pot_spr;
+	index			= 0;
+	walkable		= false;
 	transparent		= true;
 	is_visible		= false;
 	explored		= false;

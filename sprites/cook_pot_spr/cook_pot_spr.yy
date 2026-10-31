@@ -1,27 +1,27 @@
 {
   "$GMSprite":"v2",
-  "%Name":"clay_pot_smashed_spr",
+  "%Name":"cook_pot_spr",
   "bboxMode":0,
   "bbox_bottom":14,
-  "bbox_left":3,
-  "bbox_right":45,
-  "bbox_top":1,
+  "bbox_left":1,
+  "bbox_right":14,
+  "bbox_top":3,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"3a682367-070c-49d8-ab24-3a305ce34d53","name":"3a682367-070c-49d8-ab24-3a305ce34d53","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"1bb6171a-fc7c-42ec-a5c6-a8ffcd60a7c2","name":"1bb6171a-fc7c-42ec-a5c6-a8ffcd60a7c2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"087879f8-ad50-49e8-89c4-090f9493afa0","blendMode":0,"displayName":"default","isLocked":false,"name":"087879f8-ad50-49e8-89c4-090f9493afa0","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"1e46d60a-e429-411f-b0b2-a1152e14b9df","blendMode":0,"displayName":"default","isLocked":false,"name":"1e46d60a-e429-411f-b0b2-a1152e14b9df","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"clay_pot_smashed_spr",
+  "name":"cook_pot_spr",
   "nineSlice":null,
   "origin":0,
   "parent":{
@@ -33,7 +33,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"clay_pot_smashed_spr",
+    "%Name":"cook_pot_spr",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"clay_pot_smashed_spr",
+    "name":"cook_pot_spr",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3a682367-070c-49d8-ab24-3a305ce34d53","path":"sprites/clay_pot_smashed_spr/clay_pot_smashed_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"d48e24c6-17e5-4326-af32-314f1a3e1d7f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1bb6171a-fc7c-42ec-a5c6-a8ffcd60a7c2","path":"sprites/cook_pot_spr/cook_pot_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"78710a63-5b18-46bf-81bb-3c7088df2d53","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":48,
+  "width":16,
 }

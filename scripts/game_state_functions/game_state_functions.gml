@@ -621,6 +621,11 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		game_state.cell_width  = ZONE_TILE_SIZE;
 		game_state.cell_height = ZONE_TILE_SIZE;
 		
+		// Check for village doors
+		if (struct_exists(game_state.game_grid[world_x][world_y], "village")){
+			game_state.door_index = game_state.game_grid[world_x][world_y].village.decor_index;
+		}
+		
 		game_state.game_grid	= game_state.zone_map[world_x][world_y];
 		game_state.map_mode		= MAP_MODE.ZONE;
 		ui_settings.game_grid_cells_width	= MAP_WIDTH;

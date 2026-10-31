@@ -431,6 +431,16 @@ function dungeons_add_to_world(grid){
 function world_add_villages(grid){
 	
 	grid[0][0].village_index = 0;
+	grid[0][0].village = {
+		building_count:		6,
+		building_size:		[5, 4],
+		building_distance:	12,
+		building_stagger:	1.2,
+		raised_ground:		true,
+		floor_tile:			tile_floor_planks,
+		wall_tile:			tile_wall_redwood,
+		decor_index:		0,
+	}
 	
 	return(grid);
 }

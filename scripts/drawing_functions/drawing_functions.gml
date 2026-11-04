@@ -115,7 +115,7 @@ function game_draw_actor(xx, yy, screen_x, screen_y){
 					var melee_y      = melee_offset_y;
 					var x_scale		 = xscale;
 					var z_modifier	 = passive_move_bounce(self) * manager.ui_settings.move_bounce_amplitude;
-							
+					
 					// ACTOR ANIMATION ------------------------------------------------------------------------
 					var ind = actor_animate();
 								

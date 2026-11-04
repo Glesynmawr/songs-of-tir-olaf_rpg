@@ -358,6 +358,7 @@ function passive_check_actor_in_los(){
 		return;
 	}
 	
+	// Check for attack targets
 	var len = array_length(hostile_list);
 	if (len > 0){
 		target_map = create_distance_map(grid, x_pos, y_pos);

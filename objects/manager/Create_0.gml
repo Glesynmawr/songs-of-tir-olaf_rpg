@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 8, 18];
+global.version = [5, 9, 18];
 
 //randomise();
 debugging_mode		= false;
@@ -48,6 +48,12 @@ body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.BODY] = [[true, false
 body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.ARMS] = [[true, true,  "Right arm"], [true, true,  "Left arm"], [false, true,  "Right front arm"], [false, true,  "Left front arm"], [false, true,  "Right rear arm"], [false, true,  "Left rear arm"]];
 body_plan_presets[BODY_PRESET.HUMANOID][BODY_PART_CATEGORY.LEGS] = [[true, false, "Right leg"], [true, false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
 
+// INSECTOID
+body_plan_presets[BODY_PRESET.INSECTOID][BODY_PART_CATEGORY.HEAD] = [[true, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
+body_plan_presets[BODY_PRESET.INSECTOID][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
+body_plan_presets[BODY_PRESET.INSECTOID][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
+body_plan_presets[BODY_PRESET.INSECTOID][BODY_PART_CATEGORY.LEGS] = [[true,  false, "Right leg"], [true,  false, "Left leg"], [true,  false, "Right front leg"], [true,  false, "Left front leg"], [true,  false, "Right rear leg"], [true,  false, "Left rear leg"]];
+
 // QUADRUPED
 body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.HEAD] = [[true, false, "Head"], [false, false, "Left head"], [false, false, "Right head"]];
 body_plan_presets[BODY_PRESET.QUADRUPED][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
@@ -59,6 +65,17 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.HEAD] = [[true, f
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  false, "Right leg"], [true,  false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
+
+#endregion
+
+#region// FACTIONS --------------------------------------------------------------------------------
+
+// Faction overrides
+faction_override[FACTION.AMPHIBIAN_PREY]	= [];
+faction_override[FACTION.BIRD_PREY]			= [[FACTION.AMPHIBIAN_PREY, 20]];
+faction_override[FACTION.MAMMAL_PREY]		= [[FACTION.AMPHIBIAN_PREY, 20], [FACTION.MAMMAL_PREY, 20]];
+faction_override[FACTION.PLAYER]			= [];
+faction_override[FACTION.REPTILE_PREDATOR]	= [];
 
 #endregion
 

@@ -21,33 +21,55 @@ function init_control_menu(){
 	}
 }
 
+function init_new_faction(other_standing, self_standing){
+	with (manager.game_state){
+		
+		var number_of_factions = array_length(faction_list);
+		
+		for (var i = 0; i < number_of_factions; i ++){
+			array_push(faction_list[i], other_standing);
+		}
+		
+		number_of_factions = array_length(faction_list);
+		for (i = 0; i < number_of_factions; i ++){
+			faction_list[number_of_factions][i] = other_standing;
+		}
+		
+		faction_list[number_of_factions][number_of_factions]= self_standing;
+	}
+}
+
 function init_faction_list(){
 	var list = [];
 	
-	list[FACTION.AMPHIBIAN_PREY][FACTION.AMPHIBIAN_PREY]		= 20;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.BIRD_PREY]				= 20;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.MAMMAL_PREY]			= 10;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.PLAYER]				= 10;
-	list[FACTION.AMPHIBIAN_PREY][FACTION.REPTILE_PREDATOR]		= 10;
-																 
-	list[FACTION.BIRD_PREY][FACTION.AMPHIBIAN_PREY]				= 20;
-	list[FACTION.BIRD_PREY][FACTION.BIRD_PREY]					= 20;
-	list[FACTION.BIRD_PREY][FACTION.MAMMAL_PREY]				= 10;
-	list[FACTION.BIRD_PREY][FACTION.PLAYER]						= 10;
-	list[FACTION.BIRD_PREY][FACTION.REPTILE_PREDATOR]			= 10;
-						
-	list[FACTION.MAMMAL_PREY][FACTION.AMPHIBIAN_PREY]			= 20;
-	list[FACTION.MAMMAL_PREY][FACTION.BIRD_PREY]				= 20;
-	list[FACTION.MAMMAL_PREY][FACTION.MAMMAL_PREY]				= 20;
-	list[FACTION.MAMMAL_PREY][FACTION.PLAYER]					= 10;
-	list[FACTION.MAMMAL_PREY][FACTION.REPTILE_PREDATOR]			= 20;						
-						
-	list[FACTION.REPTILE_PREDATOR][FACTION.AMPHIBIAN_PREY]		= 10;
-	list[FACTION.REPTILE_PREDATOR][FACTION.BIRD_PREY]			= 10;
-	list[FACTION.REPTILE_PREDATOR][FACTION.MAMMAL_PREY]			= 10;
-	list[FACTION.REPTILE_PREDATOR][FACTION.PLAYER]				= 10;
-	list[FACTION.REPTILE_PREDATOR][FACTION.REPTILE_PREDATOR]	= 10;
+	var len = FACTION.FACTION_COUNT;
 	
+	for (var i = 0; i < len; i ++){
+		for (var j = 0; j < len; j ++){
+			list[i][j] = 10;
+			if (i == j){
+				list[i][j] = 20;
+			}
+		}
+	}
+	
+	// Apply overrides
+	len = array_length(faction_override);
+	if (len > 0){
+		for (i = 0; i < len; i ++){
+			
+			var values_to_change = array_length(faction_override[i]);
+			if (values_to_change > 0){
+				for (j = 0; j < values_to_change; j ++){
+					
+					var faction_to_change		= faction_override[i][j][0];
+					var new_faction_relation	= faction_override[i][j][1];
+					
+					list[i][faction_to_change] = new_faction_relation;
+				}
+			}
+		}
+	}
 	return(list);
 }
 
@@ -622,8 +644,8 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 		game_state.cell_height = ZONE_TILE_SIZE;
 		
 		// Check for village doors
-		if (struct_exists(game_state.game_grid[world_x][world_y], "village")){
-			game_state.door_index = game_state.game_grid[world_x][world_y].village.decor_index;
+		if (struct_exists(game_state.world_map[world_x][world_y], "village")){
+			game_state.door_index = game_state.world_map[world_x][world_y].village.decor_index;
 		}
 		
 		game_state.game_grid	= game_state.zone_map[world_x][world_y];

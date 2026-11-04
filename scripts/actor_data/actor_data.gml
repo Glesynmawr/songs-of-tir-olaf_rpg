@@ -29,6 +29,34 @@ function actor_rogue()constructor{
 
 #region// MARSH  ZONE -----------------------------------------------------------------------------
 
+// Villagers
+function actor_farmer()constructor{
+	spawn_tile		= "marsh";
+	faction         = -99
+	name			= "Farmer";
+	sprite			= farmer_spr;
+	body_index		= BODY_PRESET.HUMANOID;
+	handedness		= [2, 0];
+	
+	strength		= 5;
+	agility			= 2;
+	toughness		= 5;
+	intelligence	= 2;
+	
+	action_speed	= 100;
+	range			= 0;
+	react_range		= 4;
+	
+	state			= state_wander;
+	state_base		= state_wander;
+	demeanour		= DEMEANOUR.PASSIVE;
+	
+	equipment		= [];
+	world_x			= noone;
+	world_y			= noone;
+}
+
+// Mobs
 function actor_flamingo()constructor{
 	spawn_tile		= noone;
 	faction         = FACTION.BIRD_PREY

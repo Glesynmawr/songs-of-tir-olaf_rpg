@@ -376,7 +376,7 @@ function state_wander(){
 			var move_target_x = x_pos + move_x;
 			var move_target_y = y_pos + move_y;
 			
-			var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, move_target_x, move_target_y, 2);
+			var is_in_bounds	= grid_check_position_in_bounds(manager.game_state.game_grid, move_target_x, move_target_y, 1);
 			var is_walkable		= grid_check_tile_is_walkable(manager.game_state.game_grid, move_target_x, move_target_y);
 			var cell_has_actor	= grid_check_position_contains_actor(move_target_x, move_target_y)
 		

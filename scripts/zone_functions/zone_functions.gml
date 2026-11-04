@@ -6,8 +6,21 @@ function zone_map_generate(grid, cell_x, cell_y){
 	
 	var zone_map = zone_function[biome_index](autotile_index, has_dungeon, biome_index);
 	
-	if (struct_exists(grid[cell_x][cell_y], "village_index")){
-		zone_map = generate_village(zone_map, cell_x, cell_y);
+	if (struct_exists(grid[cell_x][cell_y], "village")){
+		
+		var new_village = generate_village(zone_map, cell_x, cell_y);
+		
+		zone_map = new_village[0];
+		var zone_occupants = new_village[1];
+		var new_faction    = new_village[2];
+		
+		for (var i = 0; i < zone_occupants; i ++){
+			
+			var new_villager = spawn_new_actor(actor_farmer, i+1, 1, false);
+			new_villager.faction	= new_faction;
+		}
+		
+		
 	}
 	
 	return(zone_map);

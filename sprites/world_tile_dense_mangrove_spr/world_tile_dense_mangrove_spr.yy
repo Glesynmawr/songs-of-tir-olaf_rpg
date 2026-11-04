@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"world_tile_dense_mangrove_spr",
   "bboxMode":0,
-  "bbox_bottom":15,
+  "bbox_bottom":7,
   "bbox_left":1,
-  "bbox_right":125,
+  "bbox_right":63,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"d1fbb5c5-9f48-49fe-9b2f-3370cf51f3ff","name":"d1fbb5c5-9f48-49fe-9b2f-3370cf51f3ff","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"128473a2-e6c3-41c4-902a-03657aab4d40","name":"128473a2-e6c3-41c4-902a-03657aab4d40","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":0,
-  "gridY":0,
-  "height":16,
+  "gridX":8,
+  "gridY":8,
+  "height":8,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"5fbd6237-c73f-4f40-b84d-6770aadde9bc","blendMode":0,"displayName":"default","isLocked":false,"name":"5fbd6237-c73f-4f40-b84d-6770aadde9bc","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"70e3d97d-285c-4d2b-9299-bb9e14db8869","blendMode":0,"displayName":"default","isLocked":false,"name":"70e3d97d-285c-4d2b-9299-bb9e14db8869","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_dense_mangrove_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d1fbb5c5-9f48-49fe-9b2f-3370cf51f3ff","path":"sprites/world_tile_dense_mangrove_spr/world_tile_dense_mangrove_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"2d2e0fb9-47fb-4366-a7f1-b121af443fbc","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"128473a2-e6c3-41c4-902a-03657aab4d40","path":"sprites/world_tile_dense_mangrove_spr/world_tile_dense_mangrove_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"f24d2c6e-fe73-4e70-a67b-958d6a393a74","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

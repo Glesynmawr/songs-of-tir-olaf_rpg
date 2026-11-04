@@ -16,7 +16,12 @@ function zone_map_generate(grid, cell_x, cell_y){
 		
 		for (var i = 0; i < zone_occupants; i ++){
 			
-			var new_villager = spawn_new_actor(actor_farmer, i+1, 1, false);
+			if (i == 0){
+				var new_villager = spawn_new_actor(actor_elder, i+1, 1, false);
+			}
+			else{
+				var new_villager = spawn_new_actor(actor_farmer, i+1, 1, false);
+			}
 			new_villager.faction	= new_faction;
 		}
 		

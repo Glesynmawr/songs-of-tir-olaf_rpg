@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"world_tile_marsh_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":2,
-  "bbox_right":126,
+  "bbox_bottom":6,
+  "bbox_left":1,
+  "bbox_right":63,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"53aab6b8-1ab7-4412-ac3c-aedd28c6cd9b","name":"53aab6b8-1ab7-4412-ac3c-aedd28c6cd9b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"11a21ac5-20f6-414f-a40b-1425c2a93a41","name":"11a21ac5-20f6-414f-a40b-1425c2a93a41","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":8,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"cb6edcc0-f5d2-4672-873a-6d6eea738d4e","blendMode":0,"displayName":"default","isLocked":false,"name":"cb6edcc0-f5d2-4672-873a-6d6eea738d4e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"b4bb0def-d61f-474a-8d68-a57253f2f703","blendMode":0,"displayName":"default","isLocked":false,"name":"b4bb0def-d61f-474a-8d68-a57253f2f703","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_marsh_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"53aab6b8-1ab7-4412-ac3c-aedd28c6cd9b","path":"sprites/world_tile_marsh_spr/world_tile_marsh_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"814517d3-7915-4eae-8397-59bc7907c400","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"11a21ac5-20f6-414f-a40b-1425c2a93a41","path":"sprites/world_tile_marsh_spr/world_tile_marsh_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"aeb7ea51-a057-44b1-9425-7e86b043825b","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

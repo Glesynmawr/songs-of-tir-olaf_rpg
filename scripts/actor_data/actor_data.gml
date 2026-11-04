@@ -30,6 +30,32 @@ function actor_rogue()constructor{
 #region// MARSH  ZONE -----------------------------------------------------------------------------
 
 // Villagers
+function actor_elder()constructor{
+	spawn_tile		= "floor";
+	faction         = -99
+	name			= "Elder";
+	sprite			= elder_spr;
+	body_index		= BODY_PRESET.HUMANOID;
+	handedness		= [2, 0];
+	
+	strength		= 4;
+	agility			= 2;
+	toughness		= 6;
+	intelligence	= 5;
+	
+	action_speed	= 100;
+	range			= 0;
+	react_range		= 4;
+	
+	state			= state_idle;
+	state_base		= state_idle;
+	demeanour		= DEMEANOUR.PASSIVE;
+	
+	equipment		= [];
+	world_x			= noone;
+	world_y			= noone;
+}
+
 function actor_farmer()constructor{
 	spawn_tile		= "marsh";
 	faction         = -99

@@ -149,10 +149,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	new_actor.colour_timer  = 0;
 	
 	// Sprite and Animation
-	new_actor.sprite_x			= cell_x * game_state.cell_width;
-	new_actor.sprite_y			= cell_y * game_state.cell_height;
-	new_actor.sprite_target_x	= cell_x * game_state.cell_width;
-	new_actor.sprite_target_y	= cell_y * game_state.cell_height;
+	new_actor.sprite_x			= cell_x * ZONE_TILE_SIZE;
+	new_actor.sprite_y			= cell_y * ZONE_TILE_SIZE;
+	new_actor.sprite_target_x	= new_actor.sprite_x;
+	new_actor.sprite_target_y	= new_actor.sprite_y;
 	new_actor.melee_offset_x	= 0;
 	new_actor.melee_offset_y	= 0;
 	

@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"world_tile_mountain_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":7,
   "bbox_left":1,
-  "bbox_right":127,
+  "bbox_right":62,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"d7bbdd27-d1f0-4b17-8a1e-ad6099197416","name":"d7bbdd27-d1f0-4b17-8a1e-ad6099197416","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"3c391974-f1b6-47cf-b25e-c6b9b5788840","name":"3c391974-f1b6-47cf-b25e-c6b9b5788840","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":8,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"01a25014-7461-42f5-9d2a-b65bf73814c2","blendMode":0,"displayName":"default","isLocked":false,"name":"01a25014-7461-42f5-9d2a-b65bf73814c2","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"4250e643-74d7-49f4-865a-ad8edde28616","blendMode":0,"displayName":"default","isLocked":false,"name":"4250e643-74d7-49f4-865a-ad8edde28616","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_mountain_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d7bbdd27-d1f0-4b17-8a1e-ad6099197416","path":"sprites/world_tile_mountain_spr/world_tile_mountain_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"19b620b3-6799-4f12-ab16-6099f8349a2a","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3c391974-f1b6-47cf-b25e-c6b9b5788840","path":"sprites/world_tile_mountain_spr/world_tile_mountain_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"16f4f7ca-8762-4807-aa16-e3f2c096a00f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

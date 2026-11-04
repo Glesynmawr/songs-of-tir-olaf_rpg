@@ -454,11 +454,8 @@ function passive_actor_reset_target(){
 
 function passive_move_bounce(actor){
 	with (actor){
-		var xx = sprite_x;
-		var yy = sprite_y;
-		
-		var x_mod = (xx mod manager.game_state.cell_width)  / manager.game_state.cell_width;
-		var y_mod = (yy mod manager.game_state.cell_height) / manager.game_state.cell_height;
+		var x_mod = (sprite_x mod manager.game_state.cell_width)  / manager.game_state.cell_width;
+		var y_mod = (sprite_y mod manager.game_state.cell_height) / manager.game_state.cell_height;
 		
 		var x_bounce = sin(pi * x_mod);
 		var y_bounce = sin(pi * y_mod);

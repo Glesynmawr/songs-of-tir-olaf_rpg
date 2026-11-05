@@ -12,6 +12,10 @@ if (notification.text != ""){
 	draw_notification();
 }
 
+if (dialogue != noone){
+	draw_dialogue();
+}
+
 draw_ui_particles();
 
 if (transition != noone){

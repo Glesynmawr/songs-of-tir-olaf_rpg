@@ -625,6 +625,69 @@ function draw_context_slot_select_menu(actor, x_pos, y_pos, width, height){
 	}
 }
 
+function draw_pickup(actor){
+	var xx, yy, ww;
+	
+	var tc = colour_text_main;
+	
+	// Get array length
+	var len = array_length(actor.pickup_menu);
+	
+	// Create controls string
+	var key_1 = keybinding_get_text(controls.key_cancel);
+	var key_2 = keybinding_get_text(controls.key_interact_confirm);
+	var control_list = $"{key_1} to exit / {key_2} to pick up item";
+	
+	// Get menu width
+	var width = 0;
+	for (var i = 0; i < len; i ++){
+		ww = string_width(actor.pickup_menu[i].name);
+		if (ww > width){
+			width = ww;
+		}
+	}
+	width = max(string_width(control_list), width);
+	width += (text_width * 6);
+	var x_pos = round(camera_get_view_width(view_camera[0]) / 2) - round(width / 2);
+	
+	// Get menu height
+	var height = (len * text_height) + (text_height * 4);
+	var y_pos = round(camera_get_view_height(view_camera[0]) / 2) - round(height / 2);
+	
+	// Draw box and background
+	ui_draw_box(x_pos, y_pos, width, height);
+	
+	// Title
+	ui_draw_box_title(x_pos + text_width, y_pos, "Pick up");
+	
+	// Draw menu options
+	for (var i = 0; i < len; i ++){
+		xx = x_pos + (text_width * 3);
+		yy = y_pos + (text_height * 2) + (i * text_height);
+		
+		// Text
+		var txt = "";
+		var x_mod = 0;
+		if (actor.pickup_hover == i){
+			txt += "> ";
+			if (ui_flip){
+				txt += " ";
+				x_mod = (text_width);
+			}
+		}
+		txt += actor.pickup_menu[i].name;
+		
+		draw_text_colour(xx - x_mod, yy, txt, tc, tc, tc, tc, 1);
+	}
+	
+	// Draw box controls
+	if (show_controls){
+		xx = x_pos + (text_width * 2);
+		yy = y_pos + height - text_height;
+		ui_draw_box_controls(xx, yy, control_list);
+	}
+}
+
 function inventory_create_display_list(actor){
 	with (actor){
 		var new_list = [];
@@ -1033,7 +1096,112 @@ function ui_anim_flip(){
 		ui_flip = !ui_flip;
 	}
 }
+
+function draw_dialogue(){
 	
+	var col = colour_text_main;
+	
+	// Screen position
+	var xx = dialogue_x - floor(dialogue_w / 2);
+	var yy = dialogue_y - floor(dialogue_h / 2);
+	
+	// Box title and subtitle
+	var title = dialogue.speaker.name;
+	var control_string = ui_menu_control_string();
+	
+	// Draw UI box
+	ui_draw_box(xx, yy, dialogue_w, dialogue_h ,title , control_string);
+	
+	// Main message
+	xx += text_width * 3;
+	yy += text_width * 3;
+	draw_text_ext_colour(xx, yy, dialogue.main_message, text_height, dialogue_w - (text_width * 6), col, col, col, col, 1);
+	
+	// responses
+	xx += text_width * 2;
+	yy =  dialogue_y + floor(dialogue_h / 2) - (text_width * 3) - text_height;
+	
+	for (var i = array_length(dialogue.responses) - 1; i >= 0; i --){
+		
+		var txt = "";
+		var x_offset = 0;
+		if (i == dialogue.hover){
+			txt += "> "
+			x_offset = text_width;
+			
+			if (ui_flip){
+				txt += " ";
+				x_offset = text_width * 2;
+			}
+		}
+		txt += dialogue.responses[i][0];
+		
+		draw_text_colour(xx - x_offset, yy, txt, col, col, col, col, 1);
+		yy -= text_height;
+	}
+}
+
+function draw_game_log(x_pos, y_pos, width, height){
+	
+	ui_draw_box(x_pos, y_pos, width, height, "log");
+	
+	var xx = x_pos + (text_width * 2);
+	var yy = y_pos + text_height;
+	
+	if (!surface_exists(log_surface)){
+		log_surface = surface_create(log_surface_width, log_surface_height);
+	}
+	
+	surface_set_target(log_surface);
+	
+	draw_clear(colour_bg_main);
+	
+	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_state.game_log));
+	var line_y_pos = 0;
+	for (var line = 0; line < draw_to; line ++){
+		
+		var text =		game_state.game_log[line][0];
+		var colour =	game_state.game_log[line][1];
+		
+		draw_text_ext_colour(0, line_y_pos, text, text_height, log_surface_width, colour ,colour ,colour ,colour, 1);
+		
+		line_y_pos += string_height_ext(text, text_height, log_surface_width) + 3;
+	}
+	
+	surface_reset_target();
+	
+	draw_surface(log_surface, xx, yy);
+}
+
+function draw_notification(){
+	with (manager){
+		var xx = notification.x_pos;
+		var yy = notification.y_pos;
+		var ww = notification.width;
+		var hh = notification.height;
+		var txt = notification.text;
+		
+		// Create controls string
+		var control_list = "";
+		if (notification.cancel){
+			var key_1 = keybinding_get_text(controls.key_cancel);
+			control_list += $"{key_1} to exit";
+		}
+		if (notification.confirm){
+			var key_2 = keybinding_get_text(controls.key_interact_confirm);
+			control_list += $" / {key_2} to confirm";
+		}
+	
+		// Background
+		ui_draw_box(xx, yy, ww, hh, , control_list);
+		
+		// Notification text
+		draw_text_outlined(txt, xx + (text_width * 2), yy + (text_height * 2));
+	}
+}
+
+
+// UI INFOBOX -------------------------------------------------------------------------------------`
 function draw_info_box(){
 	
 	// Background and border
@@ -1353,128 +1521,6 @@ function draw_held_items(actor){
 				}
 			}
 		}
-	}
-}
-
-function draw_game_log(x_pos, y_pos, width, height){
-	
-	ui_draw_box(x_pos, y_pos, width, height, "log");
-	
-	var xx = x_pos + (text_width * 2);
-	var yy = y_pos + text_height;
-	
-	if (!surface_exists(log_surface)){
-		log_surface = surface_create(log_surface_width, log_surface_height);
-	}
-	
-	surface_set_target(log_surface);
-	
-	draw_clear(colour_bg_main);
-	
-	var draw_to = min(LOG_MAX_ENTRIES, array_length(game_state.game_log));
-	var line_y_pos = 0;
-	for (var line = 0; line < draw_to; line ++){
-		
-		var text =		game_state.game_log[line][0];
-		var colour =	game_state.game_log[line][1];
-		
-		draw_text_ext_colour(0, line_y_pos, text, text_height, log_surface_width, colour ,colour ,colour ,colour, 1);
-		
-		line_y_pos += string_height_ext(text, text_height, log_surface_width) + 3;
-	}
-	
-	surface_reset_target();
-	
-	draw_surface(log_surface, xx, yy);
-}
-
-function draw_notification(){
-	with (manager){
-		var xx = notification.x_pos;
-		var yy = notification.y_pos;
-		var ww = notification.width;
-		var hh = notification.height;
-		var txt = notification.text;
-		
-		// Create controls string
-		var control_list = "";
-		if (notification.cancel){
-			var key_1 = keybinding_get_text(controls.key_cancel);
-			control_list += $"{key_1} to exit";
-		}
-		if (notification.confirm){
-			var key_2 = keybinding_get_text(controls.key_interact_confirm);
-			control_list += $" / {key_2} to confirm";
-		}
-	
-		// Background
-		ui_draw_box(xx, yy, ww, hh, , control_list);
-		
-		// Notification text
-		draw_text_outlined(txt, xx + (text_width * 2), yy + (text_height * 2));
-	}
-}
-
-function draw_pickup(actor){
-	var xx, yy, ww;
-	
-	var tc = colour_text_main;
-	
-	// Get array length
-	var len = array_length(actor.pickup_menu);
-	
-	// Create controls string
-	var key_1 = keybinding_get_text(controls.key_cancel);
-	var key_2 = keybinding_get_text(controls.key_interact_confirm);
-	var control_list = $"{key_1} to exit / {key_2} to pick up item";
-	
-	// Get menu width
-	var width = 0;
-	for (var i = 0; i < len; i ++){
-		ww = string_width(actor.pickup_menu[i].name);
-		if (ww > width){
-			width = ww;
-		}
-	}
-	width = max(string_width(control_list), width);
-	width += (text_width * 6);
-	var x_pos = round(camera_get_view_width(view_camera[0]) / 2) - round(width / 2);
-	
-	// Get menu height
-	var height = (len * text_height) + (text_height * 4);
-	var y_pos = round(camera_get_view_height(view_camera[0]) / 2) - round(height / 2);
-	
-	// Draw box and background
-	ui_draw_box(x_pos, y_pos, width, height);
-	
-	// Title
-	ui_draw_box_title(x_pos + text_width, y_pos, "Pick up");
-	
-	// Draw menu options
-	for (var i = 0; i < len; i ++){
-		xx = x_pos + (text_width * 3);
-		yy = y_pos + (text_height * 2) + (i * text_height);
-		
-		// Text
-		var txt = "";
-		var x_mod = 0;
-		if (actor.pickup_hover == i){
-			txt += "> ";
-			if (ui_flip){
-				txt += " ";
-				x_mod = (text_width);
-			}
-		}
-		txt += actor.pickup_menu[i].name;
-		
-		draw_text_colour(xx - x_mod, yy, txt, tc, tc, tc, tc, 1);
-	}
-	
-	// Draw box controls
-	if (show_controls){
-		xx = x_pos + (text_width * 2);
-		yy = y_pos + height - text_height;
-		ui_draw_box_controls(xx, yy, control_list);
 	}
 }
 

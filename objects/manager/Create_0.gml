@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 9, 19];
+global.version = [5, 9, 20];
 
 //randomise();
 debugging_mode		= false;
@@ -65,6 +65,16 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.HEAD] = [[true, f
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.BODY] = [[true, false, "Body"]];
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.ARMS] = [[false, false, "Right arm"], [false, false, "Left arm"], [false, false, "Right front arm"], [false, false, "Left front arm"], [false, false, "Right rear arm"], [false, false, "Left rear arm"]];
 body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  false, "Right leg"], [true,  false, "Left leg"], [false, false, "Right front leg"], [false, false, "Left front leg"], [false, false, "Right rear leg"], [false, false, "Left rear leg"]];
+
+#endregion
+
+#region// DIALOGUE --------------------------------------------------------------------------------
+dialogue = noone;
+
+dialogue_x = screen_width  / 2;
+dialogue_y = screen_height / 2;
+dialogue_w = 250;
+dialogue_h = 100;
 
 #endregion
 

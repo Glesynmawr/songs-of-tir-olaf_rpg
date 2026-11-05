@@ -58,10 +58,19 @@ function state_ready_for_inputs(){
 		
 		// DIRECTIONAL CELL INTERACTION -----------------------------------------------------------
 		if (keyboard_check_pressed(controls.key_interact_confirm)){
-			if (manager.game_state.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
-				found_a_secret(self);
+			
+			// Check for actor dialogue
+			var dialogue_target = grid_check_position_contains_actor(x_pos + x_move, y_pos + y_move);
+			if (dialogue_target != noone){
+				dialogue_init(self, dialogue_target);
 			}
-			player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+			else{
+				// Check for tile interaction
+				if (manager.game_state.game_grid[x_pos + x_move][y_pos + y_move].tile == "secret door"){
+					found_a_secret(self);
+				}
+				player_moved = tile_interaction(self, x_pos + x_move, y_pos + y_move);
+			}
 		}
 	}
 	else{
@@ -209,6 +218,27 @@ function state_ready_for_inputs(){
 		
 		// Update player distance map
 		distance_map_player = create_distance_map(manager.game_state.game_grid, x_pos, y_pos);
+	}
+}
+
+function state_dialogue(){
+	
+	var len = array_length(manager.dialogue.responses);
+	
+	if (keyboard_check_pressed(controls.key_up)){
+		manager.dialogue.hover = max(manager.dialogue.hover - 1, 0);
+	}
+	if (keyboard_check_pressed(controls.key_down)){
+		manager.dialogue.hover = min(manager.dialogue.hover + 1, len - 1);
+	}
+	if (keyboard_check_pressed(controls.key_interact_confirm)){
+		
+		var response_type = manager.dialogue.responses[manager.dialogue.hover][1];
+		
+		switch(response_type){
+			
+			default: dialogue_reset();
+		}
 	}
 }
 

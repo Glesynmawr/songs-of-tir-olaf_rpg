@@ -1223,6 +1223,9 @@ function draw_info_box(){
 	// Player hit points
 	draw_hp(player);
 	
+	// Player experience points
+	draw_xp(player);
+	
 	// Move speed
 	draw_move_speed(player, ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2), speed_y_pos);
 	
@@ -1436,13 +1439,37 @@ function draw_hp(actor){
 	var fill_pixels  = hp_width * fill_percent;
 	
 	// Background
-	draw_sprite_stretched(hit_point_bar_spr, 0, xx, yy, hp_width, hp_height); 
+	draw_sprite_stretched(fill_bar_spr, 0, xx, yy, hp_width, hp_height); 
 	
 	// Fill bar
-	draw_sprite_stretched(hit_point_bar_spr, 1, xx, yy, fill_pixels, hp_height);
+	draw_sprite_stretched(fill_bar_spr, 1, xx, yy, fill_pixels, hp_height);
 	
 	// Text
 	draw_text_outlined($"HP: {hp_cur} / {hp_max}", xx + 3, yy + 3);
+}
+
+function draw_xp(actor){
+	
+	// Position
+	var xx = ui_x_pos[ui_settings.ui_x_position][0] + (ui_border * 2);
+	var yy = xp_y_pos;
+	
+	// Fill amount
+	//var hp_max		= actor.hit_points[STAT_TYPE.BASE];
+	//var hp_cur		= actor.hit_points[STAT_TYPE.CURRENT];
+	//var fill_percent	= hp_cur / hp_max;
+	//var fill_pixels	= hp_width * fill_percent;
+	
+	var fill_pixels = xp_width / 2;
+	
+	// Background
+	draw_sprite_stretched(fill_bar_spr, 0, xx, yy, xp_width, xp_height); 
+	
+	// Fill bar
+	draw_sprite_stretched(fill_bar_spr, 2, xx, yy, fill_pixels, hp_height);
+	
+	// Text
+	draw_text_outlined($"XP: {0} / {10}", xx + 3, yy + 3);
 }
 
 function draw_move_speed(actor, xx, yy){

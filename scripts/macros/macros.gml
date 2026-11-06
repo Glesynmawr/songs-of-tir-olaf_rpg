@@ -93,6 +93,10 @@ enum DEMEANOUR{
 	TIMID
 }
 
+enum DIALOGUE{
+	EXIT = -1,
+}
+
 enum EQUIP{
 	HEAD,
 	NECK,

@@ -235,9 +235,14 @@ function state_dialogue(){
 		
 		var response_type = manager.dialogue.responses[manager.dialogue.hover][1];
 		
-		switch(response_type){
-			
-			default: dialogue_reset();
+		if (response_type >= 0){
+			dialogue_update(response_type);
+		}
+		else{
+			switch(response_type){
+				case DIALOGUE.EXIT: dialogue_reset(); break;
+				default: dialogue_reset();
+			}
 		}
 	}
 }

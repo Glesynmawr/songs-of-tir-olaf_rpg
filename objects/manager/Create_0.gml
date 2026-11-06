@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 9, 20];
+global.version = [5, 9, 21];
 
 //randomise();
 debugging_mode		= false;
@@ -69,6 +69,7 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 #endregion
 
 #region// DIALOGUE --------------------------------------------------------------------------------
+dialogue_text_init();
 dialogue = noone;
 
 dialogue_x = screen_width  / 2;
@@ -244,11 +245,16 @@ stats_h = minimap_height - stats_y;
 
 // Player hit points
 hp_y_pos	= minimap_height + ui_border;
-hp_height	= sprite_get_height(hit_point_bar_spr);
+hp_height	= sprite_get_height(fill_bar_spr);
 hp_width	= infobox_width - (ui_border * 4);
 
+// Player experience points
+xp_y_pos	= hp_y_pos + hp_height + ui_border;
+xp_height	= sprite_get_height(fill_bar_spr);
+xp_width	= hp_width;
+
 // Player carry weight and move speed
-speed_y_pos		= hp_y_pos + hp_height + ui_border;
+speed_y_pos		= xp_y_pos + hp_height + ui_border;
 weight_y_pos	= speed_y_pos + text_height;
 
 // Hand-held items

@@ -38,10 +38,10 @@ function actor_elder()constructor{
 	body_index		= BODY_PRESET.HUMANOID;
 	handedness		= [2, 0];
 	
-	strength		= 4;
-	agility			= 2;
+	strength		= 6;
+	agility			= 5;
 	toughness		= 6;
-	intelligence	= 5;
+	intelligence	= 8;
 	
 	action_speed	= 100;
 	range			= 0;
@@ -64,10 +64,10 @@ function actor_farmer()constructor{
 	body_index		= BODY_PRESET.HUMANOID;
 	handedness		= [2, 0];
 	
-	strength		= 5;
-	agility			= 2;
-	toughness		= 5;
-	intelligence	= 2;
+	strength		= 8;
+	agility			= 5;
+	toughness		= 8;
+	intelligence	= 5;
 	
 	action_speed	= 100;
 	range			= 0;

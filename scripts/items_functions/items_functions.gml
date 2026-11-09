@@ -257,7 +257,7 @@ function item_boot2()constructor{
 
 // Weapons - melee
 function item_sword1()constructor{
-	name			= "Sword";
+	name			= "sword";
 	sprite_index	= weapon_melee_spr;
 	image_index		= 0;
 	slot			= [];

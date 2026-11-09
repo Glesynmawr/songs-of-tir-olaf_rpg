@@ -94,7 +94,9 @@ enum DEMEANOUR{
 }
 
 enum DIALOGUE{
-	EXIT = -1,
+	EXIT		= -1,
+	ITEM_GIVE	= -2,
+	ITEM_TAKE	= -3,
 }
 
 enum EQUIP{

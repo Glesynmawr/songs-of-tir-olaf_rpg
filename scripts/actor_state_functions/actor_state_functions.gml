@@ -241,6 +241,15 @@ function state_dialogue(){
 		else{
 			switch(response_type){
 				case DIALOGUE.EXIT: dialogue_reset(); break;
+				
+				case DIALOGUE.ITEM_GIVE:
+					actor_give_item(self, manager.dialogue.speaker, manager.dialogue.responses[manager.dialogue.hover][2]);
+					dialogue_reset(); break;
+					
+				case DIALOGUE.ITEM_TAKE: 
+					spawn_new_item(manager.dialogue.responses[manager.dialogue.hover][2], 1, SPAWN_LOC.INVENTORY, , , self);
+					dialogue_reset(); break;
+					
 				default: dialogue_reset();
 			}
 		}

@@ -1,6 +1,6 @@
 /// @desc Initialise 
 
-global.version = [5, 9, 21];
+global.version = [5, 9, 22];
 
 //randomise();
 debugging_mode		= false;
@@ -70,6 +70,8 @@ body_plan_presets[BODY_PRESET.WINGED_BIPED][BODY_PART_CATEGORY.LEGS] = [[true,  
 
 #region// DIALOGUE --------------------------------------------------------------------------------
 dialogue_text_init();
+quest_dialogue_init()
+
 dialogue = noone;
 
 dialogue_x = screen_width  / 2;

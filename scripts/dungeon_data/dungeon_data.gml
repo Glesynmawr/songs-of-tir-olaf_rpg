@@ -1,10 +1,11 @@
 
 function dungeon_data(){
 	dungeons[0] = {
+		gen_function:	cavern_generate,
 		name:			"Marsh dungeon",
 		max_depth:		5,
-		max_width:		20,
-		max_height:		20,
+		max_width:		40,
+		max_height:		40,
 		size_change:	0,
 		wall_sprite:	wall_00_spr,
 		floor_sprite:	floor_00_spr,
@@ -15,6 +16,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[1] = {
+		gen_function:	catacomb_generate,
 		name:			"Mangrove dungeon",
 		max_depth:		3,
 		max_width:		20,
@@ -29,6 +31,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[2] = {
+		gen_function:	catacomb_generate,
 		name:			"River dungeon",
 		max_depth:		4,
 		max_width:		20,
@@ -43,6 +46,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[3] = {
+		gen_function:	catacomb_generate,
 		name:			"Dense mangrove dungeon",
 		max_depth:		2,
 		max_width:		20,
@@ -57,6 +61,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[4] = {
+		gen_function:	catacomb_generate,
 		name:			"Swamp dungeon",
 		max_depth:		2,
 		max_width:		20,
@@ -71,6 +76,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[5] = {
+		gen_function:	catacomb_generate,
 		max_depth:		2,
 		name:			"Scrubland dungeon",
 		max_width:		20,
@@ -85,6 +91,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[6] = {
+		gen_function:	catacomb_generate,
 		name:			"Desert dungeon",
 		max_depth:		2,
 		max_width:		20,
@@ -99,6 +106,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[7] = {
+		gen_function:	catacomb_generate,
 		name:			"Canyon dungeon",
 		max_depth:		2,
 		max_width:		20,
@@ -113,6 +121,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[8] = {
+		gen_function:	catacomb_generate,
 		name:			"Hill dungeon",
 		max_depth:		2,
 		max_width:		20,
@@ -127,6 +136,7 @@ function dungeon_data(){
 		decor_index:	0,
 	}
 	dungeons[9] = {
+		gen_function:	catacomb_generate,
 		name:			"Mountain dungeon",
 		max_depth:		2,
 		max_width:		20,

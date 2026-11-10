@@ -21,6 +21,7 @@
     {"name":"actor_data","order":16,"path":"scripts/actor_data/actor_data.yy",},
     {"name":"actor_functions","order":1,"path":"scripts/actor_functions/actor_functions.yy",},
     {"name":"actor_state_functions","order":8,"path":"scripts/actor_state_functions/actor_state_functions.yy",},
+    {"name":"cellular_automata_functions","order":19,"path":"scripts/cellular_automata_functions/cellular_automata_functions.yy",},
     {"name":"dialogue_functions","order":18,"path":"scripts/dialogue_functions/dialogue_functions.yy",},
     {"name":"drawing_functions","order":11,"path":"scripts/drawing_functions/drawing_functions.yy",},
     {"name":"dungeon_data","order":15,"path":"scripts/dungeon_data/dungeon_data.yy",},

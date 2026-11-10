@@ -1,11 +1,12 @@
 
 function dungeon_generate(index){
 	
+	// INITIALISE VARIABLES -----------------------------------------------------------------------
 	dungeon_grid = [];
 	
 	// Sets level overall size
-	grid_width		  = dungeons[index].max_width;
-	grid_height		  = dungeons[index].max_height;
+	grid_width					 = dungeons[index].max_width;
+	grid_height					 = dungeons[index].max_height;
 	game_state.max_depth		 = dungeons[index].max_depth;
 	game_state.level_size_change = dungeons[index].size_change;
 	game_state.mobs_to_spawn     = dungeons[index].mobs;
@@ -26,43 +27,12 @@ function dungeon_generate(index){
 	
 	// Initialise grids
 	dungeon_grid = initialise_game_grid(grid_width, grid_height);
-	var room_list = generate_rooms(dungeon_grid, dungeons[index].rooms[0], dungeons[index].rooms[1], dungeons[index].rooms[2]);
-	generate_hallways(dungeon_grid, 25);
+	
     
-    // Initial connections
-    var areas_connected = true;
-    while(areas_connected){
-        areas_connected = connect_areas(dungeon_grid);
-    }
-    
-    // Shortcuts
-    create_shortcuts(dungeon_grid, 25, 25);
-	
-	// Dead end culling
-	if (game_state.cull_ends){
-		var dead_ends_culled = true;
-		while(dead_ends_culled){
-			dead_ends_culled = cull_dead_ends(dungeon_grid);
-		}
-	}
-	
-	// Doors
-	if (game_state.door_index >= 0){
-		add_doors(dungeon_grid);
-	}
-	
-	// Add entry
-	game_state.entry_position = add_entry(dungeon_grid);
-	
-	// Add exit
-	if (game_state.current_depth < game_state.max_depth - 1){
-		game_state.exit_position = add_exit(dungeon_grid, game_state.entry_position[0], game_state.entry_position[1]);
-	}
-	else game_state.exit_position = noone;
-	
-	// Add decorations
-	dungeon_decorate(index, room_list);
-	
+   // CREATE DUNGEON LAYOUT -----------------------------------------------------------------------
+    dungeons[index].gen_function(index);
+   
+   
 	// Generate tilemap
 	generate_map(dungeon_grid);
 	
@@ -73,6 +43,79 @@ function dungeon_generate(index){
 	initialise_item_grid(dungeon_grid, grid_width, grid_height);
 	
 	return([dungeon_grid, game_state.entry_position, game_state.exit_position, game_state.door_index]);
+}
+
+function catacomb_generate(index){
+	
+	with (manager){
+		// Room list
+		var room_list = generate_rooms(dungeon_grid, dungeons[index].rooms[0], dungeons[index].rooms[1], dungeons[index].rooms[2]);
+		generate_hallways(dungeon_grid, 25);
+	
+		 // Initial connections
+	    var areas_connected = true;
+	    while(areas_connected){
+	        areas_connected = connect_areas(dungeon_grid);
+	    }
+	
+		 // Shortcuts
+	    create_shortcuts(dungeon_grid, 25, 25);
+	
+		// Dead end culling
+		if (game_state.cull_ends){
+			var dead_ends_culled = true;
+			while(dead_ends_culled){
+				dead_ends_culled = cull_dead_ends(dungeon_grid);
+			}
+		}
+	
+		// Doors
+		if (game_state.door_index >= 0){
+			add_doors(dungeon_grid);
+		}
+	
+		// Add entry
+		game_state.entry_position = add_entry(dungeon_grid);
+	
+		// Add exit
+		if (game_state.current_depth < game_state.max_depth - 1){
+			game_state.exit_position = add_exit(dungeon_grid, game_state.entry_position[0], game_state.entry_position[1]);
+		}
+		else game_state.exit_position = noone;
+	
+		// Add decorations
+		dungeon_decorate(index, room_list);
+	}
+}
+
+function cavern_generate(index){
+	
+	with (manager){
+		
+		// Initialise grid
+		dungeon_grid = cellular_automata(grid_width, grid_height);
+		
+		// Map smoothing
+		repeat(10){
+			dungeon_grid = cellular_automata_smoothing(dungeon_grid);
+		}
+		
+		// Add tile structs
+		cellular_automata_add_tiles();
+		
+		// Connect areas
+		
+		connect_caverns(dungeon_grid);
+		
+		// Add entry
+		game_state.entry_position = add_entry(dungeon_grid);
+	
+		// Add exit
+		if (game_state.current_depth < game_state.max_depth - 1){
+			game_state.exit_position = add_exit(dungeon_grid, game_state.entry_position[0], game_state.entry_position[1]);
+		}
+		else game_state.exit_position = noone;
+	}
 }
 
 
@@ -601,6 +644,7 @@ function add_entry(grid){
 		
 		return([x_pos, y_pos]);
 	}
+	else return(noone);
 }
 
 function add_exit(grid, entry_x, entry_y){
@@ -611,7 +655,7 @@ function add_exit(grid, entry_x, entry_y){
 	
 	for (var x_pos = 1; x_pos < grid_w - 1; x_pos ++){
 		for (var y_pos = 1; y_pos < grid_h - 1; y_pos ++){
-			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > grid_width / 3){
+			if (grid[x_pos][y_pos].tile == "room" and point_distance(entry_x, entry_y, x_pos, y_pos) > grid_width / 4){
 				var count_door = grid_check_neighbour_count(grid, x_pos, y_pos, "closed door");
 				var count_hall = grid_check_neighbour_count(grid, x_pos, y_pos, "hall");
 				if (count_door == 0) and (count_hall == 0){

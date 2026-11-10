@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"cellular_automata_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cellular_automata_functions",
+  "parent":{
+    "name":"Code",
+    "path":"folders/Code.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

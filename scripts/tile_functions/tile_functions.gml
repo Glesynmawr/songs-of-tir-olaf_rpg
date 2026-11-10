@@ -175,7 +175,7 @@ function tile_torch()constructor{
 	light_source	= true;
 	lit_sprite		= fire_spr;
 	light_index		= 0;
-	light_radius	= 4;
+	light_radius	= 2;
 }
 
 // Decorative

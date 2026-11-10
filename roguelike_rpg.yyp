@@ -45,6 +45,7 @@
     {"id":{"name":"actor_data","path":"scripts/actor_data/actor_data.yy",},},
     {"id":{"name":"actor_functions","path":"scripts/actor_functions/actor_functions.yy",},},
     {"id":{"name":"actor_state_functions","path":"scripts/actor_state_functions/actor_state_functions.yy",},},
+    {"id":{"name":"cellular_automata_functions","path":"scripts/cellular_automata_functions/cellular_automata_functions.yy",},},
     {"id":{"name":"dialogue_functions","path":"scripts/dialogue_functions/dialogue_functions.yy",},},
     {"id":{"name":"drawing_functions","path":"scripts/drawing_functions/drawing_functions.yy",},},
     {"id":{"name":"dungeon_data","path":"scripts/dungeon_data/dungeon_data.yy",},},

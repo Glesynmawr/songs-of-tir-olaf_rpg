@@ -4,28 +4,27 @@ function zone_map_generate(grid, cell_x, cell_y){
 	var autotile_index	= grid[cell_x][cell_y].index;
 	var has_dungeon		= grid[cell_x][cell_y].dungeon;
 	
+	// Generate base zone map
 	var zone_map = zone_function[biome_index](autotile_index, has_dungeon, biome_index);
 	
+	// Add village
 	if (struct_exists(grid[cell_x][cell_y], "village")){
 		
 		var new_village = generate_village(zone_map, cell_x, cell_y);
 		
-		zone_map = new_village[0];
-		var zone_occupants = new_village[1];
-		var new_faction    = new_village[2];
+		zone_map			= new_village[0];
+		var zone_occupants	= new_village[1];
+		var new_faction		= new_village[2];
 		
-		for (var i = 0; i < zone_occupants; i ++){
-			
-			if (i == 0){
-				var new_villager = spawn_new_actor(actor_elder, i+1, 1, false);
-			}
-			else{
-				var new_villager = spawn_new_actor(actor_farmer, i+1, 1, false);
-			}
-			new_villager.faction	= new_faction;
+		// Add occupants
+		map_spawn_villagers(zone_map, zone_occupants, 1, actor_elder, 0, noone, actor_farmer, 2, new_faction);
+	}
+	else{
+		// Spawn mobs
+		var b = game_state.world_map[cell_x][cell_y].biome;
+		if (mob_lookup[b][MOB_LOOKUP.ZONE] != noone){
+			map_spawn_mobs(mob_lookup[b][MOB_LOOKUP.ZONE], 5);
 		}
-		
-		
 	}
 	
 	return(zone_map);
@@ -262,7 +261,6 @@ function zone_standard(world_index, dungeon, biome_index){
 		}
 	}
 	
-	//new_map = zone_add_clump_feature(new_map, tile_zone_raised_ground, 1, 4, 0.3, 20, 20);
 	
 	// Add dungeon entrance
 	if (dungeon){
@@ -365,7 +363,7 @@ function tile_zone_grass()constructor{
 }
 
 function tile_zone_lilypad()constructor{
-	tile			= "lilypad";
+	tile			= "water";
 	sprite			= zone_tile_lilypad_spr;
 	index			= 0;
 	walkable		= true;
@@ -398,7 +396,7 @@ function tile_zone_raised_ground()constructor{
 }
 
 function tile_zone_reeds()constructor{
-	tile			= "reeds";
+	tile			= "water";
 	sprite			= zone_tile_reeds_spr;
 	index			= 0;
 	walkable		= true;

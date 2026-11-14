@@ -118,6 +118,7 @@ function actor_set_hit_points(actor){
 	return(actor.stat[STAT_NAME.TOUGHNESS][STAT_TYPE.CURRENT] * 2);
 }
 
+
 // SPAWNING	 --------------------------------------------------------------------------------------
 function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	

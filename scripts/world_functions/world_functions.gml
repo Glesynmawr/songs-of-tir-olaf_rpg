@@ -6,7 +6,6 @@ function world_data(){
 	world_generate_pass_count	= 3;
 	world_generate_chunk_size	= 8;
 	world_generate_amplitude	= 12;
-	biome_village_count			= 2;
 
 	// Biomes
 	biome[0] = 200;	// Mountains
@@ -431,15 +430,18 @@ function dungeons_add_to_world(grid){
 function world_add_villages(grid){
 	
 	grid[0][0].village = {
-		building_count:		6,
-		building_size:		[5, 4],
-		building_distance:	12,
-		building_stagger:	1.2,
-		raised_ground:		true,
-		floor_tile:			tile_floor_planks,
-		wall_tile:			tile_wall_redwood,
-		decor_index:		0,
-		furnish_list:		[furnish_home, furnish_home, noone],
+		building_count:			6,
+		building_size:			[5, 4],
+		building_distance:		12,
+		building_stagger:		1.2,
+		raised_ground:			true,
+		floor_tile:				tile_floor_planks,
+		wall_tile:				tile_wall_redwood,
+		decor_index:			0,
+		furnish_list:			[furnish_home, furnish_home, noone],
+		farm_spawn_function:	farms_add_water_crop,
+		crop:					tile_reedmace,
+		crop_ripe:				tile_reedmace_ripe,
 	}
 	
 	return(grid);

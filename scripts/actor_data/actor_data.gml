@@ -57,7 +57,7 @@ function actor_elder()constructor{
 }
 
 function actor_farmer()constructor{
-	spawn_tile		= "marsh";
+	spawn_tile		= "water";
 	faction         = -99
 	name			= "Farmer";
 	sprite			= farmer_spr;
@@ -73,8 +73,8 @@ function actor_farmer()constructor{
 	range			= 0;
 	react_range		= 4;
 	
-	state			= state_wander;
-	state_base		= state_wander;
+	state			= state_idle;
+	state_base		= state_idle;
 	demeanour		= DEMEANOUR.PASSIVE;
 	
 	equipment		= [];

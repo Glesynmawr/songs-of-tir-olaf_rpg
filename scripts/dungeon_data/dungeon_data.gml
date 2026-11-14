@@ -7,7 +7,7 @@ function dungeon_data(){
 		max_width:		40,
 		max_height:		40,
 		size_change:	0,
-		wall_sprite:	wall_00_spr,
+		wall_sprite:	wall_02_spr,
 		floor_sprite:	floor_00_spr,
 		door_index:		0,
 		rooms:			[9, 3, 5],

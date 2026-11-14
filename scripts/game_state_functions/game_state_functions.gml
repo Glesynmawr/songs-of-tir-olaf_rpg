@@ -572,18 +572,18 @@ function goto_dungeon(dungeon_id, is_descending){
 			map_spawn_mobs(game_state.mobs_to_spawn, 0);
 		}
 		
-		// Update player LOS
-		grid_calculate_lighting(manager.game_state.game_grid);
-		set_player_los(game_state.game_grid, actor_registry.player);
-	
 		// Update Minimap text
 		ui_settings.minimap_title_text = dungeons[game_state.dungeon_index].name;
 		ui_settings.minimap_sub_text   = "Level: " + string(game_state.current_depth + 1);
 	
 		// Set time_system.timescale
-		time_system.timescale	= timescale_zone;
-		time_system.map_is_underground		= true;
+		time_system.timescale			= timescale_zone;
+		time_system.map_is_underground	= true;
 		world_update_lighting();
+		
+		// Update player LOS
+		grid_calculate_lighting(manager.game_state.game_grid);
+		set_player_los(game_state.game_grid, actor_registry.player);
 	}
 }
 
@@ -648,8 +648,8 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 			game_state.door_index = game_state.world_map[world_x][world_y].village.decor_index;
 		}
 		
-		game_state.game_grid	= game_state.zone_map[world_x][world_y];
-		game_state.map_mode		= MAP_MODE.ZONE;
+		game_state.game_grid				= game_state.zone_map[world_x][world_y];
+		game_state.map_mode					= MAP_MODE.ZONE;
 		ui_settings.game_grid_cells_width	= MAP_WIDTH;
 		ui_settings.game_grid_cells_height	= MAP_HEIGHT;
 	
@@ -664,12 +664,6 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Set game state
 		game_state.state_main = game_state_dungeon;
-	
-		// Spawn mobs
-		var b = game_state.world_map[world_x][world_y].biome;
-		if (mob_lookup[b][MOB_LOOKUP.ZONE] != noone){
-			map_spawn_mobs(mob_lookup[b][MOB_LOOKUP.ZONE], 5);
-		}
 	
 		// Update player LOS
 		grid_calculate_lighting(manager.game_state.game_grid);
@@ -687,7 +681,79 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 }
 
 
-// MOB SPAWNING
+// ACTOR SPAWNING
+function map_save_actors(){
+	
+}
+
+function map_spawn_villagers(grid, villager_count, elder_count, elder_actor, crafter_count, crafter_actor, farmer_actor, spawn_border, faction_index){
+	
+	with (manager){
+		var actor_to_spawn, actor_spawn_tile;
+	
+		// Get width and height of game grid
+		var width  = array_length(grid);
+		var height = array_length(grid[0]);
+	
+		var villager_index = 0;
+		repeat(villager_count){
+		
+			if (elder_count > 0 and villager_index == 0){
+			
+				// Spawn elder
+				actor_to_spawn			= spawn_new_actor(elder_actor, floor(ZONE_SIZE / 4) + villager_index, floor(ZONE_SIZE / 2));
+				actor_to_spawn.faction	= faction_index;
+				actor_spawn_tile		= actor_to_spawn.spawn_tile;
+			}
+			else if (crafter_count > 0 and villager_index <= crafter_count){
+			
+				// Spawn crafter
+				actor_to_spawn			= spawn_new_actor(crafter_actor, floor(ZONE_SIZE / 4) + villager_index, floor(ZONE_SIZE / 2));
+				actor_to_spawn.faction	= faction_index;
+				actor_spawn_tile		= actor_to_spawn.spawn_tile;
+			}
+			else{
+				// Spawn farmer
+				actor_to_spawn			= spawn_new_actor(farmer_actor, floor(ZONE_SIZE / 4) + villager_index, floor(ZONE_SIZE / 2));
+				actor_to_spawn.faction	= faction_index;
+				actor_spawn_tile		= actor_to_spawn.spawn_tile;
+			}
+		
+			// Find valid candidate positions
+			var candidate_list = [];
+			for (var cell_x = spawn_border; cell_x < width - spawn_border; cell_x ++){
+				for (var cell_y = spawn_border; cell_y < height - spawn_border; cell_y ++){
+					var cell_type = grid[cell_x][cell_y].tile;
+				
+					if (actor_spawn_tile != noone){
+						if (cell_type == actor_spawn_tile){
+							array_push(candidate_list, [cell_x, cell_y]);
+						}
+					}
+					else{
+						array_push(candidate_list, [cell_x, cell_y]);
+					}
+				}
+			
+				var len = array_length(candidate_list);
+				if (len > 0){
+					var choice = irandom(len - 1);
+					var xx = candidate_list[choice][0];
+					var yy = candidate_list[choice][1];
+					actor_to_spawn.x_pos			= xx;
+					actor_to_spawn.y_pos			= yy;
+					actor_to_spawn.sprite_x			= xx * ZONE_TILE_SIZE;
+					actor_to_spawn.sprite_y			= yy * ZONE_TILE_SIZE;
+					actor_to_spawn.sprite_target_x	= xx * ZONE_TILE_SIZE;
+					actor_to_spawn.sprite_target_y	= yy * ZONE_TILE_SIZE;
+					actor_to_spawn.xscale			= choose(1, -1);
+				}
+			}
+			villager_index ++;
+		}
+	}
+}
+
 function map_spawn_mobs(lookup_table, spawn_border){
 	
 	// Set number of mobs to spawn
@@ -749,10 +815,10 @@ function map_spawn_mobs(lookup_table, spawn_border){
 				var yy = candidate_list[choice][1];
 				actor_to_spawn.x_pos			= xx;
 				actor_to_spawn.y_pos			= yy;
-				actor_to_spawn.sprite_x			= xx * game_state.cell_width;
-				actor_to_spawn.sprite_y			= yy * game_state.cell_height;
-				actor_to_spawn.sprite_target_x	= xx * game_state.cell_width;
-				actor_to_spawn.sprite_target_y	= yy * game_state.cell_height;
+				actor_to_spawn.sprite_x			= xx * ZONE_TILE_SIZE;
+				actor_to_spawn.sprite_y			= yy * ZONE_TILE_SIZE;
+				actor_to_spawn.sprite_target_x	= xx * ZONE_TILE_SIZE;
+				actor_to_spawn.sprite_target_y	= yy * ZONE_TILE_SIZE;
 				actor_to_spawn.xscale			= choose(1, -1);
 			}
 		}

@@ -54,6 +54,27 @@ function water_tile_placement(grid){
 	return(grid);
 }
 
+function water_crop_tile_placement(grid, crop_tile, ripe_crop_tile){
+	var xx, yy;
+	for (xx = 0; xx < ZONE_SIZE; xx ++){
+		for (yy = 0; yy < ZONE_SIZE; yy ++){
+			if (grid[xx][yy].tile == "water"){
+				if (grid[xx][yy].index >= 46){
+					if (random(1) < 0.6){
+						if (random(1) < 0.1){
+							grid[xx][yy] = generate_zone_tile(ripe_crop_tile);
+						}
+						else{
+							grid[xx][yy] = generate_zone_tile(crop_tile);
+						}
+					}
+				}
+			}
+		}
+	}
+	return(grid);
+}
+
 
 // DUNGEON TILES
 function tile_dungeon_entrance()constructor{
@@ -124,7 +145,7 @@ function tile_wall()constructor{
 
 function tile_wall_redwood()constructor{
 	tile			= "wall";
-	sprite			= wall_02_spr;
+	sprite			= wall_03_spr;
 	index			= 0;
 	walkable		= false;
 	transparent		= false;
@@ -262,6 +283,30 @@ function tile_door_secret()constructor{
 	explored		= false;
 	tile_script		= door_set_open;
 	has_been_opened = false;
+}
+
+
+// PLANTS
+function tile_reedmace()constructor{
+	tile			= "water";
+	sprite			= reedmace_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_reedmace_ripe()constructor{
+	tile			= "water";
+	sprite			= reedmace_ripe_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 

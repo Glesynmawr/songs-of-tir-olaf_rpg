@@ -235,7 +235,7 @@ enum TRANSITION{
 #macro ENERGY_PER_TURN	100
 #macro LOG_MAX_ENTRIES	10
 
-#macro ZONE_SIZE		48
+#macro ZONE_SIZE		56
 #macro ITEM_SPRITE_SIZE sprite_get_width(item_size_spr)
 
 #macro C_BLACK	 make_colour_rgb(0,   0,   0)

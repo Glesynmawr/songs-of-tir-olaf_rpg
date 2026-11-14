@@ -10,6 +10,28 @@ function generate_village(zone_map, world_x, world_y){
 	var village_occupant_count	= 0;
 	
 	// Placement variables
+	var centre_x = choose(0, 1);
+	var centre_y = choose(0, 1);
+	
+	var farm_x, farm_y;
+	
+	if (centre_x == 0){
+		centre_x	= floor(ZONE_SIZE * 0.4);
+		farm_x		= floor(ZONE_SIZE * 0.66);
+	}
+	else{
+		centre_x	= floor(ZONE_SIZE * 0.6);
+		farm_x		= floor(ZONE_SIZE * 0.33);
+	}
+	if (centre_y == 0){
+		centre_y	= floor(ZONE_SIZE * 0.4);
+		farm_y		= floor(ZONE_SIZE * 0.66);
+	}
+	else{
+		centre_y	= floor(ZONE_SIZE * 0.6);
+		farm_y		= floor(ZONE_SIZE * 0.33);
+	}
+	
 	var building_count		= game_state.world_map[world_x][world_y].village.building_count;
 	var building_size		= game_state.world_map[world_x][world_y].village.building_size;		// RADIUS for round buildings, HEIGHT AND WIDTH for rectangular
 	var building_distance	= game_state.world_map[world_x][world_y].village.building_distance; // Distance to CENTRE of building
@@ -22,9 +44,17 @@ function generate_village(zone_map, world_x, world_y){
 	var decor_index			= game_state.world_map[world_x][world_y].village.decor_index;
 	var furnish_list		= game_state.world_map[world_x][world_y].village.furnish_list;
 	
+	// Crops
+	var farm_function		= game_state.world_map[world_x][world_x].village.farm_spawn_function;
+	var crop_tile			= game_state.world_map[world_x][world_y].village.crop;
+	var ripe_tile			= game_state.world_map[world_x][world_y].village.crop_ripe;
+	
 	// Set building starting positions
 	var building_list = [];
-	building_list = buildings_set_positions(building_count, building_distance, building_size, stagger_amount, furnish_list, building_size[0], furnish_focal_cauldron)
+	building_list = buildings_set_positions(centre_x, centre_y, building_count, building_distance, building_size, stagger_amount, furnish_list, building_size[0], furnish_focal_cauldron)
+	
+	// Add farming region
+	village_map = farm_function(village_map, farm_x, farm_y, crop_tile, ripe_tile);
 	
 	// Add raised ground
 	if (has_raised_ground){
@@ -34,7 +64,7 @@ function generate_village(zone_map, world_x, world_y){
 	village_map = buildings_create_rectangle(village_map, building_list, floor_tile);
 	
 	// Add focal point
-	village_map = zone_add_clump_feature(village_map, floor_tile, 1, building_size[0] - 1, 0, ZONE_SIZE / 2, ZONE_SIZE / 2);
+	village_map = zone_add_clump_feature(village_map, floor_tile, 1, building_size[0] - 1, 0, centre_x, centre_y);
 	
 	// Add walls
 	village_map = buildings_add_walls(village_map, wall_tile);
@@ -44,8 +74,8 @@ function generate_village(zone_map, world_x, world_y){
 	
 	// Autotile walls
 	village_map = buildings_autotile_walls(village_map);
-	
-	// Add decor
+
+	// Add building decor
 	for (var i = 0; i < array_length(building_list); i ++){
 		var xx			= building_list[i][0];
 		var yy			= building_list[i][1];
@@ -61,13 +91,19 @@ function generate_village(zone_map, world_x, world_y){
 		}
 	}
 	
+	// Add cauldron seating
+	
+	// Add crops
+	village_map = water_crop_tile_placement(village_map, crop_tile, ripe_tile);
+	
+	// Return map
 	return([village_map, village_occupant_count, new_village_faction]);
 }
 
 // GENERATE VILLAGERS -----------------------------------------------------------------------------
 
 // BUILDING POSITIONS AND TILES -------------------------------------------------------------------
-function buildings_set_positions(number_of_buildings, building_distance, building_size, stagger_amount, furnish_list, focal_point_radius, focal_furnish){
+function buildings_set_positions(centre_x, centre_y, number_of_buildings, building_distance, building_size, stagger_amount, furnish_list, focal_point_radius, focal_furnish){
 	
 	var building_list = [];
 	
@@ -98,10 +134,10 @@ function buildings_set_positions(number_of_buildings, building_distance, buildin
 			}
 		}
 		
-		var xx = floor(ZONE_SIZE / 2) + lengthdir_x(dist, dir);
-		var yy = floor(ZONE_SIZE / 2) + lengthdir_y(dist, dir);
+		var xx = centre_x + lengthdir_x(dist, dir);
+		var yy = centre_y + lengthdir_y(dist, dir);
 		
-		var door_direction = point_direction(xx, yy, floor(ZONE_SIZE / 2), floor(ZONE_SIZE / 2));
+		var door_direction = point_direction(xx, yy, centre_x, centre_y);
 		door_direction = round(door_direction / 90);
 		if (door_direction == 4) door_direction = 0;
 		
@@ -114,7 +150,7 @@ function buildings_set_positions(number_of_buildings, building_distance, buildin
 		array_push(building_list, [xx, yy, ww, hh, door_direction, decor]);
 		dir += angle_inc;
 	}
-	array_push(building_list, [floor(ZONE_SIZE / 2) - focal_point_radius, floor(ZONE_SIZE / 2) - focal_point_radius, focal_point_radius * 2, focal_point_radius * 2, noone, focal_furnish]);
+	array_push(building_list, [centre_x - focal_point_radius, centre_y - focal_point_radius, focal_point_radius * 2, focal_point_radius * 2, noone, focal_furnish]);
 	
 	return(building_list);
 }
@@ -142,6 +178,7 @@ function buildings_create_raised_ground(grid, building_list, building_distance){
 	return(grid);
 }
 
+// Autotiling happens here!
 function buildings_create_rectangle(grid, building_list, floor_tile){
 	
 	for (var i = 0; i < array_length(building_list); i ++){
@@ -156,8 +193,7 @@ function buildings_create_rectangle(grid, building_list, floor_tile){
 			var hh = building_list[i][3];
 		
 			// Autotile raised ground
-			grid = autotile_map(grid);
-			grid = water_tile_placement(grid);
+			grid = autotile_map(grid); 
 		
 			// Add building floor
 			for (var x_pos = xx; x_pos < xx + ww; x_pos ++){
@@ -250,6 +286,18 @@ function buildings_add_doors(grid, building_list, door_index){
 	}
 	
 	return(grid);
+}
+
+
+// FARMING AREAS
+function farms_add_water_crop(grid, farm_x, farm_y){
+	
+	var crop_grid = variable_clone(grid);
+	
+	// Place water feature
+	crop_grid = zone_add_clump_feature(crop_grid, tile_zone_water, 1, floor(ZONE_SIZE * 0.33), 0, farm_x, farm_y);
+	
+	return(crop_grid);
 }
 
 

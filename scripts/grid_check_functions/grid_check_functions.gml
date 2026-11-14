@@ -216,8 +216,14 @@ function set_player_los(grid, actor){
 	}
 	for (var i = 0; i < array_length(manager.actor_registry.actor_list); i ++){
 		with (manager.actor_registry.actor_list[i]){
-			if (grid[self.x_pos][self.y_pos].is_visible){
-				self.is_visible = true;
+			
+			var is_in_bounds = grid_check_position_in_bounds(grid, self.x_pos, self.y_pos);
+			
+			if (is_in_bounds){
+				if (grid[self.x_pos][self.y_pos].is_visible){
+					self.is_visible = true;
+				}
+				else self.is_visible = false;
 			}
 			else self.is_visible = false;
 		}

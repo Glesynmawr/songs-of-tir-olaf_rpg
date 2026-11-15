@@ -306,7 +306,8 @@ function tile_reedmace_ripe()constructor{
 	transparent		= false;
 	is_visible		= false;
 	explored		= false;
-	tile_script		= noone;
+	tile_script		= crop_harvest;
+	harvested_tile  = tile_reedmace;
 }
 
 

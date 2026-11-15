@@ -8,6 +8,13 @@ function tile_interaction(actor, x_pos, y_pos){
 	return(false);
 }
 
+function crop_harvest(actor, x_pos, y_pos){
+	var tile_ind = manager.game_state.game_grid[x_pos][y_pos].index;
+	var replacement_tile = manager.game_state.game_grid[x_pos][y_pos].harvested_tile;
+	cell_replace_tile(x_pos, y_pos, replacement_tile);
+	manager.game_state.game_grid[x_pos][y_pos].index = tile_ind;
+}
+
 function door_set_open(actor, x_pos, y_pos){
 	
 	cell_replace_tile(x_pos, y_pos, tile_door_open);

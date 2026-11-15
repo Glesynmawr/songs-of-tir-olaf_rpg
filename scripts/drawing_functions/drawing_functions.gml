@@ -45,8 +45,8 @@ function game_draw_grid(){
 				if (game_state.game_grid[xx][yy].explored or debugging_mode){
 				
 					// Set screen pixel position
-					var screen_x = floor((((xx - x_from) * game_state.cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]));
-					var screen_y = floor((((yy - y_from) * game_state.cell_height) + map_offset_y));
+					var screen_x = (((xx - x_from) * game_state.cell_width)  + map_offset_x + ui_x_pos[ui_settings.ui_x_position][1]);
+					var screen_y = (((yy - y_from) * game_state.cell_height) + map_offset_y);
 					
 					// Draw tile
 					game_draw_tile(xx, yy, screen_x, screen_y);
@@ -213,7 +213,7 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 	var tile_x = ind mod 8;
 	var tile_y = ind div 8;
 			
-	draw_sprite_part_ext(spr, ind, tile_x*game_state.cell_width, tile_y*game_state.cell_height, game_state.cell_width, game_state.cell_height, floor(screen_x), floor(screen_y), 1, 1, C_WHITE, 1);
+	draw_sprite_part_ext(spr, ind, tile_x*game_state.cell_width, tile_y*game_state.cell_height, game_state.cell_width, game_state.cell_height, screen_x, screen_y, 1, 1, C_WHITE, 1);
 	
 	if (struct_exists(game_state.game_grid[xx][yy], "is_animated")){
 		

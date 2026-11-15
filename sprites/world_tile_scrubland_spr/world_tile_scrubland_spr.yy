@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"world_tile_scrubland_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":7,
   "bbox_left":3,
-  "bbox_right":125,
+  "bbox_right":61,
   "bbox_top":2,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"0bef7dba-a997-4421-a1da-1b8a72739d5e","name":"0bef7dba-a997-4421-a1da-1b8a72739d5e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"6d47b52f-2abc-4710-84ae-527005f2429b","name":"6d47b52f-2abc-4710-84ae-527005f2429b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":8,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"c2c36890-56bb-40eb-bb79-44d64f3ebb26","blendMode":0,"displayName":"default","isLocked":false,"name":"c2c36890-56bb-40eb-bb79-44d64f3ebb26","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"c8c7aed6-f590-4199-afda-3b55ddf20f88","blendMode":0,"displayName":"default","isLocked":false,"name":"c8c7aed6-f590-4199-afda-3b55ddf20f88","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_scrubland_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0bef7dba-a997-4421-a1da-1b8a72739d5e","path":"sprites/world_tile_scrubland_spr/world_tile_scrubland_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"560c090a-b5da-4c5c-b3a0-352ad9744a79","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6d47b52f-2abc-4710-84ae-527005f2429b","path":"sprites/world_tile_scrubland_spr/world_tile_scrubland_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"1e6adada-acd7-4086-b7bd-69dfae7be38d","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

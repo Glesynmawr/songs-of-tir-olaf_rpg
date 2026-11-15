@@ -97,6 +97,7 @@ enum DIALOGUE{
 	EXIT		= -1,
 	ITEM_GIVE	= -2,
 	ITEM_TAKE	= -3,
+	TELL_NAME   = -4,
 }
 
 enum EQUIP{

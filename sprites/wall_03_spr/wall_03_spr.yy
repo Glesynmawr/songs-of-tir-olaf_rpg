@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"tiles village",
-    "path":"folders/Art/tiles village.yy",
+    "name":"Walls",
+    "path":"folders/Art/Walls.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

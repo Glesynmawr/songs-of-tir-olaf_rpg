@@ -7,6 +7,7 @@ function dialogue_init(dialogue_self, dialogue_other){
 		return;
 	}
 	
+	var dialogue_index = dialogue_get_init_index(dialogue_self, dialogue_other)
 	with (dialogue_self){
 		state_previous	= state;
 		state			= state_dialogue;
@@ -15,8 +16,6 @@ function dialogue_init(dialogue_self, dialogue_other){
 	with (manager){
 		
 		game_state.direction_indicator = noone;
-		
-		var dialogue_index	= 0;
 		var txt_main		= dialogue_add_names(dialogue_text[dialogue_index], dialogue_other, dialogue_self);
 		
 		dialogue = {
@@ -27,6 +26,45 @@ function dialogue_init(dialogue_self, dialogue_other){
 			hover:			0,
 		}
 	}
+}
+
+function dialogue_get_init_index(dialogue_self, dialogue_other){
+	
+	var dialogue_index	= 0;
+	with (dialogue_other){
+		
+		// Never met player before
+		if (!has_met_player){
+			
+			if (knows_player_name){
+				
+				// Name known
+				dialogue_index = 1;
+			}
+			else{
+				
+				// Name unknown
+				dialogue_index = 0;
+			}
+			has_met_player = true;
+		}
+		// Met player before
+		else{
+			if (knows_player_name){
+				
+				// Name known
+				dialogue_index = 3;
+			}
+			else{
+				
+				// Name unknown
+				dialogue_index = 2;
+			}
+			has_met_player = true;
+		}
+	}
+	
+	return(dialogue_index);
 }
 
 function dialogue_reset(){
@@ -42,16 +80,18 @@ function dialogue_reset(){
 function dialogue_update(dialogue_new_index){
 	
 	with (manager){
-		var txt_main		= dialogue_text[dialogue_new_index][0];
-		var response_list	= dialogue_text[dialogue_new_index][1];
+		
+		var txt_main = dialogue_add_names(dialogue_text[dialogue_new_index], dialogue.speaker, dialogue.responder);
 	
-		dialogue.main_message	= txt_main;
-		dialogue.responses		= response_list;
+		dialogue.main_message	= txt_main[0];
+		dialogue.responses		= txt_main[1];
 		dialogue.hover			= 0;
 	}
 }
 
-function dialogue_add_names(text, speaker, responder){
+function dialogue_add_names(text_base, speaker, responder){
+	
+	var text = variable_clone(text_base);
 	
 	// Check main message
 	var main = text[0];
@@ -62,6 +102,11 @@ function dialogue_add_names(text, speaker, responder){
 			main = string_delete(main, i, 1);
 			main = string_insert(speaker.name, main, i);
 		}
+		else if (char == "&"){
+			main = string_delete(main, i, 1);
+			main = string_insert(responder.name, main, i);
+		}
+		var main_len = string_length(main);
 	}
 	
 	// Check responses
@@ -75,6 +120,11 @@ function dialogue_add_names(text, speaker, responder){
 				resp[i][0] = string_delete(resp[i][0], j, 1);
 				resp[i][0] = string_insert(responder.name, resp[i][0], j);
 			}
+			else if (char == "|"){
+				resp[i][0] = string_delete(resp[i][0], j, 1);
+				resp[i][0] = string_insert(speaker.name, resp[i][0], j);
+			}
+			resp_len = string_length(resp[i][0])
 		}
 	}
 	
@@ -109,22 +159,40 @@ function quest_dialogue_init(){
 // DIALOGUE TEXT ----------------------------------------------------------------------------------
 function dialogue_text_init(){
 	
-	dialogue_text[0][0] = "Greetings, I am |. How can I help you today?";
+	// DIALOGUE BEGINNINGS ------------------------------------------------------------------------
+	// Player unknown, first meeting
+	dialogue_text[0][0] = "Welcome, I am |. How can I help you today?";
 	dialogue_text[0][1] = [
-		["I am &, I have that sword you wanted.",	1],
-		["Do you have something for me?",	2],
-		["Goodbye",							DIALOGUE.EXIT]
+		["Greetings |, I am &.",		DIALOGUE.TELL_NAME, 4],
+		["Goodbye.",					DIALOGUE.EXIT]
 	]
 	
-	dialogue_text[1][0] = "That's great, thank you so much!";
+	// Player known, first meeting
+	dialogue_text[1][0] = "Welcome &. I know who you are. What brings you here?";
 	dialogue_text[1][1] = [
-		["- give sword -",	DIALOGUE.ITEM_GIVE, "sword"]
+		["You already know who I am?",	DIALOGUE.EXIT],
+		["Goodbye.",					DIALOGUE.EXIT]
 	]
 	
-	dialogue_text[2][0] = "It's dangerous to go alone! Take this!";
+	// Player unknown, already met
+	dialogue_text[2][0] = "Hello again stranger. How can I help you today?";
 	dialogue_text[2][1] = [
-		["Thank you.",		DIALOGUE.ITEM_TAKE, item_sword1],
-		["No thank you.",	DIALOGUE.EXIT]
+		["Greetings |, My name is &.",	DIALOGUE.TELL_NAME, 4],
+		["Goodbye.",					DIALOGUE.EXIT]
+	]
+	
+	// Player known, already met
+	dialogue_text[3][0] = "Greetings &. How can I help you today?";
+	dialogue_text[3][1] = [
+		["Greetings |.",				DIALOGUE.EXIT],
+		["Goodbye.",					DIALOGUE.EXIT]
+	]
+	
+	// DIALOGUE SECOND STATEMENTS -----------------------------------------------------------------
+	dialogue_text[4][0] = "Good to meet you &. What can I do for you?";
+	dialogue_text[4][1] = [
+		["I need nothing, thank you.",	DIALOGUE.EXIT],
+		["Goodbye.",					DIALOGUE.EXIT]
 	]
 	
 	

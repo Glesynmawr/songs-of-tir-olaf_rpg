@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"world_tile_salt_desert_spr",
   "bboxMode":0,
-  "bbox_bottom":14,
+  "bbox_bottom":7,
   "bbox_left":2,
-  "bbox_right":125,
+  "bbox_right":62,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"1d610a8c-9032-4cac-9067-734fe9723c29","name":"1d610a8c-9032-4cac-9067-734fe9723c29","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"2cbfca3e-3b41-4893-a83f-cf1a15099f17","name":"2cbfca3e-3b41-4893-a83f-cf1a15099f17","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":16,
+  "height":8,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"ff58954d-7ffc-4e81-a191-c4e92399735f","blendMode":0,"displayName":"default","isLocked":false,"name":"ff58954d-7ffc-4e81-a191-c4e92399735f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"fec0ea89-a983-4309-ace8-c3b30f7e030e","blendMode":0,"displayName":"default","isLocked":false,"name":"fec0ea89-a983-4309-ace8-c3b30f7e030e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"world_tile_salt_desert_spr",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1d610a8c-9032-4cac-9067-734fe9723c29","path":"sprites/world_tile_salt_desert_spr/world_tile_salt_desert_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"976c3ff0-dda5-43b6-ba28-d977d0e7674a","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2cbfca3e-3b41-4893-a83f-cf1a15099f17","path":"sprites/world_tile_salt_desert_spr/world_tile_salt_desert_spr.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"b5dc6cb4-51ea-4ae6-98d6-e1b4a489e829","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":128,
+  "width":64,
 }

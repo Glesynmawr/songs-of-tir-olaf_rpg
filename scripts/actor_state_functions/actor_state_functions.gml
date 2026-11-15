@@ -249,6 +249,10 @@ function state_dialogue(){
 				case DIALOGUE.ITEM_TAKE: 
 					spawn_new_item(manager.dialogue.responses[manager.dialogue.hover][2], 1, SPAWN_LOC.INVENTORY, , , self);
 					dialogue_reset(); break;
+				
+				case DIALOGUE.TELL_NAME:
+					manager.dialogue.speaker.knows_player_name = true;
+					dialogue_update(manager.dialogue.responses[manager.dialogue.hover][2]); break;
 					
 				default: dialogue_reset();
 			}

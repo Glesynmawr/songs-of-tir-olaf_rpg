@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"tiles dungeon",
-    "path":"folders/Art/tiles dungeon.yy",
+    "name":"Floors",
+    "path":"folders/Art/Floors.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

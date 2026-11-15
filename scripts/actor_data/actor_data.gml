@@ -31,7 +31,7 @@ function actor_rogue()constructor{
 
 // Villagers
 function actor_elder()constructor{
-	spawn_tile		= "floor";
+	spawn_tile		= "floor_cushion";
 	faction         = -99
 	name			= "Elder";
 	sprite			= elder_spr;

@@ -248,6 +248,38 @@ function tile_cook_pot() constructor{
 	tile_script		= noone;
 }
 
+function tile_floor_cushion() constructor{
+	tile			= "floor_cushion";
+	sprite			= floor_cushion_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_table_empty() constructor{
+	tile			= "table";
+	sprite			= table_empty_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_table_kitchen() constructor{
+	tile			= "table";
+	sprite			= table_kitchen_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
 
 // INTERACTIVE TILES
 function tile_door_closed()constructor{
@@ -292,7 +324,7 @@ function tile_reedmace()constructor{
 	sprite			= reedmace_spr;
 	index			= 0;
 	walkable		= true;
-	transparent		= false;
+	transparent		= true;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;

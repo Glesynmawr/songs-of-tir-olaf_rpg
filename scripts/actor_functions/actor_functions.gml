@@ -124,6 +124,10 @@ function spawn_new_actor(actor_type, cell_x, cell_y, actor_is_player = false){
 	
 	var new_actor = new actor_type();
 	
+	// Knowledge of world
+	new_actor.has_met_player	= false;
+	new_actor.knows_player_name = false;
+	
 	// Stats
 	var str_base = new_actor.strength;
 	var agi_base = new_actor.agility;

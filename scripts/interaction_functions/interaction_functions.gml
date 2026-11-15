@@ -25,10 +25,6 @@ function door_set_open(actor, x_pos, y_pos){
 		manager.game_state.game_grid[x_pos][y_pos].has_been_opened = true;
 	}
 	
-	// Create log entry
-	var text = $"{actor.name} opens the door.";
-	log_add_entry(text, manager.colour_text_main);
-	
 	return(true);
 }
 
@@ -38,10 +34,6 @@ function door_set_close(actor, x_pos, y_pos){
 		
 		cell_replace_tile(x_pos, y_pos, tile_door_closed);
 		manager.game_state.game_grid[x_pos][y_pos].index = manager.game_state.door_index;
-	
-		// Create log entry
-		var text = $"{actor.name} closes the door.";
-		log_add_entry(text, manager.colour_text_main);
 		
 		return(true);
 	}

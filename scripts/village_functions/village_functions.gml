@@ -7,7 +7,6 @@ function generate_village(zone_map, world_x, world_y){
 	var new_village_faction = array_length(game_state.faction_list)-1;
 	
 	var village_map				= variable_clone(zone_map);
-	var village_occupant_count	= 0;
 	
 	// Placement variables
 	var centre_x = choose(0, 1);
@@ -76,6 +75,8 @@ function generate_village(zone_map, world_x, world_y){
 	village_map = buildings_autotile_walls(village_map);
 
 	// Add building decor
+	village_occupant_count	= 0;
+	
 	for (var i = 0; i < array_length(building_list); i ++){
 		var xx			= building_list[i][0];
 		var yy			= building_list[i][1];
@@ -90,6 +91,7 @@ function generate_village(zone_map, world_x, world_y){
 			village_occupant_count	+= decor_return[1];
 		}
 	}
+	
 	
 	// Add cauldron seating
 	
@@ -198,7 +200,7 @@ function buildings_create_rectangle(grid, building_list, floor_tile){
 			// Add building floor
 			for (var x_pos = xx; x_pos < xx + ww; x_pos ++){
 				for (var y_pos = yy; y_pos < yy + hh; y_pos ++){
-					grid[x_pos][y_pos] = new floor_tile();
+					grid[x_pos][y_pos] = generate_zone_tile(floor_tile);
 				}
 			}
 		}
@@ -398,6 +400,27 @@ function furnish_focal_cauldron(grid, x_pos, y_pos, width, height, door_dir, dec
 	yy = y_pos + floor(height / 2);
 	grid[xx][yy] = new tile_door_closed();
 	grid[xx][yy].index = decor_index;
+	
+	// Cushions
+	repeat(village_occupant_count){
+		var candidate_list = [];
+		for (var i = x_pos; i < x_pos + width; i ++){
+			for (var j = y_pos; j < y_pos + height; j ++){
+				if (i != x_pos + floor(width / 2)) and (j != y_pos + floor(height / 2)){
+					if (grid[i][j].tile == "floor"){
+						array_push(candidate_list, [i, j]);
+					}
+				}
+			}
+		}
+		var len = array_length(candidate_list);
+		if (len > 0){
+			var choice = irandom(len - 1);
+			xx = candidate_list[choice][0];
+			yy = candidate_list[choice][1];
+			grid[xx][yy] = generate_zone_tile(tile_floor_cushion);
+		}
+	}
 	
 	return([grid, 0]);
 }

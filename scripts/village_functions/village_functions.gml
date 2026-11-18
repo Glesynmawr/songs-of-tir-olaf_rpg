@@ -241,50 +241,80 @@ function buildings_autotile_walls(grid){
 }
 
 function buildings_add_doors(grid, building_list, door_index){
-	for (var i = 0; i < array_length(building_list); i ++){
+	
+	var x_pos, y_pos;
+	var len = array_length(building_list);
+	
+	for (var i = 0; i < len; i ++){
 		
 		var xx = building_list[i][0] - 1;
 		var yy = building_list[i][1] - 1;
 		var ww = building_list[i][2] + 1;
 		var hh = building_list[i][3] + 1;
 		
-		var door_direction = building_list[i][4];
-		
-		var building_centre_x = xx + (ww / 2);
-		var building_centre_y = yy + (hh / 2);
-		var zone_centre       = ZONE_SIZE / 2;
-		
-		// Find wall tile index target
-		var dir_to_centre = point_direction(zone_centre, zone_centre, building_centre_x, building_centre_y);
-		var target_index = 5;
-		if ((dir_to_centre < 45) or (dir_to_centre > 315) or (dir_to_centre > 135 and dir_to_centre < 225)){
-			target_index = 10;
-		}
-		
-		if (door_direction == 0){
-			// EAST wall door
-			var y_pos = yy + irandom_range(1, hh - 1);
-			var x_pos = xx + ww;
-		}
-		else if (door_direction == 1){
-			// NORTH wall door
-			var y_pos = yy;
-			var x_pos = xx + irandom_range(1, ww - 1);
-		}
-		else if (door_direction == 2){
-			// WEST wall door
-			var y_pos = yy + irandom_range(1, hh - 1);
-			var x_pos = xx;
-		}
-		else if (door_direction == 3){
-			// SOUTH wall door
-			var y_pos = yy + hh;
-			var x_pos = xx + irandom_range(1, ww - 1);
-		}
+		if (i == len - 1){
 			
-		grid[x_pos][y_pos] = new tile_door_closed();
-		grid[x_pos][y_pos].index = door_index;
+			// Doors
+			x_pos = xx + ceil(ww / 2);
+			y_pos = yy + 2;
+			grid[x_pos][y_pos] = new tile_door_closed();
+			grid[x_pos][y_pos].index = door_index;
+	
+			x_pos = xx + ceil(ww / 2);
+			y_pos = yy + hh - 1;
+			grid[x_pos][y_pos] = new tile_door_closed();
+			grid[x_pos][y_pos].index = door_index;
+	
+			x_pos = xx + 2;
+			y_pos = yy + ceil(hh / 2);
+			grid[x_pos][y_pos] = new tile_door_closed();
+			grid[x_pos][y_pos].index = door_index;
+	
+			x_pos = xx + ww - 1;
+			y_pos = yy + ceil(hh / 2);
+			grid[x_pos][y_pos] = new tile_door_closed();
+			grid[x_pos][y_pos].index = door_index;
+		}
+		else{
 		
+			var door_direction = building_list[i][4];
+		
+			var building_centre_x = xx + (ww / 2);
+			var building_centre_y = yy + (hh / 2);
+			var zone_centre       = ZONE_SIZE / 2;
+		
+			// Find wall tile index target
+			var dir_to_centre = point_direction(zone_centre, zone_centre, building_centre_x, building_centre_y);
+			var target_index = 5;
+			if ((dir_to_centre < 45) or (dir_to_centre > 315) or (dir_to_centre > 135 and dir_to_centre < 225)){
+				target_index = 10;
+			}
+		
+			if (door_direction == 0){
+				// EAST wall door
+				y_pos = yy + irandom_range(1, hh - 1);
+				x_pos = xx + ww;
+			}
+			else if (door_direction == 1){
+				// NORTH wall door
+				y_pos = yy;
+				x_pos = xx + irandom_range(1, ww - 1);
+			}
+			else if (door_direction == 2){
+				// WEST wall door
+				y_pos = yy + irandom_range(1, hh - 1);
+				x_pos = xx;
+			}
+			else if (door_direction == 3){
+				// SOUTH wall door
+				y_pos = yy + hh;
+				x_pos = xx + irandom_range(1, ww - 1);
+			}
+			
+			grid[x_pos][y_pos] = new tile_door_closed();
+			grid[x_pos][y_pos].index = door_index;
+		
+		}
 	}
 	
 	return(grid);
@@ -378,27 +408,6 @@ function furnish_focal_cauldron(grid, x_pos, y_pos, width, height, door_dir, dec
 	var xx = x_pos + floor(width / 2);
 	var yy = y_pos + floor(height / 2);
 	grid[xx][yy] = new tile_cook_pot();
-	grid[xx][yy].index = decor_index;
-	
-	// Doors
-	xx = x_pos + floor(width / 2);
-	yy = y_pos + 1;
-	grid[xx][yy] = new tile_door_closed();
-	grid[xx][yy].index = decor_index;
-	
-	xx = x_pos + floor(width / 2);
-	yy = y_pos + height - 1;
-	grid[xx][yy] = new tile_door_closed();
-	grid[xx][yy].index = decor_index;
-	
-	xx = x_pos + 1;
-	yy = y_pos + floor(height / 2);
-	grid[xx][yy] = new tile_door_closed();
-	grid[xx][yy].index = decor_index;
-	
-	xx = x_pos + width - 1;
-	yy = y_pos + floor(height / 2);
-	grid[xx][yy] = new tile_door_closed();
 	grid[xx][yy].index = decor_index;
 	
 	// Cushions

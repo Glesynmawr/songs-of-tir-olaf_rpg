@@ -73,8 +73,8 @@ function actor_farmer()constructor{
 	range			= 0;
 	react_range		= 4;
 	
-	state			= state_idle;
-	state_base		= state_idle;
+	state			= state_wander;
+	state_base		= state_wander;
 	demeanour		= DEMEANOUR.PASSIVE;
 	
 	equipment		= [];

@@ -524,7 +524,7 @@ function goto_dungeon(dungeon_id, is_descending){
 	with (manager){
 		var world_x = actor_registry.player.world_x;
 		var world_y = actor_registry.player.world_y;
-
+		
 		// Exit dungeon
 		if (game_state.current_depth < 0){
 			transition_set(TRANSITION.GAME_DUNGEON_EXIT, C_BLACK);
@@ -567,11 +567,6 @@ function goto_dungeon(dungeon_id, is_descending){
 		// Set game state
 		game_state.state_main = game_state_dungeon;
 		
-		// Spawn mobs
-		if (game_state.mobs_to_spawn != noone){
-			map_spawn_mobs(game_state.mobs_to_spawn, 0);
-		}
-		
 		// Update Minimap text
 		ui_settings.minimap_title_text = dungeons[game_state.dungeon_index].name;
 		ui_settings.minimap_sub_text   = "Level: " + string(game_state.current_depth + 1);
@@ -589,6 +584,7 @@ function goto_dungeon(dungeon_id, is_descending){
 
 function goto_world(){
 	with (manager){
+		
 		// reset actor and action lists
 		actor_list_clear_all(false);
 		action_list_clear_all(false);
@@ -631,15 +627,16 @@ function goto_world(){
 
 function goto_zone(world_x, world_y, entry_x, entry_y){
 	with (manager){
+		
 		// reset actor and action lists
 		actor_list_clear_all(false);
 		action_list_clear_all(false);
-	
-		// Set game grid
+									 
+		// Set game grid			 
 		if (game_state.zone_map[world_x][world_y] == noone){
 			game_state.zone_map[world_x][world_y] = zone_map_generate(game_state.world_map, world_x, world_y);
 			initialise_item_grid(game_state.zone_map[world_x][world_y], ZONE_SIZE, ZONE_SIZE);
-		}
+		}							 
 		game_state.cell_width  = ZONE_TILE_SIZE;
 		game_state.cell_height = ZONE_TILE_SIZE;
 		
@@ -664,7 +661,10 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 	
 		// Set game state
 		game_state.state_main = game_state_dungeon;
-	
+		
+		// Load actors
+		map_load_actors(game_state.world_map[world_x][world_y].mobs);
+		
 		// Update player LOS
 		grid_calculate_lighting(manager.game_state.game_grid);
 		set_player_los(game_state.game_grid, actor_registry.player);
@@ -682,8 +682,33 @@ function goto_zone(world_x, world_y, entry_x, entry_y){
 
 
 // ACTOR SPAWNING
+function map_load_actors(list){
+	with (manager){
+		if (array_length(list) > 0){
+			for (var i = 0; i < array_length(list); i ++){
+				var actor = list[i];
+				array_push(actor_registry.actor_list, actor);
+			}
+		}
+	}
+}
+
 function map_save_actors(){
 	
+	with (manager){
+		var actors_to_save = [];
+		var len = array_length(actor_registry.actor_list);
+		var player = actor_registry.player;
+	
+		for (var i = 0; i < len; i ++){
+			var actor = actor_registry.actor_list[i];
+			if (actor != player){
+				array_push(actors_to_save, actor);
+			}
+		}
+		
+		return(actors_to_save);
+	}
 }
 
 function map_spawn_villagers(grid, villager_count, elder_count, elder_actor, crafter_count, crafter_actor, farmer_actor, spawn_border, faction_index){

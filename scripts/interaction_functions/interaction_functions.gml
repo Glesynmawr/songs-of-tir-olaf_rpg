@@ -42,6 +42,13 @@ function door_set_close(actor, x_pos, y_pos){
 function dungeon_enter(actor, x_pos, y_pos){
 	
 	with (manager){
+		
+		// Save current mobs
+		var world_x = actor_registry.player.world_x;
+		var world_y = actor_registry.player.world_y;
+		game_state.world_map[world_x][world_y].mobs = map_save_actors();
+		
+		// Set dungeon variables
 		game_state.dungeon_entry_x = x_pos;
 		game_state.dungeon_entry_y = y_pos;
 		game_state.dungeon_index   = game_state.game_grid[x_pos][y_pos].index;

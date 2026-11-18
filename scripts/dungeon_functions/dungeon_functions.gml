@@ -103,8 +103,10 @@ function cavern_generate(index){
 		// Add tile structs
 		cellular_automata_add_tiles();
 		
-		// Connect areas
+		// Remove single tiles
+		cellular_automata_remove_singles();
 		
+		// Fill unconnected areas
 		connect_caverns(dungeon_grid);
 		
 		// Add entry

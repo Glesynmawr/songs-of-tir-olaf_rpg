@@ -580,25 +580,28 @@ function turn_order_initialise(){
 		for (var i = 0; i < array_length(actor_registry.actor_list); i ++){
 		
 			with (actor_registry.actor_list[i]){
-	
-				// CHECK ACTOR ENERGY
-				if (energy > 0){
+				
+				if (grid_check_position_in_bounds(manager.game_state.game_grid, x_pos, y_pos)){
+					
+					// CHECK ACTOR ENERGY
+					if (energy > 0){
 		
-					// GET ACTION ENERGY COST
-					var action_cost = 100;
-					if (stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT] > 0){
-						action_cost = 10000 / stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT];
+						// GET ACTION ENERGY COST
+						var action_cost = 100;
+						if (stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT] > 0){
+							action_cost = 10000 / stat[STAT_NAME.SPEED][STAT_TYPE.CURRENT];
+						}
+		
+						// GET ACTOR DISTANCE FROM PLAYER
+						dist = 0;
+						if (self != manager.actor_registry.player){
+							var dist = distance_map_player[x_pos][y_pos];
+						}
+		
+						// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
+						energy -= action_cost;
+						array_push(other.actor_registry.action_list, [self, dist]);
 					}
-		
-					// GET ACTOR DISTANCE FROM PLAYER
-					dist = 0;
-					if (self != manager.actor_registry.player){
-						var dist = distance_map_player[x_pos][y_pos];
-					}
-		
-					// PUSH INSTANCE ID AND DISTANCE TO ACTION LIST
-					energy -= action_cost;
-					array_push(other.actor_registry.action_list, [self, dist]);
 				}
 			}
 		}

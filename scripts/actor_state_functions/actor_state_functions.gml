@@ -34,11 +34,15 @@ function state_ready_for_inputs(){
 	if (move_dir != noone){
 		
 		// Set manager direction indicator
-		with (manager) game_state.direction_indicator = move_dir;
+		// Actor saving data
+		with (manager){
+			game_state.direction_indicator	= move_dir;
+		}
 		
 		// Movement
 		if (keyboard_check(controls.key_move_confirm)){
 			if (manager.move_timer <= 0){
+				
 				var xx = manager.cell_x_neighbours[move_dir];
 				var yy = manager.cell_y_neighbours[move_dir];
 				player_moved = action_move(manager.game_state.game_grid, xx, yy);
@@ -118,7 +122,11 @@ function state_ready_for_inputs(){
 					log_add_entry(txt, manager.colour_text_main);
 				}
 				else{
+					// Save current mobs
+					manager.game_state.world_map[world_x][world_y].mobs = [];
+					manager.game_state.world_map[world_x][world_y].mobs = map_save_actors();
 					with(manager){
+						
 						transition_set(TRANSITION.GAME_WORLD, colour_bg_main);
 					}
 				}
@@ -165,6 +173,10 @@ function state_ready_for_inputs(){
 					// Reset visibility on current map
 					grid_set_visible(manager.game_state.game_grid, false)
 					
+					// Save current mobs
+					manager.game_state.world_map[world_x][world_y].mobs = [];
+					manager.game_state.world_map[world_x][world_y].mobs = map_save_actors();
+					
 					// Move world grid position
 					world_x --;
 					
@@ -177,6 +189,10 @@ function state_ready_for_inputs(){
 					
 					// Reset visibility on current map
 					grid_set_visible(manager.game_state.game_grid, false)
+					
+					// Save current mobs
+					manager.game_state.world_map[world_x][world_y].mobs = [];
+					manager.game_state.world_map[world_x][world_y].mobs = map_save_actors();
 					
 					// Move world grid position
 					world_x ++;
@@ -191,6 +207,10 @@ function state_ready_for_inputs(){
 					// Reset visibility on current map
 					grid_set_visible(manager.game_state.game_grid, false)
 					
+					// Save current mobs
+					manager.game_state.world_map[world_x][world_y].mobs = [];
+					manager.game_state.world_map[world_x][world_y].mobs = map_save_actors();
+					
 					// Move world grid position
 					world_y --;
 					
@@ -203,6 +223,10 @@ function state_ready_for_inputs(){
 					
 					// Reset visibility on current map
 					grid_set_visible(manager.game_state.game_grid, false)
+					
+					// Save current mobs
+					manager.game_state.world_map[world_x][world_y].mobs = [];
+					manager.game_state.world_map[world_x][world_y].mobs = map_save_actors();
 					
 					// Move world grid position
 					world_y ++;

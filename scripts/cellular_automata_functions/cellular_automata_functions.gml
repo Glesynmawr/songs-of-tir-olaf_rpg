@@ -7,7 +7,7 @@ function cellular_automata(ww, hh){
 	// Init grid
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
-			if (i == 0 or i == ww - 1 or j == 0 or j == hh - 1 or random(1) < 0.45){
+			if (i <= 1 or i >= ww - 2 or j <= 1 or j >= hh - 2 or random(1) < 0.45){
 				grid[i][j] = 1;
 			}
 			else grid[i][j] = 0;
@@ -48,6 +48,29 @@ function cellular_automata_smoothing(grid){
 	return(new_grid);
 }
 
+function cellular_automata_remove_singles(){
+	
+	var width  = array_length(dungeon_grid);
+	var height = array_length(dungeon_grid[0]);
+	
+	for (var i = 0; i < width; i ++){
+		for (var j = 0; j < height; j ++){
+			
+			if (dungeon_grid[i][j].tile == "wall"){
+				
+				var wall_count  = grid_check_neighbour_count(dungeon_grid, i, j, "wall", NEIGHBOUR_CHECK.ORTH);
+				if (wall_count == 0){
+					
+					// CREATE FLOOR TILE -------------------------------------------------------------------
+					dungeon_grid[i][j] = new tile_room();
+					dungeon_grid[i][j].sprite = game_state.floor_sprite;
+					dungeon_grid[i][j].flag   = -1;
+				}
+			}
+		}
+	}
+}
+
 function wall_neighbour_count(grid, xx, yy, radius){
 	var width = array_length(grid);
 	var height = array_length(grid[0]);
@@ -74,6 +97,7 @@ function cellular_automata_add_tiles(){
 	for (var i = 0; i < ww; i ++){
 		for (var j = 0; j < hh; j ++){
 			var cell_index = dungeon_grid[i][j];
+			
 			if (cell_index == 0){
 				
 				// CREATE FLOOR TILE -------------------------------------------------------------------
@@ -95,7 +119,7 @@ function cellular_automata_add_tiles(){
 }
 
 
-// CONNECTING CAVERNS
+// FILL SMALL CAVERNS
 function connect_caverns(grid){
 
 	var flags		= cellular_automata_set_flags(grid);

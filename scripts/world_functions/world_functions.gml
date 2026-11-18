@@ -303,6 +303,7 @@ function biomes_add(grid){
 				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / game_state.cell_width) - 1;
 				grid[i][j].index += irandom(tiles_in_biome);
 			}
+			grid[i][j].mobs = [];
 		}
 	}
 	

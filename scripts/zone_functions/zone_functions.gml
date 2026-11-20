@@ -1,33 +1,34 @@
-// ZONE CREATION FUNCTIONS ------------------------------------------------------------------------
-function zone_map_generate(grid, cell_x, cell_y){
-	var biome_index		= grid[cell_x][cell_y].biome;
-	var autotile_index	= grid[cell_x][cell_y].index;
-	var has_dungeon		= grid[cell_x][cell_y].dungeon;
+// ZONE GENERATOR FUNCTIONS
+
+// GENERATORS -------------------------------------------------------------------------------------
+function zone_map_generate(target_array, world_cell_x, world_cell_y){
+	var grid_biome_index	= target_array[world_cell_x][world_cell_y].biome;
+	var grid_autotile_index	= target_array[world_cell_x][world_cell_y].index;
+	var grid_has_dungeon	= target_array[world_cell_x][world_cell_y].dungeon;
 	
 	// Generate base zone map
-	var zone_map = zone_function[biome_index](autotile_index, has_dungeon, biome_index);
+	var new_zone_map = zone_function[grid_biome_index](grid_autotile_index, grid_has_dungeon, grid_biome_index);
 	
 	// Add village
-	if (struct_exists(grid[cell_x][cell_y], "village")){
+	if (struct_exists(target_array[world_cell_x][world_cell_y], "village")){
 		
-		var new_village = generate_village(zone_map, cell_x, cell_y);
+		var new_village = generate_village(new_zone_map, world_cell_x, world_cell_y);
 		
-		zone_map			= new_village[0];
-		var zone_occupants	= new_village[1];
-		var new_faction		= new_village[2];
+		new_zone_map			= new_village[0];
+		var new_zone_occupants	= new_village[1];
+		var new_faction			= new_village[2];
 		
 		// Add occupants
-		map_spawn_villagers(zone_map, zone_occupants, 1, actor_elder, 0, noone, actor_farmer, 2, new_faction);
+		map_spawn_villagers(new_zone_map, new_zone_occupants, 1, actor_elder, 0, noone, actor_farmer, 2, new_faction);
 	}
 	else{
 		// Spawn mobs
-		var b = game_state.world_map[cell_x][cell_y].biome;
-		if (mob_lookup[b][MOB_LOOKUP.ZONE] != noone){
-			map_spawn_mobs(mob_lookup[b][MOB_LOOKUP.ZONE], 5);
+		if (mob_lookup[grid_biome_index][MOB_LOOKUP.ZONE] != noone){
+			map_spawn_mobs(mob_lookup[grid_biome_index][MOB_LOOKUP.ZONE], 5);
 		}
 	}
 	
-	return(zone_map);
+	return(new_zone_map);
 }
 
 function generate_zone_tile(tile_type){
@@ -36,105 +37,49 @@ function generate_zone_tile(tile_type){
 	return(new_tile);
 }
 
-function zone_canyon(world_index, dungeon, terrain){
-	var temp_list = initialise_temp_list();
+function zone_canyon(tile_image_index, tile_has_dungeon, tile_biome_index){
+	var new_zone_map = initialise_temp_list();
 	
-	if (dungeon){
-		temp_list = dungeons_add_to_zone(temp_list, terrain);
+	if (tile_has_dungeon){
+		new_zone_map = dungeons_add_to_zone(new_zone_map, tile_biome_index);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			if (temp_list[xx][yy] == noone){
+			if (new_zone_map[xx][yy] == noone){
 
 				// Get tile image index for canyon wall position
-				var new_tile = tile_lookup(terrain_lookup[terrain]);
-				temp_list[xx][yy] = generate_zone_tile(new_tile);
+				var new_tile = tile_lookup(zone_tile_lookup[tile_biome_index]);
+				new_zone_map[xx][yy] = generate_zone_tile(new_tile);
 			}
 		}
 	}
-	return(temp_list);
+	
+	// MAP NEIGHBOURS -----------------------------------------------------------------------------
+	var tile_fill = [];
+	tile_fill = map_edge_biome_fill(tile_image_index);
+	
+	return(new_zone_map);
 }
 
-function zone_river(world_index, dungeon, terrain){
-	var temp_list = initialise_temp_list();
+function zone_river(tile_image_index, tile_has_dungeon, tile_biome_index){
+	var new_zone_map = initialise_temp_list();
 	
-	if (dungeon){
-		temp_list = dungeons_add_to_zone(temp_list, terrain);
+	if (tile_has_dungeon){
+		new_zone_map = dungeons_add_to_zone(new_zone_map, tile_biome_index);
 	}
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			if (temp_list[xx][yy] == noone){
-				temp_list[xx][yy] = generate_zone_tile(tile_zone_water);
+			if (new_zone_map[xx][yy] == noone){
+				new_zone_map[xx][yy] = generate_zone_tile(tile_zone_water);
 			}
 		}
 	}
 	
-	#region// MAP NEIGHBOURS ----------------------------------------------------------------------
-	var tile_fill;
-	tile_fill[0] = false;	// Right edge
-	tile_fill[1] = false;	// Top edge
-	tile_fill[2] = false;	// Left edge
-	tile_fill[3] = false;	// Bottom edge
-	tile_fill[4] = false;	// Top right corner
-	tile_fill[5] = false;	// Top left corner
-	tile_fill[6] = false;	// bottom left corner
-	tile_fill[7] = false;	// bottom right corner
-			
-	// Get tile image index for water bank position
-	switch(world_index){
-		case 0:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[3] = true;	break;
-		case 1:  tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[3] = true;							break;
-		case 2:  tile_fill[0] = true	 tile_fill[2] = true	 tile_fill[3] = true;							break;
-		case 3:  tile_fill[2] = true	 tile_fill[3] = true;													break;
-		case 4:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[3] = true;							break;
-		case 5:  tile_fill[1] = true	 tile_fill[3] = true;													break;
-		case 6:  tile_fill[0] = true	 tile_fill[3] = true	 tile_fill[5] = true;							break;
-		case 7:  tile_fill[3] = true	 tile_fill[5] = true;													break;
-		case 8:  tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[2] = true;							break;
-		case 9:  tile_fill[1] = true	 tile_fill[2] = true	 tile_fill[7] = true;							break;
-		case 10: tile_fill[0] = true	 tile_fill[2] = true;													break;
-		case 11: tile_fill[2] = true	 tile_fill[4] = true	 tile_fill[7] = true;							break;
-		case 12: tile_fill[0] = true	 tile_fill[1] = true	 tile_fill[6] = true;							break;
-		case 13: tile_fill[1] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
-		case 14: tile_fill[0] = true	 tile_fill[5] = true	 tile_fill[6] = true;							break;
-		case 15: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[6] = true	 tile_fill[7] = true;	break;
-		case 16: tile_fill[2] = true	 tile_fill[3] = true;													break;
-		case 17: tile_fill[0] = true	 tile_fill[3] = true;													break;
-		case 18: tile_fill[3] = true	 tile_fill[5] = true;													break;
-		case 19: tile_fill[3] = true	 tile_fill[4] = true;													break;
-		case 20: tile_fill[3] = true;																			break;
-		case 21: tile_fill[1] = true	 tile_fill[2] = true;													break;
-		case 22: tile_fill[2] = true	 tile_fill[7] = true;													break;
-		case 23: tile_fill[2] = true	 tile_fill[4] = true;													break;
-		case 24: tile_fill[2] = true;																			break;
-		case 25: tile_fill[0] = true	 tile_fill[1] = true;													break;
-		case 26: tile_fill[1] = true	 tile_fill[7] = true;													break;
-		case 27: tile_fill[1] = true	 tile_fill[6] = true;													break;
-		case 28: tile_fill[1] = true;																			break;
-		case 29: tile_fill[0] = true	 tile_fill[6] = true;													break;
-		case 30: tile_fill[0] = true	 tile_fill[5] = true;													break;
-		case 31: tile_fill[0] = true;																			break;
-		case 32: tile_fill[5] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
-		case 33: tile_fill[4] = true	 tile_fill[6] = true	 tile_fill[7] = true;							break;
-		case 34: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[7] = true;							break;
-		case 35: tile_fill[4] = true	 tile_fill[5] = true	 tile_fill[6] = true;							break;
-		case 36: tile_fill[4] = true	 tile_fill[6] = true;													break;
-		case 37: tile_fill[5] = true	 tile_fill[7] = true;													break;
-		case 38: tile_fill[5] = true	 tile_fill[6] = true;													break;
-		case 39: tile_fill[4] = true	 tile_fill[5] = true;													break;
-		case 40: tile_fill[4] = true	 tile_fill[7] = true;													break;
-		case 41: tile_fill[6] = true	 tile_fill[7] = true;													break;
-		case 42: tile_fill[4] = true;																			break;
-		case 43: tile_fill[5] = true;																			break;
-		case 44: tile_fill[6] = true;																			break;
-		case 45: tile_fill[7] = true;																			break;
-		case 46: ;																								break;
-				
-	}
-	
-	#endregion
+	// MAP NEIGHBOURS -----------------------------------------------------------------------------
+	var tile_fill = [];
+	tile_fill = map_edge_biome_fill(tile_image_index);
 	
 	var x2, y2, dist, anchor_x, anchor_y, tile_chance;
 	
@@ -147,8 +92,8 @@ function zone_river(world_index, dungeon, terrain){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
-					temp_list[x2][y2] = generate_zone_tile(new_tile);
+					var new_tile = tile_lookup(zone_tile_lookup[BIOME.DENSE_MANGROVE]);
+					new_zone_map[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -163,8 +108,8 @@ function zone_river(world_index, dungeon, terrain){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
-					temp_list[x2][y2] = generate_zone_tile(new_tile);
+					var new_tile = tile_lookup(zone_tile_lookup[BIOME.DENSE_MANGROVE]);
+					new_zone_map[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -179,8 +124,8 @@ function zone_river(world_index, dungeon, terrain){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
-					temp_list[x2][y2] = generate_zone_tile(new_tile);
+					var new_tile = tile_lookup(zone_tile_lookup[BIOME.DENSE_MANGROVE]);
+					new_zone_map[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -195,8 +140,8 @@ function zone_river(world_index, dungeon, terrain){
 				dist = point_distance(x2, y2, anchor_x, anchor_y);
 				tile_chance = dist / zone_third;
 				if (random(1) >= tile_chance){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
-					temp_list[x2][y2] = generate_zone_tile(new_tile);
+					var new_tile = tile_lookup(zone_tile_lookup[BIOME.DENSE_MANGROVE]);
+					new_zone_map[x2][y2] = generate_zone_tile(new_tile);
 				}
 			}
 		}
@@ -218,60 +163,135 @@ function zone_river(world_index, dungeon, terrain){
 					dist = point_distance(x2, y2, anchor_x, anchor_y);
 					tile_chance = dist / zone_third;
 					if (random(1) >= tile_chance){
-						var new_tile = tile_lookup(terrain_lookup[BIOME.DENSE_MANGROVE]);
-						temp_list[x2][y2] = generate_zone_tile(new_tile);
+						var new_tile = tile_lookup(zone_tile_lookup[BIOME.DENSE_MANGROVE]);
+						new_zone_map[x2][y2] = generate_zone_tile(new_tile);
 					}
 				}
 			}
 		}
 	}
 	
-	temp_list = autotile_map(temp_list);
+	new_zone_map = autotile_map(new_zone_map);
 	
 	// Water Feature Placement
-	temp_list = water_tile_placement(temp_list);
+	new_zone_map = water_tile_placement(new_zone_map);
 	
-	return(temp_list);
+	return(new_zone_map);
 }
 
-function zone_standard(world_index, dungeon, biome_index){
-	var new_map = initialise_temp_list();
+function map_edge_biome_fill(tile_image_index){
+	var map_edge_fill = [];
+	
+	map_edge_fill[0] = false;	// Right edge
+	map_edge_fill[1] = false;	// Top edge
+	map_edge_fill[2] = false;	// Left edge
+	map_edge_fill[3] = false;	// Bottom edge
+	map_edge_fill[4] = false;	// Top right corner
+	map_edge_fill[5] = false;	// Top left corner
+	map_edge_fill[6] = false;	// bottom left corner
+	map_edge_fill[7] = false;	// bottom right corner
+			
+	// Get tile image index for water bank position
+	switch(tile_image_index){
+		case 0:  map_edge_fill[0] = true	 map_edge_fill[1] = true	 map_edge_fill[2] = true	 map_edge_fill[3] = true;	break;
+		case 1:  map_edge_fill[1] = true	 map_edge_fill[2] = true	 map_edge_fill[3] = true;							break;
+		case 2:  map_edge_fill[0] = true	 map_edge_fill[2] = true	 map_edge_fill[3] = true;							break;
+		case 3:  map_edge_fill[2] = true	 map_edge_fill[3] = true;													break;
+		case 4:  map_edge_fill[0] = true	 map_edge_fill[1] = true	 map_edge_fill[3] = true;							break;
+		case 5:  map_edge_fill[1] = true	 map_edge_fill[3] = true;													break;
+		case 6:  map_edge_fill[0] = true	 map_edge_fill[3] = true	 map_edge_fill[5] = true;							break;
+		case 7:  map_edge_fill[3] = true	 map_edge_fill[5] = true;													break;
+		case 8:  map_edge_fill[0] = true	 map_edge_fill[1] = true	 map_edge_fill[2] = true;							break;
+		case 9:  map_edge_fill[1] = true	 map_edge_fill[2] = true	 map_edge_fill[7] = true;							break;
+		case 10: map_edge_fill[0] = true	 map_edge_fill[2] = true;													break;
+		case 11: map_edge_fill[2] = true	 map_edge_fill[4] = true	 map_edge_fill[7] = true;							break;
+		case 12: map_edge_fill[0] = true	 map_edge_fill[1] = true	 map_edge_fill[6] = true;							break;
+		case 13: map_edge_fill[1] = true	 map_edge_fill[6] = true	 map_edge_fill[7] = true;							break;
+		case 14: map_edge_fill[0] = true	 map_edge_fill[5] = true	 map_edge_fill[6] = true;							break;
+		case 15: map_edge_fill[4] = true	 map_edge_fill[5] = true	 map_edge_fill[6] = true	 map_edge_fill[7] = true;	break;
+		case 16: map_edge_fill[2] = true	 map_edge_fill[3] = true;													break;
+		case 17: map_edge_fill[0] = true	 map_edge_fill[3] = true;													break;
+		case 18: map_edge_fill[3] = true	 map_edge_fill[5] = true;													break;
+		case 19: map_edge_fill[3] = true	 map_edge_fill[4] = true;													break;
+		case 20: map_edge_fill[3] = true;																			break;
+		case 21: map_edge_fill[1] = true	 map_edge_fill[2] = true;													break;
+		case 22: map_edge_fill[2] = true	 map_edge_fill[7] = true;													break;
+		case 23: map_edge_fill[2] = true	 map_edge_fill[4] = true;													break;
+		case 24: map_edge_fill[2] = true;																			break;
+		case 25: map_edge_fill[0] = true	 map_edge_fill[1] = true;													break;
+		case 26: map_edge_fill[1] = true	 map_edge_fill[7] = true;													break;
+		case 27: map_edge_fill[1] = true	 map_edge_fill[6] = true;													break;
+		case 28: map_edge_fill[1] = true;																			break;
+		case 29: map_edge_fill[0] = true	 map_edge_fill[6] = true;													break;
+		case 30: map_edge_fill[0] = true	 map_edge_fill[5] = true;													break;
+		case 31: map_edge_fill[0] = true;																			break;
+		case 32: map_edge_fill[5] = true	 map_edge_fill[6] = true	 map_edge_fill[7] = true;							break;
+		case 33: map_edge_fill[4] = true	 map_edge_fill[6] = true	 map_edge_fill[7] = true;							break;
+		case 34: map_edge_fill[4] = true	 map_edge_fill[5] = true	 map_edge_fill[7] = true;							break;
+		case 35: map_edge_fill[4] = true	 map_edge_fill[5] = true	 map_edge_fill[6] = true;							break;
+		case 36: map_edge_fill[4] = true	 map_edge_fill[6] = true;													break;
+		case 37: map_edge_fill[5] = true	 map_edge_fill[7] = true;													break;
+		case 38: map_edge_fill[5] = true	 map_edge_fill[6] = true;													break;
+		case 39: map_edge_fill[4] = true	 map_edge_fill[5] = true;													break;
+		case 40: map_edge_fill[4] = true	 map_edge_fill[7] = true;													break;
+		case 41: map_edge_fill[6] = true	 map_edge_fill[7] = true;													break;
+		case 42: map_edge_fill[4] = true;																			break;
+		case 43: map_edge_fill[5] = true;																			break;
+		case 44: map_edge_fill[6] = true;																			break;
+		case 45: map_edge_fill[7] = true;																			break;
+		case 46: ;																								break;
+				
+	}
+	
+	return(map_edge_fill);
+}
+
+function zone_standard(tile_image_index, tile_has_dungeon, tile_biome_index){
+	var new_zone_map = initialise_temp_list();
 	
 	for (var xx = 0; xx < ZONE_SIZE; xx ++){
 		for (var yy = 0; yy < ZONE_SIZE; yy ++){
-			if (new_map[xx][yy] == noone){
-				var new_tile = tile_lookup(terrain_lookup[biome_index]);
-				new_map[xx][yy] = generate_zone_tile(new_tile);
+			if (new_zone_map[xx][yy] == noone){
+				var new_tile = tile_lookup(zone_tile_lookup[tile_biome_index]);
+				new_zone_map[xx][yy] = generate_zone_tile(new_tile);
 			}
 		}
 	}
 	
 	// Add zone features
-	if (zone_feature[biome_index] != noone){
+	if (zone_feature[tile_biome_index] != noone){
 		
-		for (var i = 0; i < array_length(zone_feature[biome_index]); i ++){
+		var tile_type, choice, feature_count, max_radius, density;
 		
-			var tile_type			= zone_feature[biome_index][i][1];
-			var choice				= irandom(array_length(zone_feature[biome_index][i][0]) - 1);
-			var number_of_features	= zone_feature[biome_index][i][0][choice];
-			var max_radius			= zone_feature[biome_index][i][2];
-			var density				= zone_feature[biome_index][i][3];
+		for (var i = 0; i < array_length(zone_feature[tile_biome_index]); i ++){
 		
-			new_map = zone_add_clump_feature(new_map, tile_type, number_of_features, max_radius, density);
+			tile_type		= zone_feature[tile_biome_index][i][1];
+			choice			= irandom(array_length(zone_feature[tile_biome_index][i][0]) - 1);
+			feature_count	= zone_feature[tile_biome_index][i][0][choice];
+			max_radius		= zone_feature[tile_biome_index][i][2];
+			density			= zone_feature[tile_biome_index][i][3];
+			
+			var centre_x, centre_y;
+			
+			repeat(feature_count){
+				centre_x = irandom(ZONE_SIZE);
+				centre_y = irandom(ZONE_SIZE);
+				new_zone_map = zone_add_clump_feature(new_zone_map, tile_type, max_radius, density, centre_x, centre_y);
+			}
 		}
 	}
 	
 	
-	// Add dungeon entrance
-	if (dungeon){
-		new_map = dungeons_add_to_zone(new_map, biome_index);
+	// Add tile_has_dungeon entrance
+	if (tile_has_dungeon){
+		new_zone_map = dungeons_add_to_zone(new_zone_map, tile_biome_index);
 	}
 	
 	// Water Feature Placement
-	new_map = autotile_map(new_map);
-	new_map = water_tile_placement(new_map);
+	new_zone_map = autotile_map(new_zone_map);
+	new_zone_map = water_tile_placement(new_zone_map);
 	
-	return(new_map);
+	return(new_zone_map);
 }
 
 
@@ -300,154 +320,34 @@ function dungeons_add_to_zone(grid, type){
 }
 
 
-// TERRAIN FEATURES -------------------------------------------------------------------------------
-function zone_add_clump_feature(grid, tile_type, number_of_features, max_radius, density, x_pos = noone, y_pos = noone){
+// ADD CLUMP FEATURES -----------------------------------------------------------------------------
+function zone_add_clump_feature(target_array, tile_func, max_radius, density, centre_x, centre_y){
 	
-	repeat(number_of_features){
-		var xx = x_pos;
-		var yy = y_pos;
-		if (x_pos == noone) var xx = irandom(ZONE_SIZE);
-		if (y_pos == noone) var yy = irandom(ZONE_SIZE);
+	var start_x, end_x, start_y, end_y;
 	
-		for (var i = xx - max_radius; i < xx + max_radius; i ++){
-			for (var j = yy - max_radius; j < yy + max_radius; j ++){
+	start_x = centre_x - max_radius;
+	end_x	= centre_x + max_radius;
+	start_y = centre_y - max_radius;
+	end_y	= centre_y + max_radius;
+	
+	var cell_x, cell_y;
+	
+	for (cell_x = start_x; cell_x < end_x; cell_x ++){
+		for (cell_y = start_y; cell_y < end_y; cell_y ++){
 			
-				if (grid_check_position_in_bounds(grid, i, j)){
-					var dist = round(point_distance(i, j, xx, yy));
+			if (grid_check_position_in_bounds(target_array, cell_x, cell_y)){
+				var dist = round(point_distance(cell_x, cell_y, centre_x, centre_y));
 			
-					var spawn_chance = ((max_radius - dist) / max_radius);
-					var roll = random(density);
-					if (roll < spawn_chance){
-						grid[i][j] = generate_zone_tile(tile_type);
-					}
+				var tile_spawn_chance = ((max_radius - dist) / max_radius);
+				var random_roll = random(density);
+				if (random_roll < tile_spawn_chance){
+					target_array[cell_x][cell_y] = generate_zone_tile(tile_func);
 				}
 			}
 		}
 	}
-	return(grid);
-}
-
-
-// ZONE TILES -------------------------------------------------------------------------------------
-function tile_zone_bush()constructor{
-	tile			= "bush";
-	sprite			= zone_tile_bush_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_dirt()constructor{
-	tile			= "dirt";
-	sprite			= zone_tile_dirt_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_grass()constructor{
-	tile			= "grass";
-	sprite			= zone_tile_grass_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_lilypad()constructor{
-	tile			= "water";
-	sprite			= zone_tile_lilypad_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_marsh()constructor{
-	tile			= "swamp";
-	sprite			= zone_tile_marsh_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_raised_ground()constructor{
-	tile			= "raised ground";
-	sprite			= zone_tile_raised_ground_00_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_reeds()constructor{
-	tile			= "water";
-	sprite			= zone_tile_reeds_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_rocks()constructor{
-	tile			= "rocks";
-	sprite			= zone_tile_rocks_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_salt()constructor{
-	tile			= "salt";
-	sprite			= zone_tile_salt_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_tree()constructor{
-	tile			= "tree";
-	sprite			= zone_tile_tree_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_water()constructor{
-	tile			= "water";
-	sprite			= zone_tile_water_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
+	
+	return(target_array);
 }
 
 

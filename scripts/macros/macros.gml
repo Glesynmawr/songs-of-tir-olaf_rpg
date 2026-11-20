@@ -239,22 +239,22 @@ enum TRANSITION{
 #macro ZONE_SIZE		56
 #macro ITEM_SPRITE_SIZE sprite_get_width(item_size_spr)
 
-#macro C_BLACK	 make_colour_rgb(0,   0,   0)
-#macro C_WHITE	 make_colour_rgb(255, 255, 255)
-#macro C_RED	 make_colour_rgb(189, 60,  43)
-#macro C_CYAN	 make_colour_rgb(122, 191, 199)
-#macro C_PURPLE	 make_colour_rgb(138, 70,  174)
-#macro C_GREEN	 make_colour_rgb(104, 169, 65)
-#macro C_BLUE	 make_colour_rgb(50,  39,  140)
-#macro C_YELLOW  $F4DC71
-#macro C_ORANGE  make_colour_rgb(192, 120, 33)
-#macro C_BROWN	 make_colour_rgb(92,  71,  0)
-#macro C_PINK	 make_colour_rgb(187, 119, 109)
-#macro C_DKGREY  make_colour_rgb(85,  85,  85)
-#macro C_MIDGREY make_colour_rgb(128, 128, 128)
-#macro C_LIME	 make_colour_rgb(172, 234, 136)
-#macro C_LTBLUE	 make_colour_rgb(124, 112, 218)
-#macro C_LTGREY  make_colour_rgb(171, 171, 171)
+#macro C_BLACK	 #000000
+#macro C_WHITE	 #FFFFFF
+#macro C_RED	 #BD3C2B
+#macro C_CYAN	 #7ABFC7
+#macro C_PURPLE	 #8A46AE
+#macro C_GREEN	 #68A941
+#macro C_BLUE	 #322782
+#macro C_YELLOW  #F4DC71
+#macro C_ORANGE  #C07821
+#macro C_BROWN	 #5C4700
+#macro C_PINK	 #D8776D
+#macro C_DKGREY  #555555
+#macro C_MIDGREY #808080
+#macro C_LIME	 #ACEA88
+#macro C_LTBLUE	 #7C70DA
+#macro C_LTGREY  #ABABAB
 
 
 

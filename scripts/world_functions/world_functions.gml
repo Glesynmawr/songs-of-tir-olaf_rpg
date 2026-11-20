@@ -1,48 +1,52 @@
+// WORLD GENERATOR FUNCTIONS
 
+// DATA -------------------------------------------------------------------------------------------
 function world_data(){
 	zone_third				= floor(ZONE_SIZE / 3);
 	dungeon_count_divisor	= 100;
 	
-	world_generate_pass_count	= 3;
-	world_generate_chunk_size	= 8;
+	// Generation variables
+	world_generate_octaves		= 3;
+	world_generate_frequency	= 8;
 	world_generate_amplitude	= 12;
 
-	// Biomes
-	biome[0] = 200;	// Mountains
-	biome[1] = 240;	// Hills
-	biome[2] = 400;	// Canyon
-	biome[3] = 560;	// Salt plains
-	biome[4] = 400;	// Scrubland
-	biome[5] = 360;	// Swamp
-	biome[6] = 360;	// Dense Mangrove
-	biome[7] = 440;	// Water
-	biome[8] = 360;	// Mangrove
-	biome[9] = 360;	// Marsh
+	// BIOME SIZE
+	biome_size[BIOME.MOUNTAIN]			= 200;
+	biome_size[BIOME.HILL]				= 240;
+	biome_size[BIOME.CANYON]			= 400;
+	biome_size[BIOME.DESERT]			= 560;
+	biome_size[BIOME.SCRUB]				= 400;
+	biome_size[BIOME.SWAMP]				= 360;
+	biome_size[BIOME.DENSE_MANGROVE]	= 360;
+	biome_size[BIOME.WATER]				= 440;
+	biome_size[BIOME.MANGROVE]			= 360;
+	biome_size[BIOME.MARSH]				= 360;
 	
-	tile[0] = tile_world_mountain;
-	tile[1] = tile_world_hill;
-	tile[2] = tile_world_canyon;
-	tile[3] = tile_world_salt_plain;
-	tile[4] = tile_world_scrubland;
-	tile[5] = tile_world_swamp;
-	tile[6] = tile_world_dense_mangrove;
-	tile[7] = tile_world_water;
-	tile[8] = tile_world_mangrove;
-	tile[9] = tile_world_marsh;
+	// BIOME GENERATION FUNCTIONS
+	world_tile[BIOME.MOUNTAIN]			= tile_world_mountain;
+	world_tile[BIOME.HILL]				= tile_world_hill;
+	world_tile[BIOME.CANYON]			= tile_world_canyon;
+	world_tile[BIOME.DESERT]			= tile_world_salt_plain;
+	world_tile[BIOME.SCRUB]				= tile_world_scrubland;
+	world_tile[BIOME.SWAMP]				= tile_world_swamp;
+	world_tile[BIOME.DENSE_MANGROVE]	= tile_world_dense_mangrove;
+	world_tile[BIOME.WATER]				= tile_world_water;
+	world_tile[BIOME.MANGROVE]			= tile_world_mangrove;
+	world_tile[BIOME.MARSH]				= tile_world_marsh;
 	
-	// Zone function 
-	zone_function[BIOME.MOUNTAIN]			= zone_standard;
-	zone_function[BIOME.HILL]				= zone_standard;
-	zone_function[BIOME.CANYON]				= zone_canyon;
-	zone_function[BIOME.DESERT]				= zone_standard;
-	zone_function[BIOME.SCRUB]				= zone_standard;
-	zone_function[BIOME.SWAMP]				= zone_standard;
-	zone_function[BIOME.DENSE_MANGROVE]		= zone_standard;
-	zone_function[BIOME.WATER]				= zone_river;
-	zone_function[BIOME.MANGROVE]			= zone_standard;
-	zone_function[BIOME.MARSH]				= zone_standard;
+	// ZONE GENERATION FUNCTION
+	zone_function[BIOME.MOUNTAIN]		= zone_standard;
+	zone_function[BIOME.HILL]			= zone_standard;
+	zone_function[BIOME.CANYON]			= zone_canyon;
+	zone_function[BIOME.DESERT]			= zone_standard;
+	zone_function[BIOME.SCRUB]			= zone_standard;
+	zone_function[BIOME.SWAMP]			= zone_standard;
+	zone_function[BIOME.DENSE_MANGROVE]	= zone_standard;
+	zone_function[BIOME.WATER]			= zone_river;
+	zone_function[BIOME.MANGROVE]		= zone_standard;
+	zone_function[BIOME.MARSH]			= zone_standard;
 	
-	// Zone Features
+	// ZONE FEATURES PER BIOME
 	zone_feature[BIOME.MOUNTAIN]		= noone;
 	zone_feature[BIOME.HILL]			= noone;
 	zone_feature[BIOME.CANYON]			= noone;
@@ -54,17 +58,17 @@ function world_data(){
 	zone_feature[BIOME.MANGROVE]		= noone;
 	zone_feature[BIOME.MARSH]			= [[[1, 1, 2, 2, 2, 3], tile_zone_water, 8, 0.5], [[0, 0, 1, 1, 1, 2], tile_zone_tree, 8, 1.5]];
 	
-	// Terrain								
-	terrain_lookup[BIOME.MOUNTAIN]			= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.HILL]				= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.CANYON]			= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.DESERT]			= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
-	terrain_lookup[BIOME.SCRUB]				= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
-	terrain_lookup[BIOME.SWAMP]				= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25], [tile_zone_marsh, 100]];
-	terrain_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30], [tile_zone_dirt,  60], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.WATER]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_lilypad, 20], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.MANGROVE]			= [[tile_zone_rocks, 2], [tile_zone_tree, 10], [tile_zone_dirt,  60], [tile_zone_water, 100]];
-	terrain_lookup[BIOME.MARSH]				= [[tile_zone_tree,  2], [tile_zone_reeds, 5], [tile_zone_water, 25], [tile_zone_dirt, 50], [tile_zone_marsh, 100]];
+	// TILE LOOKUP TABLES PER BIOME								
+	zone_tile_lookup[BIOME.MOUNTAIN]		= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
+	zone_tile_lookup[BIOME.HILL]			= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
+	zone_tile_lookup[BIOME.CANYON]			= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
+	zone_tile_lookup[BIOME.DESERT]			= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
+	zone_tile_lookup[BIOME.SCRUB]			= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
+	zone_tile_lookup[BIOME.SWAMP]			= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25],		[tile_zone_marsh, 100]];
+	zone_tile_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30],	[tile_zone_dirt,  60],		[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.WATER]			= [[tile_zone_tree,  2], [tile_reedmace, 5],	[tile_zone_lilypad, 20],	[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.MANGROVE]		= [[tile_zone_rocks, 2], [tile_zone_tree, 10],	[tile_zone_dirt,  60],		[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.MARSH]			= [[tile_zone_tree,  1], [tile_zone_reeds, 1],	[tile_zone_water, 4],		[tile_zone_dirt, 10],	[tile_zone_marsh, 50]];
 	
 	// MOB LOOKUP TABLES
 	mob_lookup[BIOME.MOUNTAIN][MOB_LOOKUP.ZONE]				= noone;
@@ -89,6 +93,8 @@ function world_data(){
 	mob_lookup[BIOME.MARSH][MOB_LOOKUP.DUNGEON]				= [10, [actor_marsh_rat, 10], [actor_marsh_bat, 30], [actor_reed_weevil, 100]];
 }
 
+
+// GENERATORS -------------------------------------------------------------------------------------
 function world_generate(){
 	// Initialise world grid
 	world_grid = world_grid_initialise(WORLD_WIDTH, WORLD_HEIGHT);
@@ -182,8 +188,8 @@ function noise_generate(grid){
 	var hh = array_length(grid[0]);
 	
 	var temp_map	= [];
-	var passes		= world_generate_pass_count;
-	var chunk_size	= world_generate_chunk_size;
+	var passes		= world_generate_octaves;
+	var chunk_size	= world_generate_frequency;
 	var amplitude	= world_generate_amplitude;
 	
 	var i, j, p;
@@ -265,9 +271,9 @@ function biomes_add(grid){
 	var i, j, highest_cell, highest_value;
 	
 	// Loop through biomes
-	repeat(array_length(biome)){
+	repeat(array_length(biome_size)){
 		
-		repeat(biome[current_biome]){
+		repeat(biome_size[current_biome]){
 			
 			highest_cell = [];
 			highest_value = 0;
@@ -287,7 +293,7 @@ function biomes_add(grid){
 				var cell_x = highest_cell[0];
 				var cell_y = highest_cell[1];
 			
-				grid[cell_x][cell_y] = new tile[current_biome]();
+				grid[cell_x][cell_y] = new world_tile[current_biome]();
 				var tiles_in_biome = floor(sprite_get_width(grid[cell_x][cell_y].sprite) / game_state.cell_width) - 1;
 				grid[cell_x][cell_y].index += irandom(tiles_in_biome);
 			}
@@ -390,6 +396,8 @@ function autotile_map(grid, water_spr = water_00_spr){
 	return(grid);
 }
 
+
+// ADD SPECIAL LOCATIONS --------------------------------------------------------------------------
 function dungeons_add_to_world(grid){
 	
 	var ww = array_length(grid);
@@ -403,9 +411,9 @@ function dungeons_add_to_world(grid){
 	}
 	
 	// Loop through biomes
-	for (var b = 0; b < array_length(biome); b ++){
+	for (var b = 0; b < array_length(biome_size); b ++){
 		
-		var dungeon_count = ceil(biome[b] / dungeon_count_divisor);
+		var dungeon_count = ceil(biome_size[b] / dungeon_count_divisor);
 		
 		repeat(dungeon_count){
 			var cand_list = [];
@@ -446,6 +454,128 @@ function world_add_villages(grid){
 	}
 	
 	return(grid);
+}
+
+
+// WORLD TILES ------------------------------------------------------------------------------------
+function tile_world_mountain()constructor{
+	tile			= "mountain";
+	biome			= BIOME.MOUNTAIN;
+	sprite			= world_tile_mountain_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_hill()constructor{
+	tile			= "hill";
+	biome			= BIOME.HILL;
+	sprite			= world_tile_hill_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_canyon()constructor{
+	tile			= "canyon";
+	biome			= BIOME.CANYON;
+	sprite			= world_tile_canyon_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_salt_plain()constructor{
+	tile			= "salt plain";
+	biome			= BIOME.DESERT;
+	sprite			= world_tile_salt_desert_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_scrubland()constructor{
+	tile			= "scrubland";
+	biome			= BIOME.SCRUB;
+	sprite			= world_tile_scrubland_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_dense_mangrove()constructor{
+	tile			= "dense mangrove";
+	biome			= BIOME.DENSE_MANGROVE;
+	sprite			= world_tile_dense_mangrove_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_swamp()constructor{
+	tile			= "swamp";
+	biome			= BIOME.SWAMP;
+	sprite			= world_tile_swamp_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_water()constructor{
+	tile			= "water";
+	biome			= BIOME.WATER;
+	sprite			= world_tile_water_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_mangrove()constructor{
+	tile			= "mangrove";
+	biome			= BIOME.MANGROVE;
+	sprite			= world_tile_mangrove_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_world_marsh()constructor{
+	tile			= "marsh";
+	biome			= BIOME.MARSH;
+	sprite			= world_tile_marsh_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
 }
 
 

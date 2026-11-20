@@ -1,5 +1,6 @@
+// VILLAGE GENERATOR FUNCTIONS
 
-// VILLAGE GENERATOR ------------------------------------------------------------------------------
+// GENERATORS -------------------------------------------------------------------------------------
 function generate_village(zone_map, world_x, world_y){
 	
 	// Create new faction
@@ -63,7 +64,7 @@ function generate_village(zone_map, world_x, world_y){
 	village_map = buildings_create_rectangle(village_map, building_list, floor_tile);
 	
 	// Add focal point
-	village_map = zone_add_clump_feature(village_map, floor_tile, 1, building_size[0] - 1, 0, centre_x, centre_y);
+	village_map = zone_add_clump_feature(village_map, floor_tile, building_size[0] - 1, 0, centre_x, centre_y);
 	
 	// Add walls
 	village_map = buildings_add_walls(village_map, wall_tile);
@@ -102,9 +103,7 @@ function generate_village(zone_map, world_x, world_y){
 	return([village_map, village_occupant_count, new_village_faction]);
 }
 
-// GENERATE VILLAGERS -----------------------------------------------------------------------------
-
-// BUILDING POSITIONS AND TILES -------------------------------------------------------------------
+// Building positions
 function buildings_set_positions(centre_x, centre_y, number_of_buildings, building_distance, building_size, stagger_amount, furnish_list, focal_point_radius, focal_furnish){
 	
 	var building_list = [];
@@ -159,7 +158,7 @@ function buildings_set_positions(centre_x, centre_y, number_of_buildings, buildi
 
 function buildings_create_raised_ground(grid, building_list, building_distance){
 	
-	zone_add_clump_feature(grid, tile_zone_raised_ground, 1, building_distance, 0, ZONE_SIZE / 2, ZONE_SIZE / 2);
+	zone_add_clump_feature(grid, tile_zone_raised_ground, building_distance, 0, ZONE_SIZE / 2, ZONE_SIZE / 2);
 	
 	for (var i = 0; i < array_length(building_list); i ++){
 		
@@ -170,10 +169,10 @@ function buildings_create_raised_ground(grid, building_list, building_distance){
 		
 		// Add raised ground
 		ground_size = max(ww, hh) + 4;
-		zone_add_clump_feature(grid, tile_zone_raised_ground, 1, ground_size, 0.4, xx + floor(ww / 2), yy + floor(hh / 2));
+		zone_add_clump_feature(grid, tile_zone_raised_ground, ground_size, 0.4, xx + floor(ww / 2), yy + floor(hh / 2));
 			
 		ground_size -= 3;
-		zone_add_clump_feature(grid, tile_zone_raised_ground, 1, ground_size, 0, xx + floor(ww / 2), yy + floor(hh / 2));
+		zone_add_clump_feature(grid, tile_zone_raised_ground, ground_size, 0, xx + floor(ww / 2), yy + floor(hh / 2));
 
 	}
 	
@@ -320,14 +319,13 @@ function buildings_add_doors(grid, building_list, door_index){
 	return(grid);
 }
 
-
-// FARMING AREAS
+// Farming areas
 function farms_add_water_crop(grid, farm_x, farm_y){
 	
 	var crop_grid = variable_clone(grid);
 	
 	// Place water feature
-	crop_grid = zone_add_clump_feature(crop_grid, tile_zone_water, 1, floor(ZONE_SIZE * 0.33), 0, farm_x, farm_y);
+	crop_grid = zone_add_clump_feature(crop_grid, tile_zone_water, floor(ZONE_SIZE * 0.33), 0, farm_x, farm_y);
 	
 	return(crop_grid);
 }

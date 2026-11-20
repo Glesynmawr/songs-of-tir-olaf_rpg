@@ -1268,13 +1268,13 @@ function draw_minimap(actor){
 			if(game_state.game_grid[i][j].is_visible){
 				if (game_state.game_grid[i][j].walkable == true) and (game_state.game_grid[i][j].tile != "secret door"){
 					
-					col = C_LTGREY;
+					col = C_DKGREY;
 					
 					if (game_state.game_grid[i][j].transparent == false){
 						col = C_MIDGREY;
 					}
 					else if (game_state.game_grid[i][j].tile == "entry"){
-						col = C_YELLOW;
+						col = C_CYAN;
 					}
 					else if (game_state.game_grid[i][j].tile == "exit"){
 						col = C_YELLOW;
@@ -1290,7 +1290,7 @@ function draw_minimap(actor){
 						col = C_DKGREY;
 					}
 					else if (game_state.game_grid[i][j].tile == "entry"){
-						col = C_ORANGE;
+						col = C_CYAN;
 					}
 					else if (game_state.game_grid[i][j].tile == "exit"){
 						col = C_YELLOW;

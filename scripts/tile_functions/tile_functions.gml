@@ -1,78 +1,107 @@
 
 // TILE SWAPPING
-function cell_replace_tile(x_pos, y_pos, new_tile){
-	var vis   = manager.game_state.game_grid[x_pos][y_pos].is_visible;
-	var ex    = manager.game_state.game_grid[x_pos][y_pos].explored;
-	var items = manager.game_state.game_grid[x_pos][y_pos].items;
-	var inv   = noone;
-	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "inventory")){
-		inv = manager.game_state.game_grid[x_pos][y_pos].inventory;
-	}
-	var prev_open = noone;
-	if (struct_exists(manager.game_state.game_grid[x_pos][y_pos], "has_been_opened")){
-		prev_open = manager.game_state.game_grid[x_pos][y_pos].has_been_opened;
-	}
-	var lit   = manager.game_state.game_grid[x_pos][y_pos].is_lit;
+function cell_replace_tile(cell_x, cell_y, new_tile_func){
 	
-	manager.game_state.game_grid[x_pos][y_pos] = new new_tile();
+	// Get tile state stats
+	var tile_is_visible			= manager.game_state.game_grid[cell_x][cell_y].is_visible;
+	var tile_is_explored		= manager.game_state.game_grid[cell_x][cell_y].explored;
+	var tile_has_items			= manager.game_state.game_grid[cell_x][cell_y].items;
+	var tile_has_inventory		= noone;
+	if (struct_exists(manager.game_state.game_grid[cell_x][cell_y], "inventory")){
+		tile_has_inventory		= manager.game_state.game_grid[cell_x][cell_y].inventory;
+	}
+	var tile_previously_opened	= noone;
+	if (struct_exists(manager.game_state.game_grid[cell_x][cell_y], "has_been_opened")){
+		tile_previously_opened	= manager.game_state.game_grid[cell_x][cell_y].has_been_opened;
+	}
+	var tile_is_lit				= manager.game_state.game_grid[cell_x][cell_y].is_lit;
 	
-	manager.game_state.game_grid[x_pos][y_pos].is_visible = vis;
-	manager.game_state.game_grid[x_pos][y_pos].explored   = ex;
-	manager.game_state.game_grid[x_pos][y_pos].items	  = items;
-	if (inv != noone){
-		manager.game_state.game_grid[x_pos][y_pos].inventory = inv;
+	// Create new tile
+	manager.game_state.game_grid[cell_x][cell_y] = new new_tile_func();
+	
+	// Reset tile state stats
+	manager.game_state.game_grid[cell_x][cell_y].is_visible				= tile_is_visible;
+	manager.game_state.game_grid[cell_x][cell_y].explored				= tile_is_explored;
+	manager.game_state.game_grid[cell_x][cell_y].items					= tile_has_items;
+	if (tile_has_inventory != noone){										
+		manager.game_state.game_grid[cell_x][cell_y].inventory			= tile_has_inventory;
 	}
-	if (prev_open != noone){
-		manager.game_state.game_grid[x_pos][y_pos].has_been_opened = prev_open;
+	if (tile_previously_opened != noone){
+		manager.game_state.game_grid[cell_x][cell_y].has_been_opened	= tile_previously_opened;
 	}
-	manager.game_state.game_grid[x_pos][y_pos].is_lit = lit;
+	manager.game_state.game_grid[cell_x][cell_y].is_lit					= tile_is_lit;
 }
 
-function tile_lookup(list){
-	var len = array_length(list);
-	var roll = irandom(100);
-	for (var i = 0; i < len; i ++){
-		if (roll < list[i][1]){
-			return(list[i][0]);
+function tile_lookup(tile_array){
+	var len, weights_total, random_roll, weight_accumulator, i;
+	
+	
+	len = array_length(tile_array);
+	weights_total = 0;
+	for (i = 0; i < len; i ++){
+		weights_total += tile_array[i][1];
+	}
+	
+	random_roll = irandom(weights_total);
+	weight_accumulator = 0;
+
+	for (i = 0; i < len; i ++){
+		
+		weight_accumulator += tile_array[i][1];
+		
+		if (random_roll <= weight_accumulator){
+			return(tile_array[i][0]);
 		}
 	}
-	return(list[len-1][0]);
+	return(tile_array[len-1][0]);
 }
 
-function water_tile_placement(grid){
-	var xx, yy;
-	for (xx = 0; xx < ZONE_SIZE; xx ++){
-		for (yy = 0; yy < ZONE_SIZE; yy ++){
-			if (grid[xx][yy].tile == "water"){
-				if (grid[xx][yy].index >= 46){
-					var new_tile = tile_lookup(terrain_lookup[BIOME.WATER]);
-					grid[xx][yy] = generate_zone_tile(new_tile);
+function water_tile_placement(target_array){
+	var cell_x, cell_y;
+	for (cell_x = 0; cell_x < ZONE_SIZE; cell_x ++){
+		for (cell_y = 0; cell_y < ZONE_SIZE; cell_y ++){
+			if (target_array[cell_x][cell_y].tile == "water"){
+				
+				// If tile is open water (no banks)
+				if (target_array[cell_x][cell_y].index >= 46){
+					
+					// Create random tile from list
+					var new_tile = tile_lookup(zone_tile_lookup[BIOME.WATER]);
+					target_array[cell_x][cell_y] = generate_zone_tile(new_tile);
 				}
 			}
 		}
 	}
-	return(grid);
+	return(target_array);
 }
 
-function water_crop_tile_placement(grid, crop_tile, ripe_crop_tile){
-	var xx, yy;
-	for (xx = 0; xx < ZONE_SIZE; xx ++){
-		for (yy = 0; yy < ZONE_SIZE; yy ++){
-			if (grid[xx][yy].tile == "water"){
-				if (grid[xx][yy].index >= 46){
+function water_crop_tile_placement(target_array, crop_tile, ripe_crop_tile){
+	var cell_x, cell_y;
+	for (cell_x = 0; cell_x < ZONE_SIZE; cell_x ++){
+		for (cell_y = 0; cell_y < ZONE_SIZE; cell_y ++){
+			
+			// If tile is water tile
+			if (target_array[cell_x][cell_y].tile == "water"){
+				
+				// If tile has no edges
+				if (target_array[cell_x][cell_y].index >= 46){
+					
+					// 60% chance of crop placement
 					if (random(1) < 0.6){
+						
+						// 10% chance of ripe crop placement
 						if (random(1) < 0.1){
-							grid[xx][yy] = generate_zone_tile(ripe_crop_tile);
+							target_array[cell_x][cell_y] = generate_zone_tile(ripe_crop_tile);
 						}
 						else{
-							grid[xx][yy] = generate_zone_tile(crop_tile);
+							target_array[cell_x][cell_y] = generate_zone_tile(crop_tile);
 						}
 					}
 				}
 			}
 		}
 	}
-	return(grid);
+	return(target_array);
 }
 
 
@@ -319,8 +348,30 @@ function tile_door_secret()constructor{
 
 
 // PLANTS
-function tile_reedmace()constructor{
+function tile_zone_grass()constructor{
+	tile			= "grass";
+	sprite			= zone_tile_grass_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_lilypad()constructor{
 	tile			= "water";
+	sprite			= zone_tile_lilypad_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_reedmace()constructor{
+	tile			= "reedmace";
 	sprite			= reedmace_spr;
 	index			= 0;
 	walkable		= true;
@@ -331,7 +382,7 @@ function tile_reedmace()constructor{
 }
 
 function tile_reedmace_ripe()constructor{
-	tile			= "water";
+	tile			= "reedmace";
 	sprite			= reedmace_ripe_spr;
 	index			= 0;
 	walkable		= true;
@@ -343,23 +394,10 @@ function tile_reedmace_ripe()constructor{
 }
 
 
-// WORLD TILES
-function tile_world_mountain()constructor{
-	tile			= "mountain";
-	biome			= BIOME.MOUNTAIN;
-	sprite			= world_tile_mountain_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_world_hill()constructor{
-	tile			= "hill";
-	biome			= BIOME.HILL;
-	sprite			= world_tile_hill_spr;
+// ZONE TILES -------------------------------------------------------------------------------------
+function tile_zone_bush()constructor{
+	tile			= "bush";
+	sprite			= zone_tile_bush_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
@@ -368,10 +406,9 @@ function tile_world_hill()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_canyon()constructor{
-	tile			= "canyon";
-	biome			= BIOME.CANYON;
-	sprite			= world_tile_canyon_spr;
+function tile_zone_dirt()constructor{
+	tile			= "dirt";
+	sprite			= zone_tile_dirt_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
@@ -380,46 +417,11 @@ function tile_world_canyon()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_salt_plain()constructor{
-	tile			= "salt plain";
-	biome			= BIOME.DESERT;
-	sprite			= world_tile_salt_desert_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
 
-function tile_world_scrubland()constructor{
-	tile			= "scrubland";
-	biome			= BIOME.SCRUB;
-	sprite			= world_tile_scrubland_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
 
-function tile_world_dense_mangrove()constructor{
-	tile			= "dense mangrove";
-	biome			= BIOME.DENSE_MANGROVE;
-	sprite			= world_tile_dense_mangrove_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_world_swamp()constructor{
+function tile_zone_marsh()constructor{
 	tile			= "swamp";
-	biome			= BIOME.SWAMP;
-	sprite			= world_tile_swamp_spr;
+	sprite			= zone_tile_marsh_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
@@ -428,22 +430,20 @@ function tile_world_swamp()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_water()constructor{
+function tile_zone_raised_ground()constructor{
+	tile			= "raised ground";
+	sprite			= zone_tile_raised_ground_00_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_reeds()constructor{
 	tile			= "water";
-	biome			= BIOME.WATER;
-	sprite			= world_tile_water_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_world_mangrove()constructor{
-	tile			= "mangrove";
-	biome			= BIOME.MANGROVE;
-	sprite			= world_tile_mangrove_spr;
+	sprite			= zone_tile_reeds_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= false;
@@ -452,10 +452,42 @@ function tile_world_mangrove()constructor{
 	tile_script		= noone;
 }
 
-function tile_world_marsh()constructor{
-	tile			= "marsh";
-	biome			= BIOME.MARSH;
-	sprite			= world_tile_marsh_spr;
+function tile_zone_rocks()constructor{
+	tile			= "rocks";
+	sprite			= zone_tile_rocks_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_salt()constructor{
+	tile			= "salt";
+	sprite			= zone_tile_salt_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_tree()constructor{
+	tile			= "tree";
+	sprite			= zone_tile_tree_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= false;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_zone_water()constructor{
+	tile			= "water";
+	sprite			= zone_tile_water_spr;
 	index			= 0;
 	walkable		= true;
 	transparent		= true;

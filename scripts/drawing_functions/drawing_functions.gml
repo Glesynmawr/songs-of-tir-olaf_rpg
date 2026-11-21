@@ -215,8 +215,18 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 			
 	draw_sprite_part_ext(spr, ind, tile_x*game_state.cell_width, tile_y*game_state.cell_height, game_state.cell_width, game_state.cell_height, screen_x, screen_y, 1, 1, C_WHITE, 1);
 	
+	
+	// Update tile animation
 	if (struct_exists(game_state.game_grid[xx][yy], "is_animated")){
+		if (game_state.game_grid[xx][yy].is_animated == true){
+			var anim_frame_count	= sprite_get_number(spr);
+			var anim_speed			= sprite_get_speed(spr) / game_get_speed(gamespeed_fps);
 		
+			game_state.game_grid[xx][yy].index += anim_speed;
+			if (game_state.game_grid[xx][yy].index >= anim_frame_count){
+				game_state.game_grid[xx][yy].index -= anim_frame_count;
+			}
+		}
 	}
 	
 	// If tile is light source
@@ -234,7 +244,9 @@ function game_draw_tile(xx, yy, screen_x, screen_y){
 			}
 		
 			// Draw light sprite
-			draw_sprite(game_state.game_grid[xx][yy].lit_sprite, game_state.game_grid[xx][yy].light_index, screen_x, screen_y);
+			if (struct_exists(game_state.game_grid[xx][yy], "lit_sprite")){
+				draw_sprite(game_state.game_grid[xx][yy].lit_sprite, game_state.game_grid[xx][yy].light_index, screen_x, screen_y);
+			}
 		}
 	}
 	

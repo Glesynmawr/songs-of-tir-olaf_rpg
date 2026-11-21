@@ -1,5 +1,5 @@
 
-// TILE SWAPPING
+// TILE SWAPPING ----------------------------------------------------------------------------------
 function cell_replace_tile(cell_x, cell_y, new_tile_func){
 	
 	// Get tile state stats
@@ -105,7 +105,7 @@ function water_crop_tile_placement(target_array, crop_tile, ripe_crop_tile){
 }
 
 
-// DUNGEON TILES
+// DUNGEON TILES ----------------------------------------------------------------------------------
 function tile_dungeon_entrance()constructor{
 	tile			= "dungeon entrance";
 	sprite			= zone_tile_dungeon_entrance_spr;
@@ -195,10 +195,72 @@ function tile_floor_planks()constructor{
 }
 
 
-// FURNITURE TILES
+// FURNITURE TILES --------------------------------------------------------------------------------
+// Crafting
+function tile_cook_pot() constructor{
+	tile			= "cook pot";
+	sprite			= cook_pot_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_oven() constructor{
+	tile			= "oven";
+	sprite			= oven_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+	is_animated		= true;
+}
+
+function tile_table_kitchen() constructor{
+	tile			= "kitchen table";
+	sprite			= table_kitchen_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+function tile_table_workshop() constructor{
+	tile			= "workbench";
+	sprite			= table_workshop_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
+
 // Containers
+function tile_cabinet() constructor{
+	tile			= "cabinet";
+	sprite			= cabinet_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 4;
+	inv_hover		= 0;
+	has_been_opened = false;
+}
+
 function tile_chest_large()constructor{
-	tile			= "Large chest";
+	tile			= "large chest";
 	sprite			= chest_large_closed_spr;
 	index			= 0;
 	walkable		= false;
@@ -212,7 +274,83 @@ function tile_chest_large()constructor{
 	has_been_opened = false;
 }
 
+function tile_chest_small()constructor{
+	tile			= "small chest";
+	sprite			= chest_small_closed_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 5;
+	inv_hover		= 0;
+	has_been_opened = false;
+}
+
+function tile_crate()constructor{
+	tile			= "crate";
+	sprite			= crate_wood_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 20;
+	inv_hover		= 0;
+	has_been_opened = false;
+}
+
+function tile_sack()constructor{
+	tile			= "sack";
+	sprite			= sack_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= tile_access_inventory;
+	inventory		= [];
+	inventory_max	= 12;
+	inv_hover		= 0;
+	has_been_opened = false;
+}
+
+
 // Lighting
+function tile_campfire()constructor{
+	tile			= "campfire";
+	sprite			= fireplace_open_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= light_toggle;
+	light_source	= true;
+	lit_sprite		= fire_spr;
+	light_index		= 0;
+	light_radius	= 4;
+}
+
+function tile_hearth()constructor{
+	tile			= "hearth";
+	sprite			= fireplace_stone_spr;
+	index			= 0;
+	walkable		= true;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= light_toggle;
+	light_source	= true;
+	lit_sprite		= fire_spr;
+	light_index		= 0;
+	light_radius	= 6;
+}
+
 function tile_torch()constructor{
 	tile			= "torch";
 	sprite			= torch_spr;
@@ -228,6 +366,7 @@ function tile_torch()constructor{
 	light_radius	= 2;
 }
 
+
 // Decorative
 function tile_bed() constructor{
 	tile			= "bed";
@@ -240,37 +379,11 @@ function tile_bed() constructor{
 	tile_script		= noone;
 }
 
-function tile_cabinet() constructor{
-	tile			= "cabinet";
-	sprite			= cabinet_spr;
-	index			= 0;
-	walkable		= false;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= tile_access_inventory;
-	inventory		= [];
-	inventory_max	= 10;
-	inv_hover		= 0;
-	has_been_opened = false;
-}
-
 function tile_carpet()constructor{
 	tile			= "carpet";
 	sprite			= carpet_spr;
 	index			= 0;
 	walkable		= true;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_cook_pot() constructor{
-	tile			= "cook pot";
-	sprite			= cook_pot_spr;
-	index			= 0;
-	walkable		= false;
 	transparent		= true;
 	is_visible		= false;
 	explored		= false;
@@ -288,6 +401,17 @@ function tile_floor_cushion() constructor{
 	tile_script		= noone;
 }
 
+function tile_rug() constructor{
+	tile			= "rug";
+	sprite			= rug_spr;
+	index			= 0;
+	walkable		= false;
+	transparent		= true;
+	is_visible		= false;
+	explored		= false;
+	tile_script		= noone;
+}
+
 function tile_table_empty() constructor{
 	tile			= "table";
 	sprite			= table_empty_spr;
@@ -299,18 +423,8 @@ function tile_table_empty() constructor{
 	tile_script		= noone;
 }
 
-function tile_table_kitchen() constructor{
-	tile			= "table";
-	sprite			= table_kitchen_spr;
-	index			= 0;
-	walkable		= false;
-	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
 
-// INTERACTIVE TILES
+// INTERACTIVE TILES ------------------------------------------------------------------------------
 function tile_door_closed()constructor{
 	tile			= "closed door";
 	sprite			= door_closed_spr;
@@ -347,7 +461,7 @@ function tile_door_secret()constructor{
 }
 
 
-// PLANTS
+// PLANTS -----------------------------------------------------------------------------------------
 function tile_zone_grass()constructor{
 	tile			= "grass";
 	sprite			= zone_tile_grass_spr;
@@ -394,7 +508,7 @@ function tile_reedmace_ripe()constructor{
 }
 
 
-// ZONE TILES -------------------------------------------------------------------------------------
+// TERRAIN TILES ----------------------------------------------------------------------------------
 function tile_zone_bush()constructor{
 	tile			= "bush";
 	sprite			= zone_tile_bush_spr;
@@ -417,8 +531,6 @@ function tile_zone_dirt()constructor{
 	tile_script		= noone;
 }
 
-
-
 function tile_zone_marsh()constructor{
 	tile			= "swamp";
 	sprite			= zone_tile_marsh_spr;
@@ -436,17 +548,6 @@ function tile_zone_raised_ground()constructor{
 	index			= 0;
 	walkable		= true;
 	transparent		= true;
-	is_visible		= false;
-	explored		= false;
-	tile_script		= noone;
-}
-
-function tile_zone_reeds()constructor{
-	tile			= "water";
-	sprite			= zone_tile_reeds_spr;
-	index			= 0;
-	walkable		= true;
-	transparent		= false;
 	is_visible		= false;
 	explored		= false;
 	tile_script		= noone;

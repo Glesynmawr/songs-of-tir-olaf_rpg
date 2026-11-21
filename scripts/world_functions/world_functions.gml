@@ -59,16 +59,16 @@ function world_data(){
 	zone_feature[BIOME.MARSH]			= [[[1, 1, 2, 2, 2, 3], tile_zone_water, 8, 0.5], [[0, 0, 1, 1, 1, 2], tile_zone_tree, 8, 1.5]];
 	
 	// TILE LOOKUP TABLES PER BIOME								
-	zone_tile_lookup[BIOME.MOUNTAIN]		= [[tile_zone_rocks, 15], [tile_zone_dirt, 25]];
-	zone_tile_lookup[BIOME.HILL]			= [[tile_zone_grass, 15], [tile_zone_dirt, 25]];
-	zone_tile_lookup[BIOME.CANYON]			= [[tile_zone_rocks,  5], [tile_zone_salt, 10], [tile_zone_dirt, 25]];
-	zone_tile_lookup[BIOME.DESERT]			= [[tile_zone_rocks,  5], [tile_zone_dirt, 10], [tile_zone_salt, 25]];
-	zone_tile_lookup[BIOME.SCRUB]			= [[tile_zone_bush,  8], [tile_zone_grass, 20], [tile_zone_dirt, 25]];
-	zone_tile_lookup[BIOME.SWAMP]			= [[tile_zone_tree,  5], [tile_zone_reeds, 10], [tile_zone_dirt, 25],		[tile_zone_marsh, 100]];
-	zone_tile_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2], [tile_zone_tree, 30],	[tile_zone_dirt,  60],		[tile_zone_water, 100]];
-	zone_tile_lookup[BIOME.WATER]			= [[tile_zone_tree,  2], [tile_reedmace, 5],	[tile_zone_lilypad, 20],	[tile_zone_water, 100]];
-	zone_tile_lookup[BIOME.MANGROVE]		= [[tile_zone_rocks, 2], [tile_zone_tree, 10],	[tile_zone_dirt,  60],		[tile_zone_water, 100]];
-	zone_tile_lookup[BIOME.MARSH]			= [[tile_zone_tree,  1], [tile_zone_reeds, 1],	[tile_zone_water, 4],		[tile_zone_dirt, 10],	[tile_zone_marsh, 50]];
+	zone_tile_lookup[BIOME.MOUNTAIN]		= [[tile_zone_rocks, 15], [tile_zone_dirt,  25]];
+	zone_tile_lookup[BIOME.HILL]			= [[tile_zone_grass, 15], [tile_zone_dirt,  25]];
+	zone_tile_lookup[BIOME.CANYON]			= [[tile_zone_rocks, 5],  [tile_zone_salt,  10], [tile_zone_dirt,    25]];
+	zone_tile_lookup[BIOME.DESERT]			= [[tile_zone_rocks, 5],  [tile_zone_dirt,  10], [tile_zone_salt,    25]];
+	zone_tile_lookup[BIOME.SCRUB]			= [[tile_zone_bush,  8],  [tile_zone_grass, 20], [tile_zone_dirt,    25]];
+	zone_tile_lookup[BIOME.SWAMP]			= [[tile_zone_tree,  5],  [tile_reedmace,   10], [tile_zone_dirt,    25],	[tile_zone_marsh, 100]];
+	zone_tile_lookup[BIOME.DENSE_MANGROVE]	= [[tile_zone_rocks, 2],  [tile_zone_tree,  30], [tile_zone_dirt,    60],	[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.WATER]			= [[tile_zone_tree,  2],  [tile_reedmace,   5],	 [tile_zone_lilypad, 20],	[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.MANGROVE]		= [[tile_zone_rocks, 2],  [tile_zone_tree,  10], [tile_zone_dirt,    60],	[tile_zone_water, 100]];
+	zone_tile_lookup[BIOME.MARSH]			= [[tile_zone_tree,  1],  [tile_reedmace,   1],	 [tile_zone_water,   4],	[tile_zone_dirt,  10],	[tile_zone_marsh, 50]];
 	
 	// MOB LOOKUP TABLES
 	mob_lookup[BIOME.MOUNTAIN][MOB_LOOKUP.ZONE]				= noone;
